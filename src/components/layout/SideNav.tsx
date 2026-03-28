@@ -1,0 +1,52 @@
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Home, Dumbbell, ChartBar, Users, User } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+const NAV_ITEMS = [
+  { href: '/dashboard', icon: Home, label: 'Inicio' },
+  { href: '/workout', icon: Dumbbell, label: 'Rutinas' },
+  { href: '/history', icon: ChartBar, label: 'Stats' },
+  { href: '/feed', icon: Users, label: 'Feed' },
+  { href: '/profile', icon: User, label: 'Perfil' },
+] as const;
+
+export function SideNav() {
+  const pathname = usePathname();
+
+  return (
+    <aside className="hidden lg:flex lg:fixed lg:inset-y-0 lg:w-60 flex-col bg-card border-r border-border z-40">
+      {/* Logo */}
+      <div className="flex h-14 items-center px-6 border-b border-border shrink-0">
+        <span className="font-display text-xl font-bold text-primary tracking-wide">
+          GYM<span className="text-foreground">PLANNER</span>
+        </span>
+      </div>
+
+      {/* Nav items */}
+      <nav className="flex-1 overflow-y-auto p-3 space-y-1">
+        {NAV_ITEMS.map(({ href, icon: Icon, label }) => {
+          const isActive = pathname.startsWith(href);
+
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={cn(
+                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                isActive
+                  ? 'text-primary bg-primary/10'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted',
+              )}
+            >
+              <Icon size={20} />
+              {label}
+            </Link>
+          );
+        })}
+      </nav>
+    </aside>
+  );
+}
