@@ -1,13 +1,54 @@
+'use client';
+
+import Link from 'next/link';
 import { PageContainer } from '@/components/layout/PageContainer';
-import { EmptyState } from '@/components/shared/EmptyState';
+import { PlanList } from '@/components/workout/PlanList';
+import { Button } from '@/components/ui/button';
+import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { usePlans } from '@/hooks/usePlans';
+import { Plus, Dumbbell } from 'lucide-react';
+
+const MAX_PLANS = 3;
 
 export default function WorkoutPage() {
+  const { data: plans, loading, error } = usePlans();
+
+  const atLimit = plans.length >= MAX_PLANS;
+
   return (
     <PageContainer>
-      <EmptyState
-        title="Sin planes"
-        description="Tus planes de entrenamiento aparecerán aquí. Sprint 2 implementará esta sección."
-      />
+      <div className="mb-4 flex items-center justify-between">
+        <h1 className="font-display text-2xl font-bold">My Plans</h1>
+        {atLimit ? (
+          <Button disabled size="sm" title="Maximum 3 plans reached" className="flex items-center gap-1">
+            <Plus className="h-4 w-4" />
+            New Plan
+          </Button>
+        ) : (
+          <Button size="sm" render={<Link href="/workout/new" />} className="flex items-center gap-1">
+            <Plus className="h-4 w-4" />
+            New Plan
+          </Button>
+        )}
+      </div>
+
+      <Link
+        href="/workout/exercises"
+        className="text-muted-foreground hover:text-foreground mb-4 flex items-center gap-1.5 text-sm"
+      >
+        <Dumbbell className="h-4 w-4" />
+        Browse exercise catalog
+      </Link>
+
+      {loading && (
+        <div className="flex justify-center py-12">
+          <LoadingSpinner />
+        </div>
+      )}
+      {error && (
+        <p className="text-destructive py-8 text-center text-sm">{error}</p>
+      )}
+      {!loading && !error && <PlanList plans={plans} />}
     </PageContainer>
   );
 }
