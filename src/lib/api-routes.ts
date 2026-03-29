@@ -20,4 +20,12 @@ export const API_ROUTES = {
     detail: (id: string) => `/workout-plans/${id}`,
     activate: (id: string) => `/workout-plans/${id}/activate`,
   },
+  sessions: {
+    start: '/sessions',
+    active: '/sessions/active',
+    detail: (id: string) => `/sessions/${id}`,
+    logSet: (id: string) => `/sessions/${id}/sets`,
+    modifyExercise: (id: string, exerciseId: string) => `/sessions/${id}/exercises/${exerciseId}`,
+    finish: (id: string) => `/sessions/${id}/finish`,
+  },
 } as const;

@@ -16,3 +16,9 @@ export interface ExerciseConfigDraft {
   notes?: string;
   supersetGroupId?: string;
 }
+
+export interface RestTimerState {
+  durationSeconds: number;
+  startedAt: number;
+  exerciseId: string;
+}

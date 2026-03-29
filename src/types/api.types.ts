@@ -3,6 +3,7 @@ import type {
   Exercise,
   LoadType,
   MuscleGroup,
+  SessionSet,
   UserResponse,
 } from '@/types/domain.types';
 
@@ -78,3 +79,34 @@ export interface CreatePlanRequest {
 }
 
 export type UpdatePlanRequest = CreatePlanRequest;
+
+// Sessions
+export interface StartSessionRequest {
+  dayOfWeek: DayOfWeek;
+}
+
+export interface LogSetRequest {
+  exerciseId: string;
+  setIndex: number;
+  reps?: number;
+  duration?: number;
+  weight?: number;
+  completed: boolean;
+}
+
+export interface LogSetResponse {
+  exerciseId: string;
+  sets: SessionSet[];
+}
+
+export interface ModifyExerciseRequest {
+  plannedSets?: number;
+  plannedReps?: number;
+  plannedDuration?: number;
+  plannedWeight?: number;
+  plannedRest?: number;
+}
+
+export interface FinishSessionRequest {
+  status: 'completed' | 'partial';
+}
