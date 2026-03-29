@@ -1,0 +1,56 @@
+import { cn } from '@/lib/utils';
+
+const STEPS = [
+  { number: 1, label: 'Name' },
+  { number: 2, label: 'Days' },
+  { number: 3, label: 'Exercises' },
+  { number: 4, label: 'Review' },
+];
+
+interface WizardStepperProps {
+  currentStep: 1 | 2 | 3 | 4;
+}
+
+export function WizardStepper({ currentStep }: WizardStepperProps) {
+  return (
+    <div className="flex items-center gap-1">
+      {STEPS.map((step, index) => {
+        const isDone = step.number < currentStep;
+        const isActive = step.number === currentStep;
+
+        return (
+          <div key={step.number} className="flex flex-1 items-center gap-1">
+            <div className="flex flex-col items-center gap-1">
+              <div
+                className={cn(
+                  'flex h-7 w-7 items-center justify-center rounded-full text-xs font-medium transition-colors',
+                  isDone && 'bg-primary text-primary-foreground',
+                  isActive && 'bg-primary text-primary-foreground ring-2 ring-primary/30',
+                  !isDone && !isActive && 'bg-muted text-muted-foreground',
+                )}
+              >
+                {isDone ? '✓' : step.number}
+              </div>
+              <span
+                className={cn(
+                  'text-xs',
+                  isActive ? 'text-foreground font-medium' : 'text-muted-foreground',
+                )}
+              >
+                {step.label}
+              </span>
+            </div>
+            {index < STEPS.length - 1 && (
+              <div
+                className={cn(
+                  'mb-4 h-px flex-1 transition-colors',
+                  isDone ? 'bg-primary' : 'bg-border',
+                )}
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}

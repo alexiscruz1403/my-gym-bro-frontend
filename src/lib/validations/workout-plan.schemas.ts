@@ -10,24 +10,11 @@ export const planNameSchema = z.object({
 
 export const exerciseConfigSchema = z
   .object({
-    sets: z.coerce
-      .number()
-      .min(1, 'At least 1 set is required'),
-    reps: z.coerce
-      .number()
-      .min(1, 'Reps must be at least 1')
-      .optional(),
-    duration: z.coerce
-      .number()
-      .min(1, 'Duration must be at least 1 second')
-      .optional(),
-    weight: z.coerce
-      .number()
-      .min(0, 'Weight cannot be negative')
-      .optional(),
-    rest: z.coerce
-      .number()
-      .min(0, 'Rest cannot be negative'),
+    sets: z.number({ message: 'Sets is required' }).min(1, 'At least 1 set is required'),
+    reps: z.number().min(1, 'Reps must be at least 1').optional(),
+    duration: z.number().min(1, 'Duration must be at least 1 second').optional(),
+    weight: z.number().min(0, 'Weight cannot be negative').optional(),
+    rest: z.number({ message: 'Rest is required' }).min(0, 'Rest cannot be negative'),
     notes: z.string().max(200, 'Notes cannot exceed 200 characters').optional(),
   })
   .refine((data) => data.reps !== undefined || data.duration !== undefined, {

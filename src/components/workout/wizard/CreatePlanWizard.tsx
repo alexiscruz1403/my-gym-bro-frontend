@@ -1,0 +1,131 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { WizardStepper } from './WizardStepper';
+import { WizardStep1Name } from './WizardStep1Name';
+import { WizardStep2Days } from './WizardStep2Days';
+import { WizardStep3Exercises } from './WizardStep3Exercises';
+import { WizardStep4Review } from './WizardStep4Review';
+import usePlanBuilderStore from '@/store/plan-builder.store';
+import { createPlan, updatePlan } from '@/services/workout-plans.service';
+import { toast } from 'sonner';
+import type { CreatePlanRequest } from '@/types/api.types';
+
+export function CreatePlanWizard() {
+  const router = useRouter();
+  const [isSaving, setIsSaving] = useState(false);
+
+  const {
+    step,
+    mode,
+    editingPlanId,
+    name,
+    selectedDays,
+    exercisesByDay,
+    setStep,
+    setName,
+    toggleDay,
+    addExerciseToDay,
+    removeExerciseFromDay,
+    updateExerciseConfig,
+    reset,
+  } = usePlanBuilderStore();
+
+  const handleStep1Next = (planName: string) => {
+    setName(planName);
+    setStep(2);
+  };
+
+  const handleStep2Next = () => setStep(3);
+  const handleStep3Next = () => setStep(4);
+
+  const buildPayload = (): CreatePlanRequest => ({
+    name,
+    days: selectedDays.map((day) => ({
+      dayOfWeek: day,
+      exercises: (exercisesByDay[day] ?? []).map((ex) => ({
+        exerciseId: ex.exerciseId,
+        sets: ex.sets,
+        reps: ex.reps,
+        duration: ex.duration,
+        weight: ex.weight,
+        rest: ex.rest,
+        notes: ex.notes,
+        supersetGroupId: ex.supersetGroupId,
+      })),
+    })),
+  });
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      const payload = buildPayload();
+      const saved =
+        mode === 'edit' && editingPlanId
+          ? await updatePlan(editingPlanId, payload)
+          : await createPlan(payload);
+
+      toast.success(
+        mode === 'edit' ? `"${saved.name}" updated` : `"${saved.name}" created`,
+      );
+      reset();
+      router.push(`/workout/${saved.id}`);
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response?.status;
+      if (status === 422) {
+        toast.error('You already have 3 plans. Delete one before creating a new one.');
+      } else {
+        toast.error('Failed to save plan. Please try again.');
+      }
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <div className="space-y-8">
+      <WizardStepper currentStep={step} />
+
+      {step === 1 && (
+        <WizardStep1Name defaultValue={name} onNext={handleStep1Next} />
+      )}
+      {step === 2 && (
+        <WizardStep2Days
+          selected={selectedDays}
+          onChange={(days) => {
+            days.forEach((d) => {
+              if (!selectedDays.includes(d)) toggleDay(d);
+            });
+            selectedDays.forEach((d) => {
+              if (!days.includes(d)) toggleDay(d);
+            });
+          }}
+          onNext={handleStep2Next}
+          onBack={() => setStep(1)}
+        />
+      )}
+      {step === 3 && (
+        <WizardStep3Exercises
+          selectedDays={selectedDays}
+          exercisesByDay={exercisesByDay}
+          onAdd={addExerciseToDay}
+          onUpdate={updateExerciseConfig}
+          onRemove={removeExerciseFromDay}
+          onNext={handleStep3Next}
+          onBack={() => setStep(2)}
+        />
+      )}
+      {step === 4 && (
+        <WizardStep4Review
+          name={name}
+          selectedDays={selectedDays}
+          exercisesByDay={exercisesByDay}
+          isSaving={isSaving}
+          onSave={handleSave}
+          onBack={() => setStep(3)}
+        />
+      )}
+    </div>
+  );
+}
