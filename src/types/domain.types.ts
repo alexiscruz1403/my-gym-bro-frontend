@@ -88,3 +88,51 @@ export interface PlanListItem {
   isActive: boolean;
   daysCount: number;
 }
+
+export type SessionStatus = 'in_progress' | 'completed' | 'partial' | 'abandoned';
+
+export interface SessionSet {
+  setIndex: number;
+  reps?: number;
+  duration?: number;
+  weight?: number;
+  completed: boolean;
+  loggedAt: string;
+}
+
+export interface SessionExercise {
+  exerciseId: string;
+  exerciseName: string;
+  orderIndex: number;
+  supersetGroupId?: string | null;
+  plannedSets: number;
+  plannedReps?: number;
+  plannedDuration?: number;
+  plannedWeight?: number;
+  plannedRest: number;
+  sets: SessionSet[];
+  modifiedDuringSession: boolean;
+  lastPerformance: SessionSet[] | null;
+}
+
+export interface WorkoutSession {
+  _id: string;
+  planId: string;
+  planName: string;
+  dayOfWeek: DayOfWeek;
+  status: SessionStatus;
+  startedAt: string;
+  finishedAt?: string;
+  durationSeconds?: number;
+  exercises: SessionExercise[];
+}
+
+export interface SessionSummary {
+  _id: string;
+  status: SessionStatus;
+  startedAt: string;
+  finishedAt: string;
+  durationSeconds: number;
+  exercisesCompleted: number;
+  totalSetsLogged: number;
+}
