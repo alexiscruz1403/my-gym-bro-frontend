@@ -25,7 +25,7 @@ export function DaySelector({ selected, onChange }: DaySelectorProps) {
   };
 
   return (
-    <div className="grid grid-cols-7 gap-1.5">
+    <div className="grid w-full grid-cols-7 gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {DAYS.map((day) => {
         const isSelected = selected.includes(day.value);
         return (
@@ -37,7 +37,7 @@ export function DaySelector({ selected, onChange }: DaySelectorProps) {
             aria-label={day.label}
             className={cn(
               'flex flex-col items-center justify-center rounded-lg py-3 text-xs font-medium transition-colors',
-              'min-h-[56px] select-none',
+              'min-h-[56px] cursor-pointer select-none',
               isSelected
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-muted text-muted-foreground hover:bg-muted/80',

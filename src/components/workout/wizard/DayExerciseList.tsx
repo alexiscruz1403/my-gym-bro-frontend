@@ -6,11 +6,10 @@ import { Separator } from '@/components/ui/separator';
 import { ExerciseConfigForm } from './ExerciseConfigForm';
 import { ExercisePickerDrawer } from './ExercisePickerDrawer';
 import { Trash2, Plus, Pencil } from 'lucide-react';
-import type { DayOfWeek, Exercise } from '@/types/domain.types';
+import type { Exercise } from '@/types/domain.types';
 import type { ExerciseConfigDraft } from '@/types/ui.types';
 
 interface DayExerciseListProps {
-  day: DayOfWeek;
   exercises: ExerciseConfigDraft[];
   onAdd: (exercise: ExerciseConfigDraft) => void;
   onUpdate: (index: number, config: Partial<ExerciseConfigDraft>) => void;
@@ -18,7 +17,6 @@ interface DayExerciseListProps {
 }
 
 export function DayExerciseList({
-  day,
   exercises,
   onAdd,
   onUpdate,
@@ -78,6 +76,7 @@ export function DayExerciseList({
                 size="icon"
                 onClick={() => setEditingIndex(index)}
                 aria-label="Edit exercise"
+              className="cursor-pointer"
               >
                 <Pencil className="h-4 w-4" />
               </Button>
@@ -87,7 +86,7 @@ export function DayExerciseList({
                 size="icon"
                 onClick={() => onRemove(index)}
                 aria-label="Remove exercise"
-                className="text-destructive hover:text-destructive"
+                className="cursor-pointer text-destructive hover:text-destructive"
               >
                 <Trash2 className="h-4 w-4" />
               </Button>

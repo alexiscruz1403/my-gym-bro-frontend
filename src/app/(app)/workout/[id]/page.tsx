@@ -23,9 +23,9 @@ export default function PlanDetailPage({ params }: PlanDetailPageProps) {
       <Button
         variant="ghost"
         size="icon"
-        onClick={() => router.back()}
-        className="mb-2 -ml-2"
-        aria-label="Go back"
+        onClick={() => router.push('/workout')}
+        className="mb-2 -ml-2 cursor-pointer"
+        aria-label="Back to plans"
       >
         <ArrowLeft className="h-5 w-5" />
       </Button>

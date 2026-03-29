@@ -51,12 +51,12 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
 
       <div className="flex flex-wrap gap-2">
         {!plan.isActive && (
-          <Button size="sm" onClick={handleActivate} className="flex items-center gap-1.5">
+          <Button size="sm" onClick={handleActivate} className="flex cursor-pointer items-center gap-1.5">
             <Zap className="h-4 w-4" />
             Activate
           </Button>
         )}
-        <Button size="sm" variant="outline" render={<Link href={`/workout/${plan.id}/edit`} />} className="flex items-center gap-1.5">
+        <Button size="sm" variant="outline" render={<Link href={`/workout/${plan.id}/edit`} />} className="flex cursor-pointer items-center gap-1.5">
           <Pencil className="h-4 w-4" />
           Edit
         </Button>

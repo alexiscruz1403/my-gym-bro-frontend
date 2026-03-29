@@ -43,7 +43,7 @@ export function ExerciseCard(props: ExerciseCardProps) {
 
   return (
     <Card
-      className={mode === 'browse' ? 'cursor-pointer transition-colors hover:bg-accent' : ''}
+      className={mode === 'browse' ? 'cursor-pointer transition-colors hover:bg-accent' : 'cursor-default'}
       onClick={handleCardClick}
     >
       <CardContent className="flex items-center gap-3 p-4">
@@ -72,7 +72,7 @@ export function ExerciseCard(props: ExerciseCardProps) {
         </div>
 
         {mode === 'picker' && (
-          <Button size="icon" variant="ghost" onClick={handleAdd} aria-label="Add exercise">
+          <Button size="icon" variant="ghost" onClick={handleAdd} className="cursor-pointer" aria-label="Add exercise">
             <Plus className="h-4 w-4" />
           </Button>
         )}

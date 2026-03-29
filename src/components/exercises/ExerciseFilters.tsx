@@ -70,7 +70,7 @@ export function ExerciseFilters({ value, onChange }: ExerciseFiltersProps) {
         )}
       </div>
 
-      <div className="w-full overflow-x-auto">
+      <div className="w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="flex gap-2 pb-1">
           {LOAD_TYPE_OPTIONS.map((opt) => (
             <Button
@@ -83,7 +83,7 @@ export function ExerciseFilters({ value, onChange }: ExerciseFiltersProps) {
                   loadType: value.loadType === opt.value ? undefined : opt.value,
                 })
               }
-              className="shrink-0"
+              className="shrink-0 cursor-pointer"
             >
               {opt.label}
             </Button>
@@ -91,7 +91,7 @@ export function ExerciseFilters({ value, onChange }: ExerciseFiltersProps) {
         </div>
       </div>
 
-      <div className="w-full overflow-x-auto">
+      <div className="w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="flex gap-2 pb-1">
           {MUSCLE_OPTIONS.map((opt) => (
             <Button
@@ -104,7 +104,7 @@ export function ExerciseFilters({ value, onChange }: ExerciseFiltersProps) {
                   muscle: value.muscle === opt.value ? undefined : opt.value,
                 })
               }
-              className="shrink-0"
+              className="shrink-0 cursor-pointer"
             >
               {opt.label}
             </Button>
@@ -115,7 +115,7 @@ export function ExerciseFilters({ value, onChange }: ExerciseFiltersProps) {
       {hasActiveFilters && (
         <button
           onClick={() => onChange({ ...value, muscle: undefined, loadType: undefined })}
-          className="text-muted-foreground hover:text-foreground flex items-center gap-1 text-xs"
+          className="text-muted-foreground hover:text-foreground flex cursor-pointer items-center gap-1 text-xs"
         >
           <X className="h-3 w-3" />
           Clear filters

@@ -71,7 +71,6 @@ export function WizardStep3Exercises({
         {selectedDays.map((day) => (
           <TabsContent key={day} value={day} className="mt-4">
             <DayExerciseList
-              day={day}
               exercises={exercisesByDay[day] ?? []}
               onAdd={(ex) => onAdd(day, ex)}
               onUpdate={(index, config) => onUpdate(day, index, config)}
