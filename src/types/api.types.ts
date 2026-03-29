@@ -1,4 +1,10 @@
-import type { UserResponse } from '@/types/domain.types';
+import type {
+  DayOfWeek,
+  Exercise,
+  LoadType,
+  MuscleGroup,
+  UserResponse,
+} from '@/types/domain.types';
 
 export interface ApiError {
   statusCode: number;
@@ -32,3 +38,43 @@ export interface RefreshResponse {
 export interface UpdateProfileRequest {
   username?: string;
 }
+
+// Exercises
+export interface ExerciseListParams {
+  search?: string;
+  muscle?: MuscleGroup;
+  loadType?: LoadType;
+  page?: number;
+  limit?: number;
+}
+
+export interface ExerciseListResponse {
+  data: Exercise[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+// Workout Plans
+export interface CreatePlanExercise {
+  exerciseId: string;
+  sets: number;
+  reps?: number;
+  duration?: number;
+  weight?: number;
+  rest: number;
+  notes?: string;
+  supersetGroupId?: string;
+}
+
+export interface CreatePlanDay {
+  dayOfWeek: DayOfWeek;
+  exercises: CreatePlanExercise[];
+}
+
+export interface CreatePlanRequest {
+  name: string;
+  days: CreatePlanDay[];
+}
+
+export type UpdatePlanRequest = CreatePlanRequest;
