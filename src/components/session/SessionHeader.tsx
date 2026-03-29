@@ -41,7 +41,7 @@ export function SessionHeader({ onFinish }: SessionHeaderProps) {
           size="sm"
           variant="outline"
           onClick={onFinish}
-          className="cursor-pointer gap-1.5"
+          className="min-h-11 cursor-pointer gap-1.5"
         >
           <Flag className="h-4 w-4" />
           Finish

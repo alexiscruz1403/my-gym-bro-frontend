@@ -9,6 +9,7 @@ import { LastPerformanceRow } from './LastPerformanceRow';
 import { RestTimer } from './RestTimer';
 import { ModifyExerciseSheet } from './ModifyExerciseSheet';
 import { useRestTimer } from '@/hooks/useRestTimer';
+import { toast } from 'sonner';
 import type { SessionExercise } from '@/types/domain.types';
 import type { LogSetRequest, ModifyExerciseRequest } from '@/types/api.types';
 
@@ -27,14 +28,18 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify }: ExerciseSe
     weight: number | undefined,
     reps: number | undefined,
   ) => {
-    await onLogSet({
-      exerciseId: exercise.exerciseId,
-      setIndex,
-      weight,
-      reps,
-      completed: true,
-    });
-    startTimer(exercise.plannedRest, exercise.exerciseId);
+    try {
+      await onLogSet({
+        exerciseId: exercise.exerciseId,
+        setIndex,
+        weight,
+        reps,
+        completed: true,
+      });
+      startTimer(exercise.plannedRest, exercise.exerciseId);
+    } catch {
+      toast.error('Failed to save set. Please try again.');
+    }
   };
 
   const completedCount = exercise.sets.filter((s) => s.completed).length;

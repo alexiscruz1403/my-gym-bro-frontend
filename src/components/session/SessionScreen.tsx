@@ -6,10 +6,14 @@ import { ExerciseNavigator } from './ExerciseNavigator';
 import { FinishSessionDialog } from './FinishSessionDialog';
 import { SessionSummary } from './SessionSummary';
 import { useSession } from '@/hooks/useSession';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import type { SessionSummary as SessionSummaryType } from '@/types/domain.types';
 
 export function SessionScreen() {
-  const { session, logSet, modifyExercise, finishSession } = useSession();
+  const router = useRouter();
+  const { session, loading, logSet, modifyExercise, finishSession } = useSession();
   const [finishOpen, setFinishOpen] = useState(false);
   const [summary, setSummary] = useState<SessionSummaryType | null>(null);
 
@@ -17,12 +21,33 @@ export function SessionScreen() {
     return <SessionSummary summary={summary} />;
   }
 
-  if (!session) return null;
+  if (loading) {
+    return (
+      <div className="flex flex-col gap-4 p-4">
+        <Skeleton className="h-16 w-full rounded-xl" />
+        <Skeleton className="h-8 w-1/2 rounded-lg" />
+        <Skeleton className="h-24 w-full rounded-xl" />
+        <div className="space-y-2">
+          <Skeleton className="h-14 w-full rounded-lg" />
+          <Skeleton className="h-14 w-full rounded-lg" />
+          <Skeleton className="h-14 w-full rounded-lg" />
+        </div>
+      </div>
+    );
+  }
+
+  // No active session after load — redirect to dashboard
+  if (!session) {
+    router.replace('/dashboard');
+    return null;
+  }
 
   const handleFinish = async (status: 'completed' | 'partial') => {
     const result = await finishSession({ status });
     setFinishOpen(false);
     setSummary(result);
+    const label = status === 'completed' ? 'Workout completed' : 'Session saved';
+    toast.success(`${label} · ${result.totalSetsLogged} sets · ${Math.round(result.durationSeconds / 60)}min`);
   };
 
   return (

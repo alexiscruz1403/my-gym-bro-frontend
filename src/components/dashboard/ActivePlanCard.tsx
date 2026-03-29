@@ -58,8 +58,13 @@ export function ActivePlanCard({ plan }: ActivePlanCardProps) {
       const session = await startSession({ dayOfWeek: todayDow });
       storeStartSession(session._id);
       router.push('/session');
-    } catch {
-      toast.error('Could not start workout. Please try again.');
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response?.status;
+      if (status === 422) {
+        toast.error('No exercises found for today in your active plan.');
+      } else {
+        toast.error('Could not start workout. Please try again.');
+      }
     } finally {
       setStarting(false);
     }
