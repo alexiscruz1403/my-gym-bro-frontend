@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { PlanList } from '@/components/workout/PlanList';
 import { Button } from '@/components/ui/button';
-import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { Skeleton } from '@/components/ui/skeleton';
 import { usePlans } from '@/hooks/usePlans';
 import { Plus, Dumbbell } from 'lucide-react';
 
@@ -41,8 +41,10 @@ export default function WorkoutPage() {
       </Link>
 
       {loading && (
-        <div className="flex justify-center py-12">
-          <LoadingSpinner />
+        <div className="space-y-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton key={i} className="h-16 w-full rounded-xl" />
+          ))}
         </div>
       )}
       {error && (
