@@ -1,9 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,6 +16,7 @@ import { registerSchema, type RegisterFormValues } from '@/lib/validations/auth.
 
 export function RegisterForm() {
   const { register: registerUser } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -68,14 +70,25 @@ export function RegisterForm() {
 
           <div className="space-y-1.5">
             <Label htmlFor="password">Contraseña</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Mínimo 8 caracteres"
-              autoComplete="new-password"
-              disabled={isSubmitting}
-              {...register('password')}
-            />
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Mínimo 8 caracteres"
+                autoComplete="new-password"
+                disabled={isSubmitting}
+                className="pr-10"
+                {...register('password')}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="text-muted-foreground hover:text-foreground absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
             {errors.password && (
               <p className="text-xs text-destructive">{errors.password.message}</p>
             )}
@@ -88,7 +101,7 @@ export function RegisterForm() {
             {isSubmitting ? 'Creando cuenta...' : 'Crear cuenta'}
           </Button>
 
-          <div className="flex items-center gap-2 w-full">
+          <div className="flex w-full items-center gap-2">
             <Separator className="flex-1" />
             <span className="text-xs text-muted-foreground">o</span>
             <Separator className="flex-1" />
@@ -96,7 +109,7 @@ export function RegisterForm() {
 
           <GoogleAuthButton />
 
-          <p className="text-sm text-muted-foreground text-center">
+          <p className="text-center text-sm text-muted-foreground">
             ¿Ya tienes cuenta?{' '}
             <Link href="/login" className="text-primary hover:underline">
               Inicia sesión

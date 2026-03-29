@@ -1,9 +1,12 @@
 'use client';
 
 import { use, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { CreatePlanWizard } from '@/components/workout/wizard/CreatePlanWizard';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
 import usePlanBuilderStore from '@/store/plan-builder.store';
 import { usePlan } from '@/hooks/usePlan';
 
@@ -13,6 +16,7 @@ interface EditPlanPageProps {
 
 export default function EditPlanPage({ params }: EditPlanPageProps) {
   const { id } = use(params);
+  const router = useRouter();
   const { data, loading, error } = usePlan(id);
   const { loadPlan, editingPlanId } = usePlanBuilderStore();
 
@@ -52,6 +56,15 @@ export default function EditPlanPage({ params }: EditPlanPageProps) {
 
   return (
     <PageContainer>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => router.push(`/workout/${id}`)}
+        className="mb-2 -ml-2 cursor-pointer"
+        aria-label="Back to plan"
+      >
+        <ArrowLeft className="h-5 w-5" />
+      </Button>
       <CreatePlanWizard />
     </PageContainer>
   );

@@ -30,10 +30,10 @@ export function WizardStep2Days({ selected, onChange, onNext, onBack }: WizardSt
       )}
 
       <div className="flex gap-3">
-        <Button variant="outline" onClick={onBack} className="flex-1">
+        <Button variant="outline" onClick={onBack} className="flex-1 cursor-pointer">
           Back
         </Button>
-        <Button onClick={onNext} disabled={selected.length === 0} className="flex-1">
+        <Button onClick={onNext} disabled={selected.length === 0} className="flex-1 cursor-pointer">
           Continue
         </Button>
       </div>

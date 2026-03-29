@@ -53,10 +53,10 @@ export function WizardStep3Exercises({
       </div>
 
       <Tabs value={activeDay} onValueChange={setActiveDay}>
-        <div className="w-full overflow-x-auto">
+        <div className="w-full overflow-x-auto overflow-y-hidden">
           <TabsList className="flex w-max gap-1">
             {selectedDays.map((day) => (
-              <TabsTrigger key={day} value={day} className="shrink-0">
+              <TabsTrigger key={day} value={day} className="shrink-0 cursor-pointer">
                 {DAY_SHORT[day]}
                 {(exercisesByDay[day]?.length ?? 0) > 0 && (
                   <span className="bg-primary/20 text-primary ml-1 rounded-full px-1.5 text-xs">
@@ -71,7 +71,6 @@ export function WizardStep3Exercises({
         {selectedDays.map((day) => (
           <TabsContent key={day} value={day} className="mt-4">
             <DayExerciseList
-              day={day}
               exercises={exercisesByDay[day] ?? []}
               onAdd={(ex) => onAdd(day, ex)}
               onUpdate={(index, config) => onUpdate(day, index, config)}
@@ -82,10 +81,10 @@ export function WizardStep3Exercises({
       </Tabs>
 
       <div className="flex gap-3">
-        <Button variant="outline" onClick={onBack} className="flex-1">
+        <Button variant="outline" onClick={onBack} className="flex-1 cursor-pointer">
           Back
         </Button>
-        <Button onClick={onNext} disabled={totalExercises === 0} className="flex-1">
+        <Button onClick={onNext} disabled={totalExercises === 0} className="flex-1 cursor-pointer">
           Review
         </Button>
       </div>

@@ -13,14 +13,14 @@ interface WizardStepperProps {
 
 export function WizardStepper({ currentStep }: WizardStepperProps) {
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex w-full items-center">
       {STEPS.map((step, index) => {
         const isDone = step.number < currentStep;
         const isActive = step.number === currentStep;
 
         return (
-          <div key={step.number} className="flex flex-1 items-center gap-1">
-            <div className="flex flex-col items-center gap-1">
+          <div key={step.number} className="flex flex-1 items-center">
+            <div className="flex flex-1 flex-col items-center gap-1">
               <div
                 className={cn(
                   'flex h-7 w-7 items-center justify-center rounded-full text-xs font-medium transition-colors',
@@ -33,17 +33,18 @@ export function WizardStepper({ currentStep }: WizardStepperProps) {
               </div>
               <span
                 className={cn(
-                  'text-xs',
+                  'text-center text-xs',
                   isActive ? 'text-foreground font-medium' : 'text-muted-foreground',
                 )}
               >
                 {step.label}
               </span>
             </div>
+
             {index < STEPS.length - 1 && (
               <div
                 className={cn(
-                  'mb-4 h-px flex-1 transition-colors',
+                  'mb-5 h-px w-full max-w-10 flex-1 transition-colors',
                   isDone ? 'bg-primary' : 'bg-border',
                 )}
               />
