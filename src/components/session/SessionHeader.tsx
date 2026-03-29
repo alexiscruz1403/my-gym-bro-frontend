@@ -2,7 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Flag } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
+import { Flag, MoreVertical, Trash2 } from 'lucide-react';
 import useSessionStore from '@/store/session.store';
 
 function formatElapsed(startTime: number | null): string {
@@ -16,9 +23,10 @@ function formatElapsed(startTime: number | null): string {
 
 interface SessionHeaderProps {
   onFinish: () => void;
+  onCancel: () => void;
 }
 
-export function SessionHeader({ onFinish }: SessionHeaderProps) {
+export function SessionHeader({ onFinish, onCancel }: SessionHeaderProps) {
   const { sessionStartTime, activeSession } = useSessionStore();
   const [, tick] = useState(0);
 
@@ -33,19 +41,62 @@ export function SessionHeader({ onFinish }: SessionHeaderProps) {
         <p className="text-muted-foreground text-xs">In progress</p>
         <p className="font-display text-lg font-bold">{activeSession?.planName ?? 'Workout'}</p>
       </div>
-      <div className="flex items-center gap-3">
+
+      <div className="flex items-center gap-2">
         <span className="font-display text-xl font-bold tabular-nums">
           {formatElapsed(sessionStartTime)}
         </span>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={onFinish}
-          className="min-h-11 cursor-pointer gap-1.5"
-        >
-          <Flag className="h-4 w-4" />
-          Finish
-        </Button>
+
+        {/* Desktop: explicit buttons */}
+        <div className="hidden items-center gap-2 lg:flex">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={onCancel}
+            className="min-h-11 cursor-pointer gap-1.5 text-destructive hover:text-destructive"
+          >
+            <Trash2 className="h-4 w-4" />
+            Cancel
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={onFinish}
+            className="min-h-11 cursor-pointer gap-1.5"
+          >
+            <Flag className="h-4 w-4" />
+            Finish
+          </Button>
+        </div>
+
+        {/* Mobile: dropdown menu */}
+        <div className="lg:hidden">
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="min-h-11 min-w-9 cursor-pointer"
+                  aria-label="Session options"
+                />
+              }
+            >
+              <MoreVertical className="h-4 w-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="bottom" align="end" className="bg-background">
+              <DropdownMenuItem onClick={onFinish}>
+                <Flag className="h-4 w-4" />
+                Finish workout
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem variant="destructive" onClick={onCancel}>
+                <Trash2 className="h-4 w-4" />
+                Cancel session
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </div>
   );

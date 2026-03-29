@@ -6,6 +6,7 @@ import type {
   LogSetRequest,
   LogSetResponse,
   ModifyExerciseRequest,
+  ReplaceExerciseRequest,
   FinishSessionRequest,
 } from '@/types/api.types';
 
@@ -45,6 +46,21 @@ export async function modifyExercise(
   dto: ModifyExerciseRequest,
 ): Promise<void> {
   await apiClient.patch(API_ROUTES.sessions.modifyExercise(sessionId, exerciseId), dto);
+}
+
+export async function replaceExercise(
+  sessionId: string,
+  exerciseId: string,
+  dto: ReplaceExerciseRequest,
+): Promise<WorkoutSession> {
+  await apiClient.patch(API_ROUTES.sessions.replaceExercise(sessionId, exerciseId), dto);
+  // Re-fetch to get lastPerformance resolved for the new exercise
+  const { data } = await apiClient.get<WorkoutSession>(API_ROUTES.sessions.active);
+  return data;
+}
+
+export async function cancelSession(): Promise<void> {
+  await apiClient.delete(API_ROUTES.sessions.cancel);
 }
 
 export async function finishSession(

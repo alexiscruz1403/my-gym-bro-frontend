@@ -107,6 +107,15 @@ export interface ModifyExerciseRequest {
   plannedRest?: number;
 }
 
+export interface ReplaceExerciseRequest {
+  newExerciseId: string;
+  plannedSets?: number;
+  plannedReps?: number;
+  plannedDuration?: number;
+  plannedWeight?: number;
+  plannedRest?: number;
+}
+
 export interface FinishSessionRequest {
   status: 'completed' | 'partial';
 }

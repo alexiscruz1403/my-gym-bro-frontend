@@ -12,13 +12,13 @@ const MUSCLE_LABELS: Record<MuscleGroup, string> = {
   biceps: 'Biceps',
   triceps: 'Triceps',
   forearms: 'Forearms',
-  core: 'Core',
+  abs: 'Abs',
+  obliques: 'Obliques',
+  lower_back: 'Lower Back',
   quads: 'Quads',
   hamstrings: 'Hamstrings',
   glutes: 'Glutes',
   calves: 'Calves',
-  hip_flexors: 'Hip Flexors',
-  adductors: 'Adductors',
 };
 
 interface MuscleGroupBadgeProps {

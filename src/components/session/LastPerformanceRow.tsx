@@ -6,9 +6,11 @@ import type { SessionSet } from '@/types/domain.types';
 
 interface LastPerformanceRowProps {
   sets: SessionSet[];
+  plannedSets: number;
 }
 
-export function LastPerformanceRow({ sets }: LastPerformanceRowProps) {
+export function LastPerformanceRow({ sets, plannedSets }: LastPerformanceRowProps) {
+  const displaySets = sets.slice(0, plannedSets);
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -31,7 +33,7 @@ export function LastPerformanceRow({ sets }: LastPerformanceRowProps) {
 
       {expanded && (
         <div className="mt-2 space-y-1">
-          {sets.map((s) => (
+          {displaySets.map((s) => (
             <div key={s.setIndex} className="text-muted-foreground flex items-center gap-3 text-xs">
               <span className="w-12">Set {s.setIndex + 1}</span>
               {s.weight !== undefined && s.weight > 0 && <span>{s.weight} kg</span>}

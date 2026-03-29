@@ -23,6 +23,7 @@ interface WizardStep3ExercisesProps {
   onAdd: (day: DayOfWeek, exercise: ExerciseConfigDraft) => void;
   onUpdate: (day: DayOfWeek, index: number, config: Partial<ExerciseConfigDraft>) => void;
   onRemove: (day: DayOfWeek, index: number) => void;
+  onReorder: (day: DayOfWeek, fromIndex: number, toIndex: number) => void;
   onNext: () => void;
   onBack: () => void;
 }
@@ -33,6 +34,7 @@ export function WizardStep3Exercises({
   onAdd,
   onUpdate,
   onRemove,
+  onReorder,
   onNext,
   onBack,
 }: WizardStep3ExercisesProps) {
@@ -75,6 +77,7 @@ export function WizardStep3Exercises({
               onAdd={(ex) => onAdd(day, ex)}
               onUpdate={(index, config) => onUpdate(day, index, config)}
               onRemove={(index) => onRemove(day, index)}
+              onReorder={(from, to) => onReorder(day, from, to)}
             />
           </TabsContent>
         ))}
