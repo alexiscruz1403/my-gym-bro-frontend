@@ -81,10 +81,10 @@ export function WizardStep3Exercises({
       </Tabs>
 
       <div className="flex gap-3">
-        <Button variant="outline" onClick={onBack} className="flex-1">
+        <Button variant="outline" onClick={onBack} className="flex-1 cursor-pointer">
           Back
         </Button>
-        <Button onClick={onNext} disabled={totalExercises === 0} className="flex-1">
+        <Button onClick={onNext} disabled={totalExercises === 0} className="flex-1 cursor-pointer">
           Review
         </Button>
       </div>

@@ -101,7 +101,7 @@ export function DayExerciseList({
         variant="outline"
         size="sm"
         onClick={() => setPickerOpen(true)}
-        className="w-full gap-1.5"
+        className="w-full cursor-pointer gap-1.5"
       >
         <Plus className="h-4 w-4" />
         Add exercise

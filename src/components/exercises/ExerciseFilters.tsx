@@ -71,7 +71,7 @@ export function ExerciseFilters({ value, onChange }: ExerciseFiltersProps) {
       </div>
 
       <div className="w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="flex gap-2 pb-1">
+        <div className="flex flex-wrap gap-2 pb-1">
           {LOAD_TYPE_OPTIONS.map((opt) => (
             <Button
               key={opt.value}
@@ -92,7 +92,7 @@ export function ExerciseFilters({ value, onChange }: ExerciseFiltersProps) {
       </div>
 
       <div className="w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="flex gap-2 pb-1">
+        <div className="flex flex-wrap gap-2 pb-1">
           {MUSCLE_OPTIONS.map((opt) => (
             <Button
               key={opt.value}
