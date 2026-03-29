@@ -29,6 +29,7 @@ export function CreatePlanWizard() {
     addExerciseToDay,
     removeExerciseFromDay,
     updateExerciseConfig,
+    reorderExercisesInDay,
     reset,
   } = usePlanBuilderStore();
 
@@ -112,6 +113,7 @@ export function CreatePlanWizard() {
           onAdd={addExerciseToDay}
           onUpdate={updateExerciseConfig}
           onRemove={removeExerciseFromDay}
+          onReorder={reorderExercisesInDay}
           onNext={handleStep3Next}
           onBack={() => setStep(2)}
         />

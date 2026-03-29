@@ -1,13 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { SessionHeader } from './SessionHeader';
 import { ExerciseNavigator } from './ExerciseNavigator';
-import { FinishSessionDialog } from './FinishSessionDialog';
+import { ConfirmFinishDialog } from './ConfirmFinishDialog';
 import { SessionSummary } from './SessionSummary';
-import { useSession } from '@/hooks/useSession';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useRouter } from 'next/navigation';
+import { useSession } from '@/hooks/useSession';
 import { toast } from 'sonner';
 import type { SessionSummary as SessionSummaryType } from '@/types/domain.types';
 
@@ -36,13 +36,19 @@ export function SessionScreen() {
     );
   }
 
-  // No active session after load — redirect to dashboard
   if (!session) {
     router.replace('/dashboard');
     return null;
   }
 
-  const handleFinish = async (status: 'completed' | 'partial') => {
+  // Determine status automatically: completed only if every planned set in
+  // every exercise has been logged as completed.
+  const isFullyCompleted = session.exercises.every(
+    (ex) => ex.sets.filter((s) => s.completed).length === ex.plannedSets,
+  );
+
+  const handleConfirmFinish = async () => {
+    const status = isFullyCompleted ? 'completed' : 'partial';
     const result = await finishSession({ status });
     setFinishOpen(false);
     setSummary(result);
@@ -60,10 +66,11 @@ export function SessionScreen() {
         onModify={modifyExercise}
       />
 
-      <FinishSessionDialog
+      <ConfirmFinishDialog
         open={finishOpen}
         onOpenChange={setFinishOpen}
-        onFinish={handleFinish}
+        isFullyCompleted={isFullyCompleted}
+        onConfirm={handleConfirmFinish}
       />
     </div>
   );

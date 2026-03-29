@@ -16,13 +16,13 @@ const MUSCLE_OPTIONS: { value: MuscleGroup; label: string }[] = [
   { value: 'biceps', label: 'Biceps' },
   { value: 'triceps', label: 'Triceps' },
   { value: 'forearms', label: 'Forearms' },
-  { value: 'core', label: 'Core' },
+  { value: 'abs', label: 'Abs' },
+  { value: 'obliques', label: 'Obliques' },
+  { value: 'lower_back', label: 'Lower Back' },
   { value: 'quads', label: 'Quads' },
   { value: 'hamstrings', label: 'Hamstrings' },
   { value: 'glutes', label: 'Glutes' },
   { value: 'calves', label: 'Calves' },
-  { value: 'hip_flexors', label: 'Hip Flexors' },
-  { value: 'adductors', label: 'Adductors' },
 ];
 
 const LOAD_TYPE_OPTIONS: { value: LoadType; label: string }[] = [

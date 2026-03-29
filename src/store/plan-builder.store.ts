@@ -27,6 +27,7 @@ interface PlanBuilderActions {
     index: number,
     config: Partial<ExerciseConfigDraft>,
   ) => void;
+  reorderExercisesInDay: (day: DayOfWeek, fromIndex: number, toIndex: number) => void;
   loadPlan: (plan: WorkoutPlan) => void;
   reset: () => void;
 }
@@ -90,6 +91,17 @@ const usePlanBuilderStore = create<PlanBuilderState & PlanBuilderActions>()(
         set((state) => {
           const exercises = [...(state.exercisesByDay[day] ?? [])];
           exercises[index] = { ...exercises[index], ...config };
+          return {
+            exercisesByDay: { ...state.exercisesByDay, [day]: exercises },
+            isDirty: true,
+          };
+        }),
+
+      reorderExercisesInDay: (day, fromIndex, toIndex) =>
+        set((state) => {
+          const exercises = [...(state.exercisesByDay[day] ?? [])];
+          const [moved] = exercises.splice(fromIndex, 1);
+          exercises.splice(toIndex, 0, moved);
           return {
             exercisesByDay: { ...state.exercisesByDay, [day]: exercises },
             isDirty: true,

@@ -15,7 +15,7 @@ export function SetList({ exercise, onCompleteSet }: SetListProps) {
         const logged = exercise.sets.find((s) => s.setIndex === i);
         return (
           <SetRow
-            key={i}
+            key={`${exercise.exerciseId}-${i}`}
             setIndex={i}
             plannedReps={exercise.plannedReps}
             plannedWeight={exercise.plannedWeight}

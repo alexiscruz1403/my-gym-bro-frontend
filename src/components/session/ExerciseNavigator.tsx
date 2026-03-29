@@ -23,30 +23,32 @@ export function ExerciseNavigator({ exercises, onLogSet, onModify }: ExerciseNav
   return (
     <div className="flex flex-1 flex-col">
       {/* Progress dots */}
-      <div className="flex items-center justify-center gap-1 px-4 py-3">
-        {exercises.map((ex, i) => {
-          const done = ex.sets.filter((s) => s.completed).length === ex.plannedSets;
-          return (
-            <button
-              key={ex.exerciseId}
-              type="button"
-              onClick={() => setActiveIndex(i)}
-              className="flex min-h-11 min-w-11 cursor-pointer items-center justify-center"
-              aria-label={`Go to ${ex.exerciseName}`}
-            >
-              <span
-                className={cn(
-                  'block h-2.5 rounded-full transition-all',
-                  i === activeIndex
-                    ? 'bg-primary w-6'
-                    : done
-                      ? 'bg-green-500 w-2.5'
-                      : 'bg-muted w-2.5',
-                )}
-              />
-            </button>
-          );
-        })}
+      <div className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex min-w-max items-center justify-start gap-1 px-4 py-3">
+          {exercises.map((ex, i) => {
+            const done = ex.sets.filter((s) => s.completed).length === ex.plannedSets;
+            return (
+              <button
+                key={ex.exerciseId}
+                type="button"
+                onClick={() => setActiveIndex(i)}
+                className="flex cursor-pointer items-center justify-center px-1 py-3"
+                aria-label={`Go to ${ex.exerciseName}`}
+              >
+                <span
+                  className={cn(
+                    'block h-2.5 rounded-full transition-all',
+                    i === activeIndex
+                      ? 'bg-primary w-6'
+                      : done
+                        ? 'bg-green-500 w-2.5'
+                        : 'bg-muted w-2.5',
+                  )}
+                />
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Card */}

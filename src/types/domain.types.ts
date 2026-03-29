@@ -10,22 +10,22 @@ export interface UserResponse {
 
 export type MuscleGroup =
   | 'chest'
-  | 'lats'
-  | 'upper_back'
-  | 'traps'
   | 'front_delts'
   | 'side_delts'
+  | 'triceps'
+  | 'lats'
+  | 'upper_back'
   | 'rear_delts'
   | 'biceps'
-  | 'triceps'
   | 'forearms'
-  | 'core'
+  | 'traps'
+  | 'abs'
+  | 'obliques'
+  | 'lower_back'
   | 'quads'
   | 'hamstrings'
   | 'glutes'
-  | 'calves'
-  | 'hip_flexors'
-  | 'adductors';
+  | 'calves';
 
 export type LoadType =
   | 'barbell'
