@@ -10,6 +10,7 @@ import {
   type ExerciseConfigFormValues,
 } from '@/lib/validations/workout-plan.schemas';
 import type { ExerciseConfigDraft } from '@/types/ui.types';
+import { SupersetGroupSelector } from './SupersetGroupSelector';
 
 interface ExerciseConfigFormProps {
   exerciseName: string;
@@ -29,6 +30,7 @@ export function ExerciseConfigForm({
   const [metricMode, setMetricMode] = useState<MetricMode>(
     defaultValues?.duration !== undefined ? 'duration' : 'reps',
   );
+  const [supersetGroupId, setSupersetGroupId] = useState(defaultValues?.supersetGroupId ?? '');
 
   const {
     register,
@@ -69,6 +71,7 @@ export function ExerciseConfigForm({
       weight: values.weight,
       rest: values.rest,
       notes: values.notes,
+      supersetGroupId: supersetGroupId.trim() || undefined,
     });
   };
 
@@ -169,6 +172,8 @@ export function ExerciseConfigForm({
         <label className="text-xs font-medium">Notes (optional)</label>
         <Input {...register('notes')} placeholder="e.g. Focus on form" />
       </div>
+
+      <SupersetGroupSelector value={supersetGroupId} onChange={setSupersetGroupId} />
 
       <div className="flex gap-3">
         <Button

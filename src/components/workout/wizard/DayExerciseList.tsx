@@ -8,6 +8,7 @@ import { ExercisePickerDrawer } from './ExercisePickerDrawer';
 import { Trash2, Plus, Pencil } from 'lucide-react';
 import type { Exercise } from '@/types/domain.types';
 import type { ExerciseConfigDraft } from '@/types/ui.types';
+import { SupersetGroupIndicator } from '@/components/workout/SupersetGroupIndicator';
 
 interface DayExerciseListProps {
   exercises: ExerciseConfigDraft[];
@@ -51,7 +52,14 @@ export function DayExerciseList({
         </p>
       )}
 
-      {exercises.map((ex, index) => (
+      {exercises.map((ex, index) => {
+        const nextEx = exercises[index + 1];
+        const sharesSuperset =
+          ex.supersetGroupId &&
+          nextEx?.supersetGroupId &&
+          ex.supersetGroupId === nextEx.supersetGroupId;
+
+        return (
         <div key={`${ex.exerciseId}-${index}`}>
           {editingIndex === index ? (
             <ExerciseConfigForm
@@ -92,9 +100,14 @@ export function DayExerciseList({
               </Button>
             </div>
           )}
-          {index < exercises.length - 1 && <Separator className="mt-3" />}
+          {sharesSuperset ? (
+            <SupersetGroupIndicator label={`Superset ${ex.supersetGroupId}`} />
+          ) : (
+            index < exercises.length - 1 && <Separator className="mt-3" />
+          )}
         </div>
-      ))}
+        );
+      })}
 
       <Button
         type="button"
