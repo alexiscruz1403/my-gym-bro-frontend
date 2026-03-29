@@ -106,11 +106,13 @@ export function ExerciseConfigForm({
 
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1">
-          <label className="text-xs font-medium">Sets</label>
+          <label htmlFor="sets" className="text-xs font-medium">Sets</label>
           <Input
+            id="sets"
             type="number"
             inputMode="numeric"
             min={1}
+            className="min-h-11"
             {...register('sets', { valueAsNumber: true })}
           />
           {errors.sets && (
@@ -119,21 +121,25 @@ export function ExerciseConfigForm({
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-medium">
+          <label htmlFor="metric" className="text-xs font-medium">
             {metricMode === 'reps' ? 'Reps' : 'Duration (s)'}
           </label>
           {metricMode === 'reps' ? (
             <Input
+              id="metric"
               type="number"
               inputMode="numeric"
               min={1}
+              className="min-h-11"
               {...register('reps', { valueAsNumber: true })}
             />
           ) : (
             <Input
+              id="metric"
               type="number"
               inputMode="numeric"
               min={1}
+              className="min-h-11"
               {...register('duration', { valueAsNumber: true })}
             />
           )}
@@ -143,23 +149,27 @@ export function ExerciseConfigForm({
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-medium">Weight (kg)</label>
+          <label htmlFor="weight" className="text-xs font-medium">Weight (kg)</label>
           <Input
+            id="weight"
             type="number"
             inputMode="decimal"
             min={0}
             step={0.5}
+            className="min-h-11"
             {...register('weight', { valueAsNumber: true })}
             placeholder="0"
           />
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-medium">Rest (s)</label>
+          <label htmlFor="rest" className="text-xs font-medium">Rest (s)</label>
           <Input
+            id="rest"
             type="number"
             inputMode="numeric"
             min={0}
+            className="min-h-11"
             {...register('rest', { valueAsNumber: true })}
           />
           {errors.rest && (
@@ -169,8 +179,8 @@ export function ExerciseConfigForm({
       </div>
 
       <div className="space-y-1">
-        <label className="text-xs font-medium">Notes (optional)</label>
-        <Input {...register('notes')} placeholder="e.g. Focus on form" />
+        <label htmlFor="notes" className="text-xs font-medium">Notes (optional)</label>
+        <Input id="notes" {...register('notes')} placeholder="e.g. Focus on form" className="min-h-11" />
       </div>
 
       <SupersetGroupSelector value={supersetGroupId} onChange={setSupersetGroupId} />

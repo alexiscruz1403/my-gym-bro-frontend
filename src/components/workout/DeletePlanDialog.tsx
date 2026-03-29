@@ -25,7 +25,7 @@ export function DeletePlanDialog({ planName, onConfirm }: DeletePlanDialogProps)
 
   if (confirming) {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2">
+      <div className="flex flex-wrap items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2">
         <p className="text-destructive mr-1 text-xs">
           Delete &quot;{planName}&quot;?
         </p>
@@ -34,7 +34,7 @@ export function DeletePlanDialog({ planName, onConfirm }: DeletePlanDialogProps)
           variant="outline"
           onClick={() => setConfirming(false)}
           disabled={loading}
-          className="h-7 cursor-pointer px-2 text-xs"
+          className="min-h-11 cursor-pointer px-3 text-xs"
         >
           Cancel
         </Button>
@@ -43,7 +43,7 @@ export function DeletePlanDialog({ planName, onConfirm }: DeletePlanDialogProps)
           variant="destructive"
           onClick={handleConfirm}
           disabled={loading}
-          className="h-7 cursor-pointer px-2 text-xs"
+          className="min-h-11 cursor-pointer px-3 text-xs"
         >
           {loading ? 'Deleting…' : 'Confirm'}
         </Button>

@@ -71,10 +71,10 @@ export function WizardStep4Review({
       </div>
 
       <div className="flex gap-3">
-        <Button variant="outline" onClick={onBack} disabled={isSaving} className="flex-1">
+        <Button variant="outline" onClick={onBack} disabled={isSaving} className="flex-1 cursor-pointer">
           Back
         </Button>
-        <Button onClick={onSave} disabled={isSaving} className="flex-1">
+        <Button onClick={onSave} disabled={isSaving} className="flex-1 cursor-pointer">
           {isSaving ? 'Saving...' : 'Save plan'}
         </Button>
       </div>
