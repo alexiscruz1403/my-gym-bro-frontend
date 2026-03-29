@@ -23,7 +23,7 @@ export function ExerciseNavigator({ exercises, onLogSet, onModify }: ExerciseNav
   return (
     <div className="flex flex-1 flex-col">
       {/* Progress dots */}
-      <div className="flex items-center justify-center gap-1.5 px-4 py-3">
+      <div className="flex items-center justify-center gap-1 px-4 py-3">
         {exercises.map((ex, i) => {
           const done = ex.sets.filter((s) => s.completed).length === ex.plannedSets;
           return (
@@ -31,16 +31,20 @@ export function ExerciseNavigator({ exercises, onLogSet, onModify }: ExerciseNav
               key={ex.exerciseId}
               type="button"
               onClick={() => setActiveIndex(i)}
-              className={cn(
-                'flex h-2.5 w-2.5 cursor-pointer items-center justify-center rounded-full transition-all',
-                i === activeIndex
-                  ? 'bg-primary w-6'
-                  : done
-                    ? 'bg-green-500'
-                    : 'bg-muted',
-              )}
+              className="flex min-h-11 min-w-11 cursor-pointer items-center justify-center"
               aria-label={`Go to ${ex.exerciseName}`}
-            />
+            >
+              <span
+                className={cn(
+                  'block h-2.5 rounded-full transition-all',
+                  i === activeIndex
+                    ? 'bg-primary w-6'
+                    : done
+                      ? 'bg-green-500 w-2.5'
+                      : 'bg-muted w-2.5',
+                )}
+              />
+            </button>
           );
         })}
       </div>

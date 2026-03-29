@@ -16,7 +16,7 @@ export function LastPerformanceRow({ sets }: LastPerformanceRowProps) {
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
-        className="flex w-full cursor-pointer items-center justify-between text-sm"
+        className="flex min-h-11 w-full cursor-pointer items-center justify-between text-sm"
       >
         <span className="text-muted-foreground flex items-center gap-1.5 text-xs font-medium">
           <History className="h-3.5 w-3.5" />
