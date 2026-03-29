@@ -4,7 +4,7 @@ import { use } from 'react';
 import { useRouter } from 'next/navigation';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { PlanDetailView } from '@/components/workout/PlanDetailView';
-import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { usePlan } from '@/hooks/usePlan';
 import { ArrowLeft } from 'lucide-react';
@@ -31,8 +31,17 @@ export default function PlanDetailPage({ params }: PlanDetailPageProps) {
       </Button>
 
       {loading && (
-        <div className="flex justify-center py-12">
-          <LoadingSpinner />
+        <div className="space-y-4">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-5 w-24" />
+          <div className="flex gap-2">
+            <Skeleton className="h-8 w-24 rounded-lg" />
+            <Skeleton className="h-8 w-20 rounded-lg" />
+            <Skeleton className="h-8 w-20 rounded-lg" />
+          </div>
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton key={i} className="h-12 w-full rounded-xl" />
+          ))}
         </div>
       )}
       {error && (
