@@ -7,16 +7,19 @@ import {
   getActiveSession,
   logSet as logSetService,
   modifyExercise as modifyExerciseService,
+  replaceExercise as replaceExerciseService,
+  cancelSession as cancelSessionService,
   finishSession as finishSessionService,
 } from '@/services/sessions.service';
 import type { WorkoutSession, SessionSummary } from '@/types/domain.types';
-import type { LogSetRequest, ModifyExerciseRequest, FinishSessionRequest } from '@/types/api.types';
+import type { LogSetRequest, ModifyExerciseRequest, ReplaceExerciseRequest, FinishSessionRequest } from '@/types/api.types';
 
 export function useSession() {
   const router = useRouter();
   const {
     activeSessionId,
     activeSession,
+    _hasHydrated,
     setActiveSession,
     updateExerciseSets,
     updateExerciseConfig,
@@ -26,8 +29,12 @@ export function useSession() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // On mount: if we have a persisted sessionId, hydrate from the server
+  // Wait for Zustand to rehydrate from localStorage before deciding loading state.
+  // Without this, activeSessionId is null on the first render (before persist kicks in),
+  // causing loading to be set to false immediately — triggering the redirect to /dashboard.
   useEffect(() => {
+    if (!_hasHydrated) return;
+
     if (!activeSessionId) {
       setLoading(false);
       return;
@@ -58,7 +65,7 @@ export function useSession() {
 
     return () => { cancelled = true; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeSessionId]);
+  }, [_hasHydrated, activeSessionId]);
 
   const logSet = useCallback(
     async (dto: LogSetRequest) => {
@@ -104,6 +111,21 @@ export function useSession() {
     [activeSessionId, updateExerciseConfig],
   );
 
+  const replaceExercise = useCallback(
+    async (exerciseId: string, dto: ReplaceExerciseRequest) => {
+      if (!activeSessionId) return;
+      const updatedSession = await replaceExerciseService(activeSessionId, exerciseId, dto);
+      setActiveSession(updatedSession);
+    },
+    [activeSessionId, setActiveSession],
+  );
+
+  const cancelSession = useCallback(async () => {
+    await cancelSessionService();
+    clearSession();
+    router.replace('/dashboard');
+  }, [clearSession, router]);
+
   const finishSession = useCallback(
     async (dto: FinishSessionRequest): Promise<SessionSummary> => {
       if (!activeSessionId) throw new Error('No active session');
@@ -129,6 +151,8 @@ export function useSession() {
     error,
     logSet,
     modifyExercise,
+    replaceExercise,
+    cancelSession,
     finishSession,
     resumeOrRedirect,
   };

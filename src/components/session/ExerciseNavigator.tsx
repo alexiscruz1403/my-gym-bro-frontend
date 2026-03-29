@@ -6,15 +6,16 @@ import { Button } from '@/components/ui/button';
 import { ExerciseSessionCard } from './ExerciseSessionCard';
 import { cn } from '@/lib/utils';
 import type { SessionExercise } from '@/types/domain.types';
-import type { LogSetRequest, ModifyExerciseRequest } from '@/types/api.types';
+import type { LogSetRequest, ModifyExerciseRequest, ReplaceExerciseRequest } from '@/types/api.types';
 
 interface ExerciseNavigatorProps {
   exercises: SessionExercise[];
   onLogSet: (dto: LogSetRequest) => Promise<void>;
   onModify: (exerciseId: string, dto: ModifyExerciseRequest) => Promise<void>;
+  onReplace: (exerciseId: string, dto: ReplaceExerciseRequest) => Promise<void>;
 }
 
-export function ExerciseNavigator({ exercises, onLogSet, onModify }: ExerciseNavigatorProps) {
+export function ExerciseNavigator({ exercises, onLogSet, onModify, onReplace }: ExerciseNavigatorProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const current = exercises[activeIndex];
 
@@ -24,7 +25,7 @@ export function ExerciseNavigator({ exercises, onLogSet, onModify }: ExerciseNav
     <div className="flex flex-1 flex-col">
       {/* Progress dots */}
       <div className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="flex min-w-max items-center justify-start gap-1 px-4 py-3">
+        <div className="flex min-w-full items-center justify-center gap-1 px-4 py-3">
           {exercises.map((ex, i) => {
             const done = ex.sets.filter((s) => s.completed).length === ex.plannedSets;
             return (
@@ -37,7 +38,7 @@ export function ExerciseNavigator({ exercises, onLogSet, onModify }: ExerciseNav
               >
                 <span
                   className={cn(
-                    'block h-2.5 rounded-full transition-all',
+                    'block h-3 rounded-full transition-all',
                     i === activeIndex
                       ? 'bg-primary w-6'
                       : done
@@ -57,6 +58,7 @@ export function ExerciseNavigator({ exercises, onLogSet, onModify }: ExerciseNav
           exercise={current}
           onLogSet={onLogSet}
           onModify={onModify}
+          onReplace={onReplace}
         />
       </div>
 

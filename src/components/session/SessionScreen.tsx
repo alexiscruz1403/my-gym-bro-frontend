@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { SessionHeader } from './SessionHeader';
 import { ExerciseNavigator } from './ExerciseNavigator';
 import { ConfirmFinishDialog } from './ConfirmFinishDialog';
+import { ConfirmCancelDialog } from './ConfirmCancelDialog';
 import { SessionSummary } from './SessionSummary';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSession } from '@/hooks/useSession';
@@ -13,8 +14,9 @@ import type { SessionSummary as SessionSummaryType } from '@/types/domain.types'
 
 export function SessionScreen() {
   const router = useRouter();
-  const { session, loading, logSet, modifyExercise, finishSession } = useSession();
+  const { session, loading, logSet, modifyExercise, replaceExercise, cancelSession, finishSession } = useSession();
   const [finishOpen, setFinishOpen] = useState(false);
+  const [cancelOpen, setCancelOpen] = useState(false);
   const [summary, setSummary] = useState<SessionSummaryType | null>(null);
 
   if (summary) {
@@ -58,12 +60,13 @@ export function SessionScreen() {
 
   return (
     <div className="flex h-full flex-col">
-      <SessionHeader onFinish={() => setFinishOpen(true)} />
+      <SessionHeader onFinish={() => setFinishOpen(true)} onCancel={() => setCancelOpen(true)} />
 
       <ExerciseNavigator
         exercises={session.exercises}
         onLogSet={logSet}
         onModify={modifyExercise}
+        onReplace={replaceExercise}
       />
 
       <ConfirmFinishDialog
@@ -71,6 +74,12 @@ export function SessionScreen() {
         onOpenChange={setFinishOpen}
         isFullyCompleted={isFullyCompleted}
         onConfirm={handleConfirmFinish}
+      />
+
+      <ConfirmCancelDialog
+        open={cancelOpen}
+        onOpenChange={setCancelOpen}
+        onConfirm={cancelSession}
       />
     </div>
   );

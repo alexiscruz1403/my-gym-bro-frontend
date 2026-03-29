@@ -14,10 +14,12 @@ import { getActiveSession } from '@/services/sessions.service';
 export function SessionGuard() {
   const router = useRouter();
   const pathname = usePathname();
-  const { activeSessionId, activeSession, setActiveSession, clearSession } = useSessionStore();
+  const { activeSessionId, activeSession, _hasHydrated, setActiveSession, clearSession } = useSessionStore();
   const checkedRef = useRef(false);
 
   useEffect(() => {
+    // Wait for Zustand to finish reading localStorage before checking for an active session
+    if (!_hasHydrated) return;
     // Run only once per mount and only if there is a persisted session to check
     if (checkedRef.current || !activeSessionId || activeSession) return;
     checkedRef.current = true;
@@ -37,7 +39,7 @@ export function SessionGuard() {
         // Network error — leave the store as-is, user can retry manually
       }
     })();
-  }, [activeSessionId, activeSession, pathname, router, setActiveSession, clearSession]);
+  }, [_hasHydrated, activeSessionId, activeSession, pathname, router, setActiveSession, clearSession]);
 
   return null;
 }

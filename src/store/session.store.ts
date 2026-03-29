@@ -11,6 +11,7 @@ interface SessionState {
   sessionStartTime: number | null;
   activeSession: WorkoutSession | null;
   restTimer: RestTimerState | null;
+  _hasHydrated: boolean;
 }
 
 interface SessionActions {
@@ -21,6 +22,7 @@ interface SessionActions {
   updateExerciseConfig: (exerciseId: string, config: Partial<SessionExercise>) => void;
   setRestTimer: (state: RestTimerState | null) => void;
   clearSession: () => void;
+  setHasHydrated: (value: boolean) => void;
 }
 
 const useSessionStore = create<SessionState & SessionActions>()(
@@ -30,6 +32,7 @@ const useSessionStore = create<SessionState & SessionActions>()(
       sessionStartTime: null,
       activeSession: null,
       restTimer: null,
+      _hasHydrated: false,
 
       startSession: (sessionId) =>
         set({ activeSessionId: sessionId, sessionStartTime: Date.now() }),
@@ -75,6 +78,8 @@ const useSessionStore = create<SessionState & SessionActions>()(
           activeSession: null,
           restTimer: null,
         }),
+
+      setHasHydrated: (value) => set({ _hasHydrated: value }),
     }),
     {
       name: 'gym-planner-session',
@@ -84,6 +89,9 @@ const useSessionStore = create<SessionState & SessionActions>()(
         activeSessionId: state.activeSessionId,
         sessionStartTime: state.sessionStartTime,
       }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     },
   ),
 );
