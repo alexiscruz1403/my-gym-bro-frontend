@@ -1,0 +1,93 @@
+'use client';
+
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+} from 'recharts';
+import { Skeleton } from '@/components/ui/skeleton';
+import { formatBreakdownLabel } from '@/lib/stats-dates';
+import type { VolumeByPeriodResponse, StatsPeriod } from '@/types/domain.types';
+
+interface VolumeChartProps {
+  data: VolumeByPeriodResponse;
+  period: StatsPeriod;
+  loading: boolean;
+}
+
+export function VolumeChart({ data, period, loading }: VolumeChartProps) {
+  if (loading) {
+    return <Skeleton className="h-48 w-full rounded-xl" />;
+  }
+
+  const chartData = data.breakdown.map((item) => ({
+    label: formatBreakdownLabel(period, item.label),
+    volume: item.volume,
+    sets: item.sets,
+  }));
+
+  return (
+    <div className="space-y-3">
+      <div className="flex gap-6 text-sm">
+        <div>
+          <p className="text-muted-foreground text-xs">Volumen total</p>
+          <p className="font-display font-bold">
+            {data.totalVolume.toLocaleString('es')}
+            <span className="text-muted-foreground ml-1 text-xs font-normal">kg</span>
+          </p>
+        </div>
+        <div>
+          <p className="text-muted-foreground text-xs">Series</p>
+          <p className="font-display font-bold">{data.totalSets}</p>
+        </div>
+        <div>
+          <p className="text-muted-foreground text-xs">Sesiones</p>
+          <p className="font-display font-bold">{data.totalSessions}</p>
+        </div>
+      </div>
+
+      {chartData.length === 0 ? (
+        <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
+          Sin datos para este período
+        </div>
+      ) : (
+        <ResponsiveContainer width="100%" height={192}>
+          <BarChart data={chartData} margin={{ top: 4, right: 4, left: -16, bottom: 0 }}>
+            <XAxis
+              dataKey="label"
+              tick={{ fontSize: 11 }}
+              tickLine={false}
+              axisLine={false}
+            />
+            <YAxis
+              tick={{ fontSize: 11 }}
+              tickLine={false}
+              axisLine={false}
+              width={48}
+            />
+            <Tooltip
+              formatter={(value) => [`${value} kg`, 'Volumen']}
+              cursor={{ fill: 'hsl(var(--muted))' }}
+              contentStyle={{
+                fontSize: 12,
+                borderRadius: 8,
+                border: '1px solid hsl(var(--border))',
+                background: 'hsl(var(--popover))',
+                color: 'hsl(var(--popover-foreground))',
+              }}
+            />
+            <Bar dataKey="volume" radius={[4, 4, 0, 0]} maxBarSize={40}>
+              {chartData.map((_, index) => (
+                <Cell key={index} fill="hsl(var(--primary))" />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      )}
+    </div>
+  );
+}
