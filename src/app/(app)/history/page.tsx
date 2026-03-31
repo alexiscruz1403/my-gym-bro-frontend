@@ -5,10 +5,12 @@ import Link from 'next/link';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { HistoryTabSwitcher } from '@/components/shared/HistoryTabSwitcher';
 import { SessionHistoryList } from '@/components/history/SessionHistoryList';
+import { StatsPanel } from '@/components/stats/StatsPanel';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSessionHistory } from '@/hooks/useSessionHistory';
+import { useStats } from '@/hooks/useStats';
 import type { HistoryTab } from '@/components/shared/HistoryTabSwitcher';
 
 function SessionHistorySkeletons() {
@@ -24,6 +26,11 @@ function SessionHistorySkeletons() {
 export default function HistoryPage() {
   const [activeTab, setActiveTab] = useState<HistoryTab>('history');
   const { data, meta, loading, error, page, setPage, refetch } = useSessionHistory();
+  const {
+    period, date, setPeriod, setDate,
+    volumeData, muscleData,
+    loading: statsLoading, error: statsError,
+  } = useStats();
 
   return (
     <PageContainer>
@@ -70,9 +77,17 @@ export default function HistoryPage() {
         )}
 
         {activeTab === 'stats' && (
-          <div className="py-8 text-center text-sm text-muted-foreground">
-            Estadísticas disponibles en Phase 4.
-          </div>
+          <StatsPanel
+            period={period}
+            date={date}
+            volumeData={volumeData}
+            muscleData={muscleData}
+            loading={statsLoading}
+            error={statsError}
+            onPeriodChange={setPeriod}
+            onDateChange={setDate}
+            onRetry={() => { setPeriod(period); }}
+          />
         )}
       </div>
     </PageContainer>
