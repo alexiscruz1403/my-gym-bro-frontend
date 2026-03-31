@@ -56,7 +56,7 @@ export function VolumeChart({ data, period, loading }: VolumeChartProps) {
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={192}>
-          <BarChart data={chartData} margin={{ top: 4, right: 4, left: -16, bottom: 0 }}>
+          <BarChart data={chartData} margin={{ top: 4, right: 4, left: 8, bottom: 0 }}>
             <XAxis
               dataKey="label"
               tick={{ fontSize: 11 }}
@@ -67,11 +67,11 @@ export function VolumeChart({ data, period, loading }: VolumeChartProps) {
               tick={{ fontSize: 11 }}
               tickLine={false}
               axisLine={false}
-              width={48}
+              width={40}
             />
             <Tooltip
               formatter={(value) => [`${value} kg`, 'Volumen']}
-              cursor={{ fill: 'hsl(var(--muted))' }}
+              cursor={{ fill: 'rgba(255,255,255,0.08)' }}
               contentStyle={{
                 fontSize: 12,
                 borderRadius: 8,
