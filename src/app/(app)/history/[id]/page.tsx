@@ -37,7 +37,7 @@ export default function SessionDetailPage({ params }: SessionDetailPageProps) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="text-muted-foreground hover:text-foreground flex items-center gap-1 text-sm transition-colors"
+          className="text-muted-foreground hover:text-foreground flex min-h-11 items-center gap-1 text-sm transition-colors"
         >
           <ChevronLeft className="h-4 w-4" />
           Volver

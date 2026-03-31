@@ -21,7 +21,7 @@ export function HistoryTabSwitcher({ activeTab, onChange }: HistoryTabSwitcherPr
           type="button"
           onClick={() => onChange(tab.value)}
           className={cn(
-            'flex-1 rounded-md py-1.5 text-sm font-medium transition-colors',
+            'flex-1 rounded-md py-1.5 text-sm font-medium transition-colors min-h-11',
             activeTab === tab.value
               ? 'bg-background text-foreground shadow-sm'
               : 'text-muted-foreground hover:text-foreground',
