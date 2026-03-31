@@ -28,5 +28,11 @@ export const API_ROUTES = {
     logSet: (id: string) => `/sessions/${id}/sets`,
     replaceExercise: (id: string, exerciseId: string) => `/sessions/${id}/exercises/${exerciseId}`,
     finish: (id: string) => `/sessions/${id}/finish`,
+    history: '/sessions',
+  },
+  stats: {
+    exerciseHistory: (exerciseId: string) => `/stats/exercises/${exerciseId}/history`,
+    volume: '/stats/volume',
+    muscles: '/stats/muscles',
   },
 } as const;

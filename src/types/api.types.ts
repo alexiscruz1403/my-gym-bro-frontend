@@ -4,6 +4,7 @@ import type {
   LoadType,
   MuscleGroup,
   SessionSet,
+  StatsPeriod,
   UserResponse,
 } from '@/types/domain.types';
 
@@ -118,4 +119,26 @@ export interface ReplaceExerciseRequest {
 
 export interface FinishSessionRequest {
   status: 'completed' | 'partial';
+}
+
+// History & Stats params
+
+export interface SessionHistoryParams {
+  page?: number;
+  limit?: number;
+}
+
+export interface ExerciseHistoryParams {
+  page?: number;
+  limit?: number;
+}
+
+export interface StatsVolumeParams {
+  period: StatsPeriod;
+  date: string;
+}
+
+export interface StatsMuscleParams {
+  period: StatsPeriod;
+  date: string;
 }

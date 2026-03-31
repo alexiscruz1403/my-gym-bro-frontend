@@ -136,3 +136,99 @@ export interface SessionSummary {
   exercisesCompleted: number;
   totalSetsLogged: number;
 }
+
+// Session history
+
+export interface SessionHistoryExercise {
+  exerciseName: string;
+  plannedSets: number;
+  completedSets: number;
+}
+
+export interface SessionHistoryItem {
+  _id: string;
+  planName: string;
+  dayOfWeek: DayOfWeek;
+  status: SessionStatus;
+  startedAt: string;
+  finishedAt: string;
+  durationSeconds: number;
+  totalSetsLogged: number;
+  exercises: SessionHistoryExercise[];
+}
+
+export interface PaginatedMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface SessionHistoryResponse {
+  data: SessionHistoryItem[];
+  meta: PaginatedMeta;
+}
+
+// Stats — volume by period
+
+export type StatsPeriod = 'week' | 'month' | 'year';
+
+export interface VolumeBreakdownItem {
+  label: string;
+  volume: number;
+  sets: number;
+  sessions?: number;
+}
+
+export interface VolumeByPeriodResponse {
+  period: StatsPeriod;
+  date: string;
+  from: string;
+  to: string;
+  totalVolume: number;
+  totalSets: number;
+  totalSessions: number;
+  breakdown: VolumeBreakdownItem[];
+}
+
+// Stats — volume by muscle
+
+export interface MuscleVolumeItem {
+  rank: number;
+  muscle: MuscleGroup;
+  volume: number;
+  sets: number;
+}
+
+export interface VolumeByMuscleResponse {
+  period: StatsPeriod;
+  date: string;
+  from: string;
+  to: string;
+  ranking: MuscleVolumeItem[];
+}
+
+// Exercise history
+
+export interface ExerciseHistorySet {
+  setIndex: number;
+  reps?: number;
+  weight?: number;
+  duration?: number;
+  completed: boolean;
+  loggedAt: string;
+}
+
+export interface ExerciseHistorySession {
+  sessionId: string;
+  sessionDate: string;
+  dayOfWeek: DayOfWeek;
+  sets: ExerciseHistorySet[];
+}
+
+export interface ExerciseHistoryResponse {
+  exerciseId: string;
+  exerciseName: string;
+  data: ExerciseHistorySession[];
+  meta: PaginatedMeta;
+}
