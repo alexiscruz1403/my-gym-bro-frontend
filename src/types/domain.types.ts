@@ -208,6 +208,47 @@ export interface VolumeByMuscleResponse {
   ranking: MuscleVolumeItem[];
 }
 
+// Social
+
+export interface PublicUserProfile {
+  _id: string;
+  username: string;
+  avatar: string | null;
+  followersCount: number;
+  followingCount: number;
+  isFollowing: boolean;
+}
+
+export interface PublicUserSummary {
+  _id: string;
+  username: string;
+  avatar: string | null;
+  isFollowing: boolean;
+}
+
+export interface FeedPost {
+  _id: string;
+  author: {
+    _id: string;
+    username: string;
+    avatar: string | null;
+  };
+  sessionId: string;
+  photoUrl: string | null;
+  caption: string | null;
+  reactionsCount: number;
+  commentsCount: number;
+  userReacted: boolean;
+  createdAt: string;
+}
+
+export interface FeedComment {
+  userId: string;
+  username: string;
+  text: string;
+  createdAt: string;
+}
+
 // Exercise history
 
 export interface ExerciseHistorySet {

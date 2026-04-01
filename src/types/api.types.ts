@@ -1,8 +1,12 @@
 import type {
   DayOfWeek,
   Exercise,
+  FeedComment,
+  FeedPost,
   LoadType,
   MuscleGroup,
+  PublicUserProfile,
+  PublicUserSummary,
   SessionSet,
   StatsPeriod,
   UserResponse,
@@ -141,4 +145,68 @@ export interface StatsVolumeParams {
 export interface StatsMuscleParams {
   period: StatsPeriod;
   date: string;
+}
+
+// Social & Feed
+
+export interface PaginationParams {
+  page?: number;
+  limit?: number;
+}
+
+export type FeedFilter = 'all' | 'mine';
+
+export interface FeedQueryParams extends PaginationParams {
+  // TODO: backend to implement — send as ?filter=mine to return only the requesting user's posts
+  filter?: FeedFilter;
+}
+
+export interface PaginatedUserSearchResponse {
+  data: PublicUserProfile[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface PaginatedFollowListResponse {
+  data: PublicUserSummary[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface PaginatedFeedResponse {
+  data: FeedPost[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface PaginatedCommentsResponse {
+  data: FeedComment[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface ReactionCountResponse {
+  reactionsCount: number;
+}
+
+export interface CreatePostPayload {
+  sessionId: string;
+  caption?: string;
+  file?: File;
 }
