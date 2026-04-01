@@ -130,10 +130,9 @@ export function useSession() {
     async (dto: FinishSessionRequest): Promise<SessionSummary> => {
       if (!activeSessionId) throw new Error('No active session');
       const summary = await finishSessionService(activeSessionId, dto);
-      clearSession();
       return summary;
     },
-    [activeSessionId, clearSession],
+    [activeSessionId],
   );
 
   const resumeOrRedirect = useCallback(
