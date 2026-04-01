@@ -18,7 +18,7 @@ export function FollowButton({ userId, initialIsFollowing, size = 'default' }: F
       size={size}
       disabled={isLoading}
       onClick={toggle}
-      className="min-h-[44px] min-w-[88px]"
+      className="min-h-11 min-w-22"
     >
       {isFollowing ? 'Following' : 'Follow'}
     </Button>
