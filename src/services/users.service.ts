@@ -1,7 +1,7 @@
 import { apiClient } from '@/lib/axios';
 import { API_ROUTES } from '@/lib/api-routes';
 import type { UpdateProfileRequest } from '@/types/api.types';
-import type { UserResponse } from '@/types/domain.types';
+import type { PublicUserProfile, UserResponse } from '@/types/domain.types';
 
 export const usersService = {
   getMe: (): Promise<UserResponse> =>
@@ -22,4 +22,7 @@ export const usersService = {
       })
       .then((r) => r.data);
   },
+
+  getPublicProfile: (id: string): Promise<PublicUserProfile> =>
+    apiClient.get<PublicUserProfile>(API_ROUTES.users.publicProfile(id)).then((r) => r.data),
 };
