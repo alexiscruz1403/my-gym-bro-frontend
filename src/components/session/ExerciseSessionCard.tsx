@@ -109,7 +109,7 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace }:
             variant="ghost"
             size="icon"
             onClick={() => setReplaceOpen(true)}
-            className="h-9 w-9 shrink-0 cursor-pointer"
+            className="h-11 w-11 shrink-0 cursor-pointer"
             aria-label="Replace exercise"
           >
             <ArrowLeftRight className="h-4 w-4" />
@@ -143,7 +143,7 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace }:
             size="icon"
             onClick={handleRemoveSet}
             disabled={exercise.plannedSets <= 1}
-            className="h-9 w-9 cursor-pointer"
+            className="h-11 w-11 cursor-pointer"
             aria-label="Remove set"
           >
             <Minus className="h-4 w-4" />
@@ -156,7 +156,7 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace }:
             variant="ghost"
             size="icon"
             onClick={handleAddSet}
-            className="h-9 w-9 cursor-pointer"
+            className="h-11 w-11 cursor-pointer"
             aria-label="Add set"
           >
             <Plus className="h-4 w-4" />

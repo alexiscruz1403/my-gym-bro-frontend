@@ -30,7 +30,7 @@ export function RestTimer({ exerciseId }: RestTimerProps) {
           size="icon"
           variant="ghost"
           onClick={stop}
-          className="h-8 w-8 cursor-pointer"
+          className="h-11 w-11 cursor-pointer"
           aria-label="Skip rest"
         >
           <X className="h-4 w-4" />

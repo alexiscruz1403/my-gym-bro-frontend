@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { ExerciseDetail } from '@/components/exercises/ExerciseDetail';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { ErrorMessage } from '@/components/shared/ErrorMessage';
 import { Button } from '@/components/ui/button';
 import { useExercise } from '@/hooks/useExercise';
 import { ArrowLeft } from 'lucide-react';
@@ -24,7 +25,7 @@ export default function ExerciseDetailPage({ params }: ExerciseDetailPageProps) 
         variant="ghost"
         size="icon"
         onClick={() => router.back()}
-        className="mb-2 -ml-2"
+        className="mb-2 -ml-2 min-h-11 min-w-11"
         aria-label="Go back"
       >
         <ArrowLeft className="h-5 w-5" />
@@ -35,9 +36,7 @@ export default function ExerciseDetailPage({ params }: ExerciseDetailPageProps) 
           <LoadingSpinner />
         </div>
       )}
-      {error && (
-        <p className="text-destructive py-8 text-center text-sm">{error}</p>
-      )}
+      {error && <ErrorMessage message={error} />}
       {!loading && !error && data && <ExerciseDetail exercise={data} />}
     </PageContainer>
   );

@@ -6,6 +6,7 @@ import { PageContainer } from '@/components/layout/PageContainer';
 import { PlanDetailView } from '@/components/workout/PlanDetailView';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import { ErrorMessage } from '@/components/shared/ErrorMessage';
 import { usePlan } from '@/hooks/usePlan';
 import { ArrowLeft } from 'lucide-react';
 
@@ -24,7 +25,7 @@ export default function PlanDetailPage({ params }: PlanDetailPageProps) {
         variant="ghost"
         size="icon"
         onClick={() => router.push('/workout')}
-        className="mb-2 -ml-2 cursor-pointer"
+        className="mb-2 -ml-2 min-h-11 min-w-11 cursor-pointer"
         aria-label="Back to plans"
       >
         <ArrowLeft className="h-5 w-5" />
@@ -44,9 +45,7 @@ export default function PlanDetailPage({ params }: PlanDetailPageProps) {
           ))}
         </div>
       )}
-      {error && (
-        <p className="text-destructive py-8 text-center text-sm">{error}</p>
-      )}
+      {error && <ErrorMessage message={error} onRetry={refetch} />}
       {!loading && !error && data && (
         <PlanDetailView plan={data} onUpdate={refetch} />
       )}
