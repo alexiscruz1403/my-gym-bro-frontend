@@ -154,6 +154,13 @@ export interface PaginationParams {
   limit?: number;
 }
 
+export type FeedFilter = 'all' | 'mine';
+
+export interface FeedQueryParams extends PaginationParams {
+  // TODO: backend to implement — send as ?filter=mine to return only the requesting user's posts
+  filter?: FeedFilter;
+}
+
 export interface PaginatedUserSearchResponse {
   data: PublicUserProfile[];
   meta: {

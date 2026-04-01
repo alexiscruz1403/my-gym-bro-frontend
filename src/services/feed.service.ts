@@ -1,15 +1,16 @@
 import { apiClient } from '@/lib/axios';
 import { API_ROUTES } from '@/lib/api-routes';
 import type {
-  PaginationParams,
+  FeedQueryParams,
   PaginatedFeedResponse,
   PaginatedCommentsResponse,
+  PaginationParams,
   ReactionCountResponse,
   CreatePostPayload,
 } from '@/types/api.types';
 import type { FeedPost, FeedComment } from '@/types/domain.types';
 
-export async function getFeed(params?: PaginationParams): Promise<PaginatedFeedResponse> {
+export async function getFeed(params?: FeedQueryParams): Promise<PaginatedFeedResponse> {
   const { data } = await apiClient.get<PaginatedFeedResponse>(API_ROUTES.feed.list, { params });
   return data;
 }

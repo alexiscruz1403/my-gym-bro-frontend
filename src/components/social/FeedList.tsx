@@ -28,11 +28,20 @@ interface FeedListProps {
   meta: FeedListMeta | null;
   page: number;
   isLoading: boolean;
+  currentUserId: string | null;
   onPageChange: (n: number) => void;
   onCommentOpen: (postId: string, onAdded: () => void) => void;
 }
 
-export function FeedList({ posts, meta, page, isLoading, onPageChange, onCommentOpen }: FeedListProps) {
+export function FeedList({
+  posts,
+  meta,
+  page,
+  isLoading,
+  currentUserId,
+  onPageChange,
+  onCommentOpen,
+}: FeedListProps) {
   if (isLoading) return <FeedSkeletons />;
 
   if (posts.length === 0) {
@@ -47,7 +56,12 @@ export function FeedList({ posts, meta, page, isLoading, onPageChange, onComment
   return (
     <div className="space-y-4">
       {posts.map((post) => (
-        <FeedPostCard key={post._id} post={post} onCommentOpen={onCommentOpen} />
+        <FeedPostCard
+          key={post._id}
+          post={post}
+          isOwnPost={currentUserId !== null && post.author._id === currentUserId}
+          onCommentOpen={onCommentOpen}
+        />
       ))}
 
       {meta && (

@@ -8,12 +8,16 @@ import { FeedList } from '@/components/social/FeedList';
 import { CommentsSheet } from '@/components/social/CommentsSheet';
 import { UserSearchSheet } from '@/components/social/UserSearchSheet';
 import { useFeed } from '@/hooks/useFeed';
+import useAuthStore from '@/store/auth.store';
+import type { FeedFilter } from '@/types/api.types';
 
 export default function FeedPage() {
-  const { posts, meta, page, isLoading, goToPage } = useFeed();
+  const [filter, setFilter] = useState<FeedFilter>('all');
+  const { posts, meta, page, isLoading, goToPage } = useFeed(filter);
   const [activePostId, setActivePostId] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const onCommentAddedRef = useRef<(() => void) | null>(null);
+  const currentUser = useAuthStore((s) => s.user);
 
   function handleCommentOpen(postId: string, onAdded: () => void) {
     onCommentAddedRef.current = onAdded;
@@ -39,11 +43,29 @@ export default function FeedPage() {
         </Button>
       </div>
 
+      <div className="flex gap-2 mb-4">
+        <Button
+          variant={filter === 'all' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setFilter('all')}
+        >
+          All
+        </Button>
+        <Button
+          variant={filter === 'mine' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setFilter('mine')}
+        >
+          My posts
+        </Button>
+      </div>
+
       <FeedList
         posts={posts}
         meta={meta}
         page={page}
         isLoading={isLoading}
+        currentUserId={currentUser?.id ?? null}
         onPageChange={goToPage}
         onCommentOpen={handleCommentOpen}
       />
