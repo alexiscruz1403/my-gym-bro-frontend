@@ -46,7 +46,7 @@ export default function HistoryPage() {
                 title="Error al cargar el historial"
                 description="No se pudieron obtener las sesiones. Intenta de nuevo."
                 action={
-                  <Button variant="outline" size="sm" onClick={refetch}>
+                  <Button variant="outline" size="sm" className="min-h-11" onClick={refetch}>
                     Reintentar
                   </Button>
                 }
@@ -58,7 +58,7 @@ export default function HistoryPage() {
                 title="Sin entrenamientos registrados"
                 description="Aún no has completado ninguna sesión."
                 action={
-                  <Button size="sm" render={<Link href="/dashboard" />}>
+                  <Button size="sm" className="min-h-11" render={<Link href="/dashboard" />}>
                     Ir al inicio
                   </Button>
                 }

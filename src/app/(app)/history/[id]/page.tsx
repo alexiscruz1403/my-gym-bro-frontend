@@ -50,7 +50,7 @@ export default function SessionDetailPage({ params }: SessionDetailPageProps) {
             title="Error al cargar la sesión"
             description="No se pudo obtener el detalle. Intenta de nuevo."
             action={
-              <Button variant="outline" size="sm" onClick={refetch}>
+              <Button variant="outline" size="sm" className="min-h-11" onClick={refetch}>
                 Reintentar
               </Button>
             }

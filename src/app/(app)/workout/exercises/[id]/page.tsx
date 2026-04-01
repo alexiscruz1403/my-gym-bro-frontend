@@ -25,7 +25,7 @@ export default function ExerciseDetailPage({ params }: ExerciseDetailPageProps) 
         variant="ghost"
         size="icon"
         onClick={() => router.back()}
-        className="mb-2 -ml-2"
+        className="mb-2 -ml-2 min-h-11 min-w-11"
         aria-label="Go back"
       >
         <ArrowLeft className="h-5 w-5" />

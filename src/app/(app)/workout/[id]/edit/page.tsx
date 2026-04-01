@@ -61,7 +61,7 @@ export default function EditPlanPage({ params }: EditPlanPageProps) {
         variant="ghost"
         size="icon"
         onClick={() => router.push(`/workout/${id}`)}
-        className="mb-2 -ml-2 cursor-pointer"
+        className="mb-2 -ml-2 min-h-11 min-w-11 cursor-pointer"
         aria-label="Back to plan"
       >
         <ArrowLeft className="h-5 w-5" />

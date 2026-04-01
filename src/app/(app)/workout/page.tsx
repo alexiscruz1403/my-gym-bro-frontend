@@ -21,12 +21,12 @@ export default function WorkoutPage() {
       <div className="mb-4 flex items-center justify-between">
         <h1 className="font-display text-2xl font-bold">My Plans</h1>
         {atLimit ? (
-          <Button disabled size="sm" title="Maximum 3 plans reached" className="flex items-center gap-1">
+          <Button disabled size="sm" title="Maximum 3 plans reached" className="flex min-h-11 items-center gap-1">
             <Plus className="h-4 w-4" />
             New Plan
           </Button>
         ) : (
-          <Button size="sm" render={<Link href="/workout/new" />} className="flex items-center gap-1">
+          <Button size="sm" render={<Link href="/workout/new" />} className="flex min-h-11 items-center gap-1">
             <Plus className="h-4 w-4" />
             New Plan
           </Button>
@@ -35,7 +35,7 @@ export default function WorkoutPage() {
 
       <Link
         href="/workout/exercises"
-        className="text-muted-foreground hover:text-foreground mb-4 flex items-center gap-1.5 text-sm"
+        className="text-muted-foreground hover:text-foreground mb-4 flex min-h-11 items-center gap-1.5 text-sm"
       >
         <Dumbbell className="h-4 w-4" />
         Browse exercise catalog

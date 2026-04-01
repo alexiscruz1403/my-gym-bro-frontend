@@ -25,7 +25,7 @@ export default function PlanDetailPage({ params }: PlanDetailPageProps) {
         variant="ghost"
         size="icon"
         onClick={() => router.push('/workout')}
-        className="mb-2 -ml-2 cursor-pointer"
+        className="mb-2 -ml-2 min-h-11 min-w-11 cursor-pointer"
         aria-label="Back to plans"
       >
         <ArrowLeft className="h-5 w-5" />
