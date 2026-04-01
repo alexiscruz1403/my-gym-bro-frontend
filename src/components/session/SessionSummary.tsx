@@ -54,7 +54,7 @@ export function SessionSummary({ summary }: SessionSummaryProps) {
         </div>
 
         <div className="flex w-full max-w-xs flex-col gap-2">
-          {summary.status === 'completed' && (
+          {(summary.status === 'completed' || summary.status === 'partial') && (
             <Button
               variant="outline"
               className="w-full cursor-pointer"
@@ -73,7 +73,7 @@ export function SessionSummary({ summary }: SessionSummaryProps) {
         </div>
       </div>
 
-      {summary.status === 'completed' && (
+      {(summary.status === 'completed' || summary.status === 'partial') && (
         <CreateFeedPostSheet
           sessionId={summary._id}
           open={shareOpen}
