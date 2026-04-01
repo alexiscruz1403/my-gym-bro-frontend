@@ -24,12 +24,13 @@ function CommentsSkeletons() {
 interface CommentsSheetProps {
   postId: string | null;
   onClose: () => void;
+  onCommentAdded?: () => void;
 }
 
-export function CommentsSheet({ postId, onClose }: CommentsSheetProps) {
+export function CommentsSheet({ postId, onClose, onCommentAdded }: CommentsSheetProps) {
   const open = postId !== null;
   const { comments, meta, page, isLoading, isSubmitting, fetchPage, goToPage, submitComment } =
-    useComments(postId ?? '');
+    useComments(postId ?? '', onCommentAdded);
 
   const [text, setText] = useState('');
 

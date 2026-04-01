@@ -7,12 +7,13 @@ import { formatDistanceToNow } from 'date-fns';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 import { usePostInteraction } from '@/hooks/usePostInteraction';
 import type { FeedPost } from '@/types/domain.types';
 
 interface FeedPostCardProps {
   post: FeedPost;
-  onCommentOpen: (postId: string) => void;
+  onCommentOpen: (postId: string, onAdded: () => void) => void;
 }
 
 export function FeedPostCard({ post, onCommentOpen }: FeedPostCardProps) {
@@ -21,6 +22,8 @@ export function FeedPostCard({ post, onCommentOpen }: FeedPostCardProps) {
     post.userReacted,
     post.reactionsCount,
   );
+
+  const [commentsCount, setCommentsCount] = useState(post.commentsCount);
 
   const initials = post.author.username.slice(0, 2).toUpperCase();
   const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true });
@@ -85,12 +88,12 @@ export function FeedPostCard({ post, onCommentOpen }: FeedPostCardProps) {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => onCommentOpen(post._id)}
+          onClick={() => onCommentOpen(post._id, () => setCommentsCount((n) => n + 1))}
           className="flex items-center gap-1.5 min-h-11"
           aria-label="View comments"
         >
           <MessageCircle />
-          <span className="text-sm">{post.commentsCount}</span>
+          <span className="text-sm">{commentsCount}</span>
         </Button>
       </CardFooter>
     </Card>

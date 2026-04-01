@@ -12,7 +12,7 @@ interface CommentsMeta {
   totalPages: number;
 }
 
-export function useComments(postId: string) {
+export function useComments(postId: string, onCommentAdded?: () => void) {
   const [comments, setComments] = useState<FeedComment[]>([]);
   const [meta, setMeta] = useState<CommentsMeta | null>(null);
   const [page, setPage] = useState(1);
@@ -49,6 +49,7 @@ export function useComments(postId: string) {
       if (meta) {
         setMeta({ ...meta, total: meta.total + 1 });
       }
+      onCommentAdded?.();
     } catch {
       toast.error('Failed to post comment.');
     } finally {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { UserRoundSearch } from 'lucide-react';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,17 @@ export default function FeedPage() {
   const { posts, meta, page, isLoading, goToPage } = useFeed();
   const [activePostId, setActivePostId] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
+  const onCommentAddedRef = useRef<(() => void) | null>(null);
+
+  function handleCommentOpen(postId: string, onAdded: () => void) {
+    onCommentAddedRef.current = onAdded;
+    setActivePostId(postId);
+  }
+
+  function handleCommentsClose() {
+    onCommentAddedRef.current = null;
+    setActivePostId(null);
+  }
 
   return (
     <PageContainer>
@@ -34,12 +45,13 @@ export default function FeedPage() {
         page={page}
         isLoading={isLoading}
         onPageChange={goToPage}
-        onCommentOpen={setActivePostId}
+        onCommentOpen={handleCommentOpen}
       />
 
       <CommentsSheet
         postId={activePostId}
-        onClose={() => setActivePostId(null)}
+        onClose={handleCommentsClose}
+        onCommentAdded={() => onCommentAddedRef.current?.()}
       />
 
       <UserSearchSheet

@@ -29,7 +29,7 @@ interface FeedListProps {
   page: number;
   isLoading: boolean;
   onPageChange: (n: number) => void;
-  onCommentOpen: (postId: string) => void;
+  onCommentOpen: (postId: string, onAdded: () => void) => void;
 }
 
 export function FeedList({ posts, meta, page, isLoading, onPageChange, onCommentOpen }: FeedListProps) {
