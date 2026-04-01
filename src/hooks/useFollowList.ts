@@ -47,5 +47,5 @@ export function useFollowList(userId: string, type: 'followers' | 'following') {
     fetchPage(n);
   }
 
-  return { users, meta, page, isLoading, error, goToPage };
+  return { users, meta, page, isLoading, error, fetchPage, goToPage };
 }
