@@ -7,6 +7,7 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Gym Planner',
   description: 'Tu app de entrenamiento personal',
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
@@ -16,6 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning>
+      <head>
+        <meta name="theme-color" content="#09090b" />
+      </head>
       <body className={`${inter.variable} ${oswald.variable} antialiased`}>
         <DarkModeInitializer />
         {children}
