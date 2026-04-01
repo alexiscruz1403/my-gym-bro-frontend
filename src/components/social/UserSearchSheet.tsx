@@ -7,18 +7,10 @@ import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { UserListItem } from '@/components/social/UserListItem';
-import type { PublicUserSummary } from '@/types/domain.types';
+import { usersService } from '@/services/users.service';
+import type { PublicUserProfile } from '@/types/domain.types';
 
 const DEBOUNCE_MS = 300;
-
-// TODO: Replace this stub once the backend delivers GET /users?search=<query>
-// Expected response shape: { data: PublicUserSummary[]; meta: PaginationMeta }
-// Wire it through: src/services/users.service.ts → searchUsers(query, params)
-//                  src/lib/api-routes.ts → users.search: '/users'
-async function searchUsersStub(_query: string): Promise<PublicUserSummary[]> {
-  // Intentionally returns empty — endpoint not yet available.
-  return [];
-}
 
 interface UserSearchSheetProps {
   open: boolean;
@@ -27,7 +19,7 @@ interface UserSearchSheetProps {
 
 export function UserSearchSheet({ open, onOpenChange }: UserSearchSheetProps) {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<PublicUserSummary[]>([]);
+  const [results, setResults] = useState<PublicUserProfile[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -54,7 +46,7 @@ export function UserSearchSheet({ open, onOpenChange }: UserSearchSheetProps) {
     debounceRef.current = setTimeout(async () => {
       setIsLoading(true);
       try {
-        const data = await searchUsersStub(trimmed);
+        const { data } = await usersService.searchUsers(trimmed);
         setResults(data);
         setHasSearched(true);
       } catch {

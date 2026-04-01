@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/axios';
 import { API_ROUTES } from '@/lib/api-routes';
-import type { UpdateProfileRequest } from '@/types/api.types';
+import type { PaginationParams, PaginatedUserSearchResponse } from '@/types/api.types';
 import type { PublicUserProfile, UserResponse } from '@/types/domain.types';
 
 export const usersService = {
@@ -25,4 +25,9 @@ export const usersService = {
 
   getPublicProfile: (id: string): Promise<PublicUserProfile> =>
     apiClient.get<PublicUserProfile>(API_ROUTES.users.publicProfile(id)).then((r) => r.data),
+
+  searchUsers: (username: string, params?: PaginationParams): Promise<PaginatedUserSearchResponse> =>
+    apiClient
+      .get<PaginatedUserSearchResponse>(API_ROUTES.users.search, { params: { username, ...params } })
+      .then((r) => r.data),
 };

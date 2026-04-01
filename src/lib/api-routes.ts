@@ -9,6 +9,7 @@ export const API_ROUTES = {
   users: {
     me: '/users/me',
     avatar: '/users/me/avatar',
+    search: '/users',
     publicProfile: (id: string) => `/users/${id}`,
   },
   exercises: {

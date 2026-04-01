@@ -5,6 +5,7 @@ import type {
   FeedPost,
   LoadType,
   MuscleGroup,
+  PublicUserProfile,
   PublicUserSummary,
   SessionSet,
   StatsPeriod,
@@ -151,6 +152,16 @@ export interface StatsMuscleParams {
 export interface PaginationParams {
   page?: number;
   limit?: number;
+}
+
+export interface PaginatedUserSearchResponse {
+  data: PublicUserProfile[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
 }
 
 export interface PaginatedFollowListResponse {
