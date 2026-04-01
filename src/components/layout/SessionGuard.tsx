@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import { toast } from 'sonner';
 import useSessionStore from '@/store/session.store';
 import { getActiveSession } from '@/services/sessions.service';
 
@@ -37,6 +38,7 @@ export function SessionGuard() {
         }
       } catch {
         // Network error — leave the store as-is, user can retry manually
+        toast.error('No connection. Your session will resume when online.');
       }
     })();
   }, [_hasHydrated, activeSessionId, activeSession, pathname, router, setActiveSession, clearSession]);

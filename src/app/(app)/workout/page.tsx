@@ -5,13 +5,14 @@ import { PageContainer } from '@/components/layout/PageContainer';
 import { PlanList } from '@/components/workout/PlanList';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ErrorMessage } from '@/components/shared/ErrorMessage';
 import { usePlans } from '@/hooks/usePlans';
 import { Plus, Dumbbell } from 'lucide-react';
 
 const MAX_PLANS = 3;
 
 export default function WorkoutPage() {
-  const { data: plans, loading, error } = usePlans();
+  const { data: plans, loading, error, refetch } = usePlans();
 
   const atLimit = plans.length >= MAX_PLANS;
 
@@ -47,9 +48,7 @@ export default function WorkoutPage() {
           ))}
         </div>
       )}
-      {error && (
-        <p className="text-destructive py-8 text-center text-sm">{error}</p>
-      )}
+      {error && <ErrorMessage message={error} onRetry={refetch} />}
       {!loading && !error && <PlanList plans={plans} />}
     </PageContainer>
   );
