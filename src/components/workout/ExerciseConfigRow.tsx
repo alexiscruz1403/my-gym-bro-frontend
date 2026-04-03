@@ -7,7 +7,9 @@ interface ExerciseConfigRowProps {
 export function ExerciseConfigRow({ config }: ExerciseConfigRowProps) {
   const metric = config.reps !== undefined
     ? `${config.sets} × ${config.reps} reps`
-    : `${config.sets} × ${config.duration}s`;
+    : config.duration !== undefined
+      ? `${config.sets} × ${config.duration}s`
+      : `${config.sets} sets`;
 
   return (
     <div>
