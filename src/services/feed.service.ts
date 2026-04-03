@@ -8,7 +8,7 @@ import type {
   ReactionCountResponse,
   CreatePostPayload,
 } from '@/types/api.types';
-import type { FeedPost, FeedComment } from '@/types/domain.types';
+import type { FeedPost, FeedComment, FeedCommentReply } from '@/types/domain.types';
 
 export async function getFeed(params?: FeedQueryParams): Promise<PaginatedFeedResponse> {
   const { data } = await apiClient.get<PaginatedFeedResponse>(API_ROUTES.feed.list, { params });
@@ -46,6 +46,14 @@ export async function removeReaction(postId: string): Promise<ReactionCountRespo
 
 export async function addComment(postId: string, text: string): Promise<FeedComment> {
   const { data } = await apiClient.post<FeedComment>(API_ROUTES.feed.comments(postId), { text });
+  return data;
+}
+
+export async function addReply(postId: string, commentId: string, text: string): Promise<FeedCommentReply> {
+  const { data } = await apiClient.post<FeedCommentReply>(
+    API_ROUTES.feed.addReply(postId, commentId),
+    { text },
+  );
   return data;
 }
 
