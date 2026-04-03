@@ -1,3 +1,5 @@
+export type UserRole = 'user' | 'admin';
+
 export interface UserResponse {
   id: string;
   email: string;
@@ -5,6 +7,8 @@ export interface UserResponse {
   avatar?: string;
   followersCount: number;
   followingCount: number;
+  role: UserRole;
+  isActive: boolean;
   createdAt: string;
 }
 
@@ -45,6 +49,8 @@ export type DayOfWeek =
   | 'saturday'
   | 'sunday';
 
+export type TrackingType = 'reps' | 'duration';
+
 export interface Exercise {
   id: string;
   name: string;
@@ -52,6 +58,7 @@ export interface Exercise {
   musclesSecondary: MuscleGroup[];
   loadType: LoadType;
   bilateral: boolean;
+  trackingType: TrackingType;
   gifUrl?: string;
   videoUrl?: string;
 }
@@ -110,6 +117,7 @@ export interface SessionExercise {
   plannedDuration?: number;
   plannedWeight?: number;
   plannedRest: number;
+  trackingType: TrackingType;
   sets: SessionSet[];
   modifiedDuringSession: boolean;
   lastPerformance: SessionSet[] | null;
@@ -226,6 +234,26 @@ export interface PublicUserSummary {
   isFollowing: boolean;
 }
 
+// Session summary snapshot — embedded in FeedPost at creation time
+
+export interface SessionSummarySetSnapshot {
+  reps?: number;
+  weightKg?: number;
+  completed: boolean;
+}
+
+export interface SessionSummaryExerciseSnapshot {
+  name: string;
+  sets: SessionSummarySetSnapshot[];
+}
+
+export interface SessionSummarySnapshot {
+  durationSeconds: number;
+  totalSets: number;
+  volumeKg: number;
+  exercises: SessionSummaryExerciseSnapshot[];
+}
+
 export interface FeedPost {
   _id: string;
   author: {
@@ -239,14 +267,25 @@ export interface FeedPost {
   reactionsCount: number;
   commentsCount: number;
   userReacted: boolean;
+  sessionSummary: SessionSummarySnapshot | null;
   createdAt: string;
 }
 
-export interface FeedComment {
+export interface FeedCommentReply {
+  _id: string;
   userId: string;
   username: string;
   text: string;
   createdAt: string;
+}
+
+export interface FeedComment {
+  _id: string;
+  userId: string;
+  username: string;
+  text: string;
+  createdAt: string;
+  replies: FeedCommentReply[];
 }
 
 // Exercise history
@@ -271,5 +310,47 @@ export interface ExerciseHistoryResponse {
   exerciseId: string;
   exerciseName: string;
   data: ExerciseHistorySession[];
+  meta: PaginatedMeta;
+}
+
+// Public session history (C-08)
+
+export interface PublicSessionHistoryExercise {
+  exerciseName: string;
+  sets: SessionSet[];
+}
+
+export interface PublicSessionHistoryItem {
+  _id: string;
+  planName: string;
+  dayOfWeek: DayOfWeek;
+  status: SessionStatus;
+  startedAt: string;
+  finishedAt: string;
+  durationSeconds: number;
+  totalSetsLogged: number;
+  volumeKg: number;
+  exercises: PublicSessionHistoryExercise[];
+}
+
+export interface PublicSessionHistoryResponse {
+  data: PublicSessionHistoryItem[];
+  meta: PaginatedMeta;
+}
+
+// Admin (C-11)
+
+export interface AdminUserItem {
+  id: string;
+  email: string;
+  username: string;
+  avatar: string | null;
+  role: UserRole;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface PaginatedAdminUserResponse {
+  data: AdminUserItem[];
   meta: PaginatedMeta;
 }
