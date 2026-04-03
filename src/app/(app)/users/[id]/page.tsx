@@ -3,6 +3,7 @@
 import { use } from 'react';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
+import { PublicSessionHistory } from '@/components/profile/PublicSessionHistory';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { usePublicProfile } from '@/hooks/usePublicProfile';
@@ -47,6 +48,7 @@ export default function PublicProfilePage({ params }: PublicProfilePageProps) {
   return (
     <PageContainer>
       <ProfileHeader user={profile} userId={id} />
+      <PublicSessionHistory userId={id} />
     </PageContainer>
   );
 }

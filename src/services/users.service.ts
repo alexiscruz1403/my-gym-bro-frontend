@@ -1,7 +1,7 @@
 import { apiClient } from '@/lib/axios';
 import { API_ROUTES } from '@/lib/api-routes';
 import type { PaginationParams, PaginatedUserSearchResponse, UpdateProfileRequest } from '@/types/api.types';
-import type { PublicUserProfile, UserResponse } from '@/types/domain.types';
+import type { PublicUserProfile, UserResponse, PublicSessionHistoryResponse } from '@/types/domain.types';
 
 export const usersService = {
   getMe: (): Promise<UserResponse> =>
@@ -29,5 +29,10 @@ export const usersService = {
   searchUsers: (username: string, params?: PaginationParams): Promise<PaginatedUserSearchResponse> =>
     apiClient
       .get<PaginatedUserSearchResponse>(API_ROUTES.users.search, { params: { username, ...params } })
+      .then((r) => r.data),
+
+  getSessionHistory: (id: string, params?: PaginationParams): Promise<PublicSessionHistoryResponse> =>
+    apiClient
+      .get<PublicSessionHistoryResponse>(`/users/${id}/sessions`, { params })
       .then((r) => r.data),
 };
