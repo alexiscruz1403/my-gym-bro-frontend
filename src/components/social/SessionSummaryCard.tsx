@@ -39,7 +39,7 @@ export function SessionSummaryCard({ summary }: SessionSummaryCardProps) {
         <div className="flex flex-col items-center gap-1">
           <BarChart2 className="text-primary h-4 w-4" />
           <p className="font-display text-base font-bold tabular-nums">
-            {summary.volumeKg.toLocaleString()} kg
+            {(summary.volumeKg ?? 0).toLocaleString()} kg
           </p>
           <p className="text-muted-foreground text-xs">Volume</p>
         </div>
