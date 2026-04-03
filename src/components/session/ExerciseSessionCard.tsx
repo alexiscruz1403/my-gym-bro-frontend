@@ -43,6 +43,7 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
     setIndex: number,
     weight: number | undefined,
     reps: number | undefined,
+    duration?: number,
   ) => {
     try {
       await onLogSet({
@@ -50,6 +51,7 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
         setIndex,
         weight,
         reps,
+        duration,
         completed: true,
       });
       startTimer(exercise.plannedRest, exercise.exerciseId);
@@ -121,7 +123,9 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
         </div>
         <p className="text-muted-foreground mt-0.5 text-sm">
           {exercise.plannedSets} sets
-          {exercise.plannedReps ? ` × ${exercise.plannedReps} reps` : ''}
+          {exercise.trackingType === 'duration'
+            ? exercise.plannedDuration ? ` × ${exercise.plannedDuration}s` : ''
+            : exercise.plannedReps ? ` × ${exercise.plannedReps} reps` : ''}
           {exercise.plannedWeight ? ` · ${exercise.plannedWeight} kg` : ''}
           {exercise.modifiedDuringSession && (
             <span className="text-primary ml-1 text-xs">(modified)</span>
