@@ -1,12 +1,16 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Camera, Loader2, X } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { SessionSummaryCard } from './SessionSummaryCard';
 import { createPost } from '@/services/feed.service';
+import { getSessionSummary } from '@/services/sessions.service';
+import type { SessionSummarySnapshot } from '@/types/domain.types';
 
 const MAX_CAPTION = 500;
 
@@ -22,6 +26,19 @@ export function CreateFeedPostSheet({ sessionId, open, onClose }: CreateFeedPost
   const [preview, setPreview] = useState<string | null>(null);
   const [caption, setCaption] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [summary, setSummary] = useState<SessionSummarySnapshot | null>(null);
+  const [summaryLoading, setSummaryLoading] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+    setSummaryLoading(true);
+    getSessionSummary(sessionId)
+      .then((data) => { if (!cancelled) setSummary(data); })
+      .catch(() => { /* non-blocking — hide card on failure */ })
+      .finally(() => { if (!cancelled) setSummaryLoading(false); });
+    return () => { cancelled = true; };
+  }, [open, sessionId]);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const selected = e.target.files?.[0];
@@ -60,6 +77,7 @@ export function CreateFeedPostSheet({ sessionId, open, onClose }: CreateFeedPost
     setFile(null);
     setPreview(null);
     setCaption('');
+    setSummary(null);
     onClose();
   }
 
@@ -71,6 +89,10 @@ export function CreateFeedPostSheet({ sessionId, open, onClose }: CreateFeedPost
         </SheetHeader>
 
         <div className="px-4 pb-6 space-y-4">
+          {/* Session summary preview */}
+          {summaryLoading && <Skeleton className="h-24 w-full rounded-xl" />}
+          {!summaryLoading && summary && <SessionSummaryCard summary={summary} />}
+
           {/* Photo picker */}
           {preview ? (
             <div className="relative w-full aspect-square rounded-xl overflow-hidden">
