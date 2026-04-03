@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/axios';
 import { API_ROUTES } from '@/lib/api-routes';
-import type { PaginationParams, PaginatedUserSearchResponse } from '@/types/api.types';
+import type { PaginationParams, PaginatedUserSearchResponse, UpdateProfileRequest } from '@/types/api.types';
 import type { PublicUserProfile, UserResponse } from '@/types/domain.types';
 
 export const usersService = {
