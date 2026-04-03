@@ -28,6 +28,7 @@ export const API_ROUTES = {
     cancel: '/sessions/active',
     detail: (id: string) => `/sessions/${id}`,
     logSet: (id: string) => `/sessions/${id}/sets`,
+    modifyExercise: (id: string, exerciseId: string) => `/sessions/${id}/exercises/${exerciseId}`,
     replaceExercise: (id: string, exerciseId: string) => `/sessions/${id}/exercises/${exerciseId}`,
     finish: (id: string) => `/sessions/${id}/finish`,
     history: '/sessions',
