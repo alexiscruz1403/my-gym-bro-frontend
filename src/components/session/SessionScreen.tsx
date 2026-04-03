@@ -7,6 +7,7 @@ import { ExerciseNavigator } from './ExerciseNavigator';
 import { ConfirmFinishDialog } from './ConfirmFinishDialog';
 import { ConfirmCancelDialog } from './ConfirmCancelDialog';
 import { SessionSummary } from './SessionSummary';
+import { GlobalRestTimerOverlay } from './GlobalRestTimerOverlay';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSession } from '@/hooks/useSession';
 import { toast } from 'sonner';
@@ -61,6 +62,7 @@ export function SessionScreen() {
   return (
     <div className="flex h-full flex-col">
       <SessionHeader onFinish={() => setFinishOpen(true)} onCancel={() => setCancelOpen(true)} />
+      <GlobalRestTimerOverlay />
 
       <ExerciseNavigator
         exercises={session.exercises}
