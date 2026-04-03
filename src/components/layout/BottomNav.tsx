@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Dumbbell, ChartBar, Users, User } from 'lucide-react';
+import { Home, Dumbbell, ChartBar, Users, User, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import useAuthStore from '@/store/auth.store';
 
 const NAV_ITEMS = [
   { href: '/dashboard', icon: Home, label: 'Inicio' },
@@ -15,6 +16,8 @@ const NAV_ITEMS = [
 
 export function BottomNav() {
   const pathname = usePathname();
+  const user = useAuthStore((s) => s.user);
+  const isAdmin = user?.role === 'admin';
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border lg:hidden">
@@ -38,6 +41,20 @@ export function BottomNav() {
             </Link>
           );
         })}
+        {isAdmin && (
+          <Link
+            href="/admin"
+            className={cn(
+              'flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-colors',
+              pathname.startsWith('/admin')
+                ? 'text-primary'
+                : 'text-muted-foreground hover:text-foreground',
+            )}
+          >
+            <ShieldCheck size={24} />
+            <span className="text-[10px] font-medium">Admin</span>
+          </Link>
+        )}
       </div>
     </nav>
   );

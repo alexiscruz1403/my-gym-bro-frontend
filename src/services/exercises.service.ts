@@ -19,3 +19,17 @@ export async function getExercise(id: string): Promise<Exercise> {
   );
   return data;
 }
+
+export async function createExercise(dto: Partial<Exercise>): Promise<Exercise> {
+  const { data } = await apiClient.post<Exercise>(API_ROUTES.exercises.list, dto);
+  return data;
+}
+
+export async function updateExercise(id: string, dto: Partial<Exercise>): Promise<Exercise> {
+  const { data } = await apiClient.patch<Exercise>(API_ROUTES.exercises.detail(id), dto);
+  return data;
+}
+
+export async function deleteExercise(id: string): Promise<void> {
+  await apiClient.delete(API_ROUTES.exercises.detail(id));
+}
