@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/axios';
 import { API_ROUTES } from '@/lib/api-routes';
-import type { WorkoutSession, SessionSummary } from '@/types/domain.types';
+import type { WorkoutSession, SessionSummary, SessionSummarySnapshot } from '@/types/domain.types';
 import type {
   StartSessionRequest,
   LogSetRequest,
@@ -56,6 +56,11 @@ export async function replaceExercise(
   await apiClient.patch(API_ROUTES.sessions.replaceExercise(sessionId, exerciseId), dto);
   // Re-fetch to get lastPerformance resolved for the new exercise
   const { data } = await apiClient.get<WorkoutSession>(API_ROUTES.sessions.active);
+  return data;
+}
+
+export async function getSessionSummary(sessionId: string): Promise<SessionSummarySnapshot> {
+  const { data } = await apiClient.get<SessionSummarySnapshot>(API_ROUTES.sessions.detail(sessionId));
   return data;
 }
 
