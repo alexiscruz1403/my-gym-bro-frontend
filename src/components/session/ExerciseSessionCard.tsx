@@ -6,7 +6,6 @@ import { Badge } from '@/components/ui/badge';
 import { Link, Plus, Minus, ArrowLeftRight } from 'lucide-react';
 import { SetList } from './SetList';
 import { LastPerformanceRow } from './LastPerformanceRow';
-import { RestTimer } from './RestTimer';
 import { ReplaceExerciseSheet } from './ReplaceExerciseSheet';
 import { useRestTimer } from '@/hooks/useRestTimer';
 import { toast } from 'sonner';
@@ -163,9 +162,6 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace }:
           </Button>
         </div>
       </div>
-
-      {/* Rest timer */}
-      <RestTimer exerciseId={exercise.exerciseId} />
 
       <ReplaceExerciseSheet
         open={replaceOpen}
