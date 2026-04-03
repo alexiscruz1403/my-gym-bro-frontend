@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
-import { getComments, addComment } from '@/services/feed.service';
+import { getComments, addComment, addReply } from '@/services/feed.service';
 import type { FeedComment } from '@/types/domain.types';
 
 interface CommentsMeta {
@@ -57,9 +57,27 @@ export function useComments(postId: string, onCommentAdded?: () => void) {
     }
   }
 
+  async function submitReply(commentId: string, text: string) {
+    if (!postId || isSubmitting) return;
+
+    setIsSubmitting(true);
+    try {
+      const newReply = await addReply(postId, commentId, text);
+      setComments((prev) =>
+        prev.map((c) =>
+          c._id === commentId ? { ...c, replies: [...c.replies, newReply] } : c,
+        ),
+      );
+    } catch {
+      toast.error('Failed to post reply.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   function goToPage(n: number) {
     fetchPage(n);
   }
 
-  return { comments, meta, page, isLoading, isSubmitting, error, fetchPage, goToPage, submitComment };
+  return { comments, meta, page, isLoading, isSubmitting, error, fetchPage, goToPage, submitComment, submitReply };
 }
