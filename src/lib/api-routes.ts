@@ -11,10 +11,14 @@ export const API_ROUTES = {
     avatar: '/users/me/avatar',
     search: '/users',
     publicProfile: (id: string) => `/users/${id}`,
+    sessionHistory: (id: string) => `/users/${id}/sessions`,
   },
   exercises: {
     list: '/exercises',
     detail: (id: string) => `/exercises/${id}`,
+    create: '/exercises',
+    update: (id: string) => `/exercises/${id}`,
+    delete: (id: string) => `/exercises/${id}`,
   },
   workoutPlans: {
     list: '/workout-plans',
@@ -51,5 +55,11 @@ export const API_ROUTES = {
     reactions: (postId: string) => `/feed/posts/${postId}/reactions`,
     removeReaction: (postId: string) => `/feed/posts/${postId}/reactions`,
     comments: (postId: string) => `/feed/posts/${postId}/comments`,
+    addReply: (postId: string, commentId: string) => `/feed/posts/${postId}/comments/${commentId}/replies`,
+  },
+  admin: {
+    users: '/admin/users',
+    setUserStatus: (id: string) => `/admin/users/${id}/status`,
+    setUserRole: (id: string) => `/admin/users/${id}/role`,
   },
 } as const;
