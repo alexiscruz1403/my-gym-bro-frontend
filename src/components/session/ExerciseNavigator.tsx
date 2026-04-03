@@ -59,6 +59,11 @@ export function ExerciseNavigator({ exercises, onLogSet, onModify, onReplace }: 
           onLogSet={onLogSet}
           onModify={onModify}
           onReplace={onReplace}
+          onExerciseCompleted={
+            activeIndex < exercises.length - 1
+              ? () => setActiveIndex((i) => i + 1)
+              : undefined
+          }
         />
       </div>
 

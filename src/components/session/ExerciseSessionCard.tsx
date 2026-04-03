@@ -17,9 +17,10 @@ interface ExerciseSessionCardProps {
   onLogSet: (dto: LogSetRequest) => Promise<void>;
   onModify: (exerciseId: string, dto: ModifyExerciseRequest) => Promise<void>;
   onReplace: (exerciseId: string, dto: ReplaceExerciseRequest) => Promise<void>;
+  onExerciseCompleted?: () => void;
 }
 
-export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace }: ExerciseSessionCardProps) {
+export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, onExerciseCompleted }: ExerciseSessionCardProps) {
   const { start: startTimer } = useRestTimer();
   const [replaceOpen, setReplaceOpen] = useState(false);
 
@@ -52,6 +53,10 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace }:
         completed: true,
       });
       startTimer(exercise.plannedRest, exercise.exerciseId);
+      const newCompletedCount = exercise.sets.filter((s) => s.completed).length + 1;
+      if (newCompletedCount >= exercise.plannedSets) {
+        onExerciseCompleted?.();
+      }
     } catch {
       toast.error('Failed to save set. Please try again.');
     }
