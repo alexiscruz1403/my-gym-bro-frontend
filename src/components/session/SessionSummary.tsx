@@ -12,6 +12,7 @@ const CreateFeedPostSheet = dynamic(
   { ssr: false, loading: () => <Skeleton className="h-10 w-full" /> },
 );
 import type { WorkoutSession } from '@/types/domain.types';
+import { useSession } from '@/hooks/useSession';
 
 interface SessionSummaryProps {
   session: WorkoutSession;
@@ -29,6 +30,7 @@ function formatDuration(seconds: number): string {
 export function SessionSummary({ session }: SessionSummaryProps) {
   const router = useRouter();
   const [shareOpen, setShareOpen] = useState(false);
+  const { clearSessionData } = useSession();
 
   const completedExercises = session.exercises.filter(
     (ex) => ex.sets.some((s) => s.completed),
@@ -37,6 +39,11 @@ export function SessionSummary({ session }: SessionSummaryProps) {
     (acc, ex) => acc + ex.sets.filter((s) => s.completed).length,
     0,
   );
+
+  const handleBackToDashboard = () => {
+    clearSessionData();
+    router.push('/dashboard');
+  }
 
   return (
     <>
@@ -112,7 +119,7 @@ export function SessionSummary({ session }: SessionSummaryProps) {
           )}
           <Button
             className="w-full cursor-pointer"
-            onClick={() => router.push('/dashboard')}
+            onClick={handleBackToDashboard}
           >
             Back to dashboard
           </Button>
