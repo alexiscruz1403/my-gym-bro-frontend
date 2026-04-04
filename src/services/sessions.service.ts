@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/axios';
 import { API_ROUTES } from '@/lib/api-routes';
-import type { WorkoutSession, SessionSummary, SessionSummarySnapshot } from '@/types/domain.types';
+import type { WorkoutSession } from '@/types/domain.types';
 import type {
   StartSessionRequest,
   LogSetRequest,
@@ -59,11 +59,6 @@ export async function replaceExercise(
   return data;
 }
 
-export async function getSessionSummary(sessionId: string): Promise<SessionSummarySnapshot> {
-  const { data } = await apiClient.get<SessionSummarySnapshot>(API_ROUTES.sessions.detail(sessionId));
-  return data;
-}
-
 export async function cancelSession(): Promise<void> {
   await apiClient.delete(API_ROUTES.sessions.cancel);
 }
@@ -71,8 +66,8 @@ export async function cancelSession(): Promise<void> {
 export async function finishSession(
   sessionId: string,
   dto: FinishSessionRequest,
-): Promise<SessionSummary> {
-  const { data } = await apiClient.patch<SessionSummary>(
+): Promise<WorkoutSession> {
+  const { data } = await apiClient.patch<WorkoutSession>(
     API_ROUTES.sessions.finish(sessionId),
     dto,
   );

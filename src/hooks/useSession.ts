@@ -11,7 +11,7 @@ import {
   cancelSession as cancelSessionService,
   finishSession as finishSessionService,
 } from '@/services/sessions.service';
-import type { WorkoutSession, SessionSummary } from '@/types/domain.types';
+import type { WorkoutSession } from '@/types/domain.types';
 import type { LogSetRequest, ModifyExerciseRequest, ReplaceExerciseRequest, FinishSessionRequest } from '@/types/api.types';
 
 export function useSession() {
@@ -127,12 +127,13 @@ export function useSession() {
   }, [clearSession, router]);
 
   const finishSession = useCallback(
-    async (dto: FinishSessionRequest): Promise<SessionSummary> => {
+    async (dto: FinishSessionRequest): Promise<WorkoutSession> => {
       if (!activeSessionId) throw new Error('No active session');
-      const summary = await finishSessionService(activeSessionId, dto);
-      return summary;
+      const finished = await finishSessionService(activeSessionId, dto);
+      clearSession();
+      return finished;
     },
-    [activeSessionId],
+    [activeSessionId, clearSession],
   );
 
   const resumeOrRedirect = useCallback(

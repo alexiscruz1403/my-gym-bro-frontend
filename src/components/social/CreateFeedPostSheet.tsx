@@ -1,53 +1,48 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { Camera, Loader2, X } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { SessionSummaryCard } from './SessionSummaryCard';
 import { createPost } from '@/services/feed.service';
-import { getSessionSummary } from '@/services/sessions.service';
-import type { SessionSummarySnapshot } from '@/types/domain.types';
+import type { WorkoutSession } from '@/types/domain.types';
 
 const MAX_CAPTION = 500;
 
 interface CreateFeedPostSheetProps {
-  sessionId: string;
+  session: WorkoutSession;
   open: boolean;
   onClose: () => void;
 }
 
-export function CreateFeedPostSheet({ sessionId, open, onClose }: CreateFeedPostSheetProps) {
+function formatDuration(seconds: number): string {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  if (h > 0) return `${h}h ${m}m`;
+  if (m > 0) return `${m}m ${s}s`;
+  return `${s}s`;
+}
+
+export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSheetProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [caption, setCaption] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [summary, setSummary] = useState<SessionSummarySnapshot | null>(null);
-  const [summaryLoading, setSummaryLoading] = useState(false);
 
-  useEffect(() => {
-    if (!open) return;
-    let cancelled = false;
-    setSummaryLoading(true);
-    getSessionSummary(sessionId)
-      .then((data) => { if (!cancelled) setSummary(data); })
-      .catch(() => { /* non-blocking — hide card on failure */ })
-      .finally(() => { if (!cancelled) setSummaryLoading(false); });
-    return () => { cancelled = true; };
-  }, [open, sessionId]);
+  const completedExercises = session.exercises.filter(
+    (ex) => ex.sets.some((s) => s.completed),
+  );
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const selected = e.target.files?.[0];
     if (!selected) return;
-
     if (preview) URL.revokeObjectURL(preview);
     setFile(selected);
     setPreview(URL.createObjectURL(selected));
-
     if (inputRef.current) inputRef.current.value = '';
   }
 
@@ -60,9 +55,8 @@ export function CreateFeedPostSheet({ sessionId, open, onClose }: CreateFeedPost
   async function handleShare() {
     if (isSubmitting) return;
     setIsSubmitting(true);
-
     try {
-      await createPost({ sessionId, caption: caption.trim() || undefined, file: file ?? undefined });
+      await createPost({ sessionId: session._id, caption: caption.trim() || undefined, file: file ?? undefined });
       toast.success('Workout shared!');
       handleClose();
     } catch {
@@ -77,7 +71,6 @@ export function CreateFeedPostSheet({ sessionId, open, onClose }: CreateFeedPost
     setFile(null);
     setPreview(null);
     setCaption('');
-    setSummary(null);
     onClose();
   }
 
@@ -89,9 +82,31 @@ export function CreateFeedPostSheet({ sessionId, open, onClose }: CreateFeedPost
         </SheetHeader>
 
         <div className="px-4 pb-6 space-y-4">
-          {/* Session summary preview */}
-          {summaryLoading && <Skeleton className="h-24 w-full rounded-xl" />}
-          {!summaryLoading && summary && <SessionSummaryCard summary={summary} />}
+          {/* Session preview */}
+          <div className="rounded-xl border bg-muted/30 p-4 space-y-3">
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span>{session.planName}</span>
+              <span>{formatDuration(session.durationSeconds ?? 0)}</span>
+            </div>
+            {completedExercises.map((ex) => {
+              const completedSets = ex.sets.filter((s) => s.completed);
+              return (
+                <div key={ex.exerciseId} className="space-y-0.5">
+                  <p className="text-sm font-medium">{ex.exerciseName}</p>
+                  <p className="text-muted-foreground text-xs">
+                    {completedSets.map((s, i) => {
+                      const metric =
+                        ex.trackingType === 'duration'
+                          ? `${s.duration ?? 0}s`
+                          : `${s.reps ?? 0} reps`;
+                      const weight = s.weight ? ` · ${s.weight} kg` : '';
+                      return `Set ${s.setIndex + 1}: ${metric}${weight}`;
+                    }).join(' · ')}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
 
           {/* Photo picker */}
           {preview ? (

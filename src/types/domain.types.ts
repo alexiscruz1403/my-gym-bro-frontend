@@ -135,16 +135,6 @@ export interface WorkoutSession {
   exercises: SessionExercise[];
 }
 
-export interface SessionSummary {
-  _id: string;
-  status: SessionStatus;
-  startedAt: string;
-  finishedAt: string;
-  durationSeconds: number;
-  exercisesCompleted: number;
-  totalSetsLogged: number;
-}
-
 // Session history
 
 export interface SessionHistoryExercise {
@@ -238,6 +228,7 @@ export interface PublicUserSummary {
 
 export interface SessionSummarySetSnapshot {
   reps?: number;
+  durationSeconds?: number;
   weightKg?: number;
   completed: boolean;
 }

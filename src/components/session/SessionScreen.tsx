@@ -11,17 +11,17 @@ import { GlobalRestTimerOverlay } from './GlobalRestTimerOverlay';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSession } from '@/hooks/useSession';
 import { toast } from 'sonner';
-import type { SessionSummary as SessionSummaryType } from '@/types/domain.types';
+import type { WorkoutSession } from '@/types/domain.types';
 
 export function SessionScreen() {
   const router = useRouter();
   const { session, loading, logSet, modifyExercise, replaceExercise, cancelSession, finishSession } = useSession();
   const [finishOpen, setFinishOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
-  const [summary, setSummary] = useState<SessionSummaryType | null>(null);
+  const [finishedSession, setFinishedSession] = useState<WorkoutSession | null>(null);
 
-  if (summary) {
-    return <SessionSummary summary={summary} />;
+  if (finishedSession) {
+    return <SessionSummary session={finishedSession} />;
   }
 
   if (loading) {
@@ -54,9 +54,8 @@ export function SessionScreen() {
     const status = isFullyCompleted ? 'completed' : 'partial';
     const result = await finishSession({ status });
     setFinishOpen(false);
-    setSummary(result);
-    const label = status === 'completed' ? 'Workout completed' : 'Session saved';
-    toast.success(`${label} · ${result.totalSetsLogged} sets · ${Math.round(result.durationSeconds / 60)}min`);
+    setFinishedSession(result);
+    toast.success(status === 'completed' ? 'Workout completed!' : 'Session saved');
   };
 
   return (
