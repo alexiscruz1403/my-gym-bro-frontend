@@ -17,7 +17,8 @@ export function AdminUserRow({ user, onSetStatus, onSetRole }: AdminUserRowProps
   const handleStatusToggle = async () => {
     setBusy(true);
     try {
-      await onSetStatus(user.id, !user.isActive);
+      console.log('Toggling status for user', user, 'to', !user.isActive);
+      await onSetStatus(user._id, !user.isActive);
     } finally {
       setBusy(false);
     }
@@ -27,7 +28,7 @@ export function AdminUserRow({ user, onSetStatus, onSetRole }: AdminUserRowProps
     const next: UserRole = user.role === 'admin' ? 'user' : 'admin';
     setBusy(true);
     try {
-      await onSetRole(user.id, next);
+      await onSetRole(user._id, next);
     } finally {
       setBusy(false);
     }

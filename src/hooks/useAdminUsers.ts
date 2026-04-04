@@ -32,12 +32,12 @@ export function useAdminUsers() {
 
   const setStatus = async (id: string, isActive: boolean) => {
     const updated = await adminService.setUserStatus(id, isActive);
-    setUsers((prev) => prev.map((u) => (u.id === id ? updated : u)));
+    setUsers((prev) => prev.map((u) => (u._id === id ? updated : u)));
   };
 
   const setRole = async (id: string, role: UserRole) => {
     const updated = await adminService.setUserRole(id, role);
-    setUsers((prev) => prev.map((u) => (u.id === id ? updated : u)));
+    setUsers((prev) => prev.map((u) => (u._id === id ? updated : u)));
   };
 
   return { users, meta, page, isLoading, search, fetchPage, handleSearch, setStatus, setRole };

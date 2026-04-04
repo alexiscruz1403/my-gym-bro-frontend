@@ -35,7 +35,7 @@ export function AdminUserList() {
         <div className="space-y-2">
           {users.map((user) => (
             <AdminUserRow
-              key={user.id}
+              key={user._id}
               user={user}
               onSetStatus={setStatus}
               onSetRole={setRole}

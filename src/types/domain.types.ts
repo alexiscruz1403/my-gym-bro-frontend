@@ -334,7 +334,7 @@ export interface PublicSessionHistoryResponse {
 // Admin (C-11)
 
 export interface AdminUserItem {
-  id: string;
+  _id: string;
   email: string;
   username: string;
   avatar: string | null;
