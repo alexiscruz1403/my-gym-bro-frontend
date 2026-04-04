@@ -4,7 +4,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Clock, Dumbbell, BarChart2 } from 'lucide-react';
-import { CreateFeedPostSheet } from '@/components/social/CreateFeedPostSheet';
+import dynamic from 'next/dynamic';
+import { Skeleton } from '@/components/ui/skeleton';
+
+const CreateFeedPostSheet = dynamic(
+  () => import('@/components/social/CreateFeedPostSheet').then((m) => m.CreateFeedPostSheet),
+  { ssr: false, loading: () => <Skeleton className="h-10 w-full" /> },
+);
 import type { WorkoutSession } from '@/types/domain.types';
 
 interface SessionSummaryProps {
