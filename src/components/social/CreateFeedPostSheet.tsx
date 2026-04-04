@@ -9,6 +9,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { Button } from '@/components/ui/button';
 import { createPost } from '@/services/feed.service';
 import type { WorkoutSession } from '@/types/domain.types';
+import { useSession } from '@/hooks/useSession';
 
 const MAX_CAPTION = 500;
 
@@ -35,6 +36,7 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
   const [caption, setCaption] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAll, setShowAll] = useState(false);
+  const { clearSessionData } = useSession();
 
   const completedExercises = session.exercises.filter(
     (ex) => ex.sets.some((s) => s.completed),
@@ -62,6 +64,7 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
     setIsSubmitting(true);
     try {
       await createPost({ sessionId: session._id, caption: caption.trim() || undefined, file: file ?? undefined });
+      clearSessionData();
       toast.success('Workout shared!');
       handleClose();
       router.push('/feed');

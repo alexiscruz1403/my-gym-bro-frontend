@@ -130,7 +130,6 @@ export function useSession() {
     async (dto: FinishSessionRequest): Promise<WorkoutSession> => {
       if (!activeSessionId) throw new Error('No active session');
       const finished = await finishSessionService(activeSessionId, dto);
-      //clearSession();
       return finished;
     },
     [activeSessionId],
@@ -145,6 +144,10 @@ export function useSession() {
     [router],
   );
 
+  const clearSessionData = useCallback(() => {
+    clearSession();
+  }, [clearSession]);
+
   return {
     session: activeSession,
     loading,
@@ -155,5 +158,6 @@ export function useSession() {
     cancelSession,
     finishSession,
     resumeOrRedirect,
+    clearSessionData,
   };
 }
