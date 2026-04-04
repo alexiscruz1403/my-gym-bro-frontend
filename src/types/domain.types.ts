@@ -103,6 +103,8 @@ export interface SessionSet {
   reps?: number;
   duration?: number;
   weight?: number;
+  durationSeconds?: number;
+  weightKg?: number;
   completed: boolean;
   loggedAt: string;
 }

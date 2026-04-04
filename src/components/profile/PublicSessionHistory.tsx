@@ -69,8 +69,8 @@ function SessionHistoryRow({ item }: SessionHistoryRowProps) {
                   <div key={i} className="space-y-0.5">
                     <p className="text-xs font-medium">{ex.exerciseName}</p>
                     {completedSets.map((s, j) => {
-                      const metric = s.duration !== undefined ? `${s.duration}s` : `${s.reps ?? 0} reps`;
-                      const weight = s.weight ? ` · ${s.weight} kg` : '';
+                      const metric = s.durationSeconds !== undefined && s.durationSeconds !== null ? `${s.durationSeconds}s` : `${s.reps ?? 0} reps`;
+                      const weight = s.weightKg ? ` · ${s.weightKg} kg` : '';
                       return (
                         <p key={j} className="text-xs text-muted-foreground pl-2">
                           Set {s.setIndex + 1}: {metric}{weight}
