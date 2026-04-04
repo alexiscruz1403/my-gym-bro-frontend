@@ -6,7 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Pagination } from '@/components/shared/Pagination';
 import { AdminExerciseRow } from './AdminExerciseRow';
-import { AdminExerciseForm } from './AdminExerciseForm';
+import dynamic from 'next/dynamic';
+
+const AdminExerciseForm = dynamic(
+  () => import('./AdminExerciseForm').then((m) => m.AdminExerciseForm),
+  { ssr: false },
+);
 import { useAdminExercises } from '@/hooks/useAdminExercises';
 import type { Exercise } from '@/types/domain.types';
 
