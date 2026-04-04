@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Heart, MessageCircle } from 'lucide-react';
+import { Heart, MessageCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useState, useRef } from 'react';
 import { usePostInteraction } from '@/hooks/usePostInteraction';
-import type { FeedPost, SessionSummarySnapshot } from '@/types/domain.types';
+import type { FeedPost, SessionSummaryExerciseSnapshot } from '@/types/domain.types';
 
 interface FeedPostCardProps {
   post: FeedPost;
@@ -27,18 +27,31 @@ function formatDuration(seconds: number): string {
   return `${s}s`;
 }
 
-function SessionSummarySlide({ summary }: { summary: SessionSummarySnapshot }) {
-  const completedExercises = summary.exercises.filter((ex) =>
-    ex.sets.some((s) => s.completed),
+function chunk<T>(arr: T[], size: number): T[][] {
+  return Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
+    arr.slice(i * size, i * size + size),
   );
+}
 
+const EXERCISES_PER_SLIDE = 4;
+
+interface SummarySlideProps {
+  exercises: SessionSummaryExerciseSnapshot[];
+  durationSeconds: number;
+  totalSets: number;
+  showHeader: boolean;
+}
+
+function SummarySlide({ exercises, durationSeconds, totalSets, showHeader }: SummarySlideProps) {
   return (
-    <div className="w-full shrink-0 snap-center overflow-y-auto bg-muted/30 p-4 space-y-3">
-      <div className="flex items-center justify-between text-xs text-muted-foreground">
-        <span>{summary.totalSets} sets</span>
-        <span>{formatDuration(summary.durationSeconds)}</span>
-      </div>
-      {completedExercises.map((ex, i) => {
+    <div className="w-full shrink-0 snap-center bg-muted/30 p-4 space-y-3">
+      {showHeader && (
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <span>{totalSets} sets</span>
+          <span>{formatDuration(durationSeconds)}</span>
+        </div>
+      )}
+      {exercises.map((ex, i) => {
         const completedSets = ex.sets.filter((s) => s.completed);
         return (
           <div key={i} className="space-y-0.5">
@@ -78,13 +91,23 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen }: FeedPostCardPro
 
   const hasPhoto = !!post.photoUrl;
   const hasSummary = !!post.sessionSummary;
-  const isCarousel = hasPhoto && hasSummary;
-  const slideCount = isCarousel ? 2 : 0;
+
+  const exerciseChunks = hasSummary
+    ? chunk(post.sessionSummary!.exercises.filter((ex) => ex.sets.some((s) => s.completed)), EXERCISES_PER_SLIDE)
+    : [];
+
+  const slideCount = (hasPhoto ? 1 : 0) + exerciseChunks.length;
+  const isCarousel = slideCount > 1;
 
   function handleScroll() {
     if (!scrollRef.current) return;
     const { scrollLeft, clientWidth } = scrollRef.current;
-    setActiveSlide(Math.round(scrollLeft / clientWidth));
+    setActiveSlide(Math.round(scrollLeft / (clientWidth || 1)));
+  }
+
+  function goTo(index: number) {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollTo({ left: index * scrollRef.current.clientWidth, behavior: 'smooth' });
   }
 
   return (
@@ -117,7 +140,7 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen }: FeedPostCardPro
         </div>
       </CardHeader>
 
-      {/* Media area */}
+      {/* Media / summary area */}
       {isCarousel ? (
         <div className="relative">
           <div
@@ -125,19 +148,50 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen }: FeedPostCardPro
             className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar"
             onScroll={handleScroll}
           >
-            {/* Slide 1: photo */}
-            <div className="relative w-full shrink-0 snap-center aspect-square overflow-hidden">
-              <Image
-                src={post.photoUrl!}
-                alt="Workout photo"
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 600px"
+            {hasPhoto && (
+              <div className="relative w-full shrink-0 snap-center aspect-square overflow-hidden">
+                <Image
+                  src={post.photoUrl!}
+                  alt="Workout photo"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 600px"
+                />
+              </div>
+            )}
+            {exerciseChunks.map((chunk, i) => (
+              <SummarySlide
+                key={i}
+                exercises={chunk}
+                durationSeconds={post.sessionSummary!.durationSeconds}
+                totalSets={post.sessionSummary!.totalSets}
+                showHeader={i === 0}
               />
-            </div>
-            {/* Slide 2: summary */}
-            <SessionSummarySlide summary={post.sessionSummary!} />
+            ))}
           </div>
+
+          {/* Desktop nav buttons */}
+          {activeSlide > 0 && (
+            <button
+              type="button"
+              onClick={() => goTo(activeSlide - 1)}
+              aria-label="Previous slide"
+              className="absolute left-2 top-1/2 -translate-y-1/2 hidden lg:flex items-center justify-center h-8 w-8 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+          )}
+          {activeSlide < slideCount - 1 && (
+            <button
+              type="button"
+              onClick={() => goTo(activeSlide + 1)}
+              aria-label="Next slide"
+              className="absolute right-2 top-1/2 -translate-y-1/2 hidden lg:flex items-center justify-center h-8 w-8 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          )}
+
           {/* Dot indicators */}
           <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5">
             {Array.from({ length: slideCount }, (_, i) => (
@@ -160,8 +214,13 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen }: FeedPostCardPro
             sizes="(max-width: 768px) 100vw, 600px"
           />
         </div>
-      ) : hasSummary ? (
-        <SessionSummarySlide summary={post.sessionSummary!} />
+      ) : hasSummary && exerciseChunks.length > 0 ? (
+        <SummarySlide
+          exercises={exerciseChunks[0]}
+          durationSeconds={post.sessionSummary!.durationSeconds}
+          totalSets={post.sessionSummary!.totalSets}
+          showHeader
+        />
       ) : null}
 
       {post.caption && (
@@ -178,9 +237,7 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen }: FeedPostCardPro
           className="flex items-center gap-1.5 min-h-11"
           aria-label={userReacted ? 'Remove reaction' : 'React to post'}
         >
-          <Heart
-            className={userReacted ? 'fill-destructive text-destructive' : ''}
-          />
+          <Heart className={userReacted ? 'fill-destructive text-destructive' : ''} />
           <span className="text-sm">{reactionsCount}</span>
         </Button>
 
