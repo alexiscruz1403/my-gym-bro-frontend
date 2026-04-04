@@ -35,6 +35,7 @@ export function CommentsSheet({ postId, onClose, onCommentAdded }: CommentsSheet
   const [text, setText] = useState('');
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyText, setReplyText] = useState('');
+  const [visibleReplyCount, setVisibleReplyCount] = useState<Record<string, number>>({});
 
   useEffect(() => {
     if (open && postId) {
@@ -42,6 +43,7 @@ export function CommentsSheet({ postId, onClose, onCommentAdded }: CommentsSheet
       setText('');
       setReplyingTo(null);
       setReplyText('');
+      setVisibleReplyCount({});
     }
   }, [open, postId, fetchPage]);
 
@@ -105,18 +107,34 @@ export function CommentsSheet({ postId, onClose, onCommentAdded }: CommentsSheet
                   {/* Replies */}
                   {comment.replies.length > 0 && (
                     <div className="ml-4 space-y-2 border-l pl-3">
-                      {comment.replies.map((reply) => (
-                        <div key={reply._id} className="flex flex-col gap-0.5">
-                          <div className="flex items-baseline gap-2">
-                            <CornerDownRight className="h-3 w-3 shrink-0 text-muted-foreground" />
-                            <span className="text-sm font-semibold">{reply.username}</span>
-                            <span className="text-xs text-muted-foreground">
-                              {formatDistanceToNow(new Date(reply.createdAt), { addSuffix: true })}
-                            </span>
+                      {comment.replies
+                        .slice(0, visibleReplyCount[comment._id] ?? 3)
+                        .map((reply) => (
+                          <div key={reply._id} className="flex flex-col gap-0.5">
+                            <div className="flex items-baseline gap-2">
+                              <CornerDownRight className="h-3 w-3 shrink-0 text-muted-foreground" />
+                              <span className="text-sm font-semibold">{reply.username}</span>
+                              <span className="text-xs text-muted-foreground">
+                                {formatDistanceToNow(new Date(reply.createdAt), { addSuffix: true })}
+                              </span>
+                            </div>
+                            <p className="text-sm pl-5">{reply.text}</p>
                           </div>
-                          <p className="text-sm pl-5">{reply.text}</p>
-                        </div>
-                      ))}
+                        ))}
+                      {comment.replies.length > (visibleReplyCount[comment._id] ?? 3) && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setVisibleReplyCount((prev) => ({
+                              ...prev,
+                              [comment._id]: (prev[comment._id] ?? 3) + 3,
+                            }))
+                          }
+                          className="text-xs text-muted-foreground hover:text-foreground"
+                        >
+                          Ver más respuestas ({comment.replies.length - (visibleReplyCount[comment._id] ?? 3)} más)
+                        </button>
+                      )}
                     </div>
                   )}
 
