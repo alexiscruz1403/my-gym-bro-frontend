@@ -20,7 +20,12 @@ import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ExerciseConfigForm } from './ExerciseConfigForm';
-import { ExercisePickerDrawer } from './ExercisePickerDrawer';
+import dynamic from 'next/dynamic';
+
+const ExercisePickerDrawer = dynamic(
+  () => import('./ExercisePickerDrawer').then((m) => m.ExercisePickerDrawer),
+  { ssr: false },
+);
 import { Trash2, Plus, Pencil, GripVertical } from 'lucide-react';
 import { SupersetGroupIndicator } from '@/components/workout/SupersetGroupIndicator';
 import type { Exercise } from '@/types/domain.types';

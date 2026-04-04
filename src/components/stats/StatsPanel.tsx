@@ -1,7 +1,26 @@
+import dynamic from 'next/dynamic';
 import { PeriodSelector } from '@/components/stats/PeriodSelector';
-import { VolumeChart } from '@/components/stats/VolumeChart';
-import { MuscleRankingList } from '@/components/stats/MuscleRankingList';
+import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
+
+const VolumeChart = dynamic(
+  () => import('@/components/stats/VolumeChart').then((m) => m.VolumeChart),
+  { ssr: false, loading: () => <Skeleton className="h-48 w-full rounded-xl" /> },
+);
+
+const MuscleRankingList = dynamic(
+  () => import('@/components/stats/MuscleRankingList').then((m) => m.MuscleRankingList),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="space-y-3">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-10 w-full rounded-lg" />
+        ))}
+      </div>
+    ),
+  },
+);
 import { Button } from '@/components/ui/button';
 import type { StatsPeriod, VolumeByPeriodResponse, VolumeByMuscleResponse } from '@/types/domain.types';
 
