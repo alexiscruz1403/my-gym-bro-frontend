@@ -94,7 +94,7 @@ export function SessionSummary({ session }: SessionSummaryProps) {
         )}
 
         {/* Actions */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 pb-24">
           {(session.status === 'completed' || session.status === 'partial') && (
             <Button
               variant="outline"

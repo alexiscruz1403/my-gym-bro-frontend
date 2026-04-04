@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { Camera, Loader2, X } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { createPost } from '@/services/feed.service';
@@ -27,15 +28,19 @@ function formatDuration(seconds: number): string {
 }
 
 export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSheetProps) {
+  const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [caption, setCaption] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   const completedExercises = session.exercises.filter(
     (ex) => ex.sets.some((s) => s.completed),
   );
+  const visibleExercises = showAll ? completedExercises : completedExercises.slice(0, 4);
+  const hiddenCount = completedExercises.length - 4;
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const selected = e.target.files?.[0];
@@ -59,6 +64,7 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
       await createPost({ sessionId: session._id, caption: caption.trim() || undefined, file: file ?? undefined });
       toast.success('Workout shared!');
       handleClose();
+      router.push('/feed');
     } catch {
       toast.error('Failed to share workout.');
     } finally {
@@ -71,6 +77,7 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
     setFile(null);
     setPreview(null);
     setCaption('');
+    setShowAll(false);
     onClose();
   }
 
@@ -88,24 +95,37 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
               <span>{session.planName}</span>
               <span>{formatDuration(session.durationSeconds ?? 0)}</span>
             </div>
-            {completedExercises.map((ex) => {
+            {visibleExercises.map((ex) => {
               const completedSets = ex.sets.filter((s) => s.completed);
               return (
-                <div key={ex.exerciseId} className="space-y-0.5">
+                <div key={ex.exerciseId} className="space-y-1">
                   <p className="text-sm font-medium">{ex.exerciseName}</p>
-                  <p className="text-muted-foreground text-xs">
-                    {completedSets.map((s, i) => {
+                  <div className="space-y-0.5 pl-1">
+                    {completedSets.map((s) => {
                       const metric =
                         ex.trackingType === 'duration'
                           ? `${s.duration ?? 0}s`
                           : `${s.reps ?? 0} reps`;
                       const weight = s.weight ? ` · ${s.weight} kg` : '';
-                      return `Set ${s.setIndex + 1}: ${metric}${weight}`;
-                    }).join(' · ')}
-                  </p>
+                      return (
+                        <p key={s.setIndex} className="text-xs text-muted-foreground">
+                          Set {s.setIndex + 1}: {metric}{weight}
+                        </p>
+                      );
+                    })}
+                  </div>
                 </div>
               );
             })}
+            {!showAll && hiddenCount > 0 && (
+              <button
+                type="button"
+                onClick={() => setShowAll(true)}
+                className="text-xs text-primary hover:underline"
+              >
+                Show more ({hiddenCount} more)
+              </button>
+            )}
           </div>
 
           {/* Photo picker */}
