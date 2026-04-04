@@ -110,6 +110,15 @@
     --ring: hsl(22 100% 52%);
   }
 
+  /* ─── Utilities ───────────────────────────────────────────────── */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
   /* ─── Base styles ──────────────────────────────────────────────── */
   * {
     @apply border-border outline-ring/50;

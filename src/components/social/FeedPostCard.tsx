@@ -8,14 +8,58 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { usePostInteraction } from '@/hooks/usePostInteraction';
-import type { FeedPost } from '@/types/domain.types';
+import type { FeedPost, SessionSummarySnapshot } from '@/types/domain.types';
 
 interface FeedPostCardProps {
   post: FeedPost;
   isOwnPost: boolean;
   onCommentOpen: (postId: string, onAdded: () => void) => void;
+}
+
+function formatDuration(seconds: number): string {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  if (h > 0) return `${h}h ${m}m`;
+  if (m > 0) return `${m}m ${s}s`;
+  return `${s}s`;
+}
+
+function SessionSummarySlide({ summary }: { summary: SessionSummarySnapshot }) {
+  const completedExercises = summary.exercises.filter((ex) =>
+    ex.sets.some((s) => s.completed),
+  );
+
+  return (
+    <div className="w-full shrink-0 snap-center overflow-y-auto bg-muted/30 p-4 space-y-3">
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
+        <span>{summary.totalSets} sets</span>
+        <span>{formatDuration(summary.durationSeconds)}</span>
+      </div>
+      {completedExercises.map((ex, i) => {
+        const completedSets = ex.sets.filter((s) => s.completed);
+        return (
+          <div key={i} className="space-y-0.5">
+            <p className="text-sm font-medium">{ex.name}</p>
+            <p className="text-muted-foreground text-xs">
+              {completedSets
+                .map((s) => {
+                  const metric =
+                    s.durationSeconds !== undefined
+                      ? `${s.durationSeconds}s`
+                      : `${s.reps ?? 0} reps`;
+                  const weight = s.weightKg ? ` · ${s.weightKg} kg` : '';
+                  return `${metric}${weight}`;
+                })
+                .join(' · ')}
+            </p>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 export function FeedPostCard({ post, isOwnPost, onCommentOpen }: FeedPostCardProps) {
@@ -26,9 +70,22 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen }: FeedPostCardPro
   );
 
   const [commentsCount, setCommentsCount] = useState(post.commentsCount);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const initials = post.author.username.slice(0, 2).toUpperCase();
   const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true });
+
+  const hasPhoto = !!post.photoUrl;
+  const hasSummary = !!post.sessionSummary;
+  const isCarousel = hasPhoto && hasSummary;
+  const slideCount = isCarousel ? 2 : 0;
+
+  function handleScroll() {
+    if (!scrollRef.current) return;
+    const { scrollLeft, clientWidth } = scrollRef.current;
+    setActiveSlide(Math.round(scrollLeft / clientWidth));
+  }
 
   return (
     <Card>
@@ -60,17 +117,52 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen }: FeedPostCardPro
         </div>
       </CardHeader>
 
-      {post.photoUrl && (
+      {/* Media area */}
+      {isCarousel ? (
+        <div className="relative">
+          <div
+            ref={scrollRef}
+            className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar"
+            onScroll={handleScroll}
+          >
+            {/* Slide 1: photo */}
+            <div className="relative w-full shrink-0 snap-center aspect-square overflow-hidden">
+              <Image
+                src={post.photoUrl!}
+                alt="Workout photo"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 600px"
+              />
+            </div>
+            {/* Slide 2: summary */}
+            <SessionSummarySlide summary={post.sessionSummary!} />
+          </div>
+          {/* Dot indicators */}
+          <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5">
+            {Array.from({ length: slideCount }, (_, i) => (
+              <span
+                key={i}
+                className={`h-1.5 w-1.5 rounded-full transition-colors ${
+                  i === activeSlide ? 'bg-white' : 'bg-white/40'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      ) : hasPhoto ? (
         <div className="relative w-full aspect-square overflow-hidden">
           <Image
-            src={post.photoUrl}
+            src={post.photoUrl!}
             alt="Workout photo"
             fill
             className="object-cover"
             sizes="(max-width: 768px) 100vw, 600px"
           />
         </div>
-      )}
+      ) : hasSummary ? (
+        <SessionSummarySlide summary={post.sessionSummary!} />
+      ) : null}
 
       {post.caption && (
         <CardContent>
