@@ -3,7 +3,12 @@
 import { use, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { PageContainer } from '@/components/layout/PageContainer';
-import { CreatePlanWizard } from '@/components/workout/wizard/CreatePlanWizard';
+import dynamic from 'next/dynamic';
+
+const CreatePlanWizard = dynamic(
+  () => import('@/components/workout/wizard/CreatePlanWizard').then((m) => m.CreatePlanWizard),
+  { ssr: false, loading: () => <div className="flex justify-center py-12"><LoadingSpinner /></div> },
+);
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { ErrorMessage } from '@/components/shared/ErrorMessage';
 import { Button } from '@/components/ui/button';
