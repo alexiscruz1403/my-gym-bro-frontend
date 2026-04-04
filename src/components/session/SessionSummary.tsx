@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Clock, Dumbbell, BarChart2 } from 'lucide-react';
 import { CreateFeedPostSheet } from '@/components/social/CreateFeedPostSheet';
-import type { SessionSummary as SessionSummaryType } from '@/types/domain.types';
+import type { WorkoutSession } from '@/types/domain.types';
 
 interface SessionSummaryProps {
-  summary: SessionSummaryType;
+  session: WorkoutSession;
 }
 
 function formatDuration(seconds: number): string {
@@ -20,41 +20,82 @@ function formatDuration(seconds: number): string {
   return `${s}s`;
 }
 
-export function SessionSummary({ summary }: SessionSummaryProps) {
+export function SessionSummary({ session }: SessionSummaryProps) {
   const router = useRouter();
   const [shareOpen, setShareOpen] = useState(false);
 
+  const completedExercises = session.exercises.filter(
+    (ex) => ex.sets.some((s) => s.completed),
+  );
+  const totalSets = session.exercises.reduce(
+    (acc, ex) => acc + ex.sets.filter((s) => s.completed).length,
+    0,
+  );
+
   return (
     <>
-      <div className="flex flex-1 flex-col items-center justify-center gap-8 px-6 py-12 text-center">
-        <div className="space-y-2">
-          <CheckCircle className="mx-auto h-16 w-16 text-green-500" />
+      <div className="flex flex-1 flex-col gap-6 overflow-y-auto px-4 py-8">
+        {/* Header */}
+        <div className="flex flex-col items-center gap-2 text-center">
+          <CheckCircle className="h-16 w-16 text-green-500" />
           <h1 className="font-display text-3xl font-bold">
-            {summary.status === 'completed' ? 'Workout complete!' : 'Session saved'}
+            {session.status === 'completed' ? 'Workout complete!' : 'Session saved'}
           </h1>
           <p className="text-muted-foreground text-sm">Great work. Here&apos;s your summary.</p>
         </div>
 
-        <div className="grid w-full max-w-xs grid-cols-3 gap-4">
+        {/* Stats row */}
+        <div className="grid grid-cols-3 gap-3">
           <div className="rounded-xl border bg-card p-3 text-center">
             <Clock className="text-primary mx-auto mb-1 h-5 w-5" />
-            <p className="font-display text-lg font-bold">{formatDuration(summary.durationSeconds)}</p>
+            <p className="font-display text-lg font-bold">
+              {formatDuration(session.durationSeconds ?? 0)}
+            </p>
             <p className="text-muted-foreground text-xs">Duration</p>
           </div>
           <div className="rounded-xl border bg-card p-3 text-center">
             <Dumbbell className="text-primary mx-auto mb-1 h-5 w-5" />
-            <p className="font-display text-lg font-bold">{summary.exercisesCompleted}</p>
+            <p className="font-display text-lg font-bold">{completedExercises.length}</p>
             <p className="text-muted-foreground text-xs">Exercises</p>
           </div>
           <div className="rounded-xl border bg-card p-3 text-center">
             <BarChart2 className="text-primary mx-auto mb-1 h-5 w-5" />
-            <p className="font-display text-lg font-bold">{summary.totalSetsLogged}</p>
+            <p className="font-display text-lg font-bold">{totalSets}</p>
             <p className="text-muted-foreground text-xs">Sets</p>
           </div>
         </div>
 
-        <div className="flex w-full max-w-xs flex-col gap-2">
-          {(summary.status === 'completed' || summary.status === 'partial') && (
+        {/* Exercise breakdown */}
+        {completedExercises.length > 0 && (
+          <div className="space-y-3">
+            {completedExercises.map((ex) => {
+              const completedSets = ex.sets.filter((s) => s.completed);
+              return (
+                <div key={ex.exerciseId} className="rounded-xl border bg-card px-4 py-3">
+                  <p className="text-sm font-semibold">{ex.exerciseName}</p>
+                  <div className="mt-1.5 space-y-0.5">
+                    {completedSets.map((s, i) => {
+                      const metric =
+                        ex.trackingType === 'duration'
+                          ? `${s.duration ?? 0}s`
+                          : `${s.reps ?? 0} reps`;
+                      const weight = s.weight ? ` · ${s.weight} kg` : '';
+                      return (
+                        <p key={i} className="text-muted-foreground text-xs">
+                          Set {s.setIndex + 1}: {metric}{weight}
+                        </p>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="flex flex-col gap-2">
+          {(session.status === 'completed' || session.status === 'partial') && (
             <Button
               variant="outline"
               className="w-full cursor-pointer"
@@ -63,7 +104,6 @@ export function SessionSummary({ summary }: SessionSummaryProps) {
               Share workout
             </Button>
           )}
-
           <Button
             className="w-full cursor-pointer"
             onClick={() => router.push('/dashboard')}
@@ -73,9 +113,9 @@ export function SessionSummary({ summary }: SessionSummaryProps) {
         </div>
       </div>
 
-      {(summary.status === 'completed' || summary.status === 'partial') && (
+      {(session.status === 'completed' || session.status === 'partial') && (
         <CreateFeedPostSheet
-          sessionId={summary._id}
+          session={session}
           open={shareOpen}
           onClose={() => setShareOpen(false)}
         />
