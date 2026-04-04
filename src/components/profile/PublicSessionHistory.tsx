@@ -62,12 +62,24 @@ function SessionHistoryRow({ item }: SessionHistoryRowProps) {
           </button>
 
           {expanded && (
-            <div className="space-y-1">
-              {item.exercises.map((ex, i) => (
-                <p key={i} className="text-xs text-muted-foreground">
-                  {ex.exerciseName} — {ex.sets.filter((s) => s.completed).length} sets
-                </p>
-              ))}
+            <div className="space-y-2">
+              {item.exercises.map((ex, i) => {
+                const completedSets = ex.sets.filter((s) => s.completed);
+                return (
+                  <div key={i} className="space-y-0.5">
+                    <p className="text-xs font-medium">{ex.exerciseName}</p>
+                    {completedSets.map((s, j) => {
+                      const metric = s.duration !== undefined ? `${s.duration}s` : `${s.reps ?? 0} reps`;
+                      const weight = s.weight ? ` · ${s.weight} kg` : '';
+                      return (
+                        <p key={j} className="text-xs text-muted-foreground pl-2">
+                          Set {s.setIndex + 1}: {metric}{weight}
+                        </p>
+                      );
+                    })}
+                  </div>
+                );
+              })}
             </div>
           )}
         </>
