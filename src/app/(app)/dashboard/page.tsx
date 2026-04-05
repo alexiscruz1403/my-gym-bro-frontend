@@ -3,7 +3,6 @@
 import { PageContainer } from '@/components/layout/PageContainer';
 import { ActivePlanCard } from '@/components/dashboard/ActivePlanCard';
 import { QuickActionCard } from '@/components/dashboard/QuickActionCard';
-import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/useAuth';
 import { useActivePlan } from '@/hooks/useActivePlan';
