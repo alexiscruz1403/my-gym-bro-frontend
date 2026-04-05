@@ -17,7 +17,7 @@ export function WizardStep2Days({ selected, onChange, onNext, onBack }: WizardSt
       <div className="space-y-2">
         <h2 className="font-display text-xl font-bold">Select training days</h2>
         <p className="text-muted-foreground text-sm">
-          Choose which days of the week you'll train.
+          Choose which days of the week you&apos;ll train.
         </p>
       </div>
 
