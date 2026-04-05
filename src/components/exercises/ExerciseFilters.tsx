@@ -23,6 +23,8 @@ const MUSCLE_OPTIONS: { value: MuscleGroup; label: string }[] = [
   { value: 'hamstrings', label: 'Hamstrings' },
   { value: 'glutes', label: 'Glutes' },
   { value: 'calves', label: 'Calves' },
+  { value: 'adductors', label: 'Adductors' },
+  { value: 'abductors', label: 'Abductors' },
 ];
 
 const LOAD_TYPE_OPTIONS: { value: LoadType; label: string }[] = [

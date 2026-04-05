@@ -19,6 +19,8 @@ const MUSCLE_LABELS: Record<MuscleGroup, string> = {
   hamstrings: 'Hamstrings',
   glutes: 'Glutes',
   calves: 'Calves',
+  adductors: 'Adductors',
+  abductors: 'Abductors',
 };
 
 interface MuscleGroupBadgeProps {
