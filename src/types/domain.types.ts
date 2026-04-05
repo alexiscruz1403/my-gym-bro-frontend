@@ -29,7 +29,9 @@ export type MuscleGroup =
   | 'quads'
   | 'hamstrings'
   | 'glutes'
-  | 'calves';
+  | 'calves'
+  | 'adductors'
+  | 'abductors';
 
 export type LoadType =
   | 'barbell'
