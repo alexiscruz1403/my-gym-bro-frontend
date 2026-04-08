@@ -39,29 +39,31 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
     }
   };
 
-  const handleCompleteSet = async (
+  const handleCompleteSet = (
     setIndex: number,
     weight: number | undefined,
     reps: number | undefined,
     duration?: number,
   ) => {
-    try {
-      await onLogSet({
-        exerciseId: exercise.exerciseId,
-        setIndex,
-        weight,
-        reps,
-        duration,
-        completed: true,
-      });
-      startTimer(exercise.plannedRest, exercise.exerciseId);
-      const newCompletedCount = exercise.sets.filter((s) => s.completed).length + 1;
-      if (newCompletedCount >= exercise.plannedSets) {
-        onExerciseCompleted?.();
-      }
-    } catch {
-      toast.error('Failed to save set. Please try again.');
+    // Start timer and advance exercise immediately for a fluid UX,
+    // then fire the API call in the background.
+    startTimer(exercise.plannedRest, exercise.exerciseId);
+
+    const newCompletedCount = exercise.sets.filter((s) => s.completed).length + 1;
+    if (newCompletedCount >= exercise.plannedSets) {
+      onExerciseCompleted?.();
     }
+
+    onLogSet({
+      exerciseId: exercise.exerciseId,
+      setIndex,
+      weight,
+      reps,
+      duration,
+      completed: true,
+    }).catch(() => {
+      toast.error('Failed to save set. Please try again.');
+    });
   };
 
   const handleUncompleteSet = async (
