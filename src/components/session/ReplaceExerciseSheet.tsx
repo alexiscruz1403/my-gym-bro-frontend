@@ -11,8 +11,10 @@ interface ReplaceExerciseSheetProps {
 }
 
 export function ReplaceExerciseSheet({ open, onOpenChange, onSelect }: ReplaceExerciseSheetProps) {
-  const handleSelect = (exercise: Exercise) => {
-    onSelect(exercise);
+  const handleConfirm = (exercises: Exercise[]) => {
+    if (exercises[0]) {
+      onSelect(exercises[0]);
+    }
     onOpenChange(false);
   };
 
@@ -26,7 +28,7 @@ export function ReplaceExerciseSheet({ open, onOpenChange, onSelect }: ReplaceEx
           </SheetDescription>
         </SheetHeader>
         <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-6">
-          <ExerciseCatalog mode="picker" onSelect={handleSelect} />
+          <ExerciseCatalog mode="picker" onConfirm={handleConfirm} />
         </div>
       </SheetContent>
     </Sheet>
