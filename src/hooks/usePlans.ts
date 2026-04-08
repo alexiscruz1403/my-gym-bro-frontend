@@ -1,28 +1,24 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { queryClient } from '@/lib/query-client';
 import { getPlans } from '@/services/workout-plans.service';
-import type { PlanListItem } from '@/types/domain.types';
 
 export function usePlans() {
-  const [data, setData] = useState<PlanListItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['plans'],
+    queryFn: getPlans,
+  });
 
-  const fetch = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await getPlans();
-      setData(result);
-    } catch {
-      setError('Failed to load plans');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  return {
+    data: data ?? [],
+    loading: isLoading,
+    error: error ? 'Failed to load plans' : null,
+    refetch,
+  };
+}
 
-  useEffect(() => { fetch(); }, [fetch]);
-
-  return { data, loading, error, refetch: fetch };
+export function invalidatePlansCache() {
+  queryClient.invalidateQueries({ queryKey: ['plans'] });
+  queryClient.invalidateQueries({ queryKey: ['active-plan'] });
 }

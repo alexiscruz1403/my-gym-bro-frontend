@@ -9,6 +9,7 @@ import { WizardStep3Exercises } from './WizardStep3Exercises';
 import { WizardStep4Review } from './WizardStep4Review';
 import usePlanBuilderStore from '@/store/plan-builder.store';
 import { createPlan, updatePlan } from '@/services/workout-plans.service';
+import { invalidatePlanCache } from '@/hooks/usePlan';
 import { toast } from 'sonner';
 import type { CreatePlanRequest } from '@/types/api.types';
 
@@ -70,6 +71,7 @@ export function CreatePlanWizard() {
       toast.success(
         mode === 'edit' ? `"${saved.name}" updated` : `"${saved.name}" created`,
       );
+      invalidatePlanCache(saved.id);
       reset();
       router.push(`/workout/${saved.id}`);
     } catch (err: unknown) {

@@ -11,6 +11,7 @@ import {
   cancelSession as cancelSessionService,
   finishSession as finishSessionService,
 } from '@/services/sessions.service';
+import { queryClient } from '@/lib/query-client';
 import type { WorkoutSession } from '@/types/domain.types';
 import type { LogSetRequest, ModifyExerciseRequest, ReplaceExerciseRequest, FinishSessionRequest } from '@/types/api.types';
 
@@ -130,6 +131,10 @@ export function useSession() {
     async (dto: FinishSessionRequest): Promise<WorkoutSession> => {
       if (!activeSessionId) throw new Error('No active session');
       const finished = await finishSessionService(activeSessionId, dto);
+      // Invalidate history and stats so they reflect the new session
+      queryClient.invalidateQueries({ queryKey: ['session-history'] });
+      queryClient.invalidateQueries({ queryKey: ['stats'] });
+      queryClient.invalidateQueries({ queryKey: ['exercise-history'] });
       return finished;
     },
     [activeSessionId],

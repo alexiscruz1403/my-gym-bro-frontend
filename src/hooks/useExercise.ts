@@ -1,23 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { getExercise } from '@/services/exercises.service';
-import type { Exercise } from '@/types/domain.types';
 
 export function useExercise(id: string) {
-  const [data, setData] = useState<Exercise | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['exercise', id],
+    queryFn: () => getExercise(id),
+    enabled: !!id,
+  });
 
-  useEffect(() => {
-    if (!id) return;
-    setLoading(true);
-    setError(null);
-    getExercise(id)
-      .then(setData)
-      .catch(() => setError('Failed to load exercise'))
-      .finally(() => setLoading(false));
-  }, [id]);
-
-  return { data, loading, error };
+  return {
+    data: data ?? null,
+    loading: isLoading,
+    error: error ? 'Failed to load exercise' : null,
+  };
 }

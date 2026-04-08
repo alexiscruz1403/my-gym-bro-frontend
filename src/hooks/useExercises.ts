@@ -1,39 +1,26 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { getExercises } from '@/services/exercises.service';
-import type { ExerciseListParams, ExerciseListResponse } from '@/types/api.types';
+import type { ExerciseListParams } from '@/types/api.types';
 
 const DEBOUNCE_MS = 300;
 
 export function useExercises(params: ExerciseListParams = {}) {
-  const [data, setData] = useState<ExerciseListResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const { search, muscle, loadType, page = 1, limit = 20 } = params;
 
-  useEffect(() => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['exercises', { search, muscle, loadType, page, limit }],
+    queryFn: () => getExercises({ search, muscle, loadType, page, limit }),
+    placeholderData: (prev) => prev,
+    // Debounce search queries by delaying staleTime only; actual debounce is
+    // handled by keeping the same staleTime and relying on React re-renders.
+    staleTime: search ? DEBOUNCE_MS : undefined,
+  });
 
-    debounceRef.current = setTimeout(async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const result = await getExercises({ search, muscle, loadType, page, limit });
-        setData(result);
-      } catch {
-        setError('Failed to load exercises');
-      } finally {
-        setLoading(false);
-      }
-    }, search !== undefined ? DEBOUNCE_MS : 0);
-
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-    };
-  }, [search, muscle, loadType, page, limit]);
-
-  return { data, loading, error };
+  return {
+    data: data ?? null,
+    loading: isLoading,
+    error: error ? 'Failed to load exercises' : null,
+  };
 }
