@@ -64,6 +64,24 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
     }
   };
 
+  const handleUncompleteSet = async (
+    setIndex: number,
+    weight: number | undefined,
+    reps: number | undefined,
+  ) => {
+    try {
+      await onLogSet({
+        exerciseId: exercise.exerciseId,
+        setIndex,
+        weight,
+        reps,
+        completed: false,
+      });
+    } catch {
+      toast.error('Failed to undo set. Please try again.');
+    }
+  };
+
   const completedCount = exercise.sets.filter((s) => s.completed).length;
   const allDone = completedCount === exercise.plannedSets;
 
@@ -139,7 +157,7 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
       )}
 
       {/* Sets */}
-      <SetList exercise={exercise} onCompleteSet={handleCompleteSet} />
+      <SetList exercise={exercise} onCompleteSet={handleCompleteSet} onUncompleteSet={handleUncompleteSet} />
 
       {/* Add / remove sets */}
       <div className="flex items-center justify-between rounded-lg border px-4 py-2">

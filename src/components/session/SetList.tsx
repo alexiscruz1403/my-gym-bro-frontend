@@ -7,9 +7,10 @@ import type { SessionExercise } from '@/types/domain.types';
 interface SetListProps {
   exercise: SessionExercise;
   onCompleteSet: (setIndex: number, weight: number | undefined, reps: number | undefined, duration?: number) => void;
+  onUncompleteSet: (setIndex: number, weight: number | undefined, reps: number | undefined) => void;
 }
 
-export function SetList({ exercise, onCompleteSet }: SetListProps) {
+export function SetList({ exercise, onCompleteSet, onUncompleteSet }: SetListProps) {
   const isDuration = exercise.trackingType === 'duration';
 
   return (
@@ -39,6 +40,7 @@ export function SetList({ exercise, onCompleteSet }: SetListProps) {
             plannedWeight={exercise.plannedWeight}
             loggedSet={logged}
             onComplete={onCompleteSet}
+            onUncomplete={onUncompleteSet}
           />
         );
       })}
