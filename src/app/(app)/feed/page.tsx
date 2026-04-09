@@ -37,7 +37,7 @@ export default function FeedPage() {
           variant="ghost"
           size="icon"
           onClick={() => setSearchOpen(true)}
-          className="min-h-11 min-w-11"
+          className="min-h-11 min-w-11 cursor-pointer"
           aria-label="Find people to follow"
         >
           <UserRoundSearch className="h-5 w-5" />
@@ -49,7 +49,7 @@ export default function FeedPage() {
           variant={filter === 'all' ? 'default' : 'outline'}
           size="sm"
           onClick={() => setFilter('all')}
-          className="min-h-11"
+          className="min-h-11 cursor-pointer"
         >
           All
         </Button>
@@ -57,7 +57,7 @@ export default function FeedPage() {
           variant={filter === 'mine' ? 'default' : 'outline'}
           size="sm"
           onClick={() => setFilter('mine')}
-          className="min-h-11"
+          className="min-h-11 cursor-pointer"
         >
           My posts
         </Button>

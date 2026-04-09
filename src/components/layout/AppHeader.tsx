@@ -37,6 +37,7 @@ export function AppHeader({ title, action }: AppHeaderProps) {
             size="icon"
             onClick={toggleDarkMode}
             aria-label={isDarkMode ? 'Activar modo claro' : 'Activar modo oscuro'}
+            className={'cursor-pointer'}
           >
             {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
           </Button>

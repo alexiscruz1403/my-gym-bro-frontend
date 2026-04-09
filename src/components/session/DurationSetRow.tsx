@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Play, RotateCcw, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { playBeep } from '@/lib/audio';
 import type { SessionSet } from '@/types/domain.types';
 
 interface DurationSetRowProps {
@@ -33,6 +34,7 @@ export function DurationSetRow({ setIndex, plannedDuration, loggedSet, onComplet
         if (s <= 1) {
           clear();
           setRunning(false);
+          playBeep();
           return 0;
         }
         return s - 1;

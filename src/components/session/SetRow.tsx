@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Check } from 'lucide-react';
+import { Check, Undo2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { SessionSet } from '@/types/domain.types';
 
@@ -13,9 +13,10 @@ interface SetRowProps {
   plannedWeight?: number;
   loggedSet?: SessionSet;
   onComplete: (setIndex: number, weight: number | undefined, reps: number | undefined) => void;
+  onUncomplete: (setIndex: number, weight: number | undefined, reps: number | undefined) => void;
 }
 
-export function SetRow({ setIndex, plannedReps, plannedWeight, loggedSet, onComplete }: SetRowProps) {
+export function SetRow({ setIndex, plannedReps, plannedWeight, loggedSet, onComplete, onUncomplete }: SetRowProps) {
   const [weight, setWeight] = useState<string>(
     String(loggedSet?.weight ?? plannedWeight ?? 0),
   );
@@ -29,6 +30,12 @@ export function SetRow({ setIndex, plannedReps, plannedWeight, loggedSet, onComp
     const w = parseFloat(weight);
     const r = parseInt(reps, 10);
     onComplete(setIndex, isNaN(w) ? undefined : w, isNaN(r) ? undefined : r);
+  };
+
+  const handleUncomplete = () => {
+    const w = parseFloat(weight);
+    const r = parseInt(reps, 10);
+    onUncomplete(setIndex, isNaN(w) ? undefined : w, isNaN(r) ? undefined : r);
   };
 
   return (
@@ -75,16 +82,27 @@ export function SetRow({ setIndex, plannedReps, plannedWeight, loggedSet, onComp
         </div>
       </div>
 
-      <Button
-        size="icon"
-        variant={isCompleted ? 'default' : 'outline'}
-        onClick={handleComplete}
-        disabled={isCompleted}
-        className={cn('h-11 w-11 shrink-0 cursor-pointer', isCompleted && 'cursor-default')}
-        aria-label={isCompleted ? 'Set completed' : 'Mark set as complete'}
-      >
-        <Check className="h-5 w-5" />
-      </Button>
+      {isCompleted ? (
+        <Button
+          size="icon"
+          variant="ghost"
+          onClick={handleUncomplete}
+          className="h-11 w-11 shrink-0 cursor-pointer text-primary hover:text-destructive"
+          aria-label="Undo set completion"
+        >
+          <Undo2 className="h-5 w-5" />
+        </Button>
+      ) : (
+        <Button
+          size="icon"
+          variant="outline"
+          onClick={handleComplete}
+          className="h-11 w-11 shrink-0 cursor-pointer"
+          aria-label="Mark set as complete"
+        >
+          <Check className="h-5 w-5" />
+        </Button>
+      )}
     </div>
   );
 }

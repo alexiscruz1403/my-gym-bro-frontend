@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Toaster } from '@/components/ui/sonner';
 import { DarkModeInitializer } from '@/components/layout/DarkModeInitializer';
+import { Providers } from '@/components/layout/Providers';
 import { inter, oswald } from '@/lib/fonts';
 import './globals.css';
 
@@ -22,7 +23,9 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${oswald.variable} antialiased`}>
         <DarkModeInitializer />
-        {children}
+        <Providers>
+          {children}
+        </Providers>
         <Toaster position="top-center" richColors />
       </body>
     </html>

@@ -1,36 +1,24 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { getVolumeByPeriod, getVolumeByMuscle } from '@/services/stats.service';
 import { getCurrentPeriodDate } from '@/lib/stats-dates';
-import type { StatsPeriod, VolumeByPeriodResponse, VolumeByMuscleResponse } from '@/types/domain.types';
+import type { StatsPeriod } from '@/types/domain.types';
 
 export function useStats() {
   const [period, setPeriodState] = useState<StatsPeriod>('week');
   const [date, setDateState] = useState<string>(() => getCurrentPeriodDate('week'));
-  const [volumeData, setVolumeData] = useState<VolumeByPeriodResponse | null>(null);
-  const [muscleData, setMuscleData] = useState<VolumeByMuscleResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  const fetch = useCallback(async (p: StatsPeriod, d: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const [volume, muscle] = await Promise.all([
-        getVolumeByPeriod({ period: p, date: d }),
-        getVolumeByMuscle({ period: p, date: d }),
-      ]);
-      setVolumeData(volume);
-      setMuscleData(muscle);
-    } catch {
-      setError('Failed to load stats');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const { data: volumeData, isLoading: volumeLoading, error: volumeError } = useQuery({
+    queryKey: ['stats', 'volume', period, date],
+    queryFn: () => getVolumeByPeriod({ period, date }),
+  });
 
-  useEffect(() => { fetch(period, date); }, [fetch, period, date]);
+  const { data: muscleData, isLoading: muscleLoading, error: muscleError } = useQuery({
+    queryKey: ['stats', 'muscle', period, date],
+    queryFn: () => getVolumeByMuscle({ period, date }),
+  });
 
   const setPeriod = useCallback((p: StatsPeriod) => {
     const newDate = getCurrentPeriodDate(p);
@@ -42,5 +30,14 @@ export function useStats() {
     setDateState(d);
   }, []);
 
-  return { period, date, setPeriod, setDate, volumeData, muscleData, loading, error };
+  return {
+    period,
+    date,
+    setPeriod,
+    setDate,
+    volumeData: volumeData ?? null,
+    muscleData: muscleData ?? null,
+    loading: volumeLoading || muscleLoading,
+    error: volumeError || muscleError ? 'Failed to load stats' : null,
+  };
 }

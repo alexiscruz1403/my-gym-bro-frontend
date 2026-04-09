@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 import useAuthStore from '@/store/auth.store';
@@ -9,8 +9,7 @@ import { usersService } from '@/services/users.service';
 
 export function OAuthCallback() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const { setTokens, setUser } = useAuthStore();
+  const { setAuthenticated, setUser } = useAuthStore();
   const hasProcessed = useRef(false);
 
   useEffect(() => {
@@ -18,25 +17,16 @@ export function OAuthCallback() {
     if (hasProcessed.current) return;
     hasProcessed.current = true;
 
-    const accessToken = searchParams.get('accessToken');
-    const refreshToken = searchParams.get('refreshToken');
-
-    if (!accessToken || !refreshToken) {
-      toast.error('Error en la autenticación con Google. Intenta de nuevo.');
-      router.replace('/login');
-      return;
-    }
+    // Clean any tokens from the URL immediately for security
+    window.history.replaceState({}, '', '/callback');
 
     const processCallback = async (): Promise<void> => {
       try {
-        setTokens({ accessToken, refreshToken });
-
-        // Clean tokens from the URL immediately for security
-        window.history.replaceState({}, '', '/callback');
-
+        // The backend set httpOnly cookies on redirect — just fetch the user
+        // to confirm authentication and hydrate the store.
         const user = await usersService.getMe();
+        setAuthenticated(true);
         setUser(user);
-
         router.replace('/dashboard');
       } catch {
         toast.error('Error al procesar el inicio de sesión. Intenta de nuevo.');
@@ -45,7 +35,7 @@ export function OAuthCallback() {
     };
 
     processCallback();
-  }, [searchParams, setTokens, setUser, router]);
+  }, [setAuthenticated, setUser, router]);
 
   return (
     <div className="flex flex-col items-center gap-3 py-8">
