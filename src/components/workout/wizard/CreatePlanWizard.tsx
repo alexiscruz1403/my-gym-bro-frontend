@@ -68,12 +68,12 @@ export function CreatePlanWizard() {
           ? await updatePlan(editingPlanId, payload)
           : await createPlan(payload);
 
+      invalidatePlanCache(saved.id);
+      router.push(`/workout/${saved.id}`);
+      reset();
       toast.success(
         mode === 'edit' ? `"${saved.name}" updated` : `"${saved.name}" created`,
       );
-      invalidatePlanCache(saved.id);
-      reset();
-      router.push(`/workout/${saved.id}`);
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response?.status;
       if (status === 422) {
