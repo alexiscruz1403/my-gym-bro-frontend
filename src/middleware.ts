@@ -13,16 +13,6 @@ export function middleware(request: NextRequest) {
   const accessToken = request.cookies.get(cookieName)?.value;
 
   const isPublicRoute = PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
-  const isProtectedRoute = PROTECTED_PREFIX.some((prefix) =>
-    pathname.startsWith(prefix),
-  );
-
-  // Unauthenticated user trying to access a protected route
-  if (isProtectedRoute && !accessToken) {
-    const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('redirect', pathname);
-    return NextResponse.redirect(loginUrl);
-  }
 
   // Authenticated user trying to access auth pages
   // Allow /auth/callback through so the OAuth handler can process tokens
