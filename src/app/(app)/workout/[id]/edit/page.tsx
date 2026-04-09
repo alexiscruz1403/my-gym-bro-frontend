@@ -27,10 +27,11 @@ export default function EditPlanPage({ params }: EditPlanPageProps) {
   const { loadPlan, editingPlanId } = usePlanBuilderStore();
 
   useEffect(() => {
-    if (data && editingPlanId !== data.id) {
+    if (data) {
       loadPlan(data);
     }
-  }, [data, editingPlanId, loadPlan]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   if (loading) {
     return (

@@ -2,7 +2,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MuscleGroupBadge } from './MuscleGroupBadge';
-import { Dumbbell, Plus } from 'lucide-react';
+import { Dumbbell, Plus, Check } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import type { Exercise } from '@/types/domain.types';
 
 const LOAD_TYPE_LABELS: Record<string, string> = {
@@ -24,7 +25,8 @@ interface ExerciseCardBrowseProps {
 interface ExerciseCardPickerProps {
   exercise: Exercise;
   mode: 'picker';
-  onSelect: (exercise: Exercise) => void;
+  selected: boolean;
+  onToggle: (exercise: Exercise) => void;
 }
 
 type ExerciseCardProps = ExerciseCardBrowseProps | ExerciseCardPickerProps;
@@ -34,17 +36,28 @@ export function ExerciseCard(props: ExerciseCardProps) {
 
   const handleCardClick = () => {
     if (mode === 'browse') props.onClick();
+    else props.onToggle(exercise);
   };
 
-  const handleAdd = (e: React.MouseEvent) => {
+  const handleToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (mode === 'picker') props.onSelect(exercise);
+    if (mode === 'picker') props.onToggle(exercise);
   };
+
+  const selected = mode === 'picker' ? props.selected : false;
 
   return (
     <Card
-      className={mode === 'browse' ? 'cursor-pointer transition-colors hover:bg-accent' : 'cursor-default'}
+      className={cn(
+        mode === 'browse'
+          ? 'cursor-pointer transition-colors hover:bg-accent'
+          : 'cursor-pointer transition-colors hover:bg-accent',
+        selected && 'border-primary bg-primary/5',
+      )}
       onClick={handleCardClick}
+      tabIndex={0}
+      role="button"
+      aria-pressed={selected}
     >
       <CardContent className="flex items-center gap-3 p-4">
         {exercise.gifUrl ? (
@@ -72,8 +85,16 @@ export function ExerciseCard(props: ExerciseCardProps) {
         </div>
 
         {mode === 'picker' && (
-          <Button size="icon" variant="ghost" onClick={handleAdd} className="cursor-pointer" aria-label="Add exercise">
-            <Plus className="h-4 w-4" />
+          <Button
+            size="icon"
+            variant={selected ? 'default' : 'ghost'}
+            onClick={handleToggle}
+            className="cursor-pointer shrink-0"
+            aria-label={selected ? 'Deselect exercise' : 'Select exercise'}
+            type="button"
+            tabIndex={0}
+          >
+            {selected ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
           </Button>
         )}
       </CardContent>

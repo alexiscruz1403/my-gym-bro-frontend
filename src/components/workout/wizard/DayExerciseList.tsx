@@ -159,14 +159,16 @@ export function DayExerciseList({
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
-  const handleSelectExercise = (exercise: Exercise) => {
-    onAdd({
-      exerciseId: exercise.id,
-      exerciseName: exercise.name,
-      sets: 3,
-      reps: 10,
-      rest: 60,
-    });
+  const handleSelectExercise = (exercises: Exercise[]) => {
+    for (const exercise of exercises) {
+      onAdd({
+        exerciseId: exercise.id,
+        exerciseName: exercise.name,
+        sets: 3,
+        reps: 10,
+        rest: 60,
+      });
+    }
   };
 
   const handleSaveConfig = (

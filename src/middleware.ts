@@ -7,22 +7,12 @@ const PROTECTED_PREFIX = ['/dashboard', '/workout', '/history', '/feed', '/profi
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Read the accessToken from the cookie written by the auth store.
-  // localStorage is not accessible in Edge Runtime — the cookie is the
-  // only bridge between the client store and the middleware.
-  const accessToken = request.cookies.get('gym-planner-access-token')?.value;
+  // Read the httpOnly access token cookie set by the backend.
+  // The cookie name must match the backend configuration.
+  const cookieName = process.env.NEXT_PUBLIC_ACCESS_TOKEN_COOKIE ?? 'access_token';
+  const accessToken = request.cookies.get(cookieName)?.value;
 
   const isPublicRoute = PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
-  const isProtectedRoute = PROTECTED_PREFIX.some((prefix) =>
-    pathname.startsWith(prefix),
-  );
-
-  // Unauthenticated user trying to access a protected route
-  if (isProtectedRoute && !accessToken) {
-    const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('redirect', pathname);
-    return NextResponse.redirect(loginUrl);
-  }
 
   // Authenticated user trying to access auth pages
   // Allow /auth/callback through so the OAuth handler can process tokens

@@ -52,7 +52,7 @@ export function AdminUserRow({ user, onSetStatus, onSetRole }: AdminUserRowProps
           variant="outline"
           disabled={busy}
           onClick={handleRoleToggle}
-          className="min-h-9 text-xs"
+          className="min-h-9 text-xs cursor-pointer"
         >
           {user.role === 'admin' ? 'Demote' : 'Promote'}
         </Button>
@@ -61,7 +61,7 @@ export function AdminUserRow({ user, onSetStatus, onSetRole }: AdminUserRowProps
           variant={user.isActive ? 'destructive' : 'outline'}
           disabled={busy}
           onClick={handleStatusToggle}
-          className="min-h-9 text-xs"
+          className="min-h-9 text-xs cursor-pointer"
         >
           {user.isActive ? 'Deactivate' : 'Activate'}
         </Button>

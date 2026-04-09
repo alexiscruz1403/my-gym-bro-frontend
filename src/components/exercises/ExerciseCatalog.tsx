@@ -8,6 +8,7 @@ import { ExerciseCard } from './ExerciseCard';
 import { Pagination } from '@/components/shared/Pagination';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { EmptyState } from '@/components/shared/EmptyState';
+import { Button } from '@/components/ui/button';
 import type { Exercise, MuscleGroup, LoadType } from '@/types/domain.types';
 
 interface ExerciseCatalogBrowseProps {
@@ -16,7 +17,7 @@ interface ExerciseCatalogBrowseProps {
 
 interface ExerciseCatalogPickerProps {
   mode: 'picker';
-  onSelect: (exercise: Exercise) => void;
+  onConfirm: (exercises: Exercise[]) => void;
 }
 
 type ExerciseCatalogProps = ExerciseCatalogBrowseProps | ExerciseCatalogPickerProps;
@@ -31,6 +32,7 @@ export function ExerciseCatalog(props: ExerciseCatalogProps) {
     loadType: undefined,
   });
   const [page, setPage] = useState(1);
+  const [selected, setSelected] = useState<Exercise[]>([]);
 
   const { data, loading, error } = useExercises({
     search: filters.search || undefined,
@@ -43,6 +45,21 @@ export function ExerciseCatalog(props: ExerciseCatalogProps) {
   const handleFilterChange = (next: ExerciseFiltersValue) => {
     setFilters(next);
     setPage(1);
+  };
+
+  const handleToggle = (exercise: Exercise) => {
+    setSelected((prev) =>
+      prev.some((e) => e.id === exercise.id)
+        ? prev.filter((e) => e.id !== exercise.id)
+        : [...prev, exercise],
+    );
+  };
+
+  const handleConfirm = () => {
+    if (props.mode === 'picker' && selected.length > 0) {
+      props.onConfirm(selected);
+      setSelected([]);
+    }
   };
 
   return (
@@ -81,7 +98,8 @@ export function ExerciseCatalog(props: ExerciseCatalogProps) {
                     key={exercise.id}
                     exercise={exercise}
                     mode="picker"
-                    onSelect={props.onSelect}
+                    selected={selected.some((e) => e.id === exercise.id)}
+                    onToggle={handleToggle}
                   />
                 ),
               )}
@@ -95,6 +113,22 @@ export function ExerciseCatalog(props: ExerciseCatalogProps) {
             onPageChange={setPage}
           />
         </>
+      )}
+
+      {props.mode === 'picker' && (
+        <div className="sticky bottom-0 bg-background pt-2 pb-1">
+          <Button
+            className="w-full cursor-pointer"
+            disabled={selected.length === 0}
+            onClick={handleConfirm}
+            type="button"
+            tabIndex={0}
+          >
+            {selected.length > 0
+              ? `Add ${selected.length} exercise${selected.length > 1 ? 's' : ''}`
+              : 'Select exercises'}
+          </Button>
+        </div>
       )}
     </div>
   );

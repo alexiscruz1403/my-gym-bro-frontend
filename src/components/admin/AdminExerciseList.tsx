@@ -49,7 +49,7 @@ export function AdminExerciseList() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">{total} exercises in catalog</p>
-        <Button size="sm" onClick={() => setFormOpen(true)} className="min-h-9 gap-1">
+        <Button size="sm" onClick={() => setFormOpen(true)} className="cursor-pointer min-h-9 gap-1">
           <Plus className="h-4 w-4" />
           New Exercise
         </Button>

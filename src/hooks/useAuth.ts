@@ -9,17 +9,14 @@ import type { LoginRequest, RegisterRequest, ApiError } from '@/types/api.types'
 
 export function useAuth() {
   const router = useRouter();
-  const { user, isAuthenticated, isLoading, setTokens, setUser, logout: storeLogout } =
+  const { user, isAuthenticated, isLoading, setAuthenticated, setUser, logout: storeLogout } =
     useAuthStore();
 
   const register = useCallback(
     async (data: RegisterRequest): Promise<boolean> => {
       try {
         const response = await authService.register(data);
-        setTokens({
-          accessToken: response.accessToken,
-          refreshToken: response.refreshToken,
-        });
+        setAuthenticated(true);
         setUser(response.user);
         router.push('/dashboard');
         return true;
@@ -31,17 +28,14 @@ export function useAuth() {
         return false;
       }
     },
-    [setTokens, setUser, router],
+    [setAuthenticated, setUser, router],
   );
 
   const login = useCallback(
     async (data: LoginRequest): Promise<boolean> => {
       try {
         const response = await authService.login(data);
-        setTokens({
-          accessToken: response.accessToken,
-          refreshToken: response.refreshToken,
-        });
+        setAuthenticated(true);
         setUser(response.user);
         router.push('/dashboard');
         return true;
@@ -53,15 +47,12 @@ export function useAuth() {
         return false;
       }
     },
-    [setTokens, setUser, router],
+    [setAuthenticated, setUser, router],
   );
 
   const logout = useCallback(async (): Promise<void> => {
-    const { refreshToken } = useAuthStore.getState();
     try {
-      if (refreshToken) {
-        await authService.logout(refreshToken);
-      }
+      await authService.logout();
     } catch {
       // Logout locally even if the API call fails
     } finally {

@@ -176,7 +176,7 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen }: FeedPostCardPro
               type="button"
               onClick={() => goTo(activeSlide - 1)}
               aria-label="Previous slide"
-              className="absolute left-2 top-1/2 -translate-y-1/2 hidden lg:flex items-center justify-center h-8 w-8 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+              className="cursor-pointer absolute left-2 top-1/2 -translate-y-1/2 hidden lg:flex items-center justify-center h-8 w-8 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -186,7 +186,7 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen }: FeedPostCardPro
               type="button"
               onClick={() => goTo(activeSlide + 1)}
               aria-label="Next slide"
-              className="absolute right-2 top-1/2 -translate-y-1/2 hidden lg:flex items-center justify-center h-8 w-8 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+              className="cursor-pointer absolute right-2 top-1/2 -translate-y-1/2 hidden lg:flex items-center justify-center h-8 w-8 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -234,7 +234,7 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen }: FeedPostCardPro
           variant="ghost"
           size="sm"
           onClick={toggle}
-          className="flex items-center gap-1.5 min-h-11"
+          className="cursor-pointer flex items-center gap-1.5 min-h-11"
           aria-label={userReacted ? 'Remove reaction' : 'React to post'}
         >
           <Heart className={userReacted ? 'fill-destructive text-destructive' : ''} />
@@ -245,7 +245,7 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen }: FeedPostCardPro
           variant="ghost"
           size="sm"
           onClick={() => onCommentOpen(post._id, () => setCommentsCount((n) => n + 1))}
-          className="flex items-center gap-1.5 min-h-11"
+          className="cursor-pointer flex items-center gap-1.5 min-h-11"
           aria-label="View comments"
         >
           <MessageCircle />

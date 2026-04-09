@@ -39,11 +39,37 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
     }
   };
 
-  const handleCompleteSet = async (
+  const handleCompleteSet = (
     setIndex: number,
     weight: number | undefined,
     reps: number | undefined,
     duration?: number,
+  ) => {
+    // Start timer and advance exercise immediately for a fluid UX,
+    // then fire the API call in the background.
+    startTimer(exercise.plannedRest, exercise.exerciseId);
+
+    const newCompletedCount = exercise.sets.filter((s) => s.completed).length + 1;
+    if (newCompletedCount >= exercise.plannedSets) {
+      onExerciseCompleted?.();
+    }
+
+    onLogSet({
+      exerciseId: exercise.exerciseId,
+      setIndex,
+      weight,
+      reps,
+      duration,
+      completed: true,
+    }).catch(() => {
+      toast.error('Failed to save set. Please try again.');
+    });
+  };
+
+  const handleUncompleteSet = async (
+    setIndex: number,
+    weight: number | undefined,
+    reps: number | undefined,
   ) => {
     try {
       await onLogSet({
@@ -51,16 +77,10 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
         setIndex,
         weight,
         reps,
-        duration,
-        completed: true,
+        completed: false,
       });
-      startTimer(exercise.plannedRest, exercise.exerciseId);
-      const newCompletedCount = exercise.sets.filter((s) => s.completed).length + 1;
-      if (newCompletedCount >= exercise.plannedSets) {
-        onExerciseCompleted?.();
-      }
     } catch {
-      toast.error('Failed to save set. Please try again.');
+      toast.error('Failed to undo set. Please try again.');
     }
   };
 
@@ -139,7 +159,7 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
       )}
 
       {/* Sets */}
-      <SetList exercise={exercise} onCompleteSet={handleCompleteSet} />
+      <SetList exercise={exercise} onCompleteSet={handleCompleteSet} onUncompleteSet={handleUncompleteSet} />
 
       {/* Add / remove sets */}
       <div className="flex items-center justify-between rounded-lg border px-4 py-2">

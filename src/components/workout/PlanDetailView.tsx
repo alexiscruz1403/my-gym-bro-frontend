@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { PlanDayAccordion } from './PlanDayAccordion';
 import { DeletePlanDialog } from './DeletePlanDialog';
 import { deletePlan, activatePlan } from '@/services/workout-plans.service';
+import { invalidatePlanCache } from '@/hooks/usePlan';
 import { toast } from 'sonner';
 import { Pencil, Zap } from 'lucide-react';
 import type { WorkoutPlan } from '@/types/domain.types';
@@ -23,6 +24,7 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
     try {
       await activatePlan(plan.id);
       toast.success(`"${plan.name}" is now your active plan`);
+      invalidatePlanCache(plan.id);
       onUpdate();
     } catch {
       toast.error('Failed to activate plan');
@@ -32,6 +34,7 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
   const handleDelete = async () => {
     await deletePlan(plan.id);
     toast.success(`"${plan.name}" deleted`);
+    invalidatePlanCache(plan.id);
     router.push('/workout');
   };
 
