@@ -75,7 +75,7 @@ export function AvatarUpload() {
         disabled={isLoading}
         aria-label="Cambiar foto de perfil"
         className={cn(
-          'absolute bottom-0 right-0 flex items-center justify-center',
+          'absolute bottom-0 right-0 flex items-center justify-center cursor-pointer',
           'h-7 w-7 rounded-full bg-primary text-primary-foreground cursor.pointer',
           'transition-opacity',
           isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:opacity-90',

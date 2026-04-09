@@ -23,12 +23,17 @@ export default function NewPlanPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleBack = () => {
+    reset();
+    router.push('/workout');
+  }
+
   return (
     <PageContainer>
       <Button
         variant="ghost"
         size="icon"
-        onClick={() => router.push('/workout')}
+        onClick={handleBack}
         className="mb-2 -ml-2 min-h-11 min-w-11 cursor-pointer"
         aria-label="Back to plans"
       >

@@ -59,21 +59,23 @@ export function ExerciseFilters({ value, onChange }: ExerciseFiltersProps) {
           placeholder="Search exercises..."
           value={value.search}
           onChange={(e) => onChange({ ...value, search: e.target.value })}
-          className="pl-9"
+          className="pl-9 cursor-text"
         />
         {value.search && (
           <button
             onClick={() => onChange({ ...value, search: '' })}
-            className="text-muted-foreground hover:text-foreground absolute right-3 top-1/2 -translate-y-1/2"
+            className="text-muted-foreground hover:text-foreground absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
             aria-label="Clear search"
+            type="button"
+            tabIndex={0}
           >
             <X className="h-4 w-4" />
           </button>
         )}
       </div>
 
-      <div className="w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="flex flex-wrap gap-2 pb-1">
+      <div className="w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:overflow-x-visible md:[scrollbar-width:auto] md:[&::-webkit-scrollbar]:block">
+        <div className="flex flex-nowrap gap-2 pb-1 md:flex-wrap">
           {LOAD_TYPE_OPTIONS.map((opt) => (
             <Button
               key={opt.value}
@@ -86,6 +88,8 @@ export function ExerciseFilters({ value, onChange }: ExerciseFiltersProps) {
                 })
               }
               className="shrink-0 cursor-pointer"
+              type="button"
+              tabIndex={0}
             >
               {opt.label}
             </Button>
@@ -93,8 +97,8 @@ export function ExerciseFilters({ value, onChange }: ExerciseFiltersProps) {
         </div>
       </div>
 
-      <div className="w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="flex flex-wrap gap-2 pb-1">
+      <div className="w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:overflow-x-visible md:[scrollbar-width:auto] md:[&::-webkit-scrollbar]:block">
+        <div className="flex flex-nowrap gap-2 pb-1 md:flex-wrap">
           {MUSCLE_OPTIONS.map((opt) => (
             <Button
               key={opt.value}
@@ -107,6 +111,8 @@ export function ExerciseFilters({ value, onChange }: ExerciseFiltersProps) {
                 })
               }
               className="shrink-0 cursor-pointer"
+              type="button"
+              tabIndex={0}
             >
               {opt.label}
             </Button>
@@ -118,6 +124,8 @@ export function ExerciseFilters({ value, onChange }: ExerciseFiltersProps) {
         <button
           onClick={() => onChange({ ...value, muscle: undefined, loadType: undefined })}
           className="text-muted-foreground hover:text-foreground flex cursor-pointer items-center gap-1 text-xs"
+          type="button"
+          tabIndex={0}
         >
           <X className="h-3 w-3" />
           Clear filters

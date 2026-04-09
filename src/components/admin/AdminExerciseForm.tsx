@@ -127,7 +127,7 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
               <button
                 type="button"
                 onClick={() => setBilateral(true)}
-                className={`flex-1 rounded-lg border px-3 py-2 text-sm transition-colors ${
+                className={`cursor-pointer flex-1 rounded-lg border px-3 py-2 text-sm transition-colors ${
                   bilateral
                     ? 'border-primary bg-primary text-primary-foreground'
                     : 'border-input bg-background text-foreground'
@@ -138,7 +138,7 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
               <button
                 type="button"
                 onClick={() => setBilateral(false)}
-                className={`flex-1 rounded-lg border px-3 py-2 text-sm transition-colors ${
+                className={`cursor-pointer flex-1 rounded-lg border px-3 py-2 text-sm transition-colors ${
                   !bilateral
                     ? 'border-primary bg-primary text-primary-foreground'
                     : 'border-input bg-background text-foreground'
@@ -161,7 +161,7 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
                     key={muscle}
                     type="button"
                     onClick={() => toggleMuscle(muscle, 'primary')}
-                    className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+                    className={`cursor-pointer rounded-full border px-3 py-1 text-xs transition-colors ${
                       isPrimary
                         ? 'border-primary bg-primary text-primary-foreground'
                         : isSecondary
@@ -188,7 +188,7 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
                     key={muscle}
                     type="button"
                     onClick={() => toggleMuscle(muscle, 'secondary')}
-                    className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+                    className={`cursor-pointer rounded-full border px-3 py-1 text-xs transition-colors ${
                       isSecondary
                         ? 'border-blue-500 bg-blue-500/20 text-blue-700 dark:text-blue-300'
                         : isPrimary
@@ -204,10 +204,10 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
           </div>
 
           <div className="flex flex-col gap-2 pt-2">
-            <Button type="submit" disabled={busy || musclesPrimary.length === 0} className="w-full">
+            <Button type="submit" disabled={busy || musclesPrimary.length === 0} className="cursor-pointer w-full">
               {exercise ? 'Save Changes' : 'Create Exercise'}
             </Button>
-            <Button type="button" variant="ghost" onClick={onClose} disabled={busy} className="w-full">
+            <Button type="button" variant="ghost" onClick={onClose} disabled={busy} className="cursor-pointer w-full">
               Cancel
             </Button>
           </div>

@@ -30,14 +30,14 @@ function OwnProfileHeader({ user }: OwnProfileHeaderProps) {
           <div className="flex gap-3 mt-2">
             <button
               onClick={() => setSheet('followers')}
-              className="text-sm text-left min-h-11 flex items-center"
+              className="cursor-pointer text-sm text-left min-h-11 flex items-center"
             >
               <span className="font-semibold">{user.followersCount}</span>
               <span className="text-muted-foreground ml-1">followers</span>
             </button>
             <button
               onClick={() => setSheet('following')}
-              className="text-sm text-left min-h-11 flex items-center"
+              className="cursor-pointer text-sm text-left min-h-11 flex items-center"
             >
               <span className="font-semibold">{user.followingCount}</span>
               <span className="text-muted-foreground ml-1">following</span>

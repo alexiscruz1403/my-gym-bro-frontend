@@ -121,6 +121,8 @@ export function ExerciseCatalog(props: ExerciseCatalogProps) {
             className="w-full cursor-pointer"
             disabled={selected.length === 0}
             onClick={handleConfirm}
+            type="button"
+            tabIndex={0}
           >
             {selected.length > 0
               ? `Add ${selected.length} exercise${selected.length > 1 ? 's' : ''}`

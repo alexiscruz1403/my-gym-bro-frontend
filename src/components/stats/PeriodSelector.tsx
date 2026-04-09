@@ -53,7 +53,7 @@ export function PeriodSelector({
             type="button"
             onClick={() => onPeriodChange(p.value)}
             className={cn(
-              'flex-1 rounded-md py-1.5 text-sm font-medium transition-colors',
+              'flex-1 rounded-md py-1.5 text-sm font-medium transition-colors cursor-pointer',
               period === p.value
                 ? 'bg-background text-foreground shadow-sm'
                 : 'text-muted-foreground hover:text-foreground',
@@ -68,7 +68,7 @@ export function PeriodSelector({
         <button
           type="button"
           onClick={() => onDateChange(shiftPeriod(period, date, -1))}
-          className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground min-h-11 min-w-11 flex items-center justify-center"
+          className="cursor-pointer rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground min-h-11 min-w-11 flex items-center justify-center"
           aria-label="Período anterior"
         >
           <ChevronLeft className="h-4 w-4" />
@@ -81,7 +81,7 @@ export function PeriodSelector({
         <button
           type="button"
           onClick={() => onDateChange(shiftPeriod(period, date, 1))}
-          className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground min-h-11 min-w-11 flex items-center justify-center"
+          className="cursor-pointer rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground min-h-11 min-w-11 flex items-center justify-center"
           aria-label="Período siguiente"
         >
           <ChevronRight className="h-4 w-4" />

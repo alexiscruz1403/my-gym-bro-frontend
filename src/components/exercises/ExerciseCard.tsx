@@ -55,6 +55,9 @@ export function ExerciseCard(props: ExerciseCardProps) {
         selected && 'border-primary bg-primary/5',
       )}
       onClick={handleCardClick}
+      tabIndex={0}
+      role="button"
+      aria-pressed={selected}
     >
       <CardContent className="flex items-center gap-3 p-4">
         {exercise.gifUrl ? (
@@ -88,6 +91,8 @@ export function ExerciseCard(props: ExerciseCardProps) {
             onClick={handleToggle}
             className="cursor-pointer shrink-0"
             aria-label={selected ? 'Deselect exercise' : 'Select exercise'}
+            type="button"
+            tabIndex={0}
           >
             {selected ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
           </Button>

@@ -38,7 +38,7 @@ export function AdminExerciseRow({ exercise, onEdit, onDelete }: AdminExerciseRo
         </div>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <Button size="sm" variant="outline" onClick={() => onEdit(exercise)} className="min-h-9 text-xs">
+        <Button size="sm" variant="outline" onClick={() => onEdit(exercise)} className="cursor-pointer min-h-9 text-xs">
           Edit
         </Button>
         <Button
@@ -46,7 +46,7 @@ export function AdminExerciseRow({ exercise, onEdit, onDelete }: AdminExerciseRo
           variant="destructive"
           disabled={busy}
           onClick={handleDelete}
-          className="min-h-9 text-xs"
+          className="min-h-9 text-xs cursor-pointer"
         >
           Delete
         </Button>
