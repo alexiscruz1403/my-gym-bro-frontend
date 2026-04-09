@@ -1,7 +1,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import type { ApiError } from '@/types/api.types';
 import { API_ROUTES } from '@/lib/api-routes';
-import { logout } from '@/store/auth.store';
+import { logout, setAuthenticated } from '@/store/auth.store';
 
 // ─── Axios instance ───────────────────────────────────────────────
 // withCredentials: true ensures httpOnly cookies are sent on every request.
@@ -48,7 +48,7 @@ apiClient.interceptors.response.use(
     };
 
     const isUnauthorized = error.response?.status === 401;
-    const isRefreshEndpoint = originalRequest.url === API_ROUTES.auth.refresh;
+    const isRefreshEndpoint = originalRequest.url?.includes(API_ROUTES.auth.refresh) ?? false;
     const alreadyRetried = originalRequest._retry;
 
     // Do not retry refresh requests or already-retried requests
@@ -72,12 +72,16 @@ apiClient.interceptors.response.use(
       // Refresh token is sent automatically via httpOnly cookie
       await apiClient.post(API_ROUTES.auth.refresh);
 
+      setAuthenticated(true);
       processQueue(null);
 
       return apiClient(originalRequest);
     } catch (refreshError) {
       logout();
       processQueue(refreshError);
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login';
+      }
       return Promise.reject(refreshError);
     } finally {
       isRefreshing = false;

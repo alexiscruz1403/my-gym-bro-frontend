@@ -65,4 +65,8 @@ export function logout(): void {
   useAuthStore.getState().logout();
 }
 
+export function setAuthenticated(value: boolean): void {
+  useAuthStore.getState().setAuthenticated(value);
+}
+
 export default useAuthStore;
