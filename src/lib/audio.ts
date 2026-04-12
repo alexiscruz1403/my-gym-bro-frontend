@@ -1,37 +1,74 @@
+let audioCtx: AudioContext | null = null;
+let audioBuffer: AudioBuffer | null = null;
+let bufferLoading: Promise<AudioBuffer | null> | null = null;
+
+function getAudioContext(): AudioContext | null {
+  if (audioCtx) return audioCtx;
+
+  const AudioContextClass =
+    window.AudioContext ||
+    (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+
+  if (!AudioContextClass) return null;
+
+  audioCtx = new AudioContextClass();
+  return audioCtx;
+}
+
+async function loadBuffer(ctx: AudioContext): Promise<AudioBuffer | null> {
+  const response = await fetch('/audio/timer.mp3');
+  const arrayBuffer = await response.arrayBuffer();
+  return ctx.decodeAudioData(arrayBuffer);
+}
+
 /**
- * Plays a short beep using the Web Audio API.
+ * Plays the timer notification sound (/audio/timer.mp3) using the Web Audio API.
+ * Uses AudioBufferSourceNode for reliable playback in timer callbacks,
+ * including mobile browsers with strict autoplay policies.
  * Silently no-ops in environments where AudioContext is unavailable.
  */
 export function playBeep(
-  frequency = 880,
-  durationMs = 200,
-  volume = 0.4,
+  _frequency?: number,
+  _durationMs?: number,
+  _volume?: number,
 ): void {
   if (typeof window === 'undefined') return;
 
   try {
-    const AudioContextClass =
-      window.AudioContext ||
-      (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    const ctx = getAudioContext();
+    if (!ctx) return;
 
-    if (!AudioContextClass) return;
+    if (ctx.state === 'suspended') {
+      ctx.resume();
+    }
 
-    const ctx = new AudioContextClass();
-    const oscillator = ctx.createOscillator();
-    const gain = ctx.createGain();
+    if (audioBuffer) {
+      const source = ctx.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(ctx.destination);
+      source.start(0);
+      return;
+    }
 
-    oscillator.connect(gain);
-    gain.connect(ctx.destination);
+    if (!bufferLoading) {
+      bufferLoading = loadBuffer(ctx)
+        .then((buffer) => {
+          audioBuffer = buffer;
+          return buffer;
+        })
+        .catch(() => {
+          bufferLoading = null;
+          return null;
+        });
+    }
 
-    oscillator.type = 'sine';
-    oscillator.frequency.setValueAtTime(frequency, ctx.currentTime);
-    gain.gain.setValueAtTime(volume, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + durationMs / 1000);
-
-    oscillator.start(ctx.currentTime);
-    oscillator.stop(ctx.currentTime + durationMs / 1000);
-
-    oscillator.onended = () => ctx.close();
+    bufferLoading.then((buffer) => {
+      if (!buffer) return;
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      source.connect(ctx.destination);
+      source.start(0);
+    });
   } catch {
     // Audio not available — fail silently
   }
