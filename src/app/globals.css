@@ -54,10 +54,10 @@
 /* ─── Color variables — Light mode ──────────────────────────────── */
 @layer base {
   :root {
-    --background: hsl(0 0% 100%);
+    --background: hsl(210 33% 98%);
     --foreground: hsl(222 47% 11%);
 
-    --card: hsl(0 0% 98%);
+    --card: hsl(210 25% 96%);
     --card-foreground: hsl(222 47% 11%);
 
     --primary: hsl(22 100% 52%);       /* Naranja energético #F95B0A */
@@ -66,8 +66,8 @@
     --secondary: hsl(222 47% 11%);     /* Casi negro */
     --secondary-foreground: hsl(0 0% 98%);
 
-    --muted: hsl(210 20% 96%);
-    --muted-foreground: hsl(215 16% 47%);
+    --muted: hsl(210 30% 94%);
+    --muted-foreground: hsl(215 20% 44%);
 
     --accent: hsl(142 76% 36%);        /* Verde de éxito — sets completados */
     --accent-foreground: hsl(0 0% 100%);
@@ -75,8 +75,8 @@
     --destructive: hsl(0 84% 60%);
     --destructive-foreground: hsl(0 0% 100%);
 
-    --border: hsl(214 32% 91%);
-    --input: hsl(214 32% 91%);
+    --border: hsl(214 32% 89%);
+    --input: hsl(214 32% 89%);
     --ring: hsl(22 100% 52%);
 
     --radius: 0.75rem;
