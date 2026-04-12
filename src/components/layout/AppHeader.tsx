@@ -27,7 +27,7 @@ export function AppHeader({ title, action }: AppHeaderProps) {
     <header className="sticky top-0 z-40 bg-card/80 backdrop-blur-sm border-b border-border">
       <div className="flex items-center justify-between h-14 px-4 lg:px-6">
         <h1 className="font-display text-lg font-semibold text-foreground truncate">
-          {title ?? 'Gym Planner'}
+          {title ?? 'MyGymBro'}
         </h1>
 
         <div className="flex items-center gap-2">

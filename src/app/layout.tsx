@@ -6,7 +6,7 @@ import { inter, oswald } from '@/lib/fonts';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Gym Planner',
+  title: 'MyGymBro',
   description: 'Tu app de entrenamiento personal',
   manifest: '/manifest.json',
 };
