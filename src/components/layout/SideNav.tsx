@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Home, Dumbbell, ChartBar, Users, User, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -23,9 +24,14 @@ export function SideNav() {
     <aside className="hidden lg:flex lg:fixed lg:inset-y-0 lg:w-60 flex-col bg-card border-r border-border z-40">
       {/* Logo */}
       <div className="flex h-14 items-center px-6 border-b border-border shrink-0">
-        <span className="font-display text-xl font-bold text-primary tracking-wide">
-          GYM<span className="text-foreground">PLANNER</span>
-        </span>
+        <div className="flex items-center gap-2">
+          <Image src="/MyGymBro.svg" alt="MyGymBro" width={36} height={16} priority />
+          <span className="font-display text-xl font-bold tracking-wide">
+            <span className="text-primary">My</span>
+            <span className="text-foreground">Gym</span>
+            <span className="text-primary">Bro</span>
+          </span>
+        </div>
       </div>
 
       {/* Nav items */}

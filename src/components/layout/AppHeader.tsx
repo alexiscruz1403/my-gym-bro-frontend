@@ -4,6 +4,7 @@ import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import useUIStore from '@/store/ui.store';
 import { useEffect } from 'react';
+import Image from 'next/image'
 
 interface AppHeaderProps {
   title?: string;
@@ -26,9 +27,14 @@ export function AppHeader({ title, action }: AppHeaderProps) {
   return (
     <header className="sticky top-0 z-40 bg-card/80 backdrop-blur-sm border-b border-border">
       <div className="flex items-center justify-between h-14 px-4 lg:px-6">
-        <h1 className="font-display text-lg font-semibold text-foreground truncate">
-          {title ?? 'Gym Planner'}
-        </h1>
+        <div className="flex items-center gap-2 lg:invisible">
+          <Image src="/MyGymBro.svg" alt="MyGymBro" width={36} height={16} priority />
+          <span className="font-display text-xl font-bold tracking-wide">
+            <span className="text-primary">My</span>
+            <span className="text-foreground">Gym</span>
+            <span className="text-primary">Bro</span>
+          </span>
+        </div>
 
         <div className="flex items-center gap-2">
           {action}

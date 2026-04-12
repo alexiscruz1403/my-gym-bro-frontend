@@ -1,6 +1,6 @@
 {
-  "name": "Gym Planner",
-  "short_name": "GymPlanner",
+  "name": "MyGymBro",
+  "short_name": "MyGymBro",
   "description": "Track and share your workouts",
   "start_url": "/dashboard",
   "display": "standalone",
