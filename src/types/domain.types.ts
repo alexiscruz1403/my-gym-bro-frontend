@@ -72,6 +72,7 @@ export interface ExerciseConfig {
   reps?: number;
   duration?: number;
   weight?: number;
+  weightUnit?: 'kg' | 'lbs';
   rest: number;
   notes?: string;
   supersetGroupId?: string;
@@ -79,6 +80,7 @@ export interface ExerciseConfig {
 
 export interface PlanDay {
   dayOfWeek: DayOfWeek;
+  dayName?: string | null;
   exercises: ExerciseConfig[];
 }
 
@@ -116,6 +118,7 @@ export interface SessionExercise {
   exerciseName: string;
   orderIndex: number;
   supersetGroupId?: string | null;
+  weightUnit?: 'kg' | 'lbs';
   plannedSets: number;
   plannedReps?: number;
   plannedDuration?: number;
@@ -132,6 +135,7 @@ export interface WorkoutSession {
   planId: string;
   planName: string;
   dayOfWeek: DayOfWeek;
+  dayName?: string | null;
   status: SessionStatus;
   startedAt: string;
   finishedAt?: string;
@@ -151,6 +155,7 @@ export interface SessionHistoryItem {
   _id: string;
   planName: string;
   dayOfWeek: DayOfWeek;
+  dayName?: string | null;
   status: SessionStatus;
   startedAt: string;
   finishedAt: string;
