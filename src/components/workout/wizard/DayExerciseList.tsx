@@ -18,6 +18,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { ExerciseConfigForm } from './ExerciseConfigForm';
 import dynamic from 'next/dynamic';
@@ -33,6 +34,8 @@ import type { ExerciseConfigDraft } from '@/types/ui.types';
 
 interface DayExerciseListProps {
   exercises: ExerciseConfigDraft[];
+  dayName: string;
+  onDayNameChange: (name: string) => void;
   onAdd: (exercise: ExerciseConfigDraft) => void;
   onUpdate: (index: number, config: Partial<ExerciseConfigDraft>) => void;
   onRemove: (index: number) => void;
@@ -105,7 +108,7 @@ function SortableExerciseItem({
             <p className="truncate text-sm font-medium">{ex.exerciseName}</p>
             <p className="text-muted-foreground text-xs">
               {ex.sets} × {ex.reps !== undefined ? `${ex.reps} reps` : `${ex.duration}s`}
-              {ex.weight ? ` · ${ex.weight}kg` : ''}
+              {ex.weight ? ` · ${ex.weight}${ex.weightUnit ?? 'kg'}` : ''}
               {` · ${ex.rest}s rest`}
             </p>
           </div>
@@ -146,6 +149,8 @@ function SortableExerciseItem({
 
 export function DayExerciseList({
   exercises,
+  dayName,
+  onDayNameChange,
   onAdd,
   onUpdate,
   onRemove,
@@ -193,6 +198,20 @@ export function DayExerciseList({
 
   return (
     <div className="space-y-3">
+      <div className="space-y-1">
+        <label className="text-xs font-medium text-muted-foreground">
+          Day name <span className="font-normal">(optional)</span>
+        </label>
+        <Input
+          type="text"
+          placeholder='e.g. "Push", "Legs A"'
+          value={dayName}
+          onChange={(e) => onDayNameChange(e.target.value)}
+          maxLength={50}
+          className="min-h-11"
+        />
+      </div>
+
       {exercises.length === 0 && (
         <p className="text-muted-foreground py-4 text-center text-sm">
           No exercises added for this day.
