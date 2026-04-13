@@ -66,7 +66,7 @@ export function SessionDetailHeader({ session }: SessionDetailHeaderProps) {
         <div className="min-w-0">
           <h1 className="font-display truncate text-xl font-bold">{session.planName}</h1>
           <p className="text-muted-foreground text-sm">
-            {DAY_LABEL[session.dayOfWeek]} · {formatDate(session.startedAt)}
+            {DAY_LABEL[session.dayOfWeek]}{session.dayName ? ` — ${session.dayName}` : ''} · {formatDate(session.startedAt)}
           </p>
         </div>
         <Badge variant={STATUS_VARIANT[session.status]} className="shrink-0">
