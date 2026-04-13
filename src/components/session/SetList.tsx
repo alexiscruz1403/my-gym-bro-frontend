@@ -12,6 +12,7 @@ interface SetListProps {
 
 export function SetList({ exercise, onCompleteSet, onUncompleteSet }: SetListProps) {
   const isDuration = exercise.trackingType === 'duration';
+  const weightUnit = exercise.weightUnit ?? 'kg';
 
   return (
     <div className="space-y-2">
@@ -38,6 +39,7 @@ export function SetList({ exercise, onCompleteSet, onUncompleteSet }: SetListPro
             setIndex={i}
             plannedReps={exercise.plannedReps}
             plannedWeight={exercise.plannedWeight}
+            weightUnit={weightUnit}
             loggedSet={logged}
             onComplete={onCompleteSet}
             onUncomplete={onUncompleteSet}
