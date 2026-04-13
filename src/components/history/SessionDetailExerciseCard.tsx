@@ -41,7 +41,7 @@ export function SessionDetailExerciseCard({ exercise }: SessionDetailExerciseCar
           {exercise.sets.length > 0 && (
             <div className="space-y-1.5">
               {exercise.sets.map((set) => (
-                <SessionDetailSetRow key={set.setIndex} set={set} />
+                <SessionDetailSetRow key={set.setIndex} set={set} weightUnit={exercise.weightUnit} />
               ))}
             </div>
           )}
