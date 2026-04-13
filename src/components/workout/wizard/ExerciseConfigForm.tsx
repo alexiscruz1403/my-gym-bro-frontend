@@ -30,6 +30,9 @@ export function ExerciseConfigForm({
   const [metricMode, setMetricMode] = useState<MetricMode>(
     defaultValues?.duration !== undefined ? 'duration' : 'reps',
   );
+  const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>(
+    defaultValues?.weightUnit ?? 'kg',
+  );
   const [supersetGroupId, setSupersetGroupId] = useState(defaultValues?.supersetGroupId ?? '');
 
   const {
@@ -69,6 +72,7 @@ export function ExerciseConfigForm({
       reps: metricMode === 'reps' ? values.reps : undefined,
       duration: metricMode === 'duration' ? values.duration : undefined,
       weight: values.weight,
+      weightUnit,
       rest: values.rest,
       notes: values.notes,
       supersetGroupId: supersetGroupId.trim() || undefined,
@@ -149,7 +153,25 @@ export function ExerciseConfigForm({
         </div>
 
         <div className="space-y-1">
-          <label htmlFor="weight" className="text-xs font-medium">Weight (kg)</label>
+          <div className="flex items-center justify-between">
+            <label htmlFor="weight" className="text-xs font-medium">Weight</label>
+            <div className="flex overflow-hidden rounded-md border text-xs">
+              {(['kg', 'lbs'] as const).map((unit, i) => (
+                <button
+                  key={unit}
+                  type="button"
+                  onClick={() => setWeightUnit(unit)}
+                  className={`cursor-pointer px-2 py-0.5 transition-colors ${i > 0 ? 'border-l' : ''} ${
+                    weightUnit === unit
+                      ? 'bg-primary text-primary-foreground font-medium'
+                      : 'text-muted-foreground hover:bg-muted'
+                  }`}
+                >
+                  {unit}
+                </button>
+              ))}
+            </div>
+          </div>
           <Input
             id="weight"
             type="number"
