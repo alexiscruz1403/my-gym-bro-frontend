@@ -61,7 +61,7 @@ export function SessionHistoryCard({ session }: SessionHistoryCardProps) {
             <div className="min-w-0">
               <p className="truncate font-semibold">{session.planName}</p>
               <p className="text-muted-foreground text-sm">
-                {DAY_LABEL[session.dayOfWeek]}{session.dayName ? ` — ${session.dayName}` : ''} · {formatDate(session.startedAt)}
+                {DAY_LABEL[session.dayOfWeek]}{session.dayName ? ` · ${session.dayName}` : ''} · {formatDate(session.startedAt)}
               </p>
             </div>
             <Badge variant={STATUS_VARIANT[session.status]} className="shrink-0">

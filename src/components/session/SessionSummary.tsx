@@ -92,10 +92,11 @@ export function SessionSummary({ session }: SessionSummaryProps) {
                         ex.trackingType === 'duration'
                           ? `${s.duration ?? 0}s`
                           : `${s.reps ?? 0} reps`;
-                      const weight = s.weight ? ` · ${s.weight} kg` : '';
+                      const weight = s.weight ? ` · ${s.weight}` : '';
+                      const weightUnit = ex.weightUnit ? ex.weightUnit : '';
                       return (
                         <p key={i} className="text-muted-foreground text-xs">
-                          Set {s.setIndex + 1}: {metric}{weight}
+                          Set {s.setIndex + 1}: {metric}{weight}{weightUnit && ` ${weightUnit}`}
                         </p>
                       );
                     })}

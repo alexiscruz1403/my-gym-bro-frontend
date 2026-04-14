@@ -294,6 +294,7 @@ export interface ExerciseHistorySet {
   setIndex: number;
   reps?: number;
   weight?: number;
+  weightUnit?: 'kg' | 'lbs';
   duration?: number;
   completed: boolean;
   loggedAt: string;
@@ -303,6 +304,7 @@ export interface ExerciseHistorySession {
   sessionId: string;
   sessionDate: string;
   dayOfWeek: DayOfWeek;
+  weightUnit: 'kg' | 'lbs';
   sets: ExerciseHistorySet[];
 }
 
