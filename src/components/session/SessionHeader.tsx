@@ -12,6 +12,16 @@ import {
 import { Flag, MoreVertical, Trash2 } from 'lucide-react';
 import useSessionStore from '@/store/session.store';
 
+const DAY_LABEL: Record<string, string> = {
+  monday: 'Monday',
+  tuesday: 'Tuesday',
+  wednesday: 'Wednesday',
+  thursday: 'Thursday',
+  friday: 'Friday',
+  saturday: 'Saturday',
+  sunday: 'Sunday',
+};
+
 function formatElapsed(startTime: number | null): string {
   const elapsed = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
   const h = Math.floor(elapsed / 3600);
@@ -40,6 +50,12 @@ export function SessionHeader({ onFinish, onCancel }: SessionHeaderProps) {
       <div>
         <p className="text-muted-foreground text-xs">In progress</p>
         <p className="font-display text-lg font-bold">{activeSession?.planName ?? 'Workout'}</p>
+        {activeSession && (
+          <p className="text-muted-foreground text-xs">
+            {DAY_LABEL[activeSession.dayOfWeek]}
+            {activeSession.dayName && ` · ${activeSession.dayName}`}
+          </p>
+        )}
       </div>
 
       <div className="flex items-center gap-2">

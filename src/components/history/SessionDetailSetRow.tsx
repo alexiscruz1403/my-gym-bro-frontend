@@ -4,9 +4,10 @@ import type { SessionSet } from '@/types/domain.types';
 
 interface SessionDetailSetRowProps {
   set: SessionSet;
+  weightUnit?: 'kg' | 'lbs';
 }
 
-export function SessionDetailSetRow({ set }: SessionDetailSetRowProps) {
+export function SessionDetailSetRow({ set, weightUnit }: SessionDetailSetRowProps) {
   return (
     <div
       className={cn(
@@ -27,7 +28,7 @@ export function SessionDetailSetRow({ set }: SessionDetailSetRowProps) {
         {set.weight !== undefined && (
           <span>
             <span className="font-medium">{set.weight}</span>
-            <span className="text-muted-foreground ml-0.5">kg</span>
+            <span className="text-muted-foreground ml-0.5">{weightUnit ?? 'kg'}</span>
           </span>
         )}
         {set.reps !== undefined && (

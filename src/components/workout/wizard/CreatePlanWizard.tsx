@@ -24,9 +24,11 @@ export function CreatePlanWizard() {
     name,
     selectedDays,
     exercisesByDay,
+    dayNamesByDay,
     setStep,
     setName,
     toggleDay,
+    setDayName,
     addExerciseToDay,
     removeExerciseFromDay,
     updateExerciseConfig,
@@ -46,12 +48,14 @@ export function CreatePlanWizard() {
     name,
     days: selectedDays.map((day) => ({
       dayOfWeek: day,
+      dayName: dayNamesByDay[day] || undefined,
       exercises: (exercisesByDay[day] ?? []).map((ex) => ({
         exerciseId: ex.exerciseId,
         sets: ex.sets,
         reps: ex.reps,
         duration: ex.duration,
         weight: ex.weight,
+        weightUnit: ex.weightUnit || undefined,
         rest: ex.rest,
         notes: ex.notes,
         supersetGroupId: ex.supersetGroupId,
@@ -112,6 +116,8 @@ export function CreatePlanWizard() {
         <WizardStep3Exercises
           selectedDays={selectedDays}
           exercisesByDay={exercisesByDay}
+          dayNamesByDay={dayNamesByDay}
+          onSetDayName={setDayName}
           onAdd={addExerciseToDay}
           onUpdate={updateExerciseConfig}
           onRemove={removeExerciseFromDay}

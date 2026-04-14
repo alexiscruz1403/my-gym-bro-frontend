@@ -56,7 +56,7 @@ export function ExerciseHistorySessionRow({ session }: ExerciseHistorySessionRow
       {expanded && session.sets.length > 0 && (
         <div className="border-t px-1 py-1.5">
           {session.sets.map((set) => (
-            <ExerciseHistorySetRow key={set.setIndex} set={set} />
+            <ExerciseHistorySetRow key={set.setIndex} set={set} weightUnit={session.weightUnit} />
           ))}
         </div>
       )}

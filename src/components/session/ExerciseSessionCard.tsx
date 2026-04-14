@@ -146,11 +146,30 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
           {exercise.trackingType === 'duration'
             ? exercise.plannedDuration ? ` × ${exercise.plannedDuration}s` : ''
             : exercise.plannedReps ? ` × ${exercise.plannedReps} reps` : ''}
-          {exercise.plannedWeight ? ` · ${exercise.plannedWeight} kg` : ''}
+          {exercise.plannedWeight ? ` · ${exercise.plannedWeight} ${exercise.weightUnit ?? 'kg'}` : ''}
           {exercise.modifiedDuringSession && (
             <span className="text-primary ml-1 text-xs">(modified)</span>
           )}
         </p>
+      </div>
+
+      {/* Weight unit toggle */}
+      <div className="flex items-center gap-2">
+        <span className="text-muted-foreground text-xs">Unit:</span>
+        {(['kg', 'lbs'] as const).map((unit) => (
+          <button
+            key={unit}
+            type="button"
+            onClick={() => onModify(exercise.exerciseId, { weightUnit: unit })}
+            className={`cursor-pointer rounded border px-2 py-0.5 text-xs transition-colors ${
+              (exercise.weightUnit ?? 'kg') === unit
+                ? 'border-primary bg-primary/10 text-primary font-medium'
+                : 'border-border text-muted-foreground hover:bg-muted'
+            }`}
+          >
+            {unit}
+          </button>
+        ))}
       </div>
 
       {/* Last performance */}

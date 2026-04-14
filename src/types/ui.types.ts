@@ -12,6 +12,7 @@ export interface ExerciseConfigDraft {
   reps?: number;
   duration?: number;
   weight?: number;
+  weightUnit?: 'kg' | 'lbs';
   rest: number;
   notes?: string;
   supersetGroupId?: string;

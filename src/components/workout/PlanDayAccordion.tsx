@@ -59,6 +59,9 @@ export function PlanDayAccordion({ days }: PlanDayAccordionProps) {
           <AccordionItem key={day.dayOfWeek} value={day.dayOfWeek}>
             <AccordionTrigger className="cursor-pointer text-sm font-medium">
               {DAY_LABELS[day.dayOfWeek]}
+              {day.dayName && (
+                <span className="text-muted-foreground font-normal"> · {day.dayName}</span>
+              )}
               <span className="text-muted-foreground ml-auto mr-2 text-xs">
                 {day.exercises.length} {day.exercises.length === 1 ? 'exercise' : 'exercises'}
               </span>

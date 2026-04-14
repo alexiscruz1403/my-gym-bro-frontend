@@ -53,7 +53,7 @@ export async function replaceExercise(
   exerciseId: string,
   dto: ReplaceExerciseRequest,
 ): Promise<WorkoutSession> {
-  await apiClient.patch(API_ROUTES.sessions.replaceExercise(sessionId, exerciseId), dto);
+  await apiClient.put(API_ROUTES.sessions.replaceExercise(sessionId, exerciseId), dto);
   // Re-fetch to get lastPerformance resolved for the new exercise
   const { data } = await apiClient.get<WorkoutSession>(API_ROUTES.sessions.active);
   return data;

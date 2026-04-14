@@ -11,12 +11,13 @@ interface SetRowProps {
   setIndex: number;
   plannedReps?: number;
   plannedWeight?: number;
+  weightUnit: 'kg' | 'lbs';
   loggedSet?: SessionSet;
   onComplete: (setIndex: number, weight: number | undefined, reps: number | undefined) => void;
   onUncomplete: (setIndex: number, weight: number | undefined, reps: number | undefined) => void;
 }
 
-export function SetRow({ setIndex, plannedReps, plannedWeight, loggedSet, onComplete, onUncomplete }: SetRowProps) {
+export function SetRow({ setIndex, plannedReps, plannedWeight, weightUnit, loggedSet, onComplete, onUncomplete }: SetRowProps) {
   const [weight, setWeight] = useState<string>(
     String(loggedSet?.weight ?? plannedWeight ?? 0),
   );
@@ -56,7 +57,7 @@ export function SetRow({ setIndex, plannedReps, plannedWeight, loggedSet, onComp
 
       <div className="flex flex-1 items-center gap-2">
         <div className="flex-1 space-y-0.5">
-          <label className="text-muted-foreground text-xs">kg</label>
+          <label className="text-muted-foreground text-xs">{weightUnit}</label>
           <Input
             type="number"
             inputMode="decimal"

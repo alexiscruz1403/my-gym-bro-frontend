@@ -68,6 +68,7 @@ export interface CreatePlanExercise {
   reps?: number;
   duration?: number;
   weight?: number;
+  weightUnit?: 'kg' | 'lbs';
   rest: number;
   notes?: string;
   supersetGroupId?: string;
@@ -75,6 +76,7 @@ export interface CreatePlanExercise {
 
 export interface CreatePlanDay {
   dayOfWeek: DayOfWeek;
+  dayName?: string;
   exercises: CreatePlanExercise[];
 }
 
@@ -110,6 +112,7 @@ export interface ModifyExerciseRequest {
   plannedDuration?: number;
   plannedWeight?: number;
   plannedRest?: number;
+  weightUnit?: 'kg' | 'lbs';
 }
 
 export interface ReplaceExerciseRequest {
@@ -119,6 +122,7 @@ export interface ReplaceExerciseRequest {
   plannedDuration?: number;
   plannedWeight?: number;
   plannedRest?: number;
+  weightUnit?: 'kg' | 'lbs';
 }
 
 export interface FinishSessionRequest {

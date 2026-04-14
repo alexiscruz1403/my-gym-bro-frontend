@@ -20,7 +20,7 @@ export function ExerciseConfigRow({ config }: ExerciseConfigRowProps) {
         </div>
         <div className="text-muted-foreground shrink-0 text-right text-xs">
           {config.weight !== undefined && config.weight !== null && config.weight > 0 && (
-            <span>{config.weight} kg</span>
+            <span>{config.weight} {config.weightUnit ?? 'kg'}</span>
           )}
           <p>{config.rest}s rest</p>
         </div>
