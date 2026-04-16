@@ -12,22 +12,25 @@ import {
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatBreakdownLabel } from '@/lib/stats-dates';
+import type { WeightUnit } from '@/hooks/useStats';
 import type { VolumeByPeriodResponse, StatsPeriod } from '@/types/domain.types';
 
 interface VolumeChartProps {
   data: VolumeByPeriodResponse;
   period: StatsPeriod;
   loading: boolean;
+  weightUnit: WeightUnit;
+  convertVolume: (kg: number) => number;
 }
 
-export function VolumeChart({ data, period, loading }: VolumeChartProps) {
+export function VolumeChart({ data, period, loading, weightUnit, convertVolume }: VolumeChartProps) {
   if (loading) {
     return <Skeleton className="h-48 w-full rounded-xl" />;
   }
 
   const chartData = data.breakdown.map((item) => ({
     label: formatBreakdownLabel(period, item.label),
-    volume: item.volume,
+    volume: convertVolume(item.volume),
     sets: item.sets,
   }));
 
@@ -37,8 +40,8 @@ export function VolumeChart({ data, period, loading }: VolumeChartProps) {
         <div>
           <p className="text-muted-foreground text-xs">Volumen total</p>
           <p className="font-display font-bold flex items-center">
-            {data.totalVolume.toLocaleString('es')}
-            <span className="text-muted-foreground ml-1 text-xs font-normal">kg</span>
+            {convertVolume(data.totalVolume).toLocaleString('es')}
+            <span className="text-muted-foreground ml-1 text-xs font-normal">{weightUnit}</span>
             {data.changePercent !== null && data.changePercent !== undefined && (
               <span className={cn(
                 'ml-1.5 text-[10px] font-medium rounded-full px-1.5 py-0.5',
@@ -81,7 +84,7 @@ export function VolumeChart({ data, period, loading }: VolumeChartProps) {
               width={40}
             />
             <Tooltip
-              formatter={(value) => [`${value} kg`, 'Volumen']}
+              formatter={(value) => [`${value} ${weightUnit}`, 'Volumen']}
               cursor={{ fill: 'rgba(255,255,255,0.08)' }}
               contentStyle={{
                 fontSize: 12,

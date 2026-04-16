@@ -22,6 +22,8 @@ const MuscleRankingList = dynamic(
   },
 );
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import type { WeightUnit } from '@/hooks/useStats';
 import type { StatsPeriod, VolumeByPeriodResponse, VolumeByMuscleResponse } from '@/types/domain.types';
 
 interface StatsPanelProps {
@@ -34,6 +36,9 @@ interface StatsPanelProps {
   onPeriodChange: (period: StatsPeriod) => void;
   onDateChange: (date: string) => void;
   onRetry: () => void;
+  weightUnit: WeightUnit;
+  onWeightUnitChange: (unit: WeightUnit) => void;
+  convertVolume: (kg: number) => number;
 }
 
 export function StatsPanel({
@@ -46,6 +51,9 @@ export function StatsPanel({
   onPeriodChange,
   onDateChange,
   onRetry,
+  weightUnit,
+  onWeightUnitChange,
+  convertVolume,
 }: StatsPanelProps) {
   return (
     <div className="space-y-6">
@@ -55,6 +63,28 @@ export function StatsPanel({
         onPeriodChange={onPeriodChange}
         onDateChange={onDateChange}
       />
+
+      <div className="flex items-center gap-2">
+        <span className="text-xs text-muted-foreground">Unidad:</span>
+        <div className="flex overflow-hidden rounded-md border text-xs">
+          {(['kg', 'lbs'] as const).map((unit, i) => (
+            <button
+              key={unit}
+              type="button"
+              onClick={() => onWeightUnitChange(unit)}
+              className={cn(
+                'cursor-pointer px-2 py-0.5 transition-colors',
+                i > 0 && 'border-l',
+                weightUnit === unit
+                  ? 'bg-primary text-primary-foreground font-medium'
+                  : 'text-muted-foreground hover:bg-muted',
+              )}
+            >
+              {unit}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {!loading && error && (
         <EmptyState
@@ -73,12 +103,14 @@ export function StatsPanel({
           <h2 className="text-sm font-medium">Volumen por período</h2>
           {loading || !volumeData ? (
             <VolumeChart
-              data={{ period, date, from: '', to: '', totalVolume: 0, totalSets: 0, totalSessions: 0, breakdown: [] }}
+              data={{ period, date, from: '', to: '', totalVolume: 0, totalSets: 0, totalSessions: 0, breakdown: [], hasLbsExercises: false, previousTotalVolume: 0, changePercent: null }}
               period={period}
               loading={true}
+              weightUnit={weightUnit}
+              convertVolume={convertVolume}
             />
           ) : (
-            <VolumeChart data={volumeData} period={period} loading={false} />
+            <VolumeChart data={volumeData} period={period} loading={false} weightUnit={weightUnit} convertVolume={convertVolume} />
           )}
         </div>
       )}
@@ -88,11 +120,13 @@ export function StatsPanel({
           <h2 className="text-sm font-medium">Volumen por músculo</h2>
           {loading || !muscleData ? (
             <MuscleRankingList
-              data={{ period, date, from: '', to: '', ranking: [] }}
+              data={{ period, date, from: '', to: '', ranking: [], hasLbsExercises: false }}
               loading={true}
+              weightUnit={weightUnit}
+              convertVolume={convertVolume}
             />
           ) : (
-            <MuscleRankingList data={muscleData} loading={false} />
+            <MuscleRankingList data={muscleData} loading={false} weightUnit={weightUnit} convertVolume={convertVolume} />
           )}
         </div>
       )}

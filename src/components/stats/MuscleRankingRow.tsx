@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import type { WeightUnit } from '@/hooks/useStats';
 import type { MuscleVolumeItem } from '@/types/domain.types';
 
 const MUSCLE_LABEL: Record<string, string> = {
@@ -24,10 +25,13 @@ const MUSCLE_LABEL: Record<string, string> = {
 interface MuscleRankingRowProps {
   item: MuscleVolumeItem;
   totalVolume: number;
+  weightUnit: WeightUnit;
+  convertVolume: (kg: number) => number;
 }
 
-export function MuscleRankingRow({ item, totalVolume }: MuscleRankingRowProps) {
-  const percentage = totalVolume > 0 ? (item.volume / totalVolume) * 100 : 0;
+export function MuscleRankingRow({ item, totalVolume, weightUnit, convertVolume }: MuscleRankingRowProps) {
+  const converted = convertVolume(item.volume);
+  const percentage = totalVolume > 0 ? (converted / totalVolume) * 100 : 0;
 
   return (
     <div className="flex items-center gap-3">
@@ -41,7 +45,7 @@ export function MuscleRankingRow({ item, totalVolume }: MuscleRankingRowProps) {
             {MUSCLE_LABEL[item.muscle] ?? item.muscle}
           </span>
           <span className="text-muted-foreground shrink-0 text-xs tabular-nums flex items-center gap-1">
-            {item.volume.toLocaleString('es')} kg · {item.sets} series
+            {converted.toLocaleString('es')} {weightUnit} · {item.sets} series
             {item.changePercent !== null && item.changePercent !== undefined && (
               <span className={cn(
                 'text-[10px] font-medium',
