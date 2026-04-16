@@ -21,6 +21,11 @@ const MuscleRankingList = dynamic(
     ),
   },
 );
+
+const MuscleRadarChart = dynamic(
+  () => import('@/components/stats/MuscleRadarChart').then((m) => m.MuscleRadarChart),
+  { ssr: false, loading: () => <Skeleton className="h-75 w-full rounded-xl" /> },
+);
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { WeightUnit } from '@/hooks/useStats';
@@ -127,6 +132,20 @@ export function StatsPanel({
             />
           ) : (
             <MuscleRankingList data={muscleData} loading={false} weightUnit={weightUnit} convertVolume={convertVolume} />
+          )}
+        </div>
+      )}
+
+      {(loading || (!error && muscleData)) && (
+        <div className="space-y-2">
+          <h2 className="text-sm font-medium">Distribución muscular</h2>
+          {loading || !muscleData ? (
+            <MuscleRadarChart
+              data={{ period, date, from: '', to: '', ranking: [], hasLbsExercises: false }}
+              loading={true}
+            />
+          ) : (
+            <MuscleRadarChart data={muscleData} loading={false} convertVolume={convertVolume} />
           )}
         </div>
       )}
