@@ -59,12 +59,12 @@ export function VolumeChart({ data, period, loading }: VolumeChartProps) {
           <BarChart data={chartData} margin={{ top: 4, right: 4, left: 8, bottom: 0 }}>
             <XAxis
               dataKey="label"
-              tick={{ fontSize: 11 }}
+              tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
               tickLine={false}
               axisLine={false}
             />
             <YAxis
-              tick={{ fontSize: 11 }}
+              tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
               tickLine={false}
               axisLine={false}
               width={40}
