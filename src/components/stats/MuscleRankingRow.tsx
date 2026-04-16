@@ -22,11 +22,11 @@ const MUSCLE_LABEL: Record<string, string> = {
 
 interface MuscleRankingRowProps {
   item: MuscleVolumeItem;
-  maxVolume: number;
+  totalVolume: number;
 }
 
-export function MuscleRankingRow({ item, maxVolume }: MuscleRankingRowProps) {
-  const percentage = maxVolume > 0 ? (item.volume / maxVolume) * 100 : 0;
+export function MuscleRankingRow({ item, totalVolume }: MuscleRankingRowProps) {
+  const percentage = totalVolume > 0 ? (item.volume / totalVolume) * 100 : 0;
 
   return (
     <div className="flex items-center gap-3">

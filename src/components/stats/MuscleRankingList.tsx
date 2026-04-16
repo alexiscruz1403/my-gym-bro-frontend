@@ -26,12 +26,12 @@ export function MuscleRankingList({ data, loading }: MuscleRankingListProps) {
     );
   }
 
-  const maxVolume = data.ranking[0]?.volume ?? 0;
+  const totalVolume = data.ranking.reduce((sum, item) => sum + item.volume, 0);
 
   return (
     <div className="space-y-3">
       {data.ranking.map((item) => (
-        <MuscleRankingRow key={item.muscle} item={item} maxVolume={maxVolume} />
+        <MuscleRankingRow key={item.muscle} item={item} totalVolume={totalVolume} />
       ))}
     </div>
   );
