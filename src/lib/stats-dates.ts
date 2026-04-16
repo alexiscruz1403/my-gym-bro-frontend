@@ -8,6 +8,7 @@ import type { StatsPeriod } from '@/types/domain.types';
  */
 export function getCurrentPeriodDate(period: StatsPeriod): string {
   const now = new Date();
+  now.setHours(12, 0, 0, 0);
 
   if (period === 'year') {
     return now.getFullYear().toString();
