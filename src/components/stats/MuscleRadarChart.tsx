@@ -65,14 +65,14 @@ export function MuscleRadarChart({ data, loading, convertVolume }: MuscleRadarCh
         <PolarGrid stroke="hsl(var(--border))" />
         <PolarAngleAxis
           dataKey="muscle"
-          tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+          tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
         />
         <PolarRadiusAxis tick={false} axisLine={false} />
         <Radar
           dataKey="volume"
-          fill="hsl(var(--primary))"
+          fill="var(--primary)"
           fillOpacity={0.3}
-          stroke="hsl(var(--primary))"
+          stroke="var(--primary)"
           strokeWidth={1.5}
         />
       </RadarChart>

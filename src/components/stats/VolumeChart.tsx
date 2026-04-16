@@ -73,12 +73,12 @@ export function VolumeChart({ data, period, loading, weightUnit, convertVolume }
           <BarChart data={chartData} margin={{ top: 4, right: 4, left: 8, bottom: 0 }}>
             <XAxis
               dataKey="label"
-              tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
+              tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
               tickLine={false}
               axisLine={false}
             />
             <YAxis
-              tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
+              tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
               tickLine={false}
               axisLine={false}
               width={40}
@@ -91,12 +91,13 @@ export function VolumeChart({ data, period, loading, weightUnit, convertVolume }
                 borderRadius: 8,
                 border: '1px solid hsl(var(--border))',
                 background: 'hsl(var(--popover))',
-                color: 'hsl(var(--popover-foreground))',
+                color: 'var(--foreground)',
               }}
+              itemStyle={{ color: 'var(--foreground)' }}
             />
             <Bar dataKey="volume" radius={[4, 4, 0, 0]} maxBarSize={40}>
               {chartData.map((_, index) => (
-                <Cell key={index} fill="hsl(var(--primary))" />
+                <Cell key={index} fill="var(--primary)" />
               ))}
             </Bar>
           </BarChart>
