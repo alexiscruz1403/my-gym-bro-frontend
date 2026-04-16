@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from 'recharts';
+import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatBreakdownLabel } from '@/lib/stats-dates';
 import type { VolumeByPeriodResponse, StatsPeriod } from '@/types/domain.types';
@@ -35,9 +36,19 @@ export function VolumeChart({ data, period, loading }: VolumeChartProps) {
       <div className="flex gap-6 text-sm">
         <div>
           <p className="text-muted-foreground text-xs">Volumen total</p>
-          <p className="font-display font-bold">
+          <p className="font-display font-bold flex items-center">
             {data.totalVolume.toLocaleString('es')}
             <span className="text-muted-foreground ml-1 text-xs font-normal">kg</span>
+            {data.changePercent !== null && data.changePercent !== undefined && (
+              <span className={cn(
+                'ml-1.5 text-[10px] font-medium rounded-full px-1.5 py-0.5',
+                data.changePercent > 0 && 'bg-accent/15 text-accent',
+                data.changePercent < 0 && 'bg-destructive/15 text-destructive',
+                data.changePercent === 0 && 'bg-muted text-muted-foreground',
+              )}>
+                {data.changePercent > 0 ? '+' : ''}{data.changePercent.toFixed(1)}%
+              </span>
+            )}
           </p>
         </div>
         <div>

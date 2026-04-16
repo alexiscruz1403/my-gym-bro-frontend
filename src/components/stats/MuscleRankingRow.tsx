@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import type { MuscleVolumeItem } from '@/types/domain.types';
 
 const MUSCLE_LABEL: Record<string, string> = {
@@ -39,8 +40,18 @@ export function MuscleRankingRow({ item, totalVolume }: MuscleRankingRowProps) {
           <span className="truncate text-sm font-medium">
             {MUSCLE_LABEL[item.muscle] ?? item.muscle}
           </span>
-          <span className="text-muted-foreground shrink-0 text-xs tabular-nums">
+          <span className="text-muted-foreground shrink-0 text-xs tabular-nums flex items-center gap-1">
             {item.volume.toLocaleString('es')} kg · {item.sets} series
+            {item.changePercent !== null && item.changePercent !== undefined && (
+              <span className={cn(
+                'text-[10px] font-medium',
+                item.changePercent > 0 && 'text-accent',
+                item.changePercent < 0 && 'text-destructive',
+                item.changePercent === 0 && 'text-muted-foreground',
+              )}>
+                {item.changePercent > 0 ? '↑' : item.changePercent < 0 ? '↓' : '='}{Math.abs(item.changePercent).toFixed(0)}%
+              </span>
+            )}
           </span>
         </div>
         <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
