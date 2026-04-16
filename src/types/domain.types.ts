@@ -196,6 +196,9 @@ export interface VolumeByPeriodResponse {
   totalSets: number;
   totalSessions: number;
   breakdown: VolumeBreakdownItem[];
+  hasLbsExercises: boolean;
+  previousTotalVolume: number;
+  changePercent: number | null;
 }
 
 // Stats — volume by muscle
@@ -205,6 +208,8 @@ export interface MuscleVolumeItem {
   muscle: MuscleGroup;
   volume: number;
   sets: number;
+  previousVolume: number;
+  changePercent: number | null;
 }
 
 export interface VolumeByMuscleResponse {
@@ -213,6 +218,7 @@ export interface VolumeByMuscleResponse {
   from: string;
   to: string;
   ranking: MuscleVolumeItem[];
+  hasLbsExercises: boolean;
 }
 
 // Social
