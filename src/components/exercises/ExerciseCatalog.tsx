@@ -17,6 +17,7 @@ interface ExerciseCatalogBrowseProps {
 
 interface ExerciseCatalogPickerProps {
   mode: 'picker';
+  singleSelect?: boolean;
   onConfirm: (exercises: Exercise[]) => void;
 }
 
@@ -47,7 +48,13 @@ export function ExerciseCatalog(props: ExerciseCatalogProps) {
     setPage(1);
   };
 
+  const singleSelect = props.mode === 'picker' && props.singleSelect === true;
+
   const handleToggle = (exercise: Exercise) => {
+    if (singleSelect) {
+      setSelected([exercise]);
+      return;
+    }
     setSelected((prev) =>
       prev.some((e) => e.id === exercise.id)
         ? prev.filter((e) => e.id !== exercise.id)
@@ -124,9 +131,13 @@ export function ExerciseCatalog(props: ExerciseCatalogProps) {
             type="button"
             tabIndex={0}
           >
-            {selected.length > 0
-              ? `Add ${selected.length} exercise${selected.length > 1 ? 's' : ''}`
-              : 'Select exercises'}
+            {singleSelect
+              ? selected.length > 0
+                ? `Select ${selected[0].name}`
+                : 'Select an exercise'
+              : selected.length > 0
+                ? `Add ${selected.length} exercise${selected.length > 1 ? 's' : ''}`
+                : 'Select exercises'}
           </Button>
         </div>
       )}
