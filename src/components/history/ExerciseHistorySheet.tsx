@@ -35,7 +35,7 @@ export function ExerciseHistorySheet({
   exerciseId,
   exerciseName,
 }: ExerciseHistorySheetProps) {
-  const { data, meta, loading, error, page, setPage, refetch } = useExerciseHistory(exerciseId);
+  const { data, meta, bilateral, loading, error, page, setPage, refetch } = useExerciseHistory(exerciseId);
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -70,6 +70,7 @@ export function ExerciseHistorySheet({
             <ExerciseHistoryList
               data={data}
               meta={meta}
+              bilateral={bilateral}
               page={page}
               onPageChange={setPage}
             />

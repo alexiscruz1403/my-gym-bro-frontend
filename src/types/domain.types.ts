@@ -65,6 +65,12 @@ export interface Exercise {
   videoUrl?: string;
 }
 
+export interface ExerciseSide {
+  reps?: number;
+  duration?: number;
+  weight?: number;
+}
+
 export interface ExerciseConfig {
   exerciseId: string;
   exerciseName: string;
@@ -76,6 +82,9 @@ export interface ExerciseConfig {
   rest: number;
   notes?: string;
   supersetGroupId?: string;
+  bilateral?: boolean;
+  left?: ExerciseSide | null;
+  right?: ExerciseSide | null;
 }
 
 export interface PlanDay {
@@ -111,6 +120,8 @@ export interface SessionSet {
   weightKg?: number;
   completed: boolean;
   loggedAt: string;
+  left?: ExerciseSide | null;
+  right?: ExerciseSide | null;
 }
 
 export interface SessionExercise {
@@ -128,6 +139,9 @@ export interface SessionExercise {
   sets: SessionSet[];
   modifiedDuringSession: boolean;
   lastPerformance: SessionSet[] | null;
+  bilateral?: boolean;
+  plannedLeft?: ExerciseSide | null;
+  plannedRight?: ExerciseSide | null;
 }
 
 export interface WorkoutSession {
@@ -240,11 +254,14 @@ export interface SessionSummarySetSnapshot {
   durationSeconds?: number;
   weightKg?: number;
   completed: boolean;
+  left?: ExerciseSide | null;
+  right?: ExerciseSide | null;
 }
 
 export interface SessionSummaryExerciseSnapshot {
   name: string;
   sets: SessionSummarySetSnapshot[];
+  bilateral?: boolean;
 }
 
 export interface SessionSummarySnapshot {
@@ -298,6 +315,8 @@ export interface ExerciseHistorySet {
   duration?: number;
   completed: boolean;
   loggedAt: string;
+  left?: ExerciseSide | null;
+  right?: ExerciseSide | null;
 }
 
 export interface ExerciseHistorySession {
@@ -311,6 +330,7 @@ export interface ExerciseHistorySession {
 export interface ExerciseHistoryResponse {
   exerciseId: string;
   exerciseName: string;
+  bilateral?: boolean;
   data: ExerciseHistorySession[];
   meta: PaginatedMeta;
 }
@@ -320,6 +340,7 @@ export interface ExerciseHistoryResponse {
 export interface PublicSessionHistoryExercise {
   exerciseName: string;
   sets: SessionSet[];
+  bilateral?: boolean;
 }
 
 export interface PublicSessionHistoryItem {

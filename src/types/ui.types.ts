@@ -5,6 +5,8 @@ export interface PageContainerProps {
   className?: string;
 }
 
+import type { ExerciseSide } from '@/types/domain.types';
+
 export interface ExerciseConfigDraft {
   exerciseId: string;
   exerciseName: string;
@@ -16,6 +18,9 @@ export interface ExerciseConfigDraft {
   rest: number;
   notes?: string;
   supersetGroupId?: string;
+  bilateral?: boolean;
+  left?: ExerciseSide;
+  right?: ExerciseSide;
 }
 
 export interface RestTimerState {

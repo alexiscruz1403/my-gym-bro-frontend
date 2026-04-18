@@ -59,6 +59,8 @@ export function CreatePlanWizard() {
         rest: ex.rest,
         notes: ex.notes,
         supersetGroupId: ex.supersetGroupId,
+        left: ex.left,
+        right: ex.right,
       })),
     })),
   });

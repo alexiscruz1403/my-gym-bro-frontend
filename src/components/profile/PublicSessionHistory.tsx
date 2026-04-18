@@ -65,10 +65,30 @@ function SessionHistoryRow({ item }: SessionHistoryRowProps) {
             <div className="space-y-2">
               {item.exercises.map((ex, i) => {
                 const completedSets = ex.sets.filter((s) => s.completed);
+                const exUnilateral = ex.bilateral === false;
                 return (
                   <div key={i} className="space-y-0.5">
                     <p className="text-xs font-medium">{ex.exerciseName}</p>
                     {completedSets.map((s, j) => {
+                      if (exUnilateral || s.left || s.right) {
+                        const fmt = (side?: typeof s.left) => {
+                          if (!side) return '—';
+                          const m =
+                            side.reps !== undefined
+                              ? `${side.reps} reps`
+                              : side.duration !== undefined
+                                ? `${side.duration}s`
+                                : '—';
+                          return side.weight ? `${m} · ${side.weight} kg` : m;
+                        };
+                        return (
+                          <div key={j} className="pl-2 text-xs text-muted-foreground">
+                            <p>Set {s.setIndex + 1}</p>
+                            <p className="pl-3">L: {fmt(s.left)}</p>
+                            <p className="pl-3">R: {fmt(s.right)}</p>
+                          </div>
+                        );
+                      }
                       const metric = s.durationSeconds !== undefined && s.durationSeconds !== null ? `${s.durationSeconds}s` : `${s.reps ?? 0} reps`;
                       const weight = s.weightKg ? ` · ${s.weightKg} kg` : '';
                       return (

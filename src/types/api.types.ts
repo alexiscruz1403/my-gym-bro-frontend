@@ -1,6 +1,7 @@
 import type {
   DayOfWeek,
   Exercise,
+  ExerciseSide,
   FeedComment,
   FeedPost,
   LoadType,
@@ -72,6 +73,8 @@ export interface CreatePlanExercise {
   rest: number;
   notes?: string;
   supersetGroupId?: string;
+  left?: ExerciseSide;
+  right?: ExerciseSide;
 }
 
 export interface CreatePlanDay {
@@ -99,6 +102,8 @@ export interface LogSetRequest {
   duration?: number;
   weight?: number;
   completed: boolean;
+  left?: ExerciseSide;
+  right?: ExerciseSide;
 }
 
 export interface LogSetResponse {
@@ -113,6 +118,8 @@ export interface ModifyExerciseRequest {
   plannedWeight?: number;
   plannedRest?: number;
   weightUnit?: 'kg' | 'lbs';
+  plannedLeft?: ExerciseSide;
+  plannedRight?: ExerciseSide;
 }
 
 export interface ReplaceExerciseRequest {
@@ -123,6 +130,8 @@ export interface ReplaceExerciseRequest {
   plannedWeight?: number;
   plannedRest?: number;
   weightUnit?: 'kg' | 'lbs';
+  plannedLeft?: ExerciseSide;
+  plannedRight?: ExerciseSide;
 }
 
 export interface FinishSessionRequest {

@@ -53,21 +53,43 @@ function SummarySlide({ exercises, durationSeconds, totalSets, showHeader }: Sum
       )}
       {exercises.map((ex, i) => {
         const completedSets = ex.sets.filter((s) => s.completed);
+        const isUni = ex.bilateral === false;
+        const fmtSide = (side?: { reps?: number; duration?: number; weight?: number } | null) => {
+          if (!side) return '—';
+          const m =
+            side.reps !== undefined
+              ? `${side.reps} reps`
+              : side.duration !== undefined
+                ? `${side.duration}s`
+                : '—';
+          return side.weight ? `${m} · ${side.weight} kg` : m;
+        };
         return (
           <div key={i} className="space-y-0.5">
             <p className="text-sm font-medium">{ex.name}</p>
-            <p className="text-muted-foreground text-xs">
-              {completedSets
-                .map((s) => {
-                  const metric =
-                    s.durationSeconds !== undefined
-                      ? `${s.durationSeconds}s`
-                      : `${s.reps ?? 0} reps`;
-                  const weight = s.weightKg ? ` · ${s.weightKg} kg` : '';
-                  return `${metric}${weight}`;
-                })
-                .join(' · ')}
-            </p>
+            {isUni || completedSets.some((s) => s.left || s.right) ? (
+              <div className="text-muted-foreground text-xs space-y-0.5">
+                {completedSets.map((s, j) => (
+                  <div key={j}>
+                    <p className="pl-2">L: {fmtSide(s.left)}</p>
+                    <p className="pl-2">R: {fmtSide(s.right)}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-muted-foreground text-xs">
+                {completedSets
+                  .map((s) => {
+                    const metric =
+                      s.durationSeconds !== undefined
+                        ? `${s.durationSeconds}s`
+                        : `${s.reps ?? 0} reps`;
+                    const weight = s.weightKg ? ` · ${s.weightKg} kg` : '';
+                    return `${metric}${weight}`;
+                  })
+                  .join(' · ')}
+              </p>
+            )}
           </div>
         );
       })}
