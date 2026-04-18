@@ -25,9 +25,10 @@ function formatDate(iso: string): string {
 
 interface ExerciseHistorySessionRowProps {
   session: ExerciseHistorySession;
+  bilateral?: boolean;
 }
 
-export function ExerciseHistorySessionRow({ session }: ExerciseHistorySessionRowProps) {
+export function ExerciseHistorySessionRow({ session, bilateral }: ExerciseHistorySessionRowProps) {
   const [expanded, setExpanded] = useState(false);
   const completedSets = session.sets.filter((s) => s.completed).length;
 
@@ -56,7 +57,12 @@ export function ExerciseHistorySessionRow({ session }: ExerciseHistorySessionRow
       {expanded && session.sets.length > 0 && (
         <div className="border-t px-1 py-1.5">
           {session.sets.map((set) => (
-            <ExerciseHistorySetRow key={set.setIndex} set={set} weightUnit={session.weightUnit} />
+            <ExerciseHistorySetRow
+              key={set.setIndex}
+              set={set}
+              weightUnit={session.weightUnit}
+              bilateral={bilateral}
+            />
           ))}
         </div>
       )}

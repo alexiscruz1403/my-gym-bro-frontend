@@ -136,6 +136,9 @@ const usePlanBuilderStore = create<PlanBuilderState & PlanBuilderActions>()(
             rest: ex.rest,
             notes: ex.notes,
             supersetGroupId: ex.supersetGroupId,
+            bilateral: ex.bilateral,
+            left: ex.left ?? undefined,
+            right: ex.right ?? undefined,
           }));
         }
         set({

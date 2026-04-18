@@ -11,6 +11,8 @@ import { useRestTimer } from '@/hooks/useRestTimer';
 import { toast } from 'sonner';
 import type { SessionExercise, Exercise } from '@/types/domain.types';
 import type { LogSetRequest, ModifyExerciseRequest, ReplaceExerciseRequest } from '@/types/api.types';
+import type { SetCompletePayload } from './SetRow';
+import { formatSide, isUnilateral } from '@/lib/set-format';
 
 interface ExerciseSessionCardProps {
   exercise: SessionExercise;
@@ -24,16 +26,24 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
   const { start: startTimer } = useRestTimer();
   const [replaceOpen, setReplaceOpen] = useState(false);
 
+  const unilateral = isUnilateral(exercise);
+
   const handleReplaceSelect = async (newExercise: Exercise) => {
     try {
-      await onReplace(exercise.exerciseId, {
+      const payload: ReplaceExerciseRequest = {
         newExerciseId: newExercise.id,
         plannedSets: exercise.plannedSets,
-        plannedReps: exercise.plannedReps,
-        plannedDuration: exercise.plannedDuration,
-        plannedWeight: exercise.plannedWeight,
         plannedRest: exercise.plannedRest,
-      });
+      };
+      if (newExercise.bilateral === false) {
+        payload.plannedLeft = { reps: exercise.plannedReps ?? 10 };
+        payload.plannedRight = { reps: exercise.plannedReps ?? 10 };
+      } else {
+        payload.plannedReps = exercise.plannedReps;
+        payload.plannedDuration = exercise.plannedDuration;
+        payload.plannedWeight = exercise.plannedWeight;
+      }
+      await onReplace(exercise.exerciseId, payload);
     } catch {
       toast.error('Failed to replace exercise. Please try again.');
     }
@@ -41,9 +51,7 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
 
   const handleCompleteSet = (
     setIndex: number,
-    weight: number | undefined,
-    reps: number | undefined,
-    duration?: number,
+    payload: SetCompletePayload & { duration?: number },
   ) => {
     // Start timer and advance exercise immediately for a fluid UX,
     // then fire the API call in the background.
@@ -57,9 +65,11 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
     onLogSet({
       exerciseId: exercise.exerciseId,
       setIndex,
-      weight,
-      reps,
-      duration,
+      weight: payload.weight,
+      reps: payload.reps,
+      duration: payload.duration,
+      left: payload.left,
+      right: payload.right,
       completed: true,
     }).catch(() => {
       toast.error('Failed to save set. Please try again.');
@@ -68,15 +78,16 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
 
   const handleUncompleteSet = async (
     setIndex: number,
-    weight: number | undefined,
-    reps: number | undefined,
+    payload: SetCompletePayload,
   ) => {
     try {
       await onLogSet({
         exerciseId: exercise.exerciseId,
         setIndex,
-        weight,
-        reps,
+        weight: payload.weight,
+        reps: payload.reps,
+        left: payload.left,
+        right: payload.right,
         completed: false,
       });
     } catch {
@@ -143,14 +154,22 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
         </div>
         <p className="text-muted-foreground mt-0.5 text-sm">
           {exercise.plannedSets} sets
-          {exercise.trackingType === 'duration'
-            ? exercise.plannedDuration ? ` × ${exercise.plannedDuration}s` : ''
-            : exercise.plannedReps ? ` × ${exercise.plannedReps} reps` : ''}
-          {exercise.plannedWeight ? ` · ${exercise.plannedWeight} ${exercise.weightUnit ?? 'kg'}` : ''}
+          {unilateral
+            ? ''
+            : exercise.trackingType === 'duration'
+              ? exercise.plannedDuration ? ` × ${exercise.plannedDuration}s` : ''
+              : exercise.plannedReps ? ` × ${exercise.plannedReps} reps` : ''}
+          {!unilateral && exercise.plannedWeight ? ` · ${exercise.plannedWeight} ${exercise.weightUnit ?? 'kg'}` : ''}
           {exercise.modifiedDuringSession && (
             <span className="text-primary ml-1 text-xs">(modified)</span>
           )}
         </p>
+        {unilateral && (
+          <div className="text-muted-foreground mt-1 text-xs">
+            <p>L: {formatSide(exercise.plannedLeft, exercise.weightUnit ?? 'kg')}</p>
+            <p>R: {formatSide(exercise.plannedRight, exercise.weightUnit ?? 'kg')}</p>
+          </div>
+        )}
       </div>
 
       {/* Weight unit toggle */}

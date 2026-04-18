@@ -80,6 +80,9 @@ export function useSession() {
           setIndex: dto.setIndex,
           reps: dto.reps,
           weight: dto.weight,
+          duration: dto.duration,
+          left: dto.left,
+          right: dto.right,
           completed: dto.completed,
           loggedAt: new Date().toISOString(),
         };
