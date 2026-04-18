@@ -223,3 +223,29 @@ export interface CreatePostPayload {
   caption?: string;
   file?: File;
 }
+
+// ─── Notifications ────────────────────────────────────────────────
+import type { AppNotification } from '@/types/domain.types';
+
+export interface ListNotificationsQuery {
+  limit?: number;
+  cursor?: string;
+  unreadOnly?: boolean;
+}
+
+export interface ListNotificationsResponse {
+  data: AppNotification[];
+  nextCursor: string | null;
+}
+
+export interface UnreadCountResponse {
+  count: number;
+}
+
+export interface MarkAllReadResponse {
+  updated: number;
+}
+
+export interface WsTokenResponse {
+  token: string;
+}

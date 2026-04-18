@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { UserRoundSearch } from 'lucide-react';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { Button } from '@/components/ui/button';
@@ -15,9 +16,35 @@ export default function FeedPage() {
   const [filter, setFilter] = useState<FeedFilter>('all');
   const { posts, meta, page, isLoading, goToPage } = useFeed(filter);
   const [activePostId, setActivePostId] = useState<string | null>(null);
+  const [highlightPostId, setHighlightPostId] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const onCommentAddedRef = useRef<(() => void) | null>(null);
   const currentUser = useAuthStore((s) => s.user);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const postId = searchParams.get('post');
+    const openComments = searchParams.get('comments') === '1';
+    if (!postId) return;
+    setHighlightPostId(postId);
+    if (openComments) {
+      onCommentAddedRef.current = null;
+      setActivePostId(postId);
+    }
+    router.replace(pathname, { scroll: false });
+  }, [searchParams, router, pathname]);
+
+  useEffect(() => {
+    if (!highlightPostId || isLoading) return;
+    const el = document.getElementById(`feed-post-${highlightPostId}`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const t = setTimeout(() => setHighlightPostId(null), 2000);
+      return () => clearTimeout(t);
+    }
+  }, [highlightPostId, isLoading, posts]);
 
   function handleCommentOpen(postId: string, onAdded: () => void) {
     onCommentAddedRef.current = onAdded;
@@ -71,6 +98,7 @@ export default function FeedPage() {
         currentUserId={currentUser?.id ?? null}
         onPageChange={goToPage}
         onCommentOpen={handleCommentOpen}
+        highlightPostId={highlightPostId}
       />
 
       <CommentsSheet
