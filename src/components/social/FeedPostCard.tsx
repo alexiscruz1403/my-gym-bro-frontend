@@ -16,6 +16,7 @@ interface FeedPostCardProps {
   post: FeedPost;
   isOwnPost: boolean;
   onCommentOpen: (postId: string, onAdded: () => void) => void;
+  highlight?: boolean;
 }
 
 function formatDuration(seconds: number): string {
@@ -97,7 +98,7 @@ function SummarySlide({ exercises, durationSeconds, totalSets, showHeader }: Sum
   );
 }
 
-export function FeedPostCard({ post, isOwnPost, onCommentOpen }: FeedPostCardProps) {
+export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: FeedPostCardProps) {
   const { userReacted, reactionsCount, toggle } = usePostInteraction(
     post._id,
     post.userReacted,
@@ -133,7 +134,7 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen }: FeedPostCardPro
   }
 
   return (
-    <Card>
+    <Card className={highlight ? 'ring-2 ring-primary transition-shadow' : ''}>
       <CardHeader>
         <div className="flex items-center gap-3">
           <Link href={`/users/${post.author._id}`}>

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { AvatarUpload } from '@/components/profile/AvatarUpload';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { FollowButton } from '@/components/social/FollowButton';
@@ -17,6 +18,19 @@ interface OwnProfileHeaderProps {
 
 function OwnProfileHeader({ user }: OwnProfileHeaderProps) {
   const [sheet, setSheet] = useState<'followers' | 'following' | null>(null);
+  const [highlightUserId, setHighlightUserId] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const followersParam = searchParams.get('followers');
+    if (followersParam) {
+      setSheet('followers');
+      setHighlightUserId(followersParam);
+      router.replace(pathname, { scroll: false });
+    }
+  }, [searchParams, router, pathname]);
 
   return (
     <>
@@ -50,7 +64,13 @@ function OwnProfileHeader({ user }: OwnProfileHeaderProps) {
         userId={user.id}
         type={sheet ?? 'followers'}
         open={sheet !== null}
-        onOpenChange={(open) => { if (!open) setSheet(null); }}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSheet(null);
+            setHighlightUserId(null);
+          }
+        }}
+        highlightUserId={highlightUserId}
       />
     </>
   );

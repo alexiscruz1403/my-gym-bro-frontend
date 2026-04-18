@@ -5,12 +5,14 @@ import { SessionGuard } from '@/components/layout/SessionGuard';
 import { UserLoader } from '@/components/layout/UserLoader';
 import { OfflineBanner } from '@/components/shared/OfflineBanner';
 import { ActiveSessionWidget } from '@/components/session/ActiveSessionWidget';
+import { NotificationsProvider } from '@/components/notifications/NotificationsProvider';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen bg-background">
       <SessionGuard />
       <UserLoader />
+      <NotificationsProvider />
       {/* Desktop: fixed left sidebar */}
       <SideNav />
 

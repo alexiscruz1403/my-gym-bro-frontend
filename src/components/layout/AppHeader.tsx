@@ -3,8 +3,10 @@
 import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import useUIStore from '@/store/ui.store';
+import useAuthStore from '@/store/auth.store';
 import { useEffect } from 'react';
 import Image from 'next/image'
+import { NotificationBell } from '@/components/notifications/NotificationBell';
 
 interface AppHeaderProps {
   title?: string;
@@ -13,6 +15,7 @@ interface AppHeaderProps {
 
 export function AppHeader({ title, action }: AppHeaderProps) {
   const { isDarkMode, toggleDarkMode } = useUIStore();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   // Apply .dark class to <html> whenever isDarkMode changes
   useEffect(() => {
@@ -38,6 +41,7 @@ export function AppHeader({ title, action }: AppHeaderProps) {
 
         <div className="flex items-center gap-2">
           {action}
+          {isAuthenticated && <NotificationBell />}
           <Button
             variant="ghost"
             size="icon"

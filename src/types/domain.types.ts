@@ -383,3 +383,57 @@ export interface PaginatedAdminUserResponse {
   data: AdminUserItem[];
   meta: PaginatedMeta;
 }
+
+export type NotificationType =
+  | 'follow'
+  | 'post_like'
+  | 'post_comment'
+  | 'new_post'
+  | 'system';
+
+export interface NotificationDataFollow {
+  actorUsername: string;
+  actorAvatar: string | null;
+}
+
+export interface NotificationDataPostLike {
+  actorUsername: string;
+  actorAvatar: string | null;
+  postId: string;
+}
+
+export interface NotificationDataPostComment {
+  actorUsername: string;
+  actorAvatar: string | null;
+  postId: string;
+  commentText: string;
+}
+
+export interface NotificationDataNewPost {
+  actorUsername: string;
+  actorAvatar: string | null;
+  postId: string;
+}
+
+export interface NotificationDataSystem {
+  title: string;
+  body: string;
+}
+
+export type NotificationData =
+  | NotificationDataFollow
+  | NotificationDataPostLike
+  | NotificationDataPostComment
+  | NotificationDataNewPost
+  | NotificationDataSystem;
+
+export interface AppNotification {
+  _id: string;
+  recipientId: string;
+  actorId: string | null;
+  type: NotificationType;
+  data: NotificationData;
+  isRead: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
