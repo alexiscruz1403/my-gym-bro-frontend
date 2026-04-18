@@ -9,7 +9,7 @@ import useSessionStore from '@/store/session.store';
 
 export function GlobalRestTimerOverlay() {
   const restTimer = useSessionStore((s) => s.restTimer);
-  const { secondsLeft, isRunning, stop } = useRestTimer();
+  const { secondsLeft, isRunning, stop, adjust } = useRestTimer();
   const [minimized, setMinimized] = useState(false);
 
   if (!isRunning) return null;
@@ -64,7 +64,29 @@ export function GlobalRestTimerOverlay() {
       </div>
       <p className="font-display mt-1 text-center text-4xl font-bold tabular-nums">{display}</p>
       <Progress value={progress} className="mt-3 h-2" />
-      <p className="text-muted-foreground mt-1 text-center text-xs">Tap × to skip</p>
+      <div className="mt-3 flex items-center justify-center gap-2">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => adjust(-10)}
+          className="cursor-pointer px-3 min-h-11"
+          aria-label="Subtract 10 seconds"
+        >
+          -10s
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => adjust(10)}
+          className="cursor-pointer px-3 min-h-11"
+          aria-label="Add 10 seconds"
+        >
+          +10s
+        </Button>
+      </div>
+      <p className="text-muted-foreground mt-2 text-center text-xs">Tap × to skip</p>
     </div>
   );
 }
