@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import { Flag, MoreVertical, Trash2 } from 'lucide-react';
+import { Flag, MoreVertical, Timer, Trash2 } from 'lucide-react';
 import useSessionStore from '@/store/session.store';
 
 const DAY_LABEL: Record<string, string> = {
@@ -34,9 +34,11 @@ function formatElapsed(startTime: number | null): string {
 interface SessionHeaderProps {
   onFinish: () => void;
   onCancel: () => void;
+  onToggleCountdown: () => void;
+  countdownActive: boolean;
 }
 
-export function SessionHeader({ onFinish, onCancel }: SessionHeaderProps) {
+export function SessionHeader({ onFinish, onCancel, onToggleCountdown, countdownActive }: SessionHeaderProps) {
   const { sessionStartTime, activeSession } = useSessionStore();
   const [, tick] = useState(0);
 
@@ -62,6 +64,16 @@ export function SessionHeader({ onFinish, onCancel }: SessionHeaderProps) {
         <span className="font-display text-xl font-bold tabular-nums">
           {formatElapsed(sessionStartTime)}
         </span>
+
+        <Button
+          size="icon"
+          variant={countdownActive ? 'secondary' : 'ghost'}
+          onClick={onToggleCountdown}
+          className="min-h-11 min-w-9 cursor-pointer"
+          aria-label="Temporizador de sesión"
+        >
+          <Timer className="h-4 w-4" />
+        </Button>
 
         {/* Desktop: explicit buttons */}
         <div className="hidden items-center gap-2 lg:flex">
