@@ -9,6 +9,7 @@ export interface UserResponse {
   followingCount: number;
   role: UserRole;
   isActive: boolean;
+  isPrivate: boolean;
   createdAt: string;
 }
 
@@ -244,6 +245,8 @@ export interface PublicUserProfile {
   followersCount: number;
   followingCount: number;
   isFollowing: boolean;
+  isPrivate: boolean;
+  isRequestPending: boolean;
 }
 
 export interface PublicUserSummary {
@@ -251,6 +254,24 @@ export interface PublicUserSummary {
   username: string;
   avatar: string | null;
   isFollowing: boolean;
+  isPrivate?: boolean;
+  isRequestPending?: boolean;
+}
+
+export interface FollowRequestItem {
+  _id: string;
+  senderId: string;
+  username: string;
+  avatar: string | null;
+  createdAt: string;
+}
+
+export interface NotificationPreferences {
+  allowFollow: boolean;
+  allowFollowRequest: boolean;
+  allowPostLike: boolean;
+  allowPostComment: boolean;
+  allowNewPost: boolean;
 }
 
 // Session summary snapshot — embedded in FeedPost at creation time
@@ -386,6 +407,8 @@ export interface PaginatedAdminUserResponse {
 
 export type NotificationType =
   | 'follow'
+  | 'follow_request'
+  | 'follow_accepted'
   | 'post_like'
   | 'post_comment'
   | 'new_post'
@@ -420,8 +443,20 @@ export interface NotificationDataSystem {
   body: string;
 }
 
+export interface NotificationDataFollowRequest {
+  actorUsername: string;
+  actorAvatar: string | null;
+}
+
+export interface NotificationDataFollowAccepted {
+  actorUsername: string;
+  actorAvatar: string | null;
+}
+
 export type NotificationData =
   | NotificationDataFollow
+  | NotificationDataFollowRequest
+  | NotificationDataFollowAccepted
   | NotificationDataPostLike
   | NotificationDataPostComment
   | NotificationDataNewPost

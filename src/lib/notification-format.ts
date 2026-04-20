@@ -1,6 +1,8 @@
 import type {
   AppNotification,
   NotificationDataFollow,
+  NotificationDataFollowRequest,
+  NotificationDataFollowAccepted,
   NotificationDataPostLike,
   NotificationDataPostComment,
   NotificationDataNewPost,
@@ -49,6 +51,22 @@ export function formatNotification(n: AppNotification): FormattedNotification {
         actorUsername: d.actorUsername,
       };
     }
+    case 'follow_request': {
+      const d = n.data as NotificationDataFollowRequest;
+      return {
+        text: `${d.actorUsername} quiere seguirte`,
+        avatar: d.actorAvatar,
+        actorUsername: d.actorUsername,
+      };
+    }
+    case 'follow_accepted': {
+      const d = n.data as NotificationDataFollowAccepted;
+      return {
+        text: `${d.actorUsername} aceptó tu solicitud de seguimiento`,
+        avatar: d.actorAvatar,
+        actorUsername: d.actorUsername,
+      };
+    }
     case 'system': {
       const d = n.data as NotificationDataSystem;
       return {
@@ -73,6 +91,10 @@ export function hrefFor(n: AppNotification): string {
       return `/feed?post=${encodeURIComponent(
         (n.data as NotificationDataPostComment).postId,
       )}&comments=1`;
+    case 'follow_request':
+      return '/notifications';
+    case 'follow_accepted':
+      return '/profile';
     case 'system':
       return '/notifications';
   }

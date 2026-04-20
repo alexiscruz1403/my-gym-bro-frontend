@@ -4,8 +4,10 @@ import type {
   ExerciseSide,
   FeedComment,
   FeedPost,
+  FollowRequestItem,
   LoadType,
   MuscleGroup,
+  NotificationPreferences,
   PublicUserProfile,
   PublicUserSummary,
   SessionSet,
@@ -44,6 +46,7 @@ export interface RefreshResponse {
 
 export interface UpdateProfileRequest {
   username?: string;
+  isPrivate?: boolean;
 }
 
 // Exercises
@@ -249,3 +252,27 @@ export interface MarkAllReadResponse {
 export interface WsTokenResponse {
   token: string;
 }
+
+export interface FollowActionResponse {
+  pending: boolean;
+}
+
+export interface FollowRequestsResponse {
+  data: FollowRequestItem[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface UpdateNotificationPreferencesDto {
+  allowFollow?: boolean;
+  allowFollowRequest?: boolean;
+  allowPostLike?: boolean;
+  allowPostComment?: boolean;
+  allowNewPost?: boolean;
+}
+
+export type { NotificationPreferences };
