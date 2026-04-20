@@ -13,6 +13,7 @@ interface PlanBuilderState {
   name: string;
   selectedDays: DayOfWeek[];
   exercisesByDay: Partial<Record<DayOfWeek, ExerciseConfigDraft[]>>;
+  dayNamesByDay: Partial<Record<DayOfWeek, string>>;
   isDirty: boolean;
 }
 
@@ -20,6 +21,7 @@ interface PlanBuilderActions {
   setStep: (step: WizardStep) => void;
   setName: (name: string) => void;
   toggleDay: (day: DayOfWeek) => void;
+  setDayName: (day: DayOfWeek, name: string) => void;
   addExerciseToDay: (day: DayOfWeek, exercise: ExerciseConfigDraft) => void;
   removeExerciseFromDay: (day: DayOfWeek, index: number) => void;
   updateExerciseConfig: (
@@ -39,6 +41,7 @@ const initialState: PlanBuilderState = {
   name: '',
   selectedDays: [],
   exercisesByDay: {},
+  dayNamesByDay: {},
   isDirty: false,
 };
 
@@ -59,12 +62,20 @@ const usePlanBuilderStore = create<PlanBuilderState & PlanBuilderActions>()(
             : [...state.selectedDays, day];
 
           const exercisesByDay = { ...state.exercisesByDay };
+          const dayNamesByDay = { ...state.dayNamesByDay };
           if (isSelected) {
             delete exercisesByDay[day];
+            delete dayNamesByDay[day];
           }
 
-          return { selectedDays, exercisesByDay, isDirty: true };
+          return { selectedDays, exercisesByDay, dayNamesByDay, isDirty: true };
         }),
+
+      setDayName: (day, name) =>
+        set((state) => ({
+          dayNamesByDay: { ...state.dayNamesByDay, [day]: name },
+          isDirty: true,
+        })),
 
       addExerciseToDay: (day, exercise) =>
         set((state) => ({
@@ -111,7 +122,9 @@ const usePlanBuilderStore = create<PlanBuilderState & PlanBuilderActions>()(
       loadPlan: (plan) => {
         const selectedDays = plan.days.map((d) => d.dayOfWeek);
         const exercisesByDay: Partial<Record<DayOfWeek, ExerciseConfigDraft[]>> = {};
+        const dayNamesByDay: Partial<Record<DayOfWeek, string>> = {};
         for (const day of plan.days) {
+          if (day.dayName) dayNamesByDay[day.dayOfWeek] = day.dayName;
           exercisesByDay[day.dayOfWeek] = day.exercises.map((ex) => ({
             exerciseId: ex.exerciseId,
             exerciseName: ex.exerciseName,
@@ -119,9 +132,13 @@ const usePlanBuilderStore = create<PlanBuilderState & PlanBuilderActions>()(
             reps: ex.reps,
             duration: ex.duration,
             weight: ex.weight,
+            weightUnit: ex.weightUnit,
             rest: ex.rest,
             notes: ex.notes,
             supersetGroupId: ex.supersetGroupId,
+            bilateral: ex.bilateral,
+            left: ex.left ?? undefined,
+            right: ex.right ?? undefined,
           }));
         }
         set({
@@ -131,6 +148,7 @@ const usePlanBuilderStore = create<PlanBuilderState & PlanBuilderActions>()(
           name: plan.name,
           selectedDays,
           exercisesByDay,
+          dayNamesByDay,
           isDirty: false,
         });
       },

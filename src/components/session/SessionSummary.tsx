@@ -88,14 +88,35 @@ export function SessionSummary({ session }: SessionSummaryProps) {
                   <p className="text-sm font-semibold">{ex.exerciseName}</p>
                   <div className="mt-1.5 space-y-0.5">
                     {completedSets.map((s, i) => {
+                      const unit = ex.weightUnit ?? 'kg';
+                      const isUni = ex.bilateral === false;
+                      if (isUni || s.left || s.right) {
+                        const fmt = (side?: typeof s.left) => {
+                          if (!side) return '—';
+                          const m =
+                            side.reps !== undefined
+                              ? `${side.reps} reps`
+                              : side.duration !== undefined
+                                ? `${side.duration}s`
+                                : '—';
+                          return side.weight ? `${m} · ${side.weight} ${unit}` : m;
+                        };
+                        return (
+                          <div key={i} className="text-muted-foreground text-xs">
+                            <p>Set {s.setIndex + 1}</p>
+                            <p className="pl-3">L: {fmt(s.left)}</p>
+                            <p className="pl-3">R: {fmt(s.right)}</p>
+                          </div>
+                        );
+                      }
                       const metric =
                         ex.trackingType === 'duration'
                           ? `${s.duration ?? 0}s`
                           : `${s.reps ?? 0} reps`;
-                      const weight = s.weight ? ` · ${s.weight} kg` : '';
+                      const weight = s.weight ? ` · ${s.weight}` : '';
                       return (
                         <p key={i} className="text-muted-foreground text-xs">
-                          Set {s.setIndex + 1}: {metric}{weight}
+                          Set {s.setIndex + 1}: {metric}{weight}{weight && ` ${unit}`}
                         </p>
                       );
                     })}

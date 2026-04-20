@@ -9,6 +9,7 @@ export interface UserResponse {
   followingCount: number;
   role: UserRole;
   isActive: boolean;
+  isPrivate: boolean;
   createdAt: string;
 }
 
@@ -65,6 +66,12 @@ export interface Exercise {
   videoUrl?: string;
 }
 
+export interface ExerciseSide {
+  reps?: number;
+  duration?: number;
+  weight?: number;
+}
+
 export interface ExerciseConfig {
   exerciseId: string;
   exerciseName: string;
@@ -72,13 +79,18 @@ export interface ExerciseConfig {
   reps?: number;
   duration?: number;
   weight?: number;
+  weightUnit?: 'kg' | 'lbs';
   rest: number;
   notes?: string;
   supersetGroupId?: string;
+  bilateral?: boolean;
+  left?: ExerciseSide | null;
+  right?: ExerciseSide | null;
 }
 
 export interface PlanDay {
   dayOfWeek: DayOfWeek;
+  dayName?: string | null;
   exercises: ExerciseConfig[];
 }
 
@@ -109,6 +121,8 @@ export interface SessionSet {
   weightKg?: number;
   completed: boolean;
   loggedAt: string;
+  left?: ExerciseSide | null;
+  right?: ExerciseSide | null;
 }
 
 export interface SessionExercise {
@@ -116,6 +130,7 @@ export interface SessionExercise {
   exerciseName: string;
   orderIndex: number;
   supersetGroupId?: string | null;
+  weightUnit?: 'kg' | 'lbs';
   plannedSets: number;
   plannedReps?: number;
   plannedDuration?: number;
@@ -125,6 +140,9 @@ export interface SessionExercise {
   sets: SessionSet[];
   modifiedDuringSession: boolean;
   lastPerformance: SessionSet[] | null;
+  bilateral?: boolean;
+  plannedLeft?: ExerciseSide | null;
+  plannedRight?: ExerciseSide | null;
 }
 
 export interface WorkoutSession {
@@ -132,6 +150,7 @@ export interface WorkoutSession {
   planId: string;
   planName: string;
   dayOfWeek: DayOfWeek;
+  dayName?: string | null;
   status: SessionStatus;
   startedAt: string;
   finishedAt?: string;
@@ -151,6 +170,7 @@ export interface SessionHistoryItem {
   _id: string;
   planName: string;
   dayOfWeek: DayOfWeek;
+  dayName?: string | null;
   status: SessionStatus;
   startedAt: string;
   finishedAt: string;
@@ -191,6 +211,9 @@ export interface VolumeByPeriodResponse {
   totalSets: number;
   totalSessions: number;
   breakdown: VolumeBreakdownItem[];
+  hasLbsExercises: boolean;
+  previousTotalVolume: number;
+  changePercent: number | null;
 }
 
 // Stats — volume by muscle
@@ -200,6 +223,8 @@ export interface MuscleVolumeItem {
   muscle: MuscleGroup;
   volume: number;
   sets: number;
+  previousVolume: number;
+  changePercent: number | null;
 }
 
 export interface VolumeByMuscleResponse {
@@ -208,6 +233,7 @@ export interface VolumeByMuscleResponse {
   from: string;
   to: string;
   ranking: MuscleVolumeItem[];
+  hasLbsExercises: boolean;
 }
 
 // Social
@@ -219,6 +245,8 @@ export interface PublicUserProfile {
   followersCount: number;
   followingCount: number;
   isFollowing: boolean;
+  isPrivate: boolean;
+  isRequestPending: boolean;
 }
 
 export interface PublicUserSummary {
@@ -226,6 +254,24 @@ export interface PublicUserSummary {
   username: string;
   avatar: string | null;
   isFollowing: boolean;
+  isPrivate?: boolean;
+  isRequestPending?: boolean;
+}
+
+export interface FollowRequestItem {
+  _id: string;
+  senderId: string;
+  username: string;
+  avatar: string | null;
+  createdAt: string;
+}
+
+export interface NotificationPreferences {
+  allowFollow: boolean;
+  allowFollowRequest: boolean;
+  allowPostLike: boolean;
+  allowPostComment: boolean;
+  allowNewPost: boolean;
 }
 
 // Session summary snapshot — embedded in FeedPost at creation time
@@ -235,11 +281,14 @@ export interface SessionSummarySetSnapshot {
   durationSeconds?: number;
   weightKg?: number;
   completed: boolean;
+  left?: ExerciseSide | null;
+  right?: ExerciseSide | null;
 }
 
 export interface SessionSummaryExerciseSnapshot {
   name: string;
   sets: SessionSummarySetSnapshot[];
+  bilateral?: boolean;
 }
 
 export interface SessionSummarySnapshot {
@@ -289,21 +338,26 @@ export interface ExerciseHistorySet {
   setIndex: number;
   reps?: number;
   weight?: number;
+  weightUnit?: 'kg' | 'lbs';
   duration?: number;
   completed: boolean;
   loggedAt: string;
+  left?: ExerciseSide | null;
+  right?: ExerciseSide | null;
 }
 
 export interface ExerciseHistorySession {
   sessionId: string;
   sessionDate: string;
   dayOfWeek: DayOfWeek;
+  weightUnit: 'kg' | 'lbs';
   sets: ExerciseHistorySet[];
 }
 
 export interface ExerciseHistoryResponse {
   exerciseId: string;
   exerciseName: string;
+  bilateral?: boolean;
   data: ExerciseHistorySession[];
   meta: PaginatedMeta;
 }
@@ -313,6 +367,7 @@ export interface ExerciseHistoryResponse {
 export interface PublicSessionHistoryExercise {
   exerciseName: string;
   sets: SessionSet[];
+  bilateral?: boolean;
 }
 
 export interface PublicSessionHistoryItem {
@@ -348,4 +403,72 @@ export interface AdminUserItem {
 export interface PaginatedAdminUserResponse {
   data: AdminUserItem[];
   meta: PaginatedMeta;
+}
+
+export type NotificationType =
+  | 'follow'
+  | 'follow_request'
+  | 'follow_accepted'
+  | 'post_like'
+  | 'post_comment'
+  | 'new_post'
+  | 'system';
+
+export interface NotificationDataFollow {
+  actorUsername: string;
+  actorAvatar: string | null;
+}
+
+export interface NotificationDataPostLike {
+  actorUsername: string;
+  actorAvatar: string | null;
+  postId: string;
+}
+
+export interface NotificationDataPostComment {
+  actorUsername: string;
+  actorAvatar: string | null;
+  postId: string;
+  commentText: string;
+}
+
+export interface NotificationDataNewPost {
+  actorUsername: string;
+  actorAvatar: string | null;
+  postId: string;
+}
+
+export interface NotificationDataSystem {
+  title: string;
+  body: string;
+}
+
+export interface NotificationDataFollowRequest {
+  actorUsername: string;
+  actorAvatar: string | null;
+}
+
+export interface NotificationDataFollowAccepted {
+  actorUsername: string;
+  actorAvatar: string | null;
+}
+
+export type NotificationData =
+  | NotificationDataFollow
+  | NotificationDataFollowRequest
+  | NotificationDataFollowAccepted
+  | NotificationDataPostLike
+  | NotificationDataPostComment
+  | NotificationDataNewPost
+  | NotificationDataSystem;
+
+export interface AppNotification {
+  _id: string;
+  recipientId: string;
+  actorId: string | null;
+  type: NotificationType;
+  data: NotificationData;
+  isRead: boolean;
+  createdAt: string;
+  updatedAt: string;
 }

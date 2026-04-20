@@ -8,6 +8,7 @@ import type { StatsPeriod } from '@/types/domain.types';
  */
 export function getCurrentPeriodDate(period: StatsPeriod): string {
   const now = new Date();
+  now.setHours(12, 0, 0, 0);
 
   if (period === 'year') {
     return now.getFullYear().toString();
@@ -76,7 +77,7 @@ function toISOWeekString(date: Date): string {
   const thursday = new Date(date);
   thursday.setDate(date.getDate() - ((date.getDay() + 6) % 7) + 3);
   const firstThursday = new Date(thursday.getFullYear(), 0, 4);
-  const weekNumber = Math.round(
+  const weekNumber = Math.floor(
     ((thursday.getTime() - firstThursday.getTime()) / 86400000 + ((firstThursday.getDay() + 6) % 7)) / 7,
   ) + 1;
   return `${thursday.getFullYear()}-W${String(weekNumber).padStart(2, '0')}`;

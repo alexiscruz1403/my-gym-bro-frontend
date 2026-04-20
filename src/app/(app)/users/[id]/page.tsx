@@ -45,10 +45,12 @@ export default function PublicProfilePage({ params }: PublicProfilePageProps) {
     );
   }
 
+  const isPrivateAndBlocked = profile.isPrivate && !profile.isFollowing;
+
   return (
     <PageContainer>
       <ProfileHeader user={profile} userId={id} />
-      <PublicSessionHistory userId={id} />
+      {!isPrivateAndBlocked && <PublicSessionHistory userId={id} />}
     </PageContainer>
   );
 }

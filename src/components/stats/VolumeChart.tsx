@@ -9,24 +9,28 @@ import {
   ResponsiveContainer,
   Cell,
 } from 'recharts';
+import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatBreakdownLabel } from '@/lib/stats-dates';
+import type { WeightUnit } from '@/hooks/useStats';
 import type { VolumeByPeriodResponse, StatsPeriod } from '@/types/domain.types';
 
 interface VolumeChartProps {
   data: VolumeByPeriodResponse;
   period: StatsPeriod;
   loading: boolean;
+  weightUnit: WeightUnit;
+  convertVolume: (kg: number) => number;
 }
 
-export function VolumeChart({ data, period, loading }: VolumeChartProps) {
+export function VolumeChart({ data, period, loading, weightUnit, convertVolume }: VolumeChartProps) {
   if (loading) {
     return <Skeleton className="h-48 w-full rounded-xl" />;
   }
 
   const chartData = data.breakdown.map((item) => ({
     label: formatBreakdownLabel(period, item.label),
-    volume: item.volume,
+    volume: convertVolume(item.volume),
     sets: item.sets,
   }));
 
@@ -35,9 +39,19 @@ export function VolumeChart({ data, period, loading }: VolumeChartProps) {
       <div className="flex gap-6 text-sm">
         <div>
           <p className="text-muted-foreground text-xs">Volumen total</p>
-          <p className="font-display font-bold">
-            {data.totalVolume.toLocaleString('es')}
-            <span className="text-muted-foreground ml-1 text-xs font-normal">kg</span>
+          <p className="font-display font-bold flex items-center">
+            {convertVolume(data.totalVolume).toLocaleString('es')}
+            <span className="text-muted-foreground ml-1 text-xs font-normal">{weightUnit}</span>
+            {data.changePercent !== null && data.changePercent !== undefined && (
+              <span className={cn(
+                'ml-1.5 text-[10px] font-medium rounded-full px-1.5 py-0.5',
+                data.changePercent > 0 && 'bg-accent/15 text-accent',
+                data.changePercent < 0 && 'bg-destructive/15 text-destructive',
+                data.changePercent === 0 && 'bg-muted text-muted-foreground',
+              )}>
+                {data.changePercent > 0 ? '+' : ''}{data.changePercent.toFixed(1)}%
+              </span>
+            )}
           </p>
         </div>
         <div>
@@ -59,30 +73,31 @@ export function VolumeChart({ data, period, loading }: VolumeChartProps) {
           <BarChart data={chartData} margin={{ top: 4, right: 4, left: 8, bottom: 0 }}>
             <XAxis
               dataKey="label"
-              tick={{ fontSize: 11 }}
+              tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
               tickLine={false}
               axisLine={false}
             />
             <YAxis
-              tick={{ fontSize: 11 }}
+              tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
               tickLine={false}
               axisLine={false}
               width={40}
             />
             <Tooltip
-              formatter={(value) => [`${value} kg`, 'Volumen']}
+              formatter={(value) => [`${value} ${weightUnit}`, 'Volumen']}
               cursor={{ fill: 'rgba(255,255,255,0.08)' }}
               contentStyle={{
                 fontSize: 12,
                 borderRadius: 8,
                 border: '1px solid hsl(var(--border))',
                 background: 'hsl(var(--popover))',
-                color: 'hsl(var(--popover-foreground))',
+                color: 'var(--foreground)',
               }}
+              itemStyle={{ color: 'var(--foreground)' }}
             />
             <Bar dataKey="volume" radius={[4, 4, 0, 0]} maxBarSize={40}>
               {chartData.map((_, index) => (
-                <Cell key={index} fill="hsl(var(--primary))" />
+                <Cell key={index} fill="var(--primary)" />
               ))}
             </Bar>
           </BarChart>

@@ -65,5 +65,15 @@ export function useRestTimer() {
     setRestTimer({ ...restTimer, startedAt: Date.now() });
   }, [restTimer, setRestTimer]);
 
-  return { secondsLeft, isRunning, start, stop, reset, exerciseId: restTimer?.exerciseId ?? null };
+  const adjust = useCallback(
+    (delta: number) => {
+      if (!restTimer) return;
+      const elapsed = Math.floor((Date.now() - restTimer.startedAt) / 1000);
+      const nextDuration = Math.max(elapsed + 1, restTimer.durationSeconds + delta);
+      setRestTimer({ ...restTimer, durationSeconds: nextDuration });
+    },
+    [restTimer, setRestTimer],
+  );
+
+  return { secondsLeft, isRunning, start, stop, reset, adjust, exerciseId: restTimer?.exerciseId ?? null };
 }

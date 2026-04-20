@@ -16,6 +16,7 @@ interface FeedPostCardProps {
   post: FeedPost;
   isOwnPost: boolean;
   onCommentOpen: (postId: string, onAdded: () => void) => void;
+  highlight?: boolean;
 }
 
 function formatDuration(seconds: number): string {
@@ -53,21 +54,43 @@ function SummarySlide({ exercises, durationSeconds, totalSets, showHeader }: Sum
       )}
       {exercises.map((ex, i) => {
         const completedSets = ex.sets.filter((s) => s.completed);
+        const isUni = ex.bilateral === false;
+        const fmtSide = (side?: { reps?: number; duration?: number; weight?: number } | null) => {
+          if (!side) return '—';
+          const m =
+            side.reps !== undefined
+              ? `${side.reps} reps`
+              : side.duration !== undefined
+                ? `${side.duration}s`
+                : '—';
+          return side.weight ? `${m} · ${side.weight} kg` : m;
+        };
         return (
           <div key={i} className="space-y-0.5">
             <p className="text-sm font-medium">{ex.name}</p>
-            <p className="text-muted-foreground text-xs">
-              {completedSets
-                .map((s) => {
-                  const metric =
-                    s.durationSeconds !== undefined
-                      ? `${s.durationSeconds}s`
-                      : `${s.reps ?? 0} reps`;
-                  const weight = s.weightKg ? ` · ${s.weightKg} kg` : '';
-                  return `${metric}${weight}`;
-                })
-                .join(' · ')}
-            </p>
+            {isUni || completedSets.some((s) => s.left || s.right) ? (
+              <div className="text-muted-foreground text-xs space-y-0.5">
+                {completedSets.map((s, j) => (
+                  <div key={j}>
+                    <p className="pl-2">L: {fmtSide(s.left)}</p>
+                    <p className="pl-2">R: {fmtSide(s.right)}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-muted-foreground text-xs">
+                {completedSets
+                  .map((s) => {
+                    const metric =
+                      s.durationSeconds !== undefined
+                        ? `${s.durationSeconds}s`
+                        : `${s.reps ?? 0} reps`;
+                    const weight = s.weightKg ? ` · ${s.weightKg} kg` : '';
+                    return `${metric}${weight}`;
+                  })
+                  .join(' · ')}
+              </p>
+            )}
           </div>
         );
       })}
@@ -75,7 +98,7 @@ function SummarySlide({ exercises, durationSeconds, totalSets, showHeader }: Sum
   );
 }
 
-export function FeedPostCard({ post, isOwnPost, onCommentOpen }: FeedPostCardProps) {
+export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: FeedPostCardProps) {
   const { userReacted, reactionsCount, toggle } = usePostInteraction(
     post._id,
     post.userReacted,
@@ -111,7 +134,7 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen }: FeedPostCardPro
   }
 
   return (
-    <Card>
+    <Card className={highlight ? 'ring-2 ring-primary transition-shadow' : ''}>
       <CardHeader>
         <div className="flex items-center gap-3">
           <Link href={`/users/${post.author._id}`}>

@@ -91,7 +91,7 @@ export function StartSessionSheet({
 
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium">{DAY_LABELS[day.dayOfWeek]}</span>
+                      <span className="text-sm font-medium">{DAY_LABELS[day.dayOfWeek]}</span><span className='text-muted-foreground font-normal'>{day.dayName ? ` · ${day.dayName}` : ''}</span>
                       {isToday && (
                         <Badge className="bg-primary text-primary-foreground h-4 px-1.5 text-[10px]">
                           Today

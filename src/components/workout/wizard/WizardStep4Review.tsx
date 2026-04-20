@@ -53,15 +53,22 @@ export function WizardStep4Review({
                   <p className="text-muted-foreground pl-5 text-xs">No exercises</p>
                 ) : (
                   <ul className="space-y-0.5 pl-5">
-                    {exercises.map((ex, i) => (
-                      <li key={i} className="flex items-center gap-1.5 text-xs">
-                        <Dumbbell className="text-muted-foreground h-3 w-3 shrink-0" />
-                        <span className="text-muted-foreground">
-                          {ex.exerciseName} — {ex.sets}×
-                          {ex.reps !== undefined ? `${ex.reps}reps` : `${ex.duration}s`}
-                        </span>
-                      </li>
-                    ))}
+                    {exercises.map((ex, i) => {
+                      const metric =
+                        ex.bilateral === false
+                          ? 'L/R'
+                          : ex.reps !== undefined
+                            ? `${ex.reps}reps`
+                            : `${ex.duration}s`;
+                      return (
+                        <li key={i} className="flex items-center gap-1.5 text-xs">
+                          <Dumbbell className="text-muted-foreground h-3 w-3 shrink-0" />
+                          <span className="text-muted-foreground">
+                            {ex.exerciseName} — {ex.sets}×{metric}
+                          </span>
+                        </li>
+                      );
+                    })}
                   </ul>
                 )}
               </div>

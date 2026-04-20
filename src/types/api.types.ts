@@ -1,10 +1,13 @@
 import type {
   DayOfWeek,
   Exercise,
+  ExerciseSide,
   FeedComment,
   FeedPost,
+  FollowRequestItem,
   LoadType,
   MuscleGroup,
+  NotificationPreferences,
   PublicUserProfile,
   PublicUserSummary,
   SessionSet,
@@ -43,6 +46,7 @@ export interface RefreshResponse {
 
 export interface UpdateProfileRequest {
   username?: string;
+  isPrivate?: boolean;
 }
 
 // Exercises
@@ -68,13 +72,17 @@ export interface CreatePlanExercise {
   reps?: number;
   duration?: number;
   weight?: number;
+  weightUnit?: 'kg' | 'lbs';
   rest: number;
   notes?: string;
   supersetGroupId?: string;
+  left?: ExerciseSide;
+  right?: ExerciseSide;
 }
 
 export interface CreatePlanDay {
   dayOfWeek: DayOfWeek;
+  dayName?: string;
   exercises: CreatePlanExercise[];
 }
 
@@ -97,6 +105,8 @@ export interface LogSetRequest {
   duration?: number;
   weight?: number;
   completed: boolean;
+  left?: ExerciseSide;
+  right?: ExerciseSide;
 }
 
 export interface LogSetResponse {
@@ -110,6 +120,9 @@ export interface ModifyExerciseRequest {
   plannedDuration?: number;
   plannedWeight?: number;
   plannedRest?: number;
+  weightUnit?: 'kg' | 'lbs';
+  plannedLeft?: ExerciseSide;
+  plannedRight?: ExerciseSide;
 }
 
 export interface ReplaceExerciseRequest {
@@ -119,6 +132,9 @@ export interface ReplaceExerciseRequest {
   plannedDuration?: number;
   plannedWeight?: number;
   plannedRest?: number;
+  weightUnit?: 'kg' | 'lbs';
+  plannedLeft?: ExerciseSide;
+  plannedRight?: ExerciseSide;
 }
 
 export interface FinishSessionRequest {
@@ -210,3 +226,53 @@ export interface CreatePostPayload {
   caption?: string;
   file?: File;
 }
+
+// ─── Notifications ────────────────────────────────────────────────
+import type { AppNotification } from '@/types/domain.types';
+
+export interface ListNotificationsQuery {
+  limit?: number;
+  cursor?: string;
+  unreadOnly?: boolean;
+}
+
+export interface ListNotificationsResponse {
+  data: AppNotification[];
+  nextCursor: string | null;
+}
+
+export interface UnreadCountResponse {
+  count: number;
+}
+
+export interface MarkAllReadResponse {
+  updated: number;
+}
+
+export interface WsTokenResponse {
+  token: string;
+}
+
+export interface FollowActionResponse {
+  pending: boolean;
+}
+
+export interface FollowRequestsResponse {
+  data: FollowRequestItem[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface UpdateNotificationPreferencesDto {
+  allowFollow?: boolean;
+  allowFollowRequest?: boolean;
+  allowPostLike?: boolean;
+  allowPostComment?: boolean;
+  allowNewPost?: boolean;
+}
+
+export type { NotificationPreferences };

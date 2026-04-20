@@ -20,6 +20,8 @@ const DAY_SHORT: Record<DayOfWeek, string> = {
 interface WizardStep3ExercisesProps {
   selectedDays: DayOfWeek[];
   exercisesByDay: Partial<Record<DayOfWeek, ExerciseConfigDraft[]>>;
+  dayNamesByDay: Partial<Record<DayOfWeek, string>>;
+  onSetDayName: (day: DayOfWeek, name: string) => void;
   onAdd: (day: DayOfWeek, exercise: ExerciseConfigDraft) => void;
   onUpdate: (day: DayOfWeek, index: number, config: Partial<ExerciseConfigDraft>) => void;
   onRemove: (day: DayOfWeek, index: number) => void;
@@ -31,6 +33,8 @@ interface WizardStep3ExercisesProps {
 export function WizardStep3Exercises({
   selectedDays,
   exercisesByDay,
+  dayNamesByDay,
+  onSetDayName,
   onAdd,
   onUpdate,
   onRemove,
@@ -74,6 +78,8 @@ export function WizardStep3Exercises({
           <TabsContent key={day} value={day} className="mt-4">
             <DayExerciseList
               exercises={exercisesByDay[day] ?? []}
+              dayName={dayNamesByDay[day] ?? ''}
+              onDayNameChange={(name) => onSetDayName(day, name)}
               onAdd={(ex) => onAdd(day, ex)}
               onUpdate={(index, config) => onUpdate(day, index, config)}
               onRemove={(index) => onRemove(day, index)}

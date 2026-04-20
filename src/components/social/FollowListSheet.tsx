@@ -23,9 +23,16 @@ interface FollowListSheetProps {
   type: 'followers' | 'following';
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  highlightUserId?: string | null;
 }
 
-export function FollowListSheet({ userId, type, open, onOpenChange }: FollowListSheetProps) {
+export function FollowListSheet({
+  userId,
+  type,
+  open,
+  onOpenChange,
+  highlightUserId,
+}: FollowListSheetProps) {
   const { users, meta, page, isLoading, error, fetchPage, goToPage } = useFollowList(userId, type);
 
   useEffect(() => {
@@ -60,7 +67,11 @@ export function FollowListSheet({ userId, type, open, onOpenChange }: FollowList
           {!isLoading && !error && users.length > 0 && (
             <div className="space-y-1">
               {users.map((user) => (
-                <UserListItem key={user._id} user={user} />
+                <UserListItem
+                  key={user._id}
+                  user={user}
+                  highlight={highlightUserId === user._id}
+                />
               ))}
 
               {meta && (

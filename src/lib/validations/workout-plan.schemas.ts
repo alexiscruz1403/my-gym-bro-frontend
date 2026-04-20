@@ -8,6 +8,12 @@ export const planNameSchema = z.object({
     .trim(),
 });
 
+export const exerciseSideSchema = z.object({
+  reps: z.number().int().min(1, 'Reps must be at least 1').optional(),
+  duration: z.number().int().min(1, 'Duration must be at least 1 second').optional(),
+  weight: z.number().min(0, 'Weight cannot be negative').optional(),
+});
+
 export const exerciseConfigSchema = z
   .object({
     sets: z.number({ message: 'Sets is required' }).min(1, 'At least 1 set is required'),
@@ -16,11 +22,20 @@ export const exerciseConfigSchema = z
     weight: z.number().min(0, 'Weight cannot be negative').optional(),
     rest: z.number({ message: 'Rest is required' }).min(0, 'Rest cannot be negative'),
     notes: z.string().max(200, 'Notes cannot exceed 200 characters').optional(),
+    left: exerciseSideSchema.optional(),
+    right: exerciseSideSchema.optional(),
   })
-  .refine((data) => data.reps !== undefined || data.duration !== undefined, {
-    message: 'Either reps or duration must be specified',
-    path: ['reps'],
-  })
+  .refine(
+    (data) =>
+      data.reps !== undefined ||
+      data.duration !== undefined ||
+      data.left !== undefined ||
+      data.right !== undefined,
+    {
+      message: 'Either reps or duration must be specified',
+      path: ['reps'],
+    },
+  )
   .refine(
     (data) => !(data.reps !== undefined && data.duration !== undefined),
     {
@@ -31,3 +46,4 @@ export const exerciseConfigSchema = z
 
 export type PlanNameFormValues = z.infer<typeof planNameSchema>;
 export type ExerciseConfigFormValues = z.infer<typeof exerciseConfigSchema>;
+export type ExerciseSideFormValues = z.infer<typeof exerciseSideSchema>;

@@ -28,7 +28,7 @@ export function ReplaceExerciseSheet({ open, onOpenChange, onSelect }: ReplaceEx
           </SheetDescription>
         </SheetHeader>
         <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-6">
-          <ExerciseCatalog mode="picker" onConfirm={handleConfirm} />
+          <ExerciseCatalog mode="picker" singleSelect onConfirm={handleConfirm} />
         </div>
       </SheetContent>
     </Sheet>

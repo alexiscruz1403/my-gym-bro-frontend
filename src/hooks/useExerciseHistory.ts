@@ -19,6 +19,7 @@ export function useExerciseHistory(exerciseId: string) {
   return {
     data: result?.data ?? [],
     meta: result?.meta ?? null,
+    bilateral: result?.bilateral,
     loading: isLoading,
     error: error ? 'Failed to load exercise history' : null,
     page,

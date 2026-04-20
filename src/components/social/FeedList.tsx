@@ -31,6 +31,7 @@ interface FeedListProps {
   currentUserId: string | null;
   onPageChange: (n: number) => void;
   onCommentOpen: (postId: string, onAdded: () => void) => void;
+  highlightPostId?: string | null;
 }
 
 export function FeedList({
@@ -41,6 +42,7 @@ export function FeedList({
   currentUserId,
   onPageChange,
   onCommentOpen,
+  highlightPostId,
 }: FeedListProps) {
   if (isLoading) return <FeedSkeletons />;
 
@@ -56,12 +58,14 @@ export function FeedList({
   return (
     <div className="space-y-4">
       {posts.map((post) => (
-        <FeedPostCard
-          key={post._id}
-          post={post}
-          isOwnPost={currentUserId !== null && post.author._id === currentUserId}
-          onCommentOpen={onCommentOpen}
-        />
+        <div key={post._id} id={`feed-post-${post._id}`}>
+          <FeedPostCard
+            post={post}
+            isOwnPost={currentUserId !== null && post.author._id === currentUserId}
+            onCommentOpen={onCommentOpen}
+            highlight={highlightPostId === post._id}
+          />
+        </div>
       ))}
 
       {meta && (

@@ -1,6 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { Settings, Lock } from 'lucide-react';
 import { AvatarUpload } from '@/components/profile/AvatarUpload';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { FollowButton } from '@/components/social/FollowButton';
@@ -17,6 +20,19 @@ interface OwnProfileHeaderProps {
 
 function OwnProfileHeader({ user }: OwnProfileHeaderProps) {
   const [sheet, setSheet] = useState<'followers' | 'following' | null>(null);
+  const [highlightUserId, setHighlightUserId] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const followersParam = searchParams.get('followers');
+    if (followersParam) {
+      setSheet('followers');
+      setHighlightUserId(followersParam);
+      router.replace(pathname, { scroll: false });
+    }
+  }, [searchParams, router, pathname]);
 
   return (
     <>
@@ -24,7 +40,16 @@ function OwnProfileHeader({ user }: OwnProfileHeaderProps) {
         <AvatarUpload />
 
         <div className="flex-1 min-w-0">
-          <h2 className="font-display text-xl font-semibold truncate">{user.username}</h2>
+          <div className="flex items-center gap-2">
+            <h2 className="font-display text-xl font-semibold truncate">{user.username}</h2>
+            <Link
+              href="/settings"
+              aria-label="Ajustes"
+              className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
+            >
+              <Settings className="h-4 w-4" />
+            </Link>
+          </div>
           <p className="text-sm text-muted-foreground truncate">{user.email}</p>
 
           <div className="flex gap-3 mt-2">
@@ -50,7 +75,13 @@ function OwnProfileHeader({ user }: OwnProfileHeaderProps) {
         userId={user.id}
         type={sheet ?? 'followers'}
         open={sheet !== null}
-        onOpenChange={(open) => { if (!open) setSheet(null); }}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSheet(null);
+            setHighlightUserId(null);
+          }
+        }}
+        highlightUserId={highlightUserId}
       />
     </>
   );
@@ -67,6 +98,8 @@ function PublicProfileHeader({ user }: PublicProfileHeaderProps) {
   const [sheet, setSheet] = useState<'followers' | 'following' | null>(null);
   const initials = user.username.slice(0, 2).toUpperCase();
 
+  const isPrivateAndBlocked = user.isPrivate && !user.isFollowing;
+
   return (
     <>
       <div className="flex items-start gap-4">
@@ -78,33 +111,46 @@ function PublicProfileHeader({ user }: PublicProfileHeaderProps) {
         <div className="flex-1 min-w-0">
           <h2 className="font-display text-xl font-semibold truncate">{user.username}</h2>
 
-          <div className="flex gap-3 mt-2">
-            <button
-              onClick={() => setSheet('followers')}
-              className="text-sm text-left min-h-11 flex items-center"
-            >
-              <span className="font-semibold">{user.followersCount}</span>
-              <span className="text-muted-foreground ml-1">followers</span>
-            </button>
-            <button
-              onClick={() => setSheet('following')}
-              className="text-sm text-left min-h-11 flex items-center"
-            >
-              <span className="font-semibold">{user.followingCount}</span>
-              <span className="text-muted-foreground ml-1">following</span>
-            </button>
-          </div>
+          {isPrivateAndBlocked ? (
+            <div className="flex items-center gap-1.5 mt-1 text-muted-foreground text-sm">
+              <Lock className="h-3.5 w-3.5 shrink-0" />
+              <span>Este perfil es privado</span>
+            </div>
+          ) : (
+            <div className="flex gap-3 mt-2">
+              <button
+                onClick={() => setSheet('followers')}
+                className="text-sm text-left min-h-11 flex items-center"
+              >
+                <span className="font-semibold">{user.followersCount}</span>
+                <span className="text-muted-foreground ml-1">followers</span>
+              </button>
+              <button
+                onClick={() => setSheet('following')}
+                className="text-sm text-left min-h-11 flex items-center"
+              >
+                <span className="font-semibold">{user.followingCount}</span>
+                <span className="text-muted-foreground ml-1">following</span>
+              </button>
+            </div>
+          )}
         </div>
 
-        <FollowButton userId={user._id} initialIsFollowing={user.isFollowing} />
+        <FollowButton
+          userId={user._id}
+          initialIsFollowing={user.isFollowing}
+          initialIsRequestPending={user.isRequestPending}
+        />
       </div>
 
-      <FollowListSheet
-        userId={user._id}
-        type={sheet ?? 'followers'}
-        open={sheet !== null}
-        onOpenChange={(open) => { if (!open) setSheet(null); }}
-      />
+      {!isPrivateAndBlocked && (
+        <FollowListSheet
+          userId={user._id}
+          type={sheet ?? 'followers'}
+          open={sheet !== null}
+          onOpenChange={(open) => { if (!open) setSheet(null); }}
+        />
+      )}
     </>
   );
 }

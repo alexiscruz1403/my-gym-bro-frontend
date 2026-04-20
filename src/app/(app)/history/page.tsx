@@ -30,6 +30,7 @@ export default function HistoryPage() {
     period, date, setPeriod, setDate,
     volumeData, muscleData,
     loading: statsLoading, error: statsError,
+    weightUnit, setWeightUnit, convertVolume,
   } = useStats();
 
   return (
@@ -87,6 +88,9 @@ export default function HistoryPage() {
             onPeriodChange={setPeriod}
             onDateChange={setDate}
             onRetry={() => { setPeriod(period); }}
+            weightUnit={weightUnit}
+            onWeightUnitChange={setWeightUnit}
+            convertVolume={convertVolume}
           />
         )}
       </div>
