@@ -12,6 +12,7 @@ export const API_ROUTES = {
     unreadCount: '/notifications/unread-count',
     markRead: (id: string) => `/notifications/${id}/read`,
     markAllRead: '/notifications/read-all',
+    preferences: '/notifications/preferences',
   },
   users: {
     me: '/users/me',
@@ -54,6 +55,12 @@ export const API_ROUTES = {
     unfollow: (userId: string) => `/social/follow/${userId}`,
     followers: (userId: string) => `/social/followers/${userId}`,
     following: (userId: string) => `/social/following/${userId}`,
+    followRequests: {
+      pending: '/social/follow-requests/pending',
+      approve: (userId: string) => `/social/follow-request/${userId}/approve`,
+      reject: (userId: string) => `/social/follow-request/${userId}/reject`,
+      cancel: (userId: string) => `/social/follow-request/${userId}/cancel`,
+    },
   },
   feed: {
     list: '/feed',
