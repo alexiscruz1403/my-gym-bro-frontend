@@ -105,14 +105,19 @@ export function useSession() {
 
   const modifyExercise = useCallback(
     async (exerciseId: string, dto: ModifyExerciseRequest) => {
-      if (!activeSessionId) return;
-      await modifyExerciseService(activeSessionId, exerciseId, dto);
-      updateExerciseConfig(exerciseId, {
-        ...dto,
-        modifiedDuringSession: true,
-      });
+      if (!activeSessionId || !activeSession) return;
+      const exercise = activeSession.exercises.find((ex) => ex.exerciseId === exerciseId);
+      // Optimistic update
+      updateExerciseConfig(exerciseId, { ...dto, modifiedDuringSession: true });
+      try {
+        await modifyExerciseService(activeSessionId, exerciseId, dto);
+      } catch {
+        // Revert on failure
+        if (exercise) updateExerciseConfig(exerciseId, exercise);
+        throw new Error('Failed to modify exercise');
+      }
     },
-    [activeSessionId, updateExerciseConfig],
+    [activeSessionId, activeSession, updateExerciseConfig],
   );
 
   const replaceExercise = useCallback(
