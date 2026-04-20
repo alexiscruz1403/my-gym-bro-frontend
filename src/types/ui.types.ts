@@ -28,3 +28,9 @@ export interface RestTimerState {
   startedAt: number;
   exerciseId: string;
 }
+
+export interface CountdownTimerState {
+  durationSeconds: number;
+  startedAt: number;
+  pausedSecondsLeft: number | null; // null = running, number = paused
+}

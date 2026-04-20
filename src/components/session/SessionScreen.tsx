@@ -8,6 +8,7 @@ import { ConfirmFinishDialog } from './ConfirmFinishDialog';
 import { ConfirmCancelDialog } from './ConfirmCancelDialog';
 import { SessionSummary } from './SessionSummary';
 import { GlobalRestTimerOverlay } from './GlobalRestTimerOverlay';
+import { GlobalCountdownTimerOverlay } from './GlobalCountdownTimerOverlay';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSession } from '@/hooks/useSession';
 import { toast } from 'sonner';
@@ -19,6 +20,7 @@ export function SessionScreen() {
   const [finishOpen, setFinishOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [finishedSession, setFinishedSession] = useState<WorkoutSession | null>(null);
+  const [showCountdown, setShowCountdown] = useState(false);
 
   if (finishedSession) {
     return <SessionSummary session={finishedSession} />;
@@ -60,8 +62,14 @@ export function SessionScreen() {
 
   return (
     <div className="flex h-full flex-col">
-      <SessionHeader onFinish={() => setFinishOpen(true)} onCancel={() => setCancelOpen(true)} />
+      <SessionHeader
+        onFinish={() => setFinishOpen(true)}
+        onCancel={() => setCancelOpen(true)}
+        onToggleCountdown={() => setShowCountdown((v) => !v)}
+        countdownActive={showCountdown}
+      />
       <GlobalRestTimerOverlay />
+      {showCountdown && <GlobalCountdownTimerOverlay onClose={() => setShowCountdown(false)} />}
 
       <ExerciseNavigator
         exercises={session.exercises}

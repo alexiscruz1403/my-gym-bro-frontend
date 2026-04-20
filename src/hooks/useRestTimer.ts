@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import useSessionStore from '@/store/session.store';
-import { playBeep } from '@/lib/audio';
 
 export function useRestTimer() {
   const { restTimer, setRestTimer } = useSessionStore();
@@ -36,18 +35,6 @@ export function useRestTimer() {
     : 0;
 
   const isRunning = restTimer !== null && secondsLeft > 0;
-
-  // Play a beep once when the rest timer reaches zero
-  const didBeepRef = useRef(false);
-  useEffect(() => {
-    if (restTimer && secondsLeft === 0 && !didBeepRef.current) {
-      didBeepRef.current = true;
-      playBeep();
-    }
-    if (!restTimer) {
-      didBeepRef.current = false;
-    }
-  }, [restTimer, secondsLeft]);
 
   const start = useCallback(
     (durationSeconds: number, exerciseId: string) => {

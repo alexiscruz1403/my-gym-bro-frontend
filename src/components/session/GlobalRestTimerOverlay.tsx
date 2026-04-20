@@ -1,16 +1,38 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { X, ChevronDown, ChevronUp } from 'lucide-react';
 import { useRestTimer } from '@/hooks/useRestTimer';
+import { useDraggable } from '@/hooks/useDraggable';
 import useSessionStore from '@/store/session.store';
+import { playBeep } from '@/lib/audio';
+
+function getDefaultPosition() {
+  if (typeof window === 'undefined') return { x: 16, y: 120 };
+  // Position near top so it's not covered by mobile nav or desktop taskbar
+  return { x: 16, y: 80 };
+}
 
 export function GlobalRestTimerOverlay() {
   const restTimer = useSessionStore((s) => s.restTimer);
   const { secondsLeft, isRunning, stop, adjust } = useRestTimer();
   const [minimized, setMinimized] = useState(false);
+  const { position, isDragging, pointerHandlers } = useDraggable({
+    defaultPosition: getDefaultPosition(),
+  });
+
+  // Track whether the timer ended naturally (reached 0) vs was skipped.
+  // We only beep when secondsLeft crosses from >0 to 0 AND restTimer is still
+  // set (i.e. the interval brought it to 0, not the user pressing ×).
+  const prevSecondsRef = useRef(secondsLeft);
+  useEffect(() => {
+    if (secondsLeft === 0 && prevSecondsRef.current > 0 && restTimer !== null) {
+      playBeep();
+    }
+    prevSecondsRef.current = secondsLeft;
+  }, [secondsLeft, restTimer]);
 
   if (!isRunning) return null;
 
@@ -20,10 +42,28 @@ export function GlobalRestTimerOverlay() {
   const seconds = secondsLeft % 60;
   const display = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 
+  const baseStyle: React.CSSProperties = {
+    position: 'fixed',
+    top: position.y,
+    left: position.x,
+    cursor: isDragging ? 'grabbing' : undefined,
+    touchAction: 'none',
+    zIndex: 40,
+    width: 'min(calc(100vw - 2rem), 20rem)',
+  };
+
+  const dragBorderClass = isDragging ? 'border-primary border-2' : 'border';
+
   if (minimized) {
     return (
-      <div className="fixed bottom-20 left-4 right-4 z-40 flex items-center justify-between rounded-full border bg-card px-4 py-2 shadow-lg lg:left-auto lg:right-6 lg:w-64">
-        <span className="font-display text-sm font-bold tabular-nums">{display}</span>
+      <div
+        style={baseStyle}
+        className={`flex items-center justify-between rounded-full ${dragBorderClass} bg-card px-4 py-2 shadow-lg`}
+        {...pointerHandlers}
+      >
+        <span className="flex-1 font-display text-sm font-bold tabular-nums select-none">
+          {display}
+        </span>
         <Button
           size="icon"
           variant="ghost"
@@ -38,9 +78,13 @@ export function GlobalRestTimerOverlay() {
   }
 
   return (
-    <div className="fixed bottom-20 left-4 right-4 z-40 rounded-xl border bg-card p-4 shadow-lg lg:left-auto lg:right-6 lg:w-64">
-      <div className="flex items-center justify-between">
-        <p className="text-muted-foreground text-sm font-medium">Rest</p>
+    <div
+      style={baseStyle}
+      className={`rounded-xl ${dragBorderClass} bg-card p-4 shadow-lg`}
+      {...pointerHandlers}
+    >
+      <div className="flex items-center justify-between" style={{ cursor: 'grab' }}>
+        <p className="text-muted-foreground text-sm font-medium select-none">Rest</p>
         <div className="flex items-center gap-1">
           <Button
             size="icon"
@@ -62,7 +106,7 @@ export function GlobalRestTimerOverlay() {
           </Button>
         </div>
       </div>
-      <p className="font-display mt-1 text-center text-4xl font-bold tabular-nums">{display}</p>
+      <p className="font-display mt-1 text-center text-4xl font-bold tabular-nums select-none">{display}</p>
       <Progress value={progress} className="mt-3 h-2" />
       <div className="mt-3 flex items-center justify-center gap-2">
         <Button
@@ -86,7 +130,9 @@ export function GlobalRestTimerOverlay() {
           +10s
         </Button>
       </div>
-      <p className="text-muted-foreground mt-2 text-center text-xs">Tap × to skip</p>
+      <p className="text-muted-foreground mt-2 text-center text-xs select-none">
+        Mantén presionado para mover · × para saltar
+      </p>
     </div>
   );
 }
