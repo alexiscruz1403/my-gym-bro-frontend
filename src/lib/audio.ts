@@ -1,6 +1,12 @@
 let audioCtx: AudioContext | null = null;
+
+// Timer sound (/audio/timer.mp3)
 let audioBuffer: AudioBuffer | null = null;
 let bufferLoading: Promise<AudioBuffer | null> | null = null;
+
+// Notification sound (/audio/notification.mp3)
+let notifBuffer: AudioBuffer | null = null;
+let notifBufferLoading: Promise<AudioBuffer | null> | null = null;
 
 function getAudioContext(): AudioContext | null {
   if (audioCtx) return audioCtx;
@@ -15,8 +21,8 @@ function getAudioContext(): AudioContext | null {
   return audioCtx;
 }
 
-async function loadBuffer(ctx: AudioContext): Promise<AudioBuffer | null> {
-  const response = await fetch('/audio/timer.mp3');
+async function loadBuffer(ctx: AudioContext, path: string): Promise<AudioBuffer | null> {
+  const response = await fetch(path);
   const arrayBuffer = await response.arrayBuffer();
   return ctx.decodeAudioData(arrayBuffer);
 }
@@ -51,7 +57,7 @@ export function playBeep(
     }
 
     if (!bufferLoading) {
-      bufferLoading = loadBuffer(ctx)
+      bufferLoading = loadBuffer(ctx, '/audio/timer.mp3')
         .then((buffer) => {
           audioBuffer = buffer;
           return buffer;
@@ -63,6 +69,49 @@ export function playBeep(
     }
 
     bufferLoading.then((buffer) => {
+      if (!buffer) return;
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      source.connect(ctx.destination);
+      source.start(0);
+    });
+  } catch {
+    // Audio not available — fail silently
+  }
+}
+
+export function playNotification(): void {
+  if (typeof window === 'undefined') return;
+
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    if (ctx.state === 'suspended') {
+      ctx.resume();
+    }
+
+    if (notifBuffer) {
+      const source = ctx.createBufferSource();
+      source.buffer = notifBuffer;
+      source.connect(ctx.destination);
+      source.start(0);
+      return;
+    }
+
+    if (!notifBufferLoading) {
+      notifBufferLoading = loadBuffer(ctx, '/audio/notification.mp3')
+        .then((buffer) => {
+          notifBuffer = buffer;
+          return buffer;
+        })
+        .catch(() => {
+          notifBufferLoading = null;
+          return null;
+        });
+    }
+
+    notifBufferLoading.then((buffer) => {
       if (!buffer) return;
       const source = ctx.createBufferSource();
       source.buffer = buffer;
