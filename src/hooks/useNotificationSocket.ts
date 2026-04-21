@@ -6,6 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { getWsToken } from '@/services/notifications.service';
 import { formatNotification, hrefFor } from '@/lib/notification-format';
+import { playNotification } from '@/lib/audio';
 import useAuthStore from '@/store/auth.store';
 import type { AppNotification } from '@/types/domain.types';
 import type { ListNotificationsResponse } from '@/types/api.types';
@@ -52,6 +53,8 @@ export function useNotificationSocket() {
           queryClient.setQueryData<{ count: number }>(UNREAD_COUNT_KEY, (prev) =>
             prev ? { count: prev.count + 1 } : { count: 1 },
           );
+
+          playNotification();
 
           const formatted = formatNotification(n);
           toast(formatted.text, {

@@ -2,17 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Dumbbell, ChartBar, Users, User, ShieldCheck, Settings } from 'lucide-react';
+import { Home, Dumbbell, Users, User, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import useAuthStore from '@/store/auth.store';
 
 const NAV_ITEMS = [
   { href: '/dashboard', icon: Home, label: 'Inicio' },
   { href: '/workout', icon: Dumbbell, label: 'Rutinas' },
-  { href: '/history', icon: ChartBar, label: 'Stats' },
   { href: '/feed', icon: Users, label: 'Feed' },
   { href: '/profile', icon: User, label: 'Perfil' },
-  { href: '/settings', icon: Settings, label: 'Ajustes' },
 ] as const;
 
 export function BottomNav() {
