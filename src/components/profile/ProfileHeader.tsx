@@ -1,9 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { Settings, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import { AvatarUpload } from '@/components/profile/AvatarUpload';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { FollowButton } from '@/components/social/FollowButton';
@@ -42,13 +41,6 @@ function OwnProfileHeader({ user }: OwnProfileHeaderProps) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <h2 className="font-display text-xl font-semibold truncate">{user.username}</h2>
-            <Link
-              href="/settings"
-              aria-label="Ajustes"
-              className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
-            >
-              <Settings className="h-4 w-4" />
-            </Link>
           </div>
           <p className="text-sm text-muted-foreground truncate">{user.email}</p>
 
