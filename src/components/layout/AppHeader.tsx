@@ -1,11 +1,12 @@
 'use client';
 
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import useUIStore from '@/store/ui.store';
 import useAuthStore from '@/store/auth.store';
 import { useEffect } from 'react';
-import Image from 'next/image'
+import Image from 'next/image';
+import Link from 'next/link';
 import { NotificationBell } from '@/components/notifications/NotificationBell';
 
 interface AppHeaderProps {
@@ -42,6 +43,17 @@ export function AppHeader({ title, action }: AppHeaderProps) {
         <div className="flex items-center gap-2">
           {action}
           {isAuthenticated && <NotificationBell />}
+          {isAuthenticated && (
+            <Button
+              variant="ghost"
+              size="icon"
+              render={<Link href="/settings" />}
+              aria-label="Ajustes"
+              className="cursor-pointer"
+            >
+              <Settings size={20} />
+            </Button>
+          )}
           <Button
             variant="ghost"
             size="icon"

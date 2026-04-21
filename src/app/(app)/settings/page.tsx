@@ -77,6 +77,7 @@ export default function SettingsPage() {
                       checked={preferences?.[key] ?? true}
                       onCheckedChange={(checked) => updatePreferences({ [key]: checked })}
                       aria-label={label}
+                      className={'cursor-pointer'}
                     />
                   </div>
                 ))}
@@ -100,6 +101,7 @@ export default function SettingsPage() {
                 checked={user?.isPrivate ?? false}
                 onCheckedChange={handlePrivacyToggle}
                 aria-label="Perfil privado"
+                className={'cursor-pointer'}
               />
             </div>
           </CardContent>
