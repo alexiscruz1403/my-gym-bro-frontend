@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Dumbbell, Users, User, ShieldCheck } from 'lucide-react';
+import { Home, Dumbbell, Users, User, ShieldCheck, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import useAuthStore from '@/store/auth.store';
 
@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: '/dashboard', icon: Home, label: 'Inicio' },
   { href: '/workout', icon: Dumbbell, label: 'Rutinas' },
   { href: '/feed', icon: Users, label: 'Feed' },
+  { href: '/ranks', icon: Trophy, label: 'Rangos' },
   { href: '/profile', icon: User, label: 'Perfil' },
 ] as const;
 

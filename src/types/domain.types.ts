@@ -388,6 +388,40 @@ export interface PublicSessionHistoryResponse {
   meta: PaginatedMeta;
 }
 
+// Ranks
+
+export type RankLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
+export interface ExerciseRankItem {
+  exerciseId: string;
+  exerciseName: string;
+  rank: RankLevel;
+  rankName: string;
+  bestValue: number;
+  updatedAt: string;
+}
+
+export interface MuscleRankItem {
+  muscle: MuscleGroup;
+  rank: RankLevel;
+  rankName: string;
+  exercises: ExerciseRankItem[];
+}
+
+export interface LeaderboardUserEntry {
+  userId: string;
+  username: string;
+  avatar: string | null;
+  isSelf: boolean;
+  muscleRanks: MuscleRankItem[];
+}
+
+export interface LeaderboardResponse {
+  self: LeaderboardUserEntry;
+  data: LeaderboardUserEntry[];
+  meta: PaginatedMeta;
+}
+
 // Admin (C-11)
 
 export interface AdminUserItem {
