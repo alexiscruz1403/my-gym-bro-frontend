@@ -163,6 +163,16 @@ export interface StatsMuscleParams {
   date: string;
 }
 
+// Ranks params
+
+export interface MuscleRanksParams {
+  muscle?: string;
+}
+
+export interface LeaderboardParams extends PaginationParams {
+  muscle?: MuscleGroup;
+}
+
 // Social & Feed
 
 export interface PaginationParams {

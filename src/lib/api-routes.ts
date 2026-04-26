@@ -76,4 +76,8 @@ export const API_ROUTES = {
     setUserStatus: (id: string) => `/admin/users/${id}/status`,
     setUserRole: (id: string) => `/admin/users/${id}/role`,
   },
+  ranks: {
+    muscles: '/ranks/muscles',
+    leaderboard: '/ranks/leaderboard',
+  },
 } as const;
