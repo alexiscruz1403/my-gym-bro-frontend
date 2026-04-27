@@ -2,6 +2,7 @@ import { apiClient } from '@/lib/axios';
 import { API_ROUTES } from '@/lib/api-routes';
 import type {
   ExerciseHistoryResponse,
+  ExerciseVolumeResponse,
   SessionHistoryResponse,
   VolumeByMuscleResponse,
   VolumeByPeriodResponse,
@@ -45,6 +46,17 @@ export async function getVolumeByPeriod(
   const { data } = await apiClient.get<VolumeByPeriodResponse>(API_ROUTES.stats.volume, {
     params,
   });
+  return data;
+}
+
+export async function getExerciseVolume(
+  exerciseId: string,
+  params: StatsVolumeParams,
+): Promise<ExerciseVolumeResponse> {
+  const { data } = await apiClient.get<ExerciseVolumeResponse>(
+    API_ROUTES.stats.exerciseVolume(exerciseId),
+    { params },
+  );
   return data;
 }
 

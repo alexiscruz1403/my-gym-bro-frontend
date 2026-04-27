@@ -54,6 +54,16 @@ export type DayOfWeek =
 
 export type TrackingType = 'reps' | 'duration';
 
+export type WeightInstruction =
+  | 'barbell_sum'
+  | 'machine_display'
+  | 'machine_sum_sides'
+  | 'bodyweight'
+  | 'no_weight'
+  | 'cable_display'
+  | 'cable_sum_sides'
+  | 'each_side_weight';
+
 export interface Exercise {
   id: string;
   name: string;
@@ -64,6 +74,7 @@ export interface Exercise {
   trackingType: TrackingType;
   gifUrl?: string;
   videoUrl?: string;
+  weightGuide?: { instruction: WeightInstruction; note: string | null };
 }
 
 export interface ExerciseSide {
@@ -420,6 +431,21 @@ export interface LeaderboardResponse {
   self: LeaderboardUserEntry;
   data: LeaderboardUserEntry[];
   meta: PaginatedMeta;
+}
+
+// Feature 8 — Exercise detail tabs
+
+export interface ExerciseVolumeResponse extends VolumeByPeriodResponse {
+  exerciseId: string;
+}
+
+export interface ExerciseRankResponse {
+  exerciseId: string;
+  exerciseName: string | null;
+  rank: RankLevel | null;
+  rankName: string | null;
+  bestValue: number | null;
+  updatedAt: string | null;
 }
 
 // Admin (C-11)
