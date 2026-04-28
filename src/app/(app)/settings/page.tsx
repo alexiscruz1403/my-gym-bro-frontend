@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useNotificationPreferences } from '@/hooks/useNotificationPreferences';
+import { useSubscription } from '@/hooks/useSubscription';
 import useAuthStore from '@/store/auth.store';
 import { usersService } from '@/services/users.service';
 
@@ -34,6 +35,10 @@ const NOTIFICATION_ITEMS = [
 export default function SettingsPage() {
   const { preferences, isLoading, updatePreferences } = useNotificationPreferences();
   const { user, setUser } = useAuthStore();
+  const { subscription, isLoading: subLoading, updateAutoRenew, isToggling } = useSubscription();
+
+  const showAutoRenew =
+    user?.membershipTier === 'premium' && user?.membershipStatus === 'active';
 
   async function handlePrivacyToggle(checked: boolean) {
     if (!user) return;
@@ -106,6 +111,43 @@ export default function SettingsPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Subscription auto-renew — only for active premium users */}
+        {showAutoRenew && (
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">Suscripción</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {subLoading ? (
+                <div className="flex items-center justify-between gap-3">
+                  <div className="space-y-1 flex-1">
+                    <Skeleton className="h-4 w-36 rounded" />
+                    <Skeleton className="h-3 w-52 rounded" />
+                  </div>
+                  <Skeleton className="h-6 w-11 rounded-full" />
+                </div>
+              ) : (
+                <div className="flex items-center justify-between gap-3">
+                  <div className="space-y-0.5 flex-1">
+                    <p className="text-sm font-medium">Renovación automática</p>
+                    <p className="text-xs text-muted-foreground">
+                      Tu suscripción se renovará automáticamente al vencer
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-2">Próximo pago: {subscription?.nextBillingDate}</p>
+                  </div>
+                  <Switch
+                    checked={subscription?.autoRenew ?? user?.autoRenew ?? false}
+                    onCheckedChange={(checked) => updateAutoRenew(checked)}
+                    disabled={isToggling}
+                    aria-label="Renovación automática"
+                    className="cursor-pointer"
+                  />
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
       </div>
     </PageContainer>
   );

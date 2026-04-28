@@ -82,4 +82,9 @@ export const API_ROUTES = {
     leaderboard: '/ranks/leaderboard',
     exercise: (exerciseId: string) => `/ranks/exercises/${exerciseId}`,
   },
+  subscriptions: {
+    checkout: '/subscriptions/checkout',
+    me: '/subscriptions/me',
+    autoRenew: '/subscriptions/auto-renew',
+  },
 } as const;

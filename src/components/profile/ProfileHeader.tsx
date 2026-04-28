@@ -7,6 +7,7 @@ import { AvatarUpload } from '@/components/profile/AvatarUpload';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { FollowButton } from '@/components/social/FollowButton';
 import { FollowListSheet } from '@/components/social/FollowListSheet';
+import { Badge } from '@/components/ui/badge';
 import useAuthStore from '@/store/auth.store';
 import type { UserResponse, PublicUserProfile } from '@/types/domain.types';
 
@@ -39,8 +40,17 @@ function OwnProfileHeader({ user }: OwnProfileHeaderProps) {
         <AvatarUpload />
 
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <h2 className="font-display text-xl font-semibold truncate">{user.username}</h2>
+            {user.membershipTier === 'premium' ? (
+              <Badge className="shrink-0 bg-amber-500 text-white hover:bg-amber-500 border-0">
+                Premium
+              </Badge>
+            ) : (
+              <Badge variant="secondary" className="shrink-0">
+                Gratis
+              </Badge>
+            )}
           </div>
           <p className="text-sm text-muted-foreground truncate">{user.email}</p>
 

@@ -11,6 +11,9 @@ export interface UserResponse {
   isActive: boolean;
   isPrivate: boolean;
   createdAt: string;
+  membershipTier: MembershipTier;
+  membershipStatus: MembershipStatus | null;
+  autoRenew: boolean;
 }
 
 export type MuscleGroup =
@@ -446,6 +449,33 @@ export interface ExerciseRankResponse {
   rankName: string | null;
   bestValue: number | null;
   updatedAt: string | null;
+}
+
+// Membership / Subscription (Feature 9)
+
+export type MembershipTier = 'free' | 'premium';
+
+export type MembershipStatus = 'active' | 'expired' | 'cancelled' | 'pending';
+
+export type SubscriptionPlan = 'monthly' | 'annual';
+
+export type SubscriptionStatus = 'authorized' | 'paused' | 'cancelled' | 'pending' | 'payment_failed';
+
+export interface SubscriptionResponse {
+  _id: string;
+  userId: string;
+  preapprovalId: string;
+  plan: SubscriptionPlan;
+  status: SubscriptionStatus;
+  amountArs: number;
+  orderNumber: string;
+  autoRenew: boolean;
+  nextBillingDate?: string;
+  lastPaymentDate?: string;
+  cancelledAt?: string;
+  failureCount: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // Admin (C-11)

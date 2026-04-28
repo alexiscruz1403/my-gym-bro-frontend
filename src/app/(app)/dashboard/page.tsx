@@ -3,6 +3,7 @@
 import { PageContainer } from '@/components/layout/PageContainer';
 import { ActivePlanCard } from '@/components/dashboard/ActivePlanCard';
 import { QuickActionCard } from '@/components/dashboard/QuickActionCard';
+import { PremiumCtaCard } from '@/components/dashboard/PremiumCtaCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/useAuth';
 import { useActivePlan } from '@/hooks/useActivePlan';
@@ -10,6 +11,8 @@ import { useActivePlan } from '@/hooks/useActivePlan';
 export default function DashboardPage() {
   const { user } = useAuth();
   const { data: activePlan, loading } = useActivePlan();
+
+  const isFree = !user?.membershipTier || user.membershipTier === 'free';
 
   return (
     <PageContainer>
@@ -22,6 +25,8 @@ export default function DashboardPage() {
             Here&apos;s your training overview.
           </p>
         </div>
+
+        {isFree && <PremiumCtaCard />}
 
         <div className="space-y-2">
           <h2 className="text-sm font-medium">Active Plan</h2>
