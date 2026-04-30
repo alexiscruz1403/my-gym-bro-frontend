@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CalendarDays, ChevronRight } from 'lucide-react';
+import { CalendarDays, ChevronRight, Sparkles } from 'lucide-react';
 import type { PlanListItem } from '@/types/domain.types';
 
 interface PlanCardProps {
@@ -19,6 +19,12 @@ export function PlanCard({ plan }: PlanCardProps) {
               {plan.isActive && (
                 <Badge className="shrink-0 bg-green-500 text-white hover:bg-green-600">
                   Active
+                </Badge>
+              )}
+              {plan.isAiGenerated && (
+                <Badge variant="outline" className="shrink-0 border-primary/40 text-primary gap-1">
+                  <Sparkles className="h-3 w-3" />
+                  IA
                 </Badge>
               )}
             </div>
