@@ -91,6 +91,7 @@ export interface ExerciseConfig {
   exerciseName: string;
   sets: number;
   reps?: number;
+  repsMax?: number;
   duration?: number;
   weight?: number;
   weightUnit?: 'kg' | 'lbs';
@@ -112,6 +113,7 @@ export interface WorkoutPlan {
   id: string;
   name: string;
   isActive: boolean;
+  isAiGenerated?: boolean;
   days: PlanDay[];
   createdAt: string;
   updatedAt: string;
@@ -121,6 +123,7 @@ export interface PlanListItem {
   id: string;
   name: string;
   isActive: boolean;
+  isAiGenerated?: boolean;
   daysCount: number;
 }
 
@@ -561,4 +564,134 @@ export interface AppNotification {
   isRead: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+// AI Features (10 & 11)
+
+export type AiFitnessGoal =
+  | 'muscle_gain'
+  | 'fat_loss'
+  | 'body_recomposition'
+  | 'strength'
+  | 'endurance'
+  | 'general_health'
+  | 'mobility';
+
+export type AiExperienceLevel = 'beginner' | 'intermediate' | 'advanced';
+
+export type AiEquipment =
+  | 'no_equipment'
+  | 'dumbbells'
+  | 'bands'
+  | 'barbell_plates'
+  | 'full_gym';
+
+export type AiPhysicalLimitation =
+  | 'knee_injury'
+  | 'lower_back_pain'
+  | 'shoulder_sensitivity'
+  | 'previous_surgery';
+
+export type AiPreference =
+  | 'heavy_lifting'
+  | 'prefers_machines'
+  | 'prefers_free_weights'
+  | 'hates_cardio';
+
+export type AiSex = 'male' | 'female';
+
+export type ProgressionChangeType =
+  | 'weight_increase'
+  | 'weight_decrease'
+  | 'weight_maintain'
+  | 'sets_change'
+  | 'reps_change'
+  | 'deload';
+
+export interface PhysicalProfile {
+  age: number;
+  sex: AiSex;
+  heightCm: number;
+  currentWeightKg: number;
+  targetWeightKg?: number;
+  estimatedBodyFatPercent?: number;
+}
+
+export interface GeneratePlanRequest {
+  physicalProfile: PhysicalProfile;
+  goal: AiFitnessGoal;
+  experience: AiExperienceLevel;
+  daysPerWeek: number;
+  minutesPerSession: number;
+  equipment: AiEquipment[];
+  physicalLimitations?: AiPhysicalLimitation[];
+  preferences?: AiPreference[];
+  excludedExerciseIds?: string[];
+  includedExerciseIds?: string[];
+}
+
+export interface AiPlanProfile {
+  id: string;
+  planId: string;
+  physicalProfile: PhysicalProfile;
+  goal: AiFitnessGoal;
+  experience: AiExperienceLevel;
+  daysPerWeek: number;
+  minutesPerSession: number;
+  equipment: AiEquipment[];
+  physicalLimitations: AiPhysicalLimitation[];
+  preferences: AiPreference[];
+  templateUsed: string;
+  createdAt: string;
+}
+
+export interface GeneratePlanResponse {
+  plan: WorkoutPlan;
+  profileId: string;
+  templateUsed: string;
+  message: string;
+}
+
+export interface ExerciseChange {
+  exerciseId: string;
+  exerciseName: string;
+  changeType: ProgressionChangeType;
+  previousWeight: number;
+  newWeight: number;
+  previousSets: number;
+  newSets: number;
+  previousReps: number;
+  newReps: number;
+  reasoning: string;
+}
+
+export type ProgressionLogStatus = 'pending' | 'applied' | 'rejected' | 'failed';
+
+export interface ProgressionAnalysisResponse {
+  logId: string;
+  planId: string;
+  isDeloadWeek: boolean;
+  status: ProgressionLogStatus;
+  changesApplied: ExerciseChange[];
+  message: string;
+}
+
+export interface ConfirmProgressionRequest {
+  logId: string;
+  apply: boolean;
+}
+
+export interface SuggestChangeRequest {
+  planId: string;
+  exerciseId: string;
+  newSets?: number;
+  newReps?: number;
+  newWeight?: number;
+  userReasoning?: string;
+}
+
+export interface SuggestChangeResponse {
+  approved: boolean;
+  reasoning: string;
+  appliedChange: ExerciseChange | null;
 }

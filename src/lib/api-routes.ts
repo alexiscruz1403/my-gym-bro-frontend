@@ -87,4 +87,12 @@ export const API_ROUTES = {
     me: '/subscriptions/me',
     autoRenew: '/subscriptions/auto-renew',
   },
+  ai: {
+    generatePlan: '/ai/plans/generate',
+    profiles: '/ai/plans/profiles',
+    analyzeProgression: '/ai/progression/analyze',
+    confirmProgression: '/ai/progression/confirm',
+    currentWeekProgression: '/ai/progression/current-week',
+    copyAsPlan: (id: string) => `/workout-plans/${id}/copy`,
+  },
 } as const;

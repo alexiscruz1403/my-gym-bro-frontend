@@ -14,7 +14,8 @@ const MAX_PLANS = 3;
 export default function WorkoutPage() {
   const { data: plans, loading, error, refetch } = usePlans();
 
-  const atLimit = plans.length >= MAX_PLANS;
+  const notAIPlans = plans.filter(plan => !plan.isAiGenerated);
+  const atLimit = notAIPlans.length >= MAX_PLANS;
 
   return (
     <PageContainer>
