@@ -55,7 +55,7 @@ function SummarySlide({ exercises, durationSeconds, totalSets, showHeader }: Sum
       {exercises.map((ex, i) => {
         const completedSets = ex.sets.filter((s) => s.completed);
         const isUni = ex.bilateral === false;
-        const fmtSide = (side?: { reps?: number; duration?: number; weight?: number } | null) => {
+        const fmtSide = (side?: { reps?: number; duration?: number; weight?: number } | null, unit?: string) => {
           if (!side) return '—';
           const m =
             side.reps !== undefined
@@ -63,7 +63,7 @@ function SummarySlide({ exercises, durationSeconds, totalSets, showHeader }: Sum
               : side.duration !== undefined
                 ? `${side.duration}s`
                 : '—';
-          return side.weight ? `${m} · ${side.weight} kg` : m;
+          return side.weight ? `${m} · ${side.weight} ${unit ?? 'kg'}` : m;
         };
         return (
           <div key={i} className="space-y-0.5">
@@ -72,24 +72,22 @@ function SummarySlide({ exercises, durationSeconds, totalSets, showHeader }: Sum
               <div className="text-muted-foreground text-xs space-y-0.5">
                 {completedSets.map((s, j) => (
                   <div key={j}>
-                    <p className="pl-2">L: {fmtSide(s.left)}</p>
-                    <p className="pl-2">R: {fmtSide(s.right)}</p>
+                    <p className="pl-2">L: {fmtSide(s.left, s.weightUnit)}</p>
+                    <p className="pl-2">R: {fmtSide(s.right, s.weightUnit)}</p>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground text-xs">
-                {completedSets
-                  .map((s) => {
-                    const metric =
-                      s.durationSeconds !== undefined
-                        ? `${s.durationSeconds}s`
-                        : `${s.reps ?? 0} reps`;
-                    const weight = s.weightKg ? ` · ${s.weightKg} kg` : '';
-                    return `${metric}${weight}`;
-                  })
-                  .join(' · ')}
-              </p>
+              <div className="text-muted-foreground text-xs space-y-0.5">
+                {completedSets.map((s, j) => {
+                  const metric =
+                    s.durationSeconds !== undefined
+                      ? `${s.durationSeconds}s`
+                      : `${s.reps ?? 0} reps`;
+                  const weight = s.weightKg ? ` · ${s.weightKg} ${s.weightUnit ?? 'kg'}` : '';
+                  return <p key={j} className="pl-2">{metric}{weight}</p>;
+                })}
+              </div>
             )}
           </div>
         );

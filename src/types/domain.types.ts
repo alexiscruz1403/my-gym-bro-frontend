@@ -297,6 +297,7 @@ export interface SessionSummarySetSnapshot {
   reps?: number;
   durationSeconds?: number;
   weightKg?: number;
+  weightUnit?: 'kg' | 'lbs';
   completed: boolean;
   left?: ExerciseSide | null;
   right?: ExerciseSide | null;

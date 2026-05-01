@@ -9,9 +9,10 @@ import type { PublicUserSummary } from '@/types/domain.types';
 interface UserListItemProps {
   user: PublicUserSummary;
   highlight?: boolean;
+  onFollowed?: () => void;
 }
 
-export function UserListItem({ user, highlight }: UserListItemProps) {
+export function UserListItem({ user, highlight, onFollowed }: UserListItemProps) {
   const initials = user.username.slice(0, 2).toUpperCase();
   const rowRef = useRef<HTMLDivElement>(null);
 
@@ -43,6 +44,7 @@ export function UserListItem({ user, highlight }: UserListItemProps) {
         userId={user._id}
         initialIsFollowing={user.isFollowing}
         size="sm"
+        onFollowed={onFollowed}
       />
     </div>
   );

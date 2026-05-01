@@ -13,8 +13,6 @@ export function useUnreadNotifications() {
     queryKey: UNREAD_COUNT_KEY,
     queryFn: getUnreadCount,
     enabled: isAuthenticated,
-    refetchInterval: 60_000,
-    refetchOnWindowFocus: true,
   });
 
   return { count: data?.count ?? 0 };
