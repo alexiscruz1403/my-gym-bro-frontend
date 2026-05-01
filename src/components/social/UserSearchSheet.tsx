@@ -15,9 +15,10 @@ const DEBOUNCE_MS = 300;
 interface UserSearchSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onFollowed?: () => void;
 }
 
-export function UserSearchSheet({ open, onOpenChange }: UserSearchSheetProps) {
+export function UserSearchSheet({ open, onOpenChange, onFollowed }: UserSearchSheetProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<PublicUserProfile[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -110,7 +111,7 @@ export function UserSearchSheet({ open, onOpenChange }: UserSearchSheetProps) {
           {!isLoading && results.length > 0 && (
             <div className="space-y-1 mt-2">
               {results.map((user) => (
-                <UserListItem key={user._id} user={user} />
+                <UserListItem key={user._id} user={user} onFollowed={onFollowed} />
               ))}
             </div>
           )}

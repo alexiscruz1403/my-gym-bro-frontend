@@ -14,7 +14,7 @@ import type { FeedFilter } from '@/types/api.types';
 
 export default function FeedPage() {
   const [filter, setFilter] = useState<FeedFilter>('all');
-  const { posts, meta, page, isLoading, goToPage } = useFeed(filter);
+  const { posts, meta, page, isLoading, goToPage, refresh } = useFeed(filter);
   const [activePostId, setActivePostId] = useState<string | null>(null);
   const [highlightPostId, setHighlightPostId] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -110,6 +110,7 @@ export default function FeedPage() {
       <UserSearchSheet
         open={searchOpen}
         onOpenChange={setSearchOpen}
+        onFollowed={refresh}
       />
     </PageContainer>
   );

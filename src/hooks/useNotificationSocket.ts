@@ -8,7 +8,7 @@ import { getWsToken } from '@/services/notifications.service';
 import { formatNotification, hrefFor } from '@/lib/notification-format';
 import { playNotification } from '@/lib/audio';
 import useAuthStore from '@/store/auth.store';
-import type { AppNotification } from '@/types/domain.types';
+import type { AppNotification, UserResponse } from '@/types/domain.types';
 import type { ListNotificationsResponse } from '@/types/api.types';
 import { NOTIFICATIONS_KEY } from '@/hooks/useNotifications';
 import { UNREAD_COUNT_KEY } from '@/hooks/useUnreadNotifications';
@@ -67,6 +67,21 @@ export function useNotificationSocket() {
               },
             },
           });
+        });
+
+        type FollowUpdatePayload = {
+          type: 'follow' | 'unfollow';
+          followersCount?: number;
+          followingCount?: number;
+        };
+
+        socket.on('follow_update', ({ followersCount, followingCount }: FollowUpdatePayload) => {
+          const { user, setUser } = useAuthStore.getState();
+          if (!user) return;
+          const patch: Partial<UserResponse> = {};
+          if (followersCount !== undefined) patch.followersCount = followersCount;
+          if (followingCount !== undefined) patch.followingCount = followingCount;
+          if (Object.keys(patch).length > 0) setUser({ ...user, ...patch });
         });
 
         socket.on('connect_error', async (err) => {
