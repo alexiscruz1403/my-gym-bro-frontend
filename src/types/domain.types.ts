@@ -481,7 +481,7 @@ export interface SubscriptionResponse {
   updatedAt: string;
 }
 
-// Admin (C-11)
+// Admin (C-11 / Feature 12)
 
 export interface AdminUserItem {
   _id: string;
@@ -490,7 +490,16 @@ export interface AdminUserItem {
   avatar: string | null;
   role: UserRole;
   isActive: boolean;
+  membershipTier: MembershipTier;
   createdAt: string;
+}
+
+export interface GiftMembershipDto {
+  plan: SubscriptionPlan;
+}
+
+export interface RevokeMembershipDto {
+  reason: string;
 }
 
 export interface PaginatedAdminUserResponse {

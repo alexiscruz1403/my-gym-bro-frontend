@@ -1,14 +1,34 @@
 import { apiClient } from '@/lib/axios';
-import type { PaginatedAdminUserResponse, AdminUserItem, UserRole } from '@/types/domain.types';
+import { API_ROUTES } from '@/lib/api-routes';
+import type {
+  PaginatedAdminUserResponse,
+  AdminUserItem,
+  UserRole,
+  MembershipTier,
+  GiftMembershipDto,
+  RevokeMembershipDto,
+} from '@/types/domain.types';
 import type { PaginationParams } from '@/types/api.types';
 
+interface AdminUsersParams extends PaginationParams {
+  username?: string;
+  role?: UserRole;
+  membershipTier?: MembershipTier;
+}
+
 export const adminService = {
-  listUsers: (params?: PaginationParams & { search?: string }): Promise<PaginatedAdminUserResponse> =>
-    apiClient.get<PaginatedAdminUserResponse>('/admin/users', { params }).then((r) => r.data),
+  listUsers: (params?: AdminUsersParams): Promise<PaginatedAdminUserResponse> =>
+    apiClient.get<PaginatedAdminUserResponse>(API_ROUTES.admin.users, { params }).then((r) => r.data),
 
   setUserStatus: (id: string, isActive: boolean): Promise<AdminUserItem> =>
-    apiClient.patch<AdminUserItem>(`/admin/users/${id}/status`, { isActive }).then((r) => r.data),
+    apiClient.patch<AdminUserItem>(API_ROUTES.admin.setUserStatus(id), { isActive }).then((r) => r.data),
 
   setUserRole: (id: string, role: UserRole): Promise<AdminUserItem> =>
-    apiClient.patch<AdminUserItem>(`/admin/users/${id}/role`, { role }).then((r) => r.data),
+    apiClient.patch<AdminUserItem>(API_ROUTES.admin.setUserRole(id), { role }).then((r) => r.data),
+
+  giftMembership: (id: string, dto: GiftMembershipDto): Promise<void> =>
+    apiClient.post<void>(API_ROUTES.admin.giftMembership(id), dto).then((r) => r.data),
+
+  revokeMembership: (id: string, dto: RevokeMembershipDto): Promise<void> =>
+    apiClient.post<void>(API_ROUTES.admin.revokeMembership(id), dto).then((r) => r.data),
 };

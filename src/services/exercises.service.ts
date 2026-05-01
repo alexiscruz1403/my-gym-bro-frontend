@@ -20,13 +20,15 @@ export async function getExercise(id: string): Promise<Exercise> {
   return data;
 }
 
-export async function createExercise(dto: Partial<Exercise>): Promise<Exercise> {
-  const { data } = await apiClient.post<Exercise>(API_ROUTES.exercises.list, dto);
+export async function createExercise(formData: FormData): Promise<Exercise> {
+  const { data } = await apiClient.post<Exercise>(API_ROUTES.exercises.list, formData);
   return data;
 }
 
-export async function updateExercise(id: string, dto: Partial<Exercise>): Promise<Exercise> {
-  const { data } = await apiClient.patch<Exercise>(API_ROUTES.exercises.detail(id), dto);
+export async function updateExercise(id: string, formData: FormData): Promise<Exercise> {
+  const { data } = await apiClient.patch<Exercise>(API_ROUTES.exercises.detail(id), formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
   return data;
 }
 

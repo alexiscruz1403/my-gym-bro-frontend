@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,7 +17,7 @@ const MUSCLE_GROUPS: MuscleGroup[] = [
 interface AdminExerciseFormProps {
   open: boolean;
   exercise: Exercise | null;
-  onSubmit: (dto: Partial<Exercise>) => Promise<void>;
+  onSubmit: (formData: FormData) => Promise<void>;
   onClose: () => void;
 }
 
@@ -28,7 +28,12 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
   const [musclesPrimary, setMusclesPrimary] = useState<MuscleGroup[]>([]);
   const [musclesSecondary, setMusclesSecondary] = useState<MuscleGroup[]>([]);
   const [bilateral, setBilateral] = useState(true);
+  const [gifFile, setGifFile] = useState<File | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
+
+  const gifInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (exercise) {
@@ -46,6 +51,10 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
       setMusclesSecondary([]);
       setBilateral(true);
     }
+    setGifFile(null);
+    setVideoFile(null);
+    if (gifInputRef.current) gifInputRef.current.value = '';
+    if (videoInputRef.current) videoInputRef.current.value = '';
   }, [exercise, open]);
 
   const toggleMuscle = (muscle: MuscleGroup, list: 'primary' | 'secondary') => {
@@ -65,7 +74,17 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
     if (!name.trim() || musclesPrimary.length === 0) return;
     setBusy(true);
     try {
-      await onSubmit({ name: name.trim(), trackingType, loadType, musclesPrimary, musclesSecondary, bilateral });
+      const formData = new FormData();
+      formData.append('name', name.trim());
+      formData.append('trackingType', trackingType);
+      formData.append('loadType', loadType);
+      formData.append('bilateral', String(bilateral));
+      musclesPrimary.forEach((m) => formData.append('musclesPrimary', m));
+      musclesSecondary.forEach((m) => formData.append('musclesSecondary', m));
+      console.log('gifFile', gifFile);
+      if (gifFile) formData.append('gif', gifFile);
+      if (videoFile) formData.append('video', videoFile);
+      await onSubmit(formData);
     } finally {
       setBusy(false);
     }
@@ -147,6 +166,40 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
                 Unilateral
               </button>
             </div>
+          </div>
+
+          {/* GIF upload */}
+          <div className="space-y-1.5">
+            <Label htmlFor="ex-gif">GIF <span className="text-muted-foreground text-xs">(optional)</span></Label>
+            {exercise?.gifUrl && !gifFile && (
+              <p className="text-xs text-muted-foreground">Current GIF: <a href={exercise.gifUrl} target="_blank" rel="noreferrer" className="underline">view</a></p>
+            )}
+            <input
+              id="ex-gif"
+              ref={gifInputRef}
+              type="file"
+              accept="image/gif"
+              onChange={(e) => setGifFile(e.target.files?.[0] ?? null)}
+              className="w-full text-sm text-muted-foreground file:mr-3 file:rounded-lg file:border file:border-input file:bg-background file:px-3 file:py-1 file:text-xs file:cursor-pointer"
+            />
+            {gifFile && <p className="text-xs text-muted-foreground">Selected: {gifFile.name}</p>}
+          </div>
+
+          {/* Video upload */}
+          <div className="space-y-1.5">
+            <Label htmlFor="ex-video">Video <span className="text-muted-foreground text-xs">(optional, max 50 MB)</span></Label>
+            {exercise?.videoUrl && !videoFile && (
+              <p className="text-xs text-muted-foreground">Current video: <a href={exercise.videoUrl} target="_blank" rel="noreferrer" className="underline">view</a></p>
+            )}
+            <input
+              id="ex-video"
+              ref={videoInputRef}
+              type="file"
+              accept="video/mp4,video/webm,video/quicktime"
+              onChange={(e) => setVideoFile(e.target.files?.[0] ?? null)}
+              className="w-full text-sm text-muted-foreground file:mr-3 file:rounded-lg file:border file:border-input file:bg-background file:px-3 file:py-1 file:text-xs file:cursor-pointer"
+            />
+            {videoFile && <p className="text-xs text-muted-foreground">Selected: {videoFile.name}</p>}
           </div>
 
           {/* Primary muscles */}
