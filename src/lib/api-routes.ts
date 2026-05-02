@@ -89,6 +89,9 @@ export const API_ROUTES = {
     me: '/subscriptions/me',
     autoRenew: '/subscriptions/auto-renew',
   },
+  streaks: {
+    me: '/streaks',
+  },
   ai: {
     generatePlan: '/ai/plans/generate',
     profiles: '/ai/plans/profiles',

@@ -12,7 +12,7 @@ import {
   finishSession as finishSessionService,
 } from '@/services/sessions.service';
 import { queryClient } from '@/lib/query-client';
-import type { WorkoutSession } from '@/types/domain.types';
+import type { WorkoutSession, FinishSessionResponse } from '@/types/domain.types';
 import type { LogSetRequest, ModifyExerciseRequest, ReplaceExerciseRequest, FinishSessionRequest } from '@/types/api.types';
 
 export function useSession() {
@@ -136,14 +136,15 @@ export function useSession() {
   }, [clearSession, router]);
 
   const finishSession = useCallback(
-    async (dto: FinishSessionRequest): Promise<WorkoutSession> => {
+    async (dto: FinishSessionRequest): Promise<FinishSessionResponse> => {
       if (!activeSessionId) throw new Error('No active session');
-      const finished = await finishSessionService(activeSessionId, dto);
+      const result = await finishSessionService(activeSessionId, dto);
       // Invalidate history and stats so they reflect the new session
       queryClient.invalidateQueries({ queryKey: ['session-history'] });
       queryClient.invalidateQueries({ queryKey: ['stats'] });
       queryClient.invalidateQueries({ queryKey: ['exercise-history'] });
-      return finished;
+      queryClient.invalidateQueries({ queryKey: ['streaks', 'me'] });
+      return result;
     },
     [activeSessionId],
   );

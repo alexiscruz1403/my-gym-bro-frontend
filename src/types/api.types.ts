@@ -96,6 +96,7 @@ export type UpdatePlanRequest = CreatePlanRequest;
 // Sessions
 export interface StartSessionRequest {
   dayOfWeek: DayOfWeek;
+  planId?: string;
 }
 
 export interface LogSetRequest {
