@@ -109,12 +109,23 @@ function SortableExerciseItem({
             <p className="truncate text-sm font-medium">{ex.exerciseName}</p>
             {ex.bilateral === false ? (
               <p className="text-muted-foreground text-xs">
-                {ex.sets} × L/R
+                {ex.sets} ×{' '}
+                {ex.left?.reps !== undefined && ex.left?.reps !== null
+                  ? `${ex.left.reps} reps`
+                  : ex.left?.duration !== undefined && ex.left?.duration !== null
+                    ? `${ex.left.duration}s`
+                    : 'L/R'}{' '}
+                L/R
                 {` · ${ex.rest}s rest`}
               </p>
             ) : (
               <p className="text-muted-foreground text-xs">
-                {ex.sets} × {ex.reps !== undefined ? `${ex.reps} reps` : `${ex.duration}s`}
+                {ex.sets} ×{' '}
+                {ex.reps !== undefined && ex.reps !== null
+                  ? `${ex.reps} reps`
+                  : ex.duration !== undefined && ex.duration !== null
+                    ? `${ex.duration}s`
+                    : '—'}
                 {ex.weight ? ` · ${ex.weight}${ex.weightUnit ?? 'kg'}` : ''}
                 {` · ${ex.rest}s rest`}
               </p>

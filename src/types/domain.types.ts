@@ -426,6 +426,22 @@ export interface MuscleRankItem {
   exercises: ExerciseRankItem[];
 }
 
+export interface ExerciseRankSummaryItem {
+  exerciseId: string;
+  exerciseName: string;
+  rankBefore: number | null;
+  rankNameBefore: string | null;
+  rankAfter: number;
+  rankNameAfter: string;
+  bestValueBefore: number | null;
+  bestValueAfter: number;
+}
+
+export interface FinishSessionResponse {
+  session: WorkoutSession;
+  rankSummary: ExerciseRankSummaryItem[];
+}
+
 export interface LeaderboardUserEntry {
   userId: string;
   username: string;
@@ -704,4 +720,10 @@ export interface SuggestChangeResponse {
   approved: boolean;
   reasoning: string;
   appliedChange: ExerciseChange | null;
+}
+
+export interface StreakResponse {
+  currentStreak: number;
+  longestStreak: number;
+  lastActivityDate: string | null;
 }

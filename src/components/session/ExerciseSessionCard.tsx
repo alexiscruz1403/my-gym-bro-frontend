@@ -152,24 +152,6 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
             <ArrowLeftRight className="h-4 w-4" />
           </Button>
         </div>
-        <p className="text-muted-foreground mt-0.5 text-sm">
-          {exercise.plannedSets} sets
-          {unilateral
-            ? ''
-            : exercise.trackingType === 'duration'
-              ? exercise.plannedDuration ? ` × ${exercise.plannedDuration}s` : ''
-              : exercise.plannedReps ? ` × ${exercise.plannedReps} reps` : ''}
-          {!unilateral && exercise.plannedWeight ? ` · ${exercise.plannedWeight} ${exercise.weightUnit ?? 'kg'}` : ''}
-          {exercise.modifiedDuringSession && (
-            <span className="text-primary ml-1 text-xs">(modified)</span>
-          )}
-        </p>
-        {unilateral && (
-          <div className="text-muted-foreground mt-1 text-xs">
-            <p>L: {formatSide(exercise.plannedLeft, exercise.weightUnit ?? 'kg')}</p>
-            <p>R: {formatSide(exercise.plannedRight, exercise.weightUnit ?? 'kg')}</p>
-          </div>
-        )}
       </div>
 
       {/* Weight unit toggle */}

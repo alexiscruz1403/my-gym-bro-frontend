@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/axios';
 import { API_ROUTES } from '@/lib/api-routes';
-import type { WorkoutSession } from '@/types/domain.types';
+import type { WorkoutSession, FinishSessionResponse } from '@/types/domain.types';
 import type {
   StartSessionRequest,
   LogSetRequest,
@@ -66,8 +66,8 @@ export async function cancelSession(): Promise<void> {
 export async function finishSession(
   sessionId: string,
   dto: FinishSessionRequest,
-): Promise<WorkoutSession> {
-  const { data } = await apiClient.patch<WorkoutSession>(
+): Promise<FinishSessionResponse> {
+  const { data } = await apiClient.patch<FinishSessionResponse>(
     API_ROUTES.sessions.finish(sessionId),
     dto,
   );

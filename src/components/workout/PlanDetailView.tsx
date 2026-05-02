@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
@@ -14,7 +15,7 @@ import { usePlans } from '@/hooks/usePlans';
 import { useCopyAiPlan } from '@/hooks/useCopyAiPlan';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
-import { Pencil, Zap, Sparkles, Copy, LayoutList, Loader2 } from 'lucide-react';
+import { Pencil, Zap, Sparkles, Copy, LayoutList, Loader2, AlertTriangle } from 'lucide-react';
 import type { WorkoutPlan } from '@/types/domain.types';
 
 interface PlanDetailViewProps {
@@ -26,6 +27,8 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
   const router = useRouter();
   const { user } = useAuth();
   const { data: plans } = usePlans();
+  const [confirmingActivate, setConfirmingActivate] = useState(false);
+  const [activating, setActivating] = useState(false);
 
   const isPremium =
     user?.membershipTier === 'premium' && user?.membershipStatus === 'active';
@@ -52,6 +55,7 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
   };
 
   const handleActivate = async () => {
+    setActivating(true);
     try {
       await activatePlan(plan.id);
       toast.success(`"${plan.name}" is now your active plan`);
@@ -59,6 +63,9 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
       onUpdate();
     } catch {
       toast.error('Failed to activate plan');
+    } finally {
+      setActivating(false);
+      setConfirmingActivate(false);
     }
   };
 
@@ -91,10 +98,36 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
 
       <div className="flex flex-wrap gap-2">
         {!plan.isActive && (
-          <Button size="sm" onClick={handleActivate} className="flex cursor-pointer items-center gap-1.5">
-            <Zap className="h-4 w-4" />
-            Activate
-          </Button>
+          confirmingActivate ? (
+            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-orange-500/30 bg-orange-500/5 px-3 py-2">
+              <AlertTriangle className="h-4 w-4 shrink-0 text-orange-500" />
+              <p className="text-xs text-orange-600 dark:text-orange-400">
+                Your current streak will reset. Continue?
+              </p>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setConfirmingActivate(false)}
+                disabled={activating}
+                className="min-h-11 cursor-pointer px-3 text-xs"
+              >
+                Cancel
+              </Button>
+              <Button
+                size="sm"
+                onClick={handleActivate}
+                disabled={activating}
+                className="min-h-11 cursor-pointer px-3 text-xs"
+              >
+                {activating ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Activate'}
+              </Button>
+            </div>
+          ) : (
+            <Button size="sm" onClick={() => setConfirmingActivate(true)} className="flex cursor-pointer items-center gap-1.5">
+              <Zap className="h-4 w-4" />
+              Activate
+            </Button>
+          )
         )}
         {!plan.isAiGenerated && (
           <Button size="sm" variant="outline" render={<Link href={`/workout/${plan.id}/edit`} />} className="flex cursor-pointer items-center gap-1.5">
