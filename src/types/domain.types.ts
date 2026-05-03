@@ -524,6 +524,28 @@ export interface PaginatedAdminUserResponse {
   meta: PaginatedMeta;
 }
 
+export interface PaymentLog {
+  _id: string;
+  userId: string;
+  subscriptionId: string;
+  preapprovalId: string;
+  plan: SubscriptionPlan;
+  status: SubscriptionStatus;
+  amountArs?: number;
+  orderNumber?: string;
+  nextBillingDate?: string;
+  lastPaymentDate?: string;
+  cancelledAt?: string;
+  failureCount: number;
+  error?: string;
+  createdAt: string;
+}
+
+export interface PaginatedPaymentLogResponse {
+  data: PaymentLog[];
+  meta: PaginatedMeta;
+}
+
 export type NotificationType =
   | 'follow'
   | 'follow_request'

@@ -6,6 +6,7 @@ import { PageContainer } from '@/components/layout/PageContainer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AdminUserList } from '@/components/admin/AdminUserList';
 import { AdminExerciseList } from '@/components/admin/AdminExerciseList';
+import { AdminPaymentLogList } from '@/components/admin/AdminPaymentLogList';
 import useAuthStore from '@/store/auth.store';
 
 export default function AdminPage() {
@@ -27,12 +28,16 @@ export default function AdminPage() {
         <TabsList className="mb-4">
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="exercises">Exercises</TabsTrigger>
+          <TabsTrigger value="payments">Payments</TabsTrigger>
         </TabsList>
         <TabsContent value="users">
           <AdminUserList />
         </TabsContent>
         <TabsContent value="exercises">
           <AdminExerciseList />
+        </TabsContent>
+        <TabsContent value="payments">
+          <AdminPaymentLogList />
         </TabsContent>
       </Tabs>
     </PageContainer>

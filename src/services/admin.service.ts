@@ -7,6 +7,9 @@ import type {
   MembershipTier,
   GiftMembershipDto,
   RevokeMembershipDto,
+  PaginatedPaymentLogResponse,
+  SubscriptionPlan,
+  SubscriptionStatus,
 } from '@/types/domain.types';
 import type { PaginationParams } from '@/types/api.types';
 
@@ -14,6 +17,12 @@ interface AdminUsersParams extends PaginationParams {
   username?: string;
   role?: UserRole;
   membershipTier?: MembershipTier;
+}
+
+interface AdminPaymentLogsParams extends PaginationParams {
+  userId?: string;
+  plan?: SubscriptionPlan;
+  status?: SubscriptionStatus;
 }
 
 export const adminService = {
@@ -31,4 +40,7 @@ export const adminService = {
 
   revokeMembership: (id: string, dto: RevokeMembershipDto): Promise<void> =>
     apiClient.post<void>(API_ROUTES.admin.revokeMembership(id), dto).then((r) => r.data),
+
+  listPaymentLogs: (params?: AdminPaymentLogsParams): Promise<PaginatedPaymentLogResponse> =>
+    apiClient.get<PaginatedPaymentLogResponse>(API_ROUTES.admin.paymentLogs, { params }).then((r) => r.data),
 };
