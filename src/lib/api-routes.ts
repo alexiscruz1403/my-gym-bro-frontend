@@ -74,6 +74,7 @@ export const API_ROUTES = {
   },
   admin: {
     users: '/admin/users',
+    paymentLogs: '/admin/payment-logs',
     setUserStatus: (id: string) => `/admin/users/${id}/status`,
     setUserRole: (id: string) => `/admin/users/${id}/role`,
     giftMembership: (id: string) => `/admin/users/${id}/membership/gift`,
