@@ -6,6 +6,8 @@ export const API_ROUTES = {
     logout: '/auth/logout',
     google: '/auth/callback',
     wsToken: '/auth/ws-token',
+    forgotPassword: '/auth/password-reset/request',
+    resetPassword: '/auth/password-reset/confirm',
   },
   notifications: {
     list: '/notifications',
