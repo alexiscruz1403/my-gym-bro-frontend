@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AdminUserList } from '@/components/admin/AdminUserList';
 import { AdminExerciseList } from '@/components/admin/AdminExerciseList';
 import { AdminPaymentLogList } from '@/components/admin/AdminPaymentLogList';
+import { AdminTermsList } from '@/components/admin/AdminTermsList';
 import useAuthStore from '@/store/auth.store';
 
 export default function AdminPage() {
@@ -29,6 +30,7 @@ export default function AdminPage() {
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="exercises">Exercises</TabsTrigger>
           <TabsTrigger value="payments">Payments</TabsTrigger>
+          <TabsTrigger value="terms">Terms</TabsTrigger>
         </TabsList>
         <TabsContent value="users">
           <AdminUserList />
@@ -38,6 +40,9 @@ export default function AdminPage() {
         </TabsContent>
         <TabsContent value="payments">
           <AdminPaymentLogList />
+        </TabsContent>
+        <TabsContent value="terms">
+          <AdminTermsList />
         </TabsContent>
       </Tabs>
     </PageContainer>

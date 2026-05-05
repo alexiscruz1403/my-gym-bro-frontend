@@ -749,3 +749,27 @@ export interface StreakResponse {
   longestStreak: number;
   lastActivityDate: string | null;
 }
+
+export interface TermsSection {
+  _id: string;
+  header: string;
+  content: string;
+  order: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateTermsSectionDto {
+  header: string;
+  content: string;
+  order: number;
+  isActive?: boolean;
+}
+
+export interface UpdateTermsSectionDto {
+  header?: string;
+  content?: string;
+  order?: number;
+  isActive?: boolean;
+}

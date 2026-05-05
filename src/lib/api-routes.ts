@@ -94,6 +94,12 @@ export const API_ROUTES = {
   streaks: {
     me: '/streaks',
   },
+  terms: {
+    adminList: '/terms/admin',
+    create: '/terms',
+    update: (id: string) => `/terms/${id}`,
+    delete: (id: string) => `/terms/${id}`,
+  },
   ai: {
     generatePlan: '/ai/plans/generate',
     profiles: '/ai/plans/profiles',
