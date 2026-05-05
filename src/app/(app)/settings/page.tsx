@@ -171,6 +171,27 @@ export default function SettingsPage() {
             </Link>
           </CardContent>
         </Card>
+
+        {/* Soporte */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Soporte</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Link
+              href="/faq"
+              className="flex items-center justify-between gap-3 hover:opacity-75 transition-opacity"
+            >
+              <div className="space-y-0.5 flex-1">
+                <p className="text-sm font-medium">FAQ y contacto</p>
+                <p className="text-xs text-muted-foreground">
+                  Preguntas frecuentes y soporte
+                </p>
+              </div>
+              <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+            </Link>
+          </CardContent>
+        </Card>
       </div>
     </PageContainer>
   );
