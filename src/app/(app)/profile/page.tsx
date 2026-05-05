@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Loader2, LogOut } from 'lucide-react';
+import { Loader2, LogOut, Trash2 } from 'lucide-react';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { Button } from '@/components/ui/button';
@@ -22,6 +22,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useSessionHistory } from '@/hooks/useSessionHistory';
 import { useStats } from '@/hooks/useStats';
+import { DeleteAccountDialog } from '@/components/profile/DeleteAccountDialog';
 import { cn } from '@/lib/utils';
 
 const editProfileSchema = z.object({
@@ -57,6 +58,7 @@ export default function ProfilePage() {
   const { logout } = useAuth();
   const { user, isLoading, updateProfile } = useProfile();
   const [activeTab, setActiveTab] = useState<ProfileTab>('profile');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const { data, meta, loading: histLoading, error: histError, page, setPage, refetch } = useSessionHistory();
   const {
@@ -154,6 +156,20 @@ export default function ProfilePage() {
               <LogOut className="mr-2 h-4 w-4" />
               Cerrar sesión
             </Button>
+
+            <Button
+              variant="ghost"
+              className="w-full text-muted-foreground hover:text-destructive cursor-pointer"
+              onClick={() => setDeleteDialogOpen(true)}
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Eliminar cuenta
+            </Button>
+
+            <DeleteAccountDialog
+              open={deleteDialogOpen}
+              onOpenChange={setDeleteDialogOpen}
+            />
           </div>
         )}
 

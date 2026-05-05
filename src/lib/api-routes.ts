@@ -6,6 +6,8 @@ export const API_ROUTES = {
     logout: '/auth/logout',
     google: '/auth/callback',
     wsToken: '/auth/ws-token',
+    forgotPassword: '/auth/password-reset/request',
+    resetPassword: '/auth/password-reset/confirm',
   },
   notifications: {
     list: '/notifications',
@@ -20,6 +22,7 @@ export const API_ROUTES = {
     search: '/users',
     publicProfile: (id: string) => `/users/${id}`,
     sessionHistory: (id: string) => `/users/${id}/sessions`,
+    deleteAccount: '/users/me',
   },
   exercises: {
     list: '/exercises',
@@ -92,6 +95,12 @@ export const API_ROUTES = {
   },
   streaks: {
     me: '/streaks',
+  },
+  terms: {
+    adminList: '/terms/admin',
+    create: '/terms',
+    update: (id: string) => `/terms/${id}`,
+    delete: (id: string) => `/terms/${id}`,
   },
   ai: {
     generatePlan: '/ai/plans/generate',

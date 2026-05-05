@@ -2,6 +2,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import type { ApiError } from '@/types/api.types';
 import { API_ROUTES } from '@/lib/api-routes';
 import { logout, setAuthenticated } from '@/store/auth.store';
+import { request } from 'http';
 
 // ─── Axios instance ───────────────────────────────────────────────
 // withCredentials: true ensures httpOnly cookies are sent on every request.
@@ -49,10 +50,11 @@ apiClient.interceptors.response.use(
 
     const isUnauthorized = error.response?.status === 401;
     const isRefreshEndpoint = originalRequest.url?.includes(API_ROUTES.auth.refresh) ?? false;
+    const isLoginEndpoint = originalRequest.url?.includes(API_ROUTES.auth.login) ?? false;
     const alreadyRetried = originalRequest._retry;
 
-    // Do not retry refresh requests or already-retried requests
-    if (!isUnauthorized || isRefreshEndpoint || alreadyRetried) {
+    // Do not retry refresh requests, login requests, or already-retried requests
+    if (!isUnauthorized || isRefreshEndpoint || isLoginEndpoint || alreadyRetried) {
       return Promise.reject(error);
     }
 
@@ -80,7 +82,7 @@ apiClient.interceptors.response.use(
       logout();
       processQueue(refreshError);
       if (typeof window !== 'undefined') {
-        window.location.href = '/login';
+        //window.location.href = '/login';
       }
       return Promise.reject(refreshError);
     } finally {

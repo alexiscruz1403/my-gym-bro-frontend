@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+import { ChevronRight } from 'lucide-react';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
@@ -148,6 +150,48 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
         )}
+
+        {/* Legal */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Legal</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Link
+              href="/terms"
+              className="flex items-center justify-between gap-3 hover:opacity-75 transition-opacity"
+            >
+              <div className="space-y-0.5 flex-1">
+                <p className="text-sm font-medium">Términos y condiciones</p>
+                <p className="text-xs text-muted-foreground">
+                  Uso del servicio, privacidad y suscripción
+                </p>
+              </div>
+              <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+            </Link>
+          </CardContent>
+        </Card>
+
+        {/* Soporte */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Soporte</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Link
+              href="/faq"
+              className="flex items-center justify-between gap-3 hover:opacity-75 transition-opacity"
+            >
+              <div className="space-y-0.5 flex-1">
+                <p className="text-sm font-medium">FAQ y contacto</p>
+                <p className="text-xs text-muted-foreground">
+                  Preguntas frecuentes y soporte
+                </p>
+              </div>
+              <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+            </Link>
+          </CardContent>
+        </Card>
       </div>
     </PageContainer>
   );
