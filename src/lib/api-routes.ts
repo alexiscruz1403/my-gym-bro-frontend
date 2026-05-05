@@ -20,6 +20,7 @@ export const API_ROUTES = {
     search: '/users',
     publicProfile: (id: string) => `/users/${id}`,
     sessionHistory: (id: string) => `/users/${id}/sessions`,
+    deleteAccount: '/users/me',
   },
   exercises: {
     list: '/exercises',

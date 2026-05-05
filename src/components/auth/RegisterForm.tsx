@@ -109,6 +109,13 @@ export function RegisterForm() {
 
           <GoogleAuthButton />
 
+          <p className="text-center text-xs text-muted-foreground">
+            Al registrarte aceptas nuestros{' '}
+            <Link href="/terms" className="text-primary hover:underline">
+              Términos y condiciones
+            </Link>
+          </p>
+
           <p className="text-center text-sm text-muted-foreground">
             ¿Ya tienes cuenta?{' '}
             <Link href="/login" className="text-primary hover:underline">

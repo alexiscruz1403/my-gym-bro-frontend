@@ -35,4 +35,7 @@ export const usersService = {
     apiClient
       .get<PublicSessionHistoryResponse>(`/users/${id}/sessions`, { params })
       .then((r) => r.data),
+
+  deleteAccount: (): Promise<void> =>
+    apiClient.delete(API_ROUTES.users.deleteAccount).then(() => undefined),
 };

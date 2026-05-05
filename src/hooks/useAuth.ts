@@ -43,6 +43,7 @@ export function useAuth() {
         const error = err as AxiosError<ApiError>;
         const message = error.response?.data?.message;
         const displayMessage = Array.isArray(message) ? message[0] : message;
+        console.log("display", displayMessage)
         toast.error(displayMessage ?? 'Credenciales incorrectas.');
         return false;
       }
