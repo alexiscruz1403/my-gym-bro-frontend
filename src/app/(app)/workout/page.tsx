@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { PlanList } from '@/components/workout/PlanList';
 import { Button } from '@/components/ui/button';
@@ -12,6 +13,7 @@ import { Plus, Dumbbell } from 'lucide-react';
 const MAX_PLANS = 3;
 
 export default function WorkoutPage() {
+  const { t } = useTranslation();
   const { data: plans, loading, error, refetch } = usePlans();
 
   const notAIPlans = plans.filter(plan => !plan.isAiGenerated);
@@ -20,16 +22,16 @@ export default function WorkoutPage() {
   return (
     <PageContainer>
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold">My Plans</h1>
+        <h1 className="font-display text-2xl font-bold">{t('plans.title')}</h1>
         {atLimit ? (
-          <Button disabled size="sm" title="Maximum 3 plans reached" className="flex min-h-11 items-center gap-1">
+          <Button disabled size="sm" title={t('plans.maxReached')} className="flex min-h-11 items-center gap-1">
             <Plus className="h-4 w-4" />
-            New Plan
+            {t('plans.newPlan')}
           </Button>
         ) : (
           <Button size="sm" render={<Link href="/workout/new" />} className="flex min-h-11 items-center gap-1">
             <Plus className="h-4 w-4" />
-            New Plan
+            {t('plans.newPlan')}
           </Button>
         )}
       </div>
@@ -39,7 +41,7 @@ export default function WorkoutPage() {
         className="text-muted-foreground hover:text-foreground mb-4 flex min-h-11 items-center gap-1.5 text-sm"
       >
         <Dumbbell className="h-4 w-4" />
-        Browse exercise catalog
+        {t('plans.browseExercises')}
       </Link>
 
       {loading && (

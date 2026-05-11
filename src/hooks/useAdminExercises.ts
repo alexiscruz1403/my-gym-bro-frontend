@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import { getExercises, createExercise, updateExercise, deleteExercise } from '@/services/exercises.service';
 import type { Exercise, MuscleGroup } from '@/types/domain.types';
@@ -13,10 +13,14 @@ export function useAdminExercises() {
   const [nameSearch, setNameSearch] = useState('');
   const [primaryMuscle, setPrimaryMuscle] = useState<MuscleGroup | ''>('');
 
+  const nameSearchRef = useRef('');
+  const primaryMuscleRef = useRef<MuscleGroup | ''>('');
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const fetchPage = useCallback(
     (targetPage: number, overrides?: { nameSearch?: string; primaryMuscle?: MuscleGroup | '' }) => {
-      const name = overrides?.nameSearch ?? nameSearch;
-      const muscle = overrides?.primaryMuscle ?? primaryMuscle;
+      const name = overrides?.nameSearch ?? nameSearchRef.current;
+      const muscle = overrides?.primaryMuscle ?? primaryMuscleRef.current;
       setIsLoading(true);
       getExercises({
         page: targetPage,
@@ -32,16 +36,21 @@ export function useAdminExercises() {
         .catch(() => toast.error('Failed to load exercises.'))
         .finally(() => setIsLoading(false));
     },
-    [nameSearch, primaryMuscle],
+    [],
   );
 
   const handleNameSearch = (q: string) => {
     setNameSearch(q);
-    fetchPage(1, { nameSearch: q });
+    nameSearchRef.current = q;
+    if (searchTimer.current) clearTimeout(searchTimer.current);
+    searchTimer.current = setTimeout(() => {
+      fetchPage(1, { nameSearch: q });
+    }, 400);
   };
 
   const handleMuscleFilter = (m: MuscleGroup | '') => {
     setPrimaryMuscle(m);
+    primaryMuscleRef.current = m;
     fetchPage(1, { primaryMuscle: m });
   };
 

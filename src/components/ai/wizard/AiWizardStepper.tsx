@@ -1,29 +1,27 @@
+'use client';
+
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { Check } from 'lucide-react';
 
-const STEPS = [
-  { number: 1, label: 'Perfil' },
-  { number: 2, label: 'Objetivo' },
-  { number: 3, label: 'Horario' },
-  { number: 4, label: 'Equipo' },
-  { number: 5, label: 'Límites' },
-  { number: 6, label: 'Ejercicios' },
-  { number: 7, label: 'Generar' },
-];
+const STEP_KEYS = ['profile', 'goal', 'schedule', 'equipment', 'limits', 'exercises', 'generate'] as const;
 
 interface AiWizardStepperProps {
   currentStep: number;
 }
 
 export function AiWizardStepper({ currentStep }: AiWizardStepperProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="flex w-full items-center overflow-x-auto pt-2 pb-1">
-      {STEPS.map((step, index) => {
-        const isDone = step.number < currentStep;
-        const isActive = step.number === currentStep;
+      {STEP_KEYS.map((key, index) => {
+        const stepNumber = index + 1;
+        const isDone = stepNumber < currentStep;
+        const isActive = stepNumber === currentStep;
 
         return (
-          <div key={step.number} className="flex flex-1 items-center min-w-0">
+          <div key={key} className="flex flex-1 items-center min-w-0">
             <div className="flex flex-1 flex-col items-center gap-1">
               <div
                 className={cn(
@@ -37,7 +35,7 @@ export function AiWizardStepper({ currentStep }: AiWizardStepperProps) {
                     'bg-muted text-muted-foreground',
                 )}
               >
-                {isDone ? <Check className="h-3.5 w-3.5" /> : step.number}
+                {isDone ? <Check className="h-3.5 w-3.5" /> : stepNumber}
               </div>
               <span
                 className={cn(
@@ -49,11 +47,11 @@ export function AiWizardStepper({ currentStep }: AiWizardStepperProps) {
                       : 'text-muted-foreground',
                 )}
               >
-                {step.label}
+                {t(`ai.wizard.steps.${key}`)}
               </span>
             </div>
 
-            {index < STEPS.length - 1 && (
+            {index < STEP_KEYS.length - 1 && (
               <div
                 className={cn(
                   'mb-5 h-px flex-1 min-w-2 max-w-8 transition-all duration-500',

@@ -1,9 +1,14 @@
+'use client';
+
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 
 export function QuickActionCard() {
+  const { t } = useTranslation();
+
   return (
     <Card className="border-dashed">
       <CardContent className="flex flex-col items-center gap-3 py-8 text-center">
@@ -11,13 +16,13 @@ export function QuickActionCard() {
           <Plus className="text-muted-foreground h-6 w-6" />
         </div>
         <div className="space-y-1">
-          <p className="font-medium">No active plan</p>
+          <p className="font-medium">{t('dashboard.noActivePlan.title')}</p>
           <p className="text-muted-foreground text-sm">
-            Create a workout plan to get started.
+            {t('dashboard.noActivePlan.description')}
           </p>
         </div>
         <Button size="sm" render={<Link href="/workout/new" />}>
-          Create your first plan
+          {t('dashboard.noActivePlan.button')}
         </Button>
       </CardContent>
     </Card>

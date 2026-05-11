@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,6 +17,7 @@ interface AiStep1ProfileProps {
 }
 
 export function AiStep1Profile({ defaultValues, onNext }: AiStep1ProfileProps) {
+  const { t } = useTranslation();
   const [showTarget, setShowTarget] = useState(!!defaultValues?.targetWeightKg);
   const [showBodyFat, setShowBodyFat] = useState(
     !!defaultValues?.estimatedBodyFatPercent,
@@ -46,15 +48,14 @@ export function AiStep1Profile({ defaultValues, onNext }: AiStep1ProfileProps) {
   return (
     <form onSubmit={handleSubmit(onNext)} className="space-y-6">
       <div className="text-center space-y-1">
-        <h2 className="text-xl font-bold">Tu perfil físico</h2>
+        <h2 className="text-xl font-bold">{t('ai.wizard.step1.title')}</h2>
         <p className="text-sm text-muted-foreground">
-          Esta información ayuda a la IA a diseñar un plan adaptado a ti.
+          {t('ai.wizard.step1.description')}
         </p>
       </div>
 
-      {/* Sex selection */}
       <div className="space-y-2">
-        <Label className="text-sm font-medium">Sexo biológico</Label>
+        <Label className="text-sm font-medium">{t('ai.wizard.step1.sex')}</Label>
         <div className="grid grid-cols-2 gap-3">
           {(['male', 'female'] as const).map((s) => (
             <motion.button
@@ -71,7 +72,7 @@ export function AiStep1Profile({ defaultValues, onNext }: AiStep1ProfileProps) {
             >
               <span className="text-3xl">{s === 'male' ? '♂' : '♀'}</span>
               <span className="text-sm font-medium capitalize">
-                {s === 'male' ? 'Masculino' : 'Femenino'}
+                {s === 'male' ? t('ai.wizard.step1.male') : t('ai.wizard.step1.female')}
               </span>
               {selectedSex === s && (
                 <motion.div
@@ -87,9 +88,8 @@ export function AiStep1Profile({ defaultValues, onNext }: AiStep1ProfileProps) {
         )}
       </div>
 
-      {/* Age */}
       <div className="space-y-1.5">
-        <Label htmlFor="age">Edad</Label>
+        <Label htmlFor="age">{t('ai.wizard.step1.age')}</Label>
         <Input
           id="age"
           type="number"
@@ -102,10 +102,9 @@ export function AiStep1Profile({ defaultValues, onNext }: AiStep1ProfileProps) {
         )}
       </div>
 
-      {/* Height */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label>Altura</Label>
+          <Label>{t('ai.wizard.step1.height')}</Label>
           <span className="text-lg font-bold tabular-nums">
             {heightCm}
             <span className="text-sm font-normal text-muted-foreground ml-1">cm</span>
@@ -131,9 +130,8 @@ export function AiStep1Profile({ defaultValues, onNext }: AiStep1ProfileProps) {
         )}
       </div>
 
-      {/* Current weight */}
       <div className="space-y-1.5">
-        <Label htmlFor="currentWeightKg">Peso actual (kg)</Label>
+        <Label htmlFor="currentWeightKg">{t('ai.wizard.step1.currentWeight')}</Label>
         <Input
           id="currentWeightKg"
           type="number"
@@ -147,7 +145,6 @@ export function AiStep1Profile({ defaultValues, onNext }: AiStep1ProfileProps) {
         )}
       </div>
 
-      {/* Optional: Target weight */}
       <div className="space-y-2">
         <button
           type="button"
@@ -165,7 +162,7 @@ export function AiStep1Profile({ defaultValues, onNext }: AiStep1ProfileProps) {
           >
             {showTarget ? '−' : '+'}
           </span>
-          Peso objetivo (opcional)
+          {t('ai.wizard.step1.targetWeight')}
         </button>
         {showTarget && (
           <motion.div
@@ -189,7 +186,6 @@ export function AiStep1Profile({ defaultValues, onNext }: AiStep1ProfileProps) {
         )}
       </div>
 
-      {/* Optional: Body fat */}
       <div className="space-y-2">
         <button
           type="button"
@@ -207,7 +203,7 @@ export function AiStep1Profile({ defaultValues, onNext }: AiStep1ProfileProps) {
           >
             {showBodyFat ? '−' : '+'}
           </span>
-          % grasa corporal estimada (opcional)
+          {t('ai.wizard.step1.bodyFat')}
         </button>
         {showBodyFat && (
           <motion.div
@@ -216,7 +212,7 @@ export function AiStep1Profile({ defaultValues, onNext }: AiStep1ProfileProps) {
             className="space-y-2"
           >
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Grasa estimada</span>
+              <span className="text-sm text-muted-foreground">{t('ai.wizard.step1.estimatedBodyFat')}</span>
               <span className="text-lg font-bold tabular-nums">
                 {bodyFatPct}
                 <span className="text-sm font-normal text-muted-foreground ml-0.5">%</span>
@@ -244,7 +240,7 @@ export function AiStep1Profile({ defaultValues, onNext }: AiStep1ProfileProps) {
       </div>
 
       <Button type="submit" className="w-full cursor-pointer" size="lg">
-        Continuar
+        {t('common.continue')}
       </Button>
     </form>
   );

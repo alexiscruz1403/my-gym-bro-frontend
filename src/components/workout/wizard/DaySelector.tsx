@@ -1,14 +1,11 @@
+'use client';
+
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import type { DayOfWeek } from '@/types/domain.types';
 
-const DAYS: { value: DayOfWeek; label: string; short: string }[] = [
-  { value: 'monday',    label: 'Monday',    short: 'Mon' },
-  { value: 'tuesday',   label: 'Tuesday',   short: 'Tue' },
-  { value: 'wednesday', label: 'Wednesday', short: 'Wed' },
-  { value: 'thursday',  label: 'Thursday',  short: 'Thu' },
-  { value: 'friday',    label: 'Friday',    short: 'Fri' },
-  { value: 'saturday',  label: 'Saturday',  short: 'Sat' },
-  { value: 'sunday',    label: 'Sunday',    short: 'Sun' },
+const DAY_ORDER: DayOfWeek[] = [
+  'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
 ];
 
 interface DaySelectorProps {
@@ -17,6 +14,10 @@ interface DaySelectorProps {
 }
 
 export function DaySelector({ selected, onChange }: DaySelectorProps) {
+  const { t } = useTranslation();
+  const dayLabels = t('days', { returnObjects: true }) as Record<DayOfWeek, string>;
+  const dayShortLabels = t('daysShort', { returnObjects: true }) as Record<DayOfWeek, string>;
+
   const toggle = (day: DayOfWeek) => {
     const next = selected.includes(day)
       ? selected.filter((d) => d !== day)
@@ -26,24 +27,24 @@ export function DaySelector({ selected, onChange }: DaySelectorProps) {
 
   return (
     <div className="grid w-full grid-cols-7 gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      {DAYS.map((day) => {
-        const isSelected = selected.includes(day.value);
+      {DAY_ORDER.map((day) => {
+        const isSelected = selected.includes(day);
         return (
           <button
-            key={day.value}
+            key={day}
             type="button"
-            onClick={() => toggle(day.value)}
+            onClick={() => toggle(day)}
             aria-pressed={isSelected}
-            aria-label={day.label}
+            aria-label={dayLabels[day]}
             className={cn(
               'flex flex-col items-center justify-center rounded-lg py-3 text-xs font-medium transition-colors',
-              'min-h-[56px] cursor-pointer select-none',
+              'min-h-14 cursor-pointer select-none',
               isSelected
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-muted text-muted-foreground hover:bg-muted/80',
             )}
           >
-            {day.short}
+            {dayShortLabels[day]}
           </button>
         );
       })}

@@ -3,10 +3,10 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 import { adminService } from '@/services/admin.service';
-import type { TermsSection, CreateTermsSectionDto, UpdateTermsSectionDto } from '@/types/domain.types';
+import type { AdminTermsSection, CreateAdminTermsSectionDto, UpdateAdminTermsSectionDto } from '@/types/domain.types';
 
 export function useAdminTerms() {
-  const [sections, setSections] = useState<TermsSection[]>([]);
+  const [sections, setSections] = useState<AdminTermsSection[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -20,10 +20,10 @@ export function useAdminTerms() {
   }, []);
 
   const createSection = useCallback(
-    async (dto: CreateTermsSectionDto): Promise<boolean> => {
+    async (dto: CreateAdminTermsSectionDto): Promise<boolean> => {
       setIsSaving(true);
       try {
-        const created = await adminService.createTermsSection(dto);
+        const created = await adminService.createAdminTermsSection(dto);
         setSections((prev) => [...prev, created].sort((a, b) => a.order - b.order));
         toast.success('Sección creada.');
         return true;
@@ -38,10 +38,10 @@ export function useAdminTerms() {
   );
 
   const updateSection = useCallback(
-    async (id: string, dto: UpdateTermsSectionDto): Promise<boolean> => {
+    async (id: string, dto: UpdateAdminTermsSectionDto): Promise<boolean> => {
       setIsSaving(true);
       try {
-        const updated = await adminService.updateTermsSection(id, dto);
+        const updated = await adminService.updateAdminTermsSection(id, dto);
         setSections((prev) =>
           prev.map((s) => (s._id === id ? updated : s)).sort((a, b) => a.order - b.order),
         );
@@ -60,7 +60,7 @@ export function useAdminTerms() {
   const deleteSection = useCallback(async (id: string): Promise<boolean> => {
     setIsSaving(true);
     try {
-      await adminService.deleteTermsSection(id);
+      await adminService.deleteAdminTermsSection(id);
       setSections((prev) => prev.filter((s) => s._id !== id));
       toast.success('Sección eliminada.');
       return true;

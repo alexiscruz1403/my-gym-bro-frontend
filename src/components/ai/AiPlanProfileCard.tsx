@@ -4,19 +4,10 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Sparkles, Calendar, Target, ChevronRight } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { es as esLocale, enUS } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next';
 import { Badge } from '@/components/ui/badge';
-import type { AiPlanProfile, AiFitnessGoal, AiEquipment } from '@/types/domain.types';
-
-const GOAL_LABELS: Record<AiFitnessGoal, string> = {
-  muscle_gain: 'Ganar músculo',
-  fat_loss: 'Perder grasa',
-  body_recomposition: 'Recomposición',
-  strength: 'Fuerza',
-  endurance: 'Resistencia',
-  general_health: 'Salud general',
-  mobility: 'Movilidad',
-};
+import type { AiPlanProfile, AiFitnessGoal } from '@/types/domain.types';
 
 const GOAL_ICONS: Record<AiFitnessGoal, string> = {
   muscle_gain: '💪',
@@ -28,20 +19,15 @@ const GOAL_ICONS: Record<AiFitnessGoal, string> = {
   mobility: '🧘',
 };
 
-const EQUIPMENT_LABELS: Record<AiEquipment, string> = {
-  no_equipment: 'Sin material',
-  dumbbells: 'Mancuernas',
-  bands: 'Bandas',
-  barbell_plates: 'Barra',
-  full_gym: 'Gimnasio',
-};
-
 interface AiPlanProfileCardProps {
   profile: AiPlanProfile;
   index?: number;
 }
 
 export function AiPlanProfileCard({ profile, index = 0 }: AiPlanProfileCardProps) {
+  const { t, i18n } = useTranslation();
+  const dateLocale = i18n.language === 'es' ? esLocale : enUS;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -57,7 +43,7 @@ export function AiPlanProfileCard({ profile, index = 0 }: AiPlanProfileCardProps
           <div className="flex-1 min-w-0 space-y-1.5">
             <div className="flex items-center justify-between gap-2">
               <p className="font-semibold text-sm truncate">
-                {GOAL_LABELS[profile.goal]}
+                {t(`ai.planCard.goal.${profile.goal}`)}
               </p>
               <ChevronRight className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
             </div>
@@ -67,7 +53,7 @@ export function AiPlanProfileCard({ profile, index = 0 }: AiPlanProfileCardProps
             <div className="flex flex-wrap gap-1.5">
               {profile.equipment.slice(0, 3).map((eq) => (
                 <Badge key={eq} variant="secondary" className="text-[10px] px-1.5 py-0">
-                  {EQUIPMENT_LABELS[eq]}
+                  {t(`ai.planCard.equipment.${eq}`)}
                 </Badge>
               ))}
               {profile.equipment.length > 3 && (
@@ -80,7 +66,7 @@ export function AiPlanProfileCard({ profile, index = 0 }: AiPlanProfileCardProps
             <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Calendar className="h-3 w-3" />
-                {profile.daysPerWeek}d / semana
+                {t('ai.planCard.daysPerWeek', { count: profile.daysPerWeek })}
               </span>
               <span className="flex items-center gap-1">
                 <Target className="h-3 w-3" />
@@ -89,7 +75,7 @@ export function AiPlanProfileCard({ profile, index = 0 }: AiPlanProfileCardProps
               <span>
                 {formatDistanceToNow(new Date(profile.createdAt), {
                   addSuffix: true,
-                  locale: es,
+                  locale: dateLocale,
                 })}
               </span>
             </div>
@@ -123,11 +109,12 @@ interface AiPlanCountBadgeProps {
 }
 
 export function AiPlanCountBadge({ count, max = 3 }: AiPlanCountBadgeProps) {
+  const { t } = useTranslation();
   const pct = (count / max) * 100;
   return (
     <div className="flex items-center gap-2 rounded-xl bg-muted/60 px-3 py-2 text-xs">
       <Sparkles className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-      <span className="text-muted-foreground">Planes IA:</span>
+      <span className="text-muted-foreground">{t('ai.countBadge.label')}</span>
       <span className="font-semibold">{count} / {max}</span>
       <div className="flex-1 h-1.5 rounded-full bg-border overflow-hidden">
         <div

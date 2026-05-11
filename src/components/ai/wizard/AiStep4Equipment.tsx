@@ -4,47 +4,22 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { step4EquipmentSchema, type Step4EquipmentValues } from '@/lib/validations/ai.schemas';
 import type { AiEquipment } from '@/types/domain.types';
 
-const EQUIPMENT_OPTIONS: {
-  value: AiEquipment;
-  label: string;
-  icon: string;
-  description: string;
-}[] = [
-  {
-    value: 'no_equipment',
-    label: 'Sin material',
-    icon: '🏠',
-    description: 'Solo peso corporal en casa',
-  },
-  {
-    value: 'dumbbells',
-    label: 'Mancuernas',
-    icon: '🏋️',
-    description: 'Par de mancuernas ajustables',
-  },
-  {
-    value: 'bands',
-    label: 'Bandas elásticas',
-    icon: '🎯',
-    description: 'Bandas de resistencia',
-  },
-  {
-    value: 'barbell_plates',
-    label: 'Barra + discos',
-    icon: '🔩',
-    description: 'Barra olímpica con discos',
-  },
-  {
-    value: 'full_gym',
-    label: 'Gimnasio completo',
-    icon: '🏢',
-    description: 'Acceso a toda la maquinaria',
-  },
+const EQUIPMENT_ICONS: Record<AiEquipment, string> = {
+  no_equipment: '🏠',
+  dumbbells: '🏋️',
+  bands: '🎯',
+  barbell_plates: '🔩',
+  full_gym: '🏢',
+};
+
+const EQUIPMENT_VALUES: AiEquipment[] = [
+  'no_equipment', 'dumbbells', 'bands', 'barbell_plates', 'full_gym',
 ];
 
 interface AiStep4EquipmentProps {
@@ -54,6 +29,8 @@ interface AiStep4EquipmentProps {
 }
 
 export function AiStep4Equipment({ defaultValues, onNext, onBack }: AiStep4EquipmentProps) {
+  const { t } = useTranslation();
+
   const {
     handleSubmit,
     watch,
@@ -77,21 +54,21 @@ export function AiStep4Equipment({ defaultValues, onNext, onBack }: AiStep4Equip
   return (
     <form onSubmit={handleSubmit(onNext)} className="space-y-6">
       <div className="text-center space-y-1">
-        <h2 className="text-xl font-bold">Equipamiento disponible</h2>
+        <h2 className="text-xl font-bold">{t('ai.wizard.step4.title')}</h2>
         <p className="text-sm text-muted-foreground">
-          Selecciona todo lo que tienes acceso. Puedes elegir varios.
+          {t('ai.wizard.step4.description')}
         </p>
       </div>
 
       <div className="space-y-2.5">
-        {EQUIPMENT_OPTIONS.map((eq) => {
-          const isSelected = selected.includes(eq.value);
+        {EQUIPMENT_VALUES.map((value) => {
+          const isSelected = selected.includes(value);
           return (
             <motion.button
-              key={eq.value}
+              key={value}
               type="button"
               whileTap={{ scale: 0.985 }}
-              onClick={() => toggle(eq.value)}
+              onClick={() => toggle(value)}
               className={cn(
                 'flex w-full items-center gap-4 rounded-xl border-2 p-4 text-left transition-all duration-200 cursor-pointer',
                 isSelected
@@ -99,10 +76,10 @@ export function AiStep4Equipment({ defaultValues, onNext, onBack }: AiStep4Equip
                   : 'border-border bg-card hover:border-primary/30',
               )}
             >
-              <span className="text-3xl">{eq.icon}</span>
+              <span className="text-3xl">{EQUIPMENT_ICONS[value]}</span>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm">{eq.label}</p>
-                <p className="text-xs text-muted-foreground">{eq.description}</p>
+                <p className="font-semibold text-sm">{t(`ai.wizard.step4.equipment.${value}`)}</p>
+                <p className="text-xs text-muted-foreground">{t(`ai.wizard.step4.equipmentDescriptions.${value}`)}</p>
               </div>
               <div
                 className={cn(
@@ -125,10 +102,10 @@ export function AiStep4Equipment({ defaultValues, onNext, onBack }: AiStep4Equip
 
       <div className="flex gap-3">
         <Button type="button" variant="outline" className="flex-1 cursor-pointer" onClick={onBack}>
-          Atrás
+          {t('common.back')}
         </Button>
         <Button type="submit" className="flex-1 cursor-pointer" size="lg">
-          Continuar
+          {t('common.continue')}
         </Button>
       </div>
     </form>

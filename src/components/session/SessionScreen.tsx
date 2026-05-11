@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { SessionHeader } from './SessionHeader';
 import { ExerciseNavigator } from './ExerciseNavigator';
 import { ConfirmFinishDialog } from './ConfirmFinishDialog';
@@ -15,6 +16,7 @@ import { toast } from 'sonner';
 import type { WorkoutSession, ExerciseRankSummaryItem } from '@/types/domain.types';
 
 export function SessionScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { session, loading, logSet, modifyExercise, replaceExercise, cancelSession, finishSession } = useSession();
   const [finishOpen, setFinishOpen] = useState(false);
@@ -63,7 +65,7 @@ export function SessionScreen() {
     setFinishOpen(false);
     setFinishedSession(result.session);
     setRankSummary(result.rankSummary);
-    toast.success(status === 'completed' ? 'Workout completed!' : 'Session saved');
+    toast.success(status === 'completed' ? t('session.success.completed') : t('session.success.partialSaved'));
   };
 
   return (
@@ -71,7 +73,7 @@ export function SessionScreen() {
       <SessionHeader
         onFinish={() => {
             if (!hasAnyCompletedSet) {
-              toast.error('Complete at least one set before finishing.');
+              toast.error(t('session.error.noSetsCompleted'));
               return;
             }
             setFinishOpen(true);

@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import type { AxiosError } from 'axios';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,6 +22,7 @@ interface ResetPasswordFormProps {
 }
 
 export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -36,17 +38,17 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const onSubmit = async (data: ResetPasswordFormValues): Promise<void> => {
     try {
       await authService.resetPassword(token, data.password);
-      toast.success('Contraseña restablecida. Iniciá sesión con tu nueva contraseña.');
+      toast.success(t('auth.resetPasswordFlow.success'));
       router.push('/login');
     } catch (err) {
       const error = err as AxiosError<ApiError>;
       const status = error.response?.status;
       if (status === 401) {
-        toast.error('El enlace expiró o no es válido. Solicitá uno nuevo.');
+        toast.error(t('auth.resetPasswordFlow.error.invalidToken'));
       } else {
         const message = error.response?.data?.message;
         const displayMessage = Array.isArray(message) ? message[0] : message;
-        toast.error(displayMessage ?? 'Ocurrió un error. Intenta de nuevo.');
+        toast.error(displayMessage ?? t('auth.error.generic'));
       }
     }
   };
@@ -54,23 +56,22 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-display text-2xl">Nueva contraseña</CardTitle>
+        <CardTitle className="font-display text-2xl">{t('auth.resetPasswordFlow.title')}</CardTitle>
       </CardHeader>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-4 pb-6">
           <p className="text-sm text-muted-foreground">
-            Ingresá tu nueva contraseña. Debe tener al menos 8 caracteres, una mayúscula, una
-            minúscula, un número y un símbolo.
+            {t('auth.resetPasswordFlow.description')}
           </p>
 
           <div className="space-y-1.5">
-            <Label htmlFor="password">Nueva contraseña</Label>
+            <Label htmlFor="password">{t('auth.newPasswordLabel')}</Label>
             <div className="relative">
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
-                placeholder="Mínimo 8 caracteres"
+                placeholder={t('auth.newPasswordPlaceholder')}
                 autoComplete="new-password"
                 disabled={isSubmitting}
                 className="pr-10"
@@ -80,7 +81,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
                 className="text-muted-foreground hover:text-foreground absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-                aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                aria-label={showPassword ? t('auth.passwordHide') : t('auth.passwordShow')}
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -91,12 +92,12 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="confirmPassword">Confirmar contraseña</Label>
+            <Label htmlFor="confirmPassword">{t('auth.confirmPasswordLabel')}</Label>
             <div className="relative">
               <Input
                 id="confirmPassword"
                 type={showConfirm ? 'text' : 'password'}
-                placeholder="Repetí tu contraseña"
+                placeholder={t('auth.confirmPasswordPlaceholder')}
                 autoComplete="new-password"
                 disabled={isSubmitting}
                 className="pr-10"
@@ -106,7 +107,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 type="button"
                 onClick={() => setShowConfirm((v) => !v)}
                 className="text-muted-foreground hover:text-foreground absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-                aria-label={showConfirm ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                aria-label={showConfirm ? t('auth.passwordHide') : t('auth.passwordShow')}
               >
                 {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -120,11 +121,11 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         <CardFooter className="flex flex-col gap-3">
           <Button type="submit" className="w-full cursor-pointer" disabled={isSubmitting}>
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {isSubmitting ? 'Guardando...' : 'Restablecer contraseña'}
+            {isSubmitting ? t('auth.resetPasswordFlow.submitting') : t('auth.resetPasswordFlow.submit')}
           </Button>
           <p className="text-center text-sm text-muted-foreground">
             <Link href="/login" className="text-primary hover:underline">
-              Volver al inicio de sesión
+              {t('auth.resetPasswordFlow.backToLogin')}
             </Link>
           </p>
         </CardFooter>

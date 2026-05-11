@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Sheet,
   SheetContent,
@@ -26,6 +27,7 @@ export function ModifyExerciseSheet({
   exercise,
   onSave,
 }: ModifyExerciseSheetProps) {
+  const { t } = useTranslation();
   const [weight, setWeight] = useState(String(exercise.plannedWeight ?? 0));
   const [reps, setReps] = useState(String(exercise.plannedReps ?? ''));
   const [rest, setRest] = useState(String(exercise.plannedRest));
@@ -52,17 +54,17 @@ export function ModifyExerciseSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom">
         <SheetHeader>
-          <SheetTitle>Modify — {exercise.exerciseName}</SheetTitle>
+          <SheetTitle>{t('session.modify.titlePrefix')} — {exercise.exerciseName}</SheetTitle>
         </SheetHeader>
 
         <div className="space-y-4 px-4 pb-2">
           <p className="text-muted-foreground text-xs">
-            Changes apply to this session only. Your plan is not affected.
+            {t('session.modify.info')}
           </p>
 
           <div className="grid grid-cols-3 gap-3">
             <div className="space-y-1">
-              <label htmlFor="mod-weight" className="text-xs font-medium">Weight (kg)</label>
+              <label htmlFor="mod-weight" className="text-xs font-medium">{t('session.modify.weightLabel')}</label>
               <Input
                 id="mod-weight"
                 type="number"
@@ -75,7 +77,7 @@ export function ModifyExerciseSheet({
               />
             </div>
             <div className="space-y-1">
-              <label htmlFor="mod-reps" className="text-xs font-medium">Reps</label>
+              <label htmlFor="mod-reps" className="text-xs font-medium">{t('session.modify.repsLabel')}</label>
               <Input
                 id="mod-reps"
                 type="number"
@@ -87,7 +89,7 @@ export function ModifyExerciseSheet({
               />
             </div>
             <div className="space-y-1">
-              <label htmlFor="mod-rest" className="text-xs font-medium">Rest (s)</label>
+              <label htmlFor="mod-rest" className="text-xs font-medium">{t('session.modify.restLabel')}</label>
               <Input
                 id="mod-rest"
                 type="number"
@@ -108,10 +110,10 @@ export function ModifyExerciseSheet({
             disabled={saving}
             className="flex-1 cursor-pointer"
           >
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button onClick={handleSave} disabled={saving} className="flex-1 cursor-pointer">
-            {saving ? 'Saving…' : 'Apply'}
+            {saving ? t('session.modify.saving') : t('session.modify.apply')}
           </Button>
         </SheetFooter>
       </SheetContent>

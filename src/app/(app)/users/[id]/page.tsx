@@ -1,6 +1,7 @@
 'use client';
 
 import { use } from 'react';
+import { useTranslation } from 'react-i18next';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { PublicSessionHistory } from '@/components/profile/PublicSessionHistory';
@@ -14,6 +15,7 @@ interface PublicProfilePageProps {
 
 export default function PublicProfilePage({ params }: PublicProfilePageProps) {
   const { id } = use(params);
+  const { t } = useTranslation();
   const { profile, isLoading, error } = usePublicProfile(id);
 
   if (isLoading) {
@@ -40,7 +42,10 @@ export default function PublicProfilePage({ params }: PublicProfilePageProps) {
   if (error || !profile) {
     return (
       <PageContainer>
-        <EmptyState title="User not found" description="This profile does not exist or could not be loaded." />
+        <EmptyState
+          title={t('profile.notFound')}
+          description={t('profile.notFoundDescription')}
+        />
       </PageContainer>
     );
   }

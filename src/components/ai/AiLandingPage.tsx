@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Sparkles, Dumbbell, Plus, BrainCircuit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -19,6 +20,7 @@ import { usePlans } from '@/hooks/usePlans';
 const MAX_AI_PLANS = 3;
 
 export function AiLandingPage() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const isPremium =
     user?.membershipTier === 'premium' && user?.membershipStatus === 'active';
@@ -32,7 +34,6 @@ export function AiLandingPage() {
   if (!isPremium) {
     return (
       <div className="space-y-6">
-        {/* Hero */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -43,17 +44,12 @@ export function AiLandingPage() {
               <BrainCircuit className="h-8 w-8 text-primary" />
             </div>
           </div>
-          <h2 className="text-xl font-bold">Entrenamiento con IA</h2>
+          <h2 className="text-xl font-bold">{t('ai.landing.title')}</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Genera planes personalizados y recibe recomendaciones de progresión
-            de carga cada semana. Solo para miembros Premium.
+            {t('ai.landing.description')}
           </p>
           <div className="flex flex-col gap-2 text-sm text-left">
-            {[
-              '✨ Planes 100% adaptados a tu perfil',
-              '📈 Progresión de carga automática semanal',
-              '🤖 Revisión de cambios por IA',
-            ].map((f) => (
+            {(t('ai.landing.features', { returnObjects: true }) as string[]).map((f) => (
               <div key={f} className="text-muted-foreground">
                 {f}
               </div>
@@ -68,7 +64,6 @@ export function AiLandingPage() {
 
   return (
     <div className="space-y-5">
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -78,9 +73,9 @@ export function AiLandingPage() {
           <BrainCircuit className="h-6 w-6 text-primary" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-bold text-sm">Entrenamiento con IA</p>
+          <p className="font-bold text-sm">{t('ai.landing.title')}</p>
           <p className="text-xs text-muted-foreground">
-            Planes y progresiones personalizadas
+            {t('ai.subtitle')}
           </p>
         </div>
         <div className="flex-shrink-0">
@@ -97,25 +92,24 @@ export function AiLandingPage() {
             value="generate"
             className="flex-1 rounded-lg data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
           >
-            Generar plan
+            {t('ai.landing.tabGenerate')}
           </TabsTrigger>
           <TabsTrigger
             value="plans"
             className="flex-1 rounded-lg data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
           >
-            Mis planes IA
+            {t('ai.landing.tabPlans')}
           </TabsTrigger>
         </TabsList>
 
-        {/* Generate tab */}
         <TabsContent value="generate" className="space-y-4 mt-4">
           <AiPlanCountBadge count={profiles.length} max={MAX_AI_PLANS} />
 
           {atLimit ? (
             <div className="rounded-xl border border-dashed border-muted-foreground/30 p-6 text-center space-y-2">
-              <p className="text-sm font-medium">Límite alcanzado</p>
+              <p className="text-sm font-medium">{t('ai.landing.limitTitle')}</p>
               <p className="text-xs text-muted-foreground">
-                Ya tienes {MAX_AI_PLANS} planes generados por IA. Elimina uno para generar otro.
+                {t('ai.landing.limitDescription', { max: MAX_AI_PLANS })}
               </p>
             </div>
           ) : (
@@ -125,11 +119,10 @@ export function AiLandingPage() {
               size="lg"
             >
               <Sparkles className="h-4 w-4" />
-              Generar nuevo plan con IA
+              {t('ai.landing.generate')}
             </Button>
           )}
 
-          {/* Past profiles */}
           {profilesLoading ? (
             <div className="space-y-3">
               {Array.from({ length: 2 }).map((_, i) => (
@@ -139,7 +132,7 @@ export function AiLandingPage() {
           ) : profiles.length > 0 ? (
             <div className="space-y-3">
               <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                Generaciones anteriores
+                {t('ai.landing.previousGenerations')}
               </p>
               {profiles.map((p, i) => (
                 <AiPlanProfileCard key={p.id} profile={p} index={i} />
@@ -148,7 +141,6 @@ export function AiLandingPage() {
           ) : null}
         </TabsContent>
 
-        {/* My AI plans tab */}
         <TabsContent value="plans" className="space-y-3 mt-4">
           {plansLoading ? (
             <div className="space-y-3">
@@ -159,9 +151,9 @@ export function AiLandingPage() {
           ) : aiPlans.length === 0 ? (
             <div className="rounded-xl border border-dashed border-muted-foreground/30 p-8 text-center space-y-3">
               <Dumbbell className="mx-auto h-8 w-8 text-muted-foreground/40" />
-              <p className="text-sm font-medium">Sin planes de IA todavía</p>
+              <p className="text-sm font-medium">{t('ai.landing.noPlansTitle')}</p>
               <p className="text-xs text-muted-foreground">
-                Genera tu primer plan con IA y aparecerá aquí.
+                {t('ai.landing.noPlansDescription')}
               </p>
               {!atLimit && (
                 <Button
@@ -171,7 +163,7 @@ export function AiLandingPage() {
                   className="gap-2 mt-2"
                 >
                   <Plus className="h-3.5 w-3.5" />
-                  Generar plan
+                  {t('ai.landing.generateShort')}
                 </Button>
               )}
             </div>
@@ -192,12 +184,12 @@ export function AiLandingPage() {
                       <div className="flex-1 min-w-0">
                         <p className="font-semibold text-sm truncate">{plan.name}</p>
                         <p className="text-xs text-muted-foreground">
-                          {plan.daysCount} días de entrenamiento
+                          {t('ai.landing.planDays', { count: plan.daysCount })}
                         </p>
                       </div>
                       {plan.isActive && (
                         <span className="text-[10px] font-semibold text-primary bg-primary/10 rounded-full px-2 py-0.5 flex-shrink-0">
-                          Activo
+                          {t('ai.landing.planActive')}
                         </span>
                       )}
                     </div>

@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslation } from 'react-i18next';
 import { PlanCard } from './PlanCard';
 import { EmptyState } from '@/components/shared/EmptyState';
 import type { PlanListItem } from '@/types/domain.types';
@@ -7,11 +10,13 @@ interface PlanListProps {
 }
 
 export function PlanList({ plans }: PlanListProps) {
+  const { t } = useTranslation();
+
   if (plans.length === 0) {
     return (
       <EmptyState
-        title="No plans yet"
-        description="Create your first workout plan to get started."
+        title={t('plans.empty.title')}
+        description={t('plans.empty.description')}
       />
     );
   }

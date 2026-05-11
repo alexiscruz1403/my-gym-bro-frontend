@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Loader2, Pencil, Trash2, TriangleAlert, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,29 +17,34 @@ import {
   DialogFooter,
   DialogClose,
 } from '@/components/ui/dialog';
-import type { TermsSection, UpdateTermsSectionDto } from '@/types/domain.types';
+import type { AdminTermsSection, UpdateAdminTermsSectionDto } from '@/types/domain.types';
 
 interface AdminTermsRowProps {
-  section: TermsSection;
+  section: AdminTermsSection;
   isSaving: boolean;
-  onUpdate: (id: string, dto: UpdateTermsSectionDto) => Promise<boolean>;
+  onUpdate: (id: string, dto: UpdateAdminTermsSectionDto) => Promise<boolean>;
   onDelete: (id: string) => Promise<boolean>;
 }
 
 type DialogMode = 'save-notify' | 'delete' | null;
 
 export function AdminTermsRow({ section, isSaving, onUpdate, onDelete }: AdminTermsRowProps) {
+  const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
-  const [header, setHeader] = useState(section.header);
-  const [content, setContent] = useState(section.content);
+  const [headerEs, setHeaderEs] = useState(section.header.es);
+  const [headerEn, setHeaderEn] = useState(section.header.en);
+  const [contentEs, setContentEs] = useState(section.content.es);
+  const [contentEn, setContentEn] = useState(section.content.en);
   const [order, setOrder] = useState(String(section.order));
   const [isActive, setIsActive] = useState(section.isActive);
   const [dialogMode, setDialogMode] = useState<DialogMode>(null);
-  const [pendingDto, setPendingDto] = useState<UpdateTermsSectionDto | null>(null);
+  const [pendingDto, setPendingDto] = useState<UpdateAdminTermsSectionDto | null>(null);
 
   function openEdit() {
-    setHeader(section.header);
-    setContent(section.content);
+    setHeaderEs(section.header.es);
+    setHeaderEn(section.header.en);
+    setContentEs(section.content.es);
+    setContentEn(section.content.en);
     setOrder(String(section.order));
     setIsActive(section.isActive);
     setIsEditing(true);
@@ -49,9 +55,9 @@ export function AdminTermsRow({ section, isSaving, onUpdate, onDelete }: AdminTe
   }
 
   function handleSaveClick() {
-    const dto: UpdateTermsSectionDto = {
-      header: header.trim(),
-      content: content.trim(),
+    const dto: UpdateAdminTermsSectionDto = {
+      header: { es: headerEs.trim(), en: headerEn.trim() },
+      content: { es: contentEs.trim(), en: contentEn.trim() },
       order: Number(order),
       isActive,
     };
@@ -63,7 +69,7 @@ export function AdminTermsRow({ section, isSaving, onUpdate, onDelete }: AdminTe
     }
   }
 
-  async function submitUpdate(dto: UpdateTermsSectionDto) {
+  async function submitUpdate(dto: UpdateAdminTermsSectionDto) {
     const ok = await onUpdate(section._id, dto);
     if (ok) setIsEditing(false);
   }
@@ -80,7 +86,12 @@ export function AdminTermsRow({ section, isSaving, onUpdate, onDelete }: AdminTe
     await onDelete(section._id);
   }
 
-  const isFormValid = header.trim().length > 0 && content.trim().length > 0 && Number(order) > 0;
+  const isFormValid =
+    headerEs.trim().length > 0 &&
+    headerEn.trim().length > 0 &&
+    contentEs.trim().length > 0 &&
+    contentEn.trim().length > 0 &&
+    Number(order) > 0;
 
   return (
     <>
@@ -90,12 +101,12 @@ export function AdminTermsRow({ section, isSaving, onUpdate, onDelete }: AdminTe
           <div className="min-w-0 space-y-0.5">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs text-muted-foreground font-mono">#{section.order}</span>
-              <p className="text-sm font-medium truncate">{section.header}</p>
+              <p className="text-sm font-medium truncate">{section.header.es}</p>
               <Badge variant={section.isActive ? 'default' : 'secondary'} className="text-xs">
-                {section.isActive ? 'activo' : 'inactivo'}
+                {section.isActive ? t('common.active') : t('common.inactive')}
               </Badge>
             </div>
-            <p className="text-xs text-muted-foreground line-clamp-2">{section.content}</p>
+            <p className="text-xs text-muted-foreground line-clamp-2">{section.content.es}</p>
           </div>
           <div className="flex items-center gap-1 shrink-0">
             {!isEditing && (
@@ -107,7 +118,7 @@ export function AdminTermsRow({ section, isSaving, onUpdate, onDelete }: AdminTe
                   onClick={openEdit}
                 >
                   <Pencil className="h-3.5 w-3.5 mr-1" />
-                  Editar
+                  {t('common.edit')}
                 </Button>
                 <Button
                   size="icon-sm"
@@ -137,20 +148,48 @@ export function AdminTermsRow({ section, isSaving, onUpdate, onDelete }: AdminTe
         {isEditing && (
           <div className="border-t pt-3 space-y-3">
             <div className="space-y-1.5">
-              <Label htmlFor={`header-${section._id}`} className="text-xs">Header</Label>
+              <Label htmlFor={`header-es-${section._id}`} className="text-xs">
+                {t('admin.terms.headerEs')}
+              </Label>
               <Input
-                id={`header-${section._id}`}
-                value={header}
-                onChange={(e) => setHeader(e.target.value)}
+                id={`header-es-${section._id}`}
+                value={headerEs}
+                onChange={(e) => setHeaderEs(e.target.value)}
                 disabled={isSaving}
               />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor={`content-${section._id}`} className="text-xs">Content</Label>
+              <Label htmlFor={`header-en-${section._id}`} className="text-xs">
+                {t('admin.terms.headerEn')}
+              </Label>
+              <Input
+                id={`header-en-${section._id}`}
+                value={headerEn}
+                onChange={(e) => setHeaderEn(e.target.value)}
+                disabled={isSaving}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor={`content-es-${section._id}`} className="text-xs">
+                {t('admin.terms.contentEs')}
+              </Label>
               <textarea
-                id={`content-${section._id}`}
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
+                id={`content-es-${section._id}`}
+                value={contentEs}
+                onChange={(e) => setContentEs(e.target.value)}
+                disabled={isSaving}
+                rows={4}
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm resize-y disabled:opacity-50"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor={`content-en-${section._id}`} className="text-xs">
+                {t('admin.terms.contentEn')}
+              </Label>
+              <textarea
+                id={`content-en-${section._id}`}
+                value={contentEn}
+                onChange={(e) => setContentEn(e.target.value)}
                 disabled={isSaving}
                 rows={4}
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm resize-y disabled:opacity-50"
@@ -158,7 +197,7 @@ export function AdminTermsRow({ section, isSaving, onUpdate, onDelete }: AdminTe
             </div>
             <div className="flex items-center gap-4">
               <div className="space-y-1.5">
-                <Label htmlFor={`order-${section._id}`} className="text-xs">Orden</Label>
+                <Label htmlFor={`order-${section._id}`} className="text-xs">{t('admin.terms.order')}</Label>
                 <Input
                   id={`order-${section._id}`}
                   type="number"
@@ -177,7 +216,7 @@ export function AdminTermsRow({ section, isSaving, onUpdate, onDelete }: AdminTe
                   disabled={isSaving}
                 />
                 <Label htmlFor={`active-${section._id}`} className="text-xs cursor-pointer">
-                  Activo
+                  {t('admin.terms.active')}
                 </Label>
               </div>
             </div>
@@ -189,7 +228,7 @@ export function AdminTermsRow({ section, isSaving, onUpdate, onDelete }: AdminTe
                 disabled={isSaving}
                 className="cursor-pointer"
               >
-                Cancelar
+                {t('admin.terms.cancel')}
               </Button>
               <Button
                 size="sm"
@@ -198,7 +237,7 @@ export function AdminTermsRow({ section, isSaving, onUpdate, onDelete }: AdminTe
                 className="cursor-pointer"
               >
                 {isSaving && <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" />}
-                Guardar
+                {isSaving ? t('admin.terms.saving') : t('admin.terms.save')}
               </Button>
             </div>
           </div>
@@ -211,23 +250,21 @@ export function AdminTermsRow({ section, isSaving, onUpdate, onDelete }: AdminTe
           <DialogHeader>
             <div className="flex items-center gap-2">
               <TriangleAlert className="h-5 w-5 text-amber-500 shrink-0" />
-              <DialogTitle>Confirmar cambios</DialogTitle>
+              <DialogTitle>{t('admin.terms.confirmSave.title')}</DialogTitle>
             </div>
             <DialogDescription className="pt-1">
-              Esta sección quedará <strong className="text-foreground">activa</strong>. Al guardar,
-              se enviará una notificación a todos los usuarios activos informando que los Términos y
-              condiciones fueron actualizados. ¿Querés continuar?
+              {t('admin.terms.confirmSave.description')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose
               render={<Button variant="outline" disabled={isSaving} className="cursor-pointer" />}
             >
-              Cancelar
+              {t('admin.terms.cancel')}
             </DialogClose>
             <Button onClick={handleConfirmSave} disabled={isSaving} className="cursor-pointer">
               {isSaving && <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" />}
-              Sí, guardar y notificar
+              {t('admin.terms.confirmSave.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -239,19 +276,17 @@ export function AdminTermsRow({ section, isSaving, onUpdate, onDelete }: AdminTe
           <DialogHeader>
             <div className="flex items-center gap-2">
               <TriangleAlert className="h-5 w-5 text-destructive shrink-0" />
-              <DialogTitle>Eliminar sección</DialogTitle>
+              <DialogTitle>{t('admin.terms.confirmDelete.title')}</DialogTitle>
             </div>
             <DialogDescription className="pt-1">
-              ¿Estás seguro de que querés eliminar la sección{' '}
-              <strong className="text-foreground">&quot;{section.header}&quot;</strong>? Esta acción
-              es permanente e irreversible.
+              {t('admin.terms.confirmDelete.description', { header: section.header.es })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose
               render={<Button variant="outline" disabled={isSaving} className="cursor-pointer" />}
             >
-              Cancelar
+              {t('admin.terms.cancel')}
             </DialogClose>
             <Button
               variant="destructive"
@@ -260,7 +295,7 @@ export function AdminTermsRow({ section, isSaving, onUpdate, onDelete }: AdminTe
               className="cursor-pointer"
             >
               {isSaving && <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" />}
-              Eliminar
+              {isSaving ? t('admin.terms.deleting') : t('admin.terms.confirmDelete.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>

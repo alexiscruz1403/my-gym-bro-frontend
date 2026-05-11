@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Sheet,
   SheetContent,
@@ -13,11 +14,6 @@ import { Badge } from '@/components/ui/badge';
 import { CalendarDays, Dumbbell, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { WorkoutPlan, DayOfWeek } from '@/types/domain.types';
-
-const DAY_LABELS: Record<DayOfWeek, string> = {
-  monday: 'Monday', tuesday: 'Tuesday', wednesday: 'Wednesday',
-  thursday: 'Thursday', friday: 'Friday', saturday: 'Saturday', sunday: 'Sunday',
-};
 
 interface StartSessionSheetProps {
   open: boolean;
@@ -34,8 +30,10 @@ export function StartSessionSheet({
   todayDow,
   onStart,
 }: StartSessionSheetProps) {
+  const { t } = useTranslation();
+  const dayLabels = t('days', { returnObjects: true }) as Record<DayOfWeek, string>;
+
   const [selected, setSelected] = useState<DayOfWeek | null>(
-    // Pre-select today if it exists in the plan, otherwise null
     plan.days.find((d) => d.dayOfWeek === todayDow)?.dayOfWeek ?? null,
   );
   const [starting, setStarting] = useState(false);
@@ -54,9 +52,9 @@ export function StartSessionSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom">
         <SheetHeader>
-          <SheetTitle>Choose a workout</SheetTitle>
+          <SheetTitle>{t('session.startSession.title')}</SheetTitle>
           <SheetDescription>
-            Select which day&apos;s routine you want to do today.
+            {t('session.startSession.description')}
           </SheetDescription>
         </SheetHeader>
 
@@ -91,21 +89,22 @@ export function StartSessionSheet({
 
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium">{DAY_LABELS[day.dayOfWeek]}</span><span className='text-muted-foreground font-normal'>{day.dayName ? ` · ${day.dayName}` : ''}</span>
+                      <span className="text-sm font-medium">{dayLabels[day.dayOfWeek]}</span>
+                      <span className='text-muted-foreground font-normal'>{day.dayName ? ` · ${day.dayName}` : ''}</span>
                       {isToday && (
                         <Badge className="bg-primary text-primary-foreground h-4 px-1.5 text-[10px]">
-                          Today
+                          {t('session.today')}
                         </Badge>
                       )}
                     </div>
                     <div className="text-muted-foreground mt-0.5 flex items-center gap-2 text-xs">
                       <span className="flex items-center gap-1">
                         <Dumbbell className="h-3 w-3" />
-                        {day.exercises.length} {day.exercises.length === 1 ? 'exercise' : 'exercises'}
+                        {t('plans.exerciseCount', { count: day.exercises.length })}
                       </span>
                       <span className="flex items-center gap-1">
                         <CalendarDays className="h-3 w-3" />
-                        {day.exercises.reduce((s, e) => s + e.sets, 0)} sets
+                        {t('plans.setCount', { count: day.exercises.reduce((s, e) => s + e.sets, 0) })}
                       </span>
                     </div>
                   </div>
@@ -122,7 +121,7 @@ export function StartSessionSheet({
             onClick={handleStart}
           >
             <Play className="h-4 w-4" />
-            {starting ? 'Starting…' : 'Start workout'}
+            {starting ? t('session.startSession.starting') : t('session.startWorkout')}
           </Button>
         </div>
       </SheetContent>

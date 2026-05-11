@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { useExercises } from '@/hooks/useExercises';
 import { ExerciseFilters, type ExerciseFiltersValue } from './ExerciseFilters';
 import { ExerciseCard } from './ExerciseCard';
@@ -27,6 +28,7 @@ const LIMIT = 15;
 
 export function ExerciseCatalog(props: ExerciseCatalogProps) {
   const router = useRouter();
+  const { t, i18n } = useTranslation();
   const [filters, setFilters] = useState<ExerciseFiltersValue>({
     search: '',
     muscle: undefined,
@@ -87,8 +89,8 @@ export function ExerciseCatalog(props: ExerciseCatalogProps) {
         <>
           {data.data.length === 0 ? (
             <EmptyState
-              title="No exercises found"
-              description="Try adjusting your search or filters."
+              title={t('exercises.catalog.empty')}
+              description={t('exercises.catalog.emptyDescription')}
             />
           ) : (
             <div className="flex flex-col gap-2">
@@ -133,11 +135,11 @@ export function ExerciseCatalog(props: ExerciseCatalogProps) {
           >
             {singleSelect
               ? selected.length > 0
-                ? `Select ${selected[0].name}`
-                : 'Select an exercise'
+                ? t('exercises.catalog.selectOne', { name: selected[0].name[i18n.language as 'es' | 'en'] ?? selected[0].name.en })
+                : t('exercises.catalog.selectPrompt')
               : selected.length > 0
-                ? `Add ${selected.length} exercise${selected.length > 1 ? 's' : ''}`
-                : 'Select exercises'}
+                ? t('exercises.catalog.addCount', { count: selected.length })
+                : t('exercises.catalog.selectPrompt')}
           </Button>
         </div>
       )}

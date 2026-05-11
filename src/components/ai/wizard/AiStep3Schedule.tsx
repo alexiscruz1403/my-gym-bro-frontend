@@ -3,6 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { step3ScheduleSchema, type Step3ScheduleValues } from '@/lib/validations/ai.schemas';
@@ -16,6 +17,8 @@ interface AiStep3ScheduleProps {
 }
 
 export function AiStep3Schedule({ defaultValues, onNext, onBack }: AiStep3ScheduleProps) {
+  const { t } = useTranslation();
+
   const {
     handleSubmit,
     watch,
@@ -35,15 +38,14 @@ export function AiStep3Schedule({ defaultValues, onNext, onBack }: AiStep3Schedu
   return (
     <form onSubmit={handleSubmit(onNext)} className="space-y-8">
       <div className="text-center space-y-1">
-        <h2 className="text-xl font-bold">Tu disponibilidad</h2>
+        <h2 className="text-xl font-bold">{t('ai.wizard.step3.title')}</h2>
         <p className="text-sm text-muted-foreground">
-          ¿Cuántos días entrenas y cuánto tiempo tienes?
+          {t('ai.wizard.step3.description')}
         </p>
       </div>
 
-      {/* Days per week */}
       <div className="space-y-4">
-        <p className="text-sm font-medium">Días por semana</p>
+        <p className="text-sm font-medium">{t('ai.wizard.step3.daysPerWeek')}</p>
         <div className="flex gap-2 justify-center">
           {[1, 2, 3, 4, 5, 6].map((d) => (
             <motion.button
@@ -69,9 +71,7 @@ export function AiStep3Schedule({ defaultValues, onNext, onBack }: AiStep3Schedu
             animate={{ opacity: 1, y: 0 }}
             className="text-center text-sm text-muted-foreground"
           >
-            {days === 1
-              ? '1 día a la semana'
-              : `${days} días a la semana`}
+            {t('ai.wizard.step3.daysLabel', { count: days })}
           </motion.p>
         )}
         {errors.daysPerWeek && (
@@ -79,17 +79,15 @@ export function AiStep3Schedule({ defaultValues, onNext, onBack }: AiStep3Schedu
         )}
       </div>
 
-      {/* Minutes per session */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-medium">Duración por sesión</p>
+          <p className="text-sm font-medium">{t('ai.wizard.step3.sessionDuration')}</p>
           <span className="text-2xl font-bold tabular-nums">
             {minutes}
             <span className="text-sm font-normal text-muted-foreground ml-1">min</span>
           </span>
         </div>
 
-        {/* Preset chips */}
         <div className="flex flex-wrap gap-2 justify-center">
           {DURATION_PRESETS.map((p) => (
             <button
@@ -130,10 +128,10 @@ export function AiStep3Schedule({ defaultValues, onNext, onBack }: AiStep3Schedu
 
       <div className="flex gap-3">
         <Button type="button" variant="outline" className="flex-1 cursor-pointer" onClick={onBack}>
-          Atrás
+          {t('common.back')}
         </Button>
         <Button type="submit" className="flex-1 cursor-pointer" size="lg">
-          Continuar
+          {t('common.continue')}
         </Button>
       </div>
     </form>

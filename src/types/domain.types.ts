@@ -1,4 +1,5 @@
 export type UserRole = 'user' | 'admin';
+export type Language = 'es' | 'en';
 
 export interface UserResponse {
   id: string;
@@ -14,6 +15,12 @@ export interface UserResponse {
   membershipTier: MembershipTier;
   membershipStatus: MembershipStatus | null;
   autoRenew: boolean;
+  language: Language;
+}
+
+export interface BilingualString {
+  es: string;
+  en: string;
 }
 
 export type MuscleGroup =
@@ -69,7 +76,7 @@ export type WeightInstruction =
 
 export interface Exercise {
   id: string;
-  name: string;
+  name: BilingualString;
   musclesPrimary: MuscleGroup[];
   musclesSecondary: MuscleGroup[];
   loadType: LoadType;
@@ -760,16 +767,29 @@ export interface TermsSection {
   updatedAt: string;
 }
 
+export interface AdminTermsSection {
+  _id: string;
+  header: BilingualString;
+  content: BilingualString;
+  order: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface CreateTermsSectionDto {
-  header: string;
-  content: string;
+  header: BilingualString;
+  content: BilingualString;
   order: number;
   isActive?: boolean;
 }
 
 export interface UpdateTermsSectionDto {
-  header?: string;
-  content?: string;
+  header?: BilingualString;
+  content?: BilingualString;
   order?: number;
   isActive?: boolean;
 }
+
+export type CreateAdminTermsSectionDto = CreateTermsSectionDto;
+export type UpdateAdminTermsSectionDto = UpdateTermsSectionDto;

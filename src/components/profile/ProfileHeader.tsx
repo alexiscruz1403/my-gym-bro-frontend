@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Lock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { AvatarUpload } from '@/components/profile/AvatarUpload';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { FollowButton } from '@/components/social/FollowButton';
@@ -19,6 +20,7 @@ interface OwnProfileHeaderProps {
 }
 
 function OwnProfileHeader({ user }: OwnProfileHeaderProps) {
+  const { t } = useTranslation();
   const [sheet, setSheet] = useState<'followers' | 'following' | null>(null);
   const [highlightUserId, setHighlightUserId] = useState<string | null>(null);
   const searchParams = useSearchParams();
@@ -44,11 +46,11 @@ function OwnProfileHeader({ user }: OwnProfileHeaderProps) {
             <h2 className="font-display text-xl font-semibold truncate">{user.username}</h2>
             {user.membershipTier === 'premium' ? (
               <Badge className="shrink-0 bg-amber-500 text-white hover:bg-amber-500 border-0">
-                Premium
+                {t('profile.membership.premium')}
               </Badge>
             ) : (
               <Badge variant="secondary" className="shrink-0">
-                Gratis
+                {t('profile.membership.free')}
               </Badge>
             )}
           </div>
@@ -60,14 +62,14 @@ function OwnProfileHeader({ user }: OwnProfileHeaderProps) {
               className="cursor-pointer text-sm text-left min-h-11 flex items-center"
             >
               <span className="font-semibold">{user.followersCount}</span>
-              <span className="text-muted-foreground ml-1">followers</span>
+              <span className="text-muted-foreground ml-1">{t('profile.followers')}</span>
             </button>
             <button
               onClick={() => setSheet('following')}
               className="cursor-pointer text-sm text-left min-h-11 flex items-center"
             >
               <span className="font-semibold">{user.followingCount}</span>
-              <span className="text-muted-foreground ml-1">following</span>
+              <span className="text-muted-foreground ml-1">{t('profile.following')}</span>
             </button>
           </div>
         </div>
@@ -97,6 +99,7 @@ interface PublicProfileHeaderProps {
 }
 
 function PublicProfileHeader({ user }: PublicProfileHeaderProps) {
+  const { t } = useTranslation();
   const [sheet, setSheet] = useState<'followers' | 'following' | null>(null);
   const initials = user.username.slice(0, 2).toUpperCase();
 
@@ -116,7 +119,7 @@ function PublicProfileHeader({ user }: PublicProfileHeaderProps) {
           {isPrivateAndBlocked ? (
             <div className="flex items-center gap-1.5 mt-1 text-muted-foreground text-sm">
               <Lock className="h-3.5 w-3.5 shrink-0" />
-              <span>Este perfil es privado</span>
+              <span>{t('profile.privateProfile')}</span>
             </div>
           ) : (
             <div className="flex gap-3 mt-2">
@@ -125,14 +128,14 @@ function PublicProfileHeader({ user }: PublicProfileHeaderProps) {
                 className="text-sm text-left min-h-11 flex items-center"
               >
                 <span className="font-semibold">{user.followersCount}</span>
-                <span className="text-muted-foreground ml-1">followers</span>
+                <span className="text-muted-foreground ml-1">{t('profile.followers')}</span>
               </button>
               <button
                 onClick={() => setSheet('following')}
                 className="text-sm text-left min-h-11 flex items-center"
               >
                 <span className="font-semibold">{user.followingCount}</span>
-                <span className="text-muted-foreground ml-1">following</span>
+                <span className="text-muted-foreground ml-1">{t('profile.following')}</span>
               </button>
             </div>
           )}

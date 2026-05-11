@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CalendarDays, ChevronRight, Sparkles } from 'lucide-react';
@@ -9,6 +12,8 @@ interface PlanCardProps {
 }
 
 export function PlanCard({ plan }: PlanCardProps) {
+  const { t } = useTranslation();
+
   return (
     <Link href={`/workout/${plan.id}`}>
       <Card className="cursor-pointer transition-colors hover:bg-accent">
@@ -18,7 +23,7 @@ export function PlanCard({ plan }: PlanCardProps) {
               <p className="truncate font-medium">{plan.name}</p>
               {plan.isActive && (
                 <Badge className="shrink-0 bg-green-500 text-white hover:bg-green-600">
-                  Active
+                  {t('plans.status.active')}
                 </Badge>
               )}
               {plan.isAiGenerated && (
@@ -30,7 +35,7 @@ export function PlanCard({ plan }: PlanCardProps) {
             </div>
             <div className="text-muted-foreground mt-1 flex items-center gap-1 text-sm">
               <CalendarDays className="h-3.5 w-3.5" />
-              <span>{plan.daysCount} {plan.daysCount === 1 ? 'day' : 'days'}</span>
+              <span>{t('plans.dayCount', { count: plan.daysCount })}</span>
             </div>
           </div>
           <ChevronRight className="text-muted-foreground h-4 w-4 shrink-0" />

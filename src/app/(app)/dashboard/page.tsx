@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { ActivePlanCard } from '@/components/dashboard/ActivePlanCard';
 import { QuickActionCard } from '@/components/dashboard/QuickActionCard';
@@ -14,6 +15,7 @@ import { usePlans } from '@/hooks/usePlans';
 import { useStreak } from '@/hooks/useStreak';
 
 export default function DashboardPage() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { data: activePlan, loading } = useActivePlan();
   const { data: plans, loading: plansLoading } = usePlans();
@@ -29,10 +31,10 @@ export default function DashboardPage() {
       <div className="space-y-6">
         <div>
           <h1 className="font-display text-2xl font-bold">
-            Hello, {user?.username ?? '…'}
+            {t('dashboard.greeting', { username: user?.username ?? '…' })}
           </h1>
           <p className="text-muted-foreground mt-1 text-sm">
-            Here&apos;s your training overview.
+            {t('dashboard.subtitle')}
           </p>
         </div>
 
@@ -42,7 +44,7 @@ export default function DashboardPage() {
 
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <h2 className="text-sm font-medium">Active Plan</h2>
+            <h2 className="text-sm font-medium">{t('dashboard.activePlan')}</h2>
             {!streakLoading && <StreakBadge streak={currentStreak} />}
           </div>
           {loading ? (
@@ -56,13 +58,13 @@ export default function DashboardPage() {
 
         {!plansLoading && myPlans.length > 0 && (
           <div className="space-y-2">
-            <PlanListSection title="My Plans" plans={myPlans} />
+            <PlanListSection title={t('dashboard.myPlans')} plans={myPlans} />
           </div>
         )}
 
         {!plansLoading && aiPlans.length > 0 && (
           <div className="space-y-2">
-            <PlanListSection title="AI Plans" plans={aiPlans} />
+            <PlanListSection title={t('dashboard.aiPlans')} plans={aiPlans} />
           </div>
         )}
       </div>

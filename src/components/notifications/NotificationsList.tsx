@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
@@ -8,6 +9,7 @@ import { useNotifications } from '@/hooks/useNotifications';
 import { NotificationRow } from '@/components/notifications/NotificationRow';
 
 export function NotificationsList() {
+  const { t } = useTranslation();
   const {
     items,
     isLoading,
@@ -53,8 +55,8 @@ export function NotificationsList() {
   if (error) {
     return (
       <EmptyState
-        title="No se pudieron cargar las notificaciones"
-        description="Intenta de nuevo en unos segundos."
+        title={t('notifications.error.title')}
+        description={t('notifications.error.description')}
       />
     );
   }
@@ -62,8 +64,8 @@ export function NotificationsList() {
   if (items.length === 0) {
     return (
       <EmptyState
-        title="No tienes notificaciones"
-        description="Aquí aparecerán las novedades de la comunidad."
+        title={t('notifications.empty.title')}
+        description={t('notifications.empty.description')}
       />
     );
   }
@@ -79,7 +81,7 @@ export function NotificationsList() {
           disabled={!hasUnread || isMarkingAll}
           className="cursor-pointer"
         >
-          Marcar todas como leídas
+          {t('notifications.markAllRead')}
         </Button>
       </div>
 

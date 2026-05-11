@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslation } from 'react-i18next';
 import { MuscleRankingRow } from '@/components/stats/MuscleRankingRow';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { WeightUnit } from '@/hooks/useStats';
@@ -11,6 +14,8 @@ interface MuscleRankingListProps {
 }
 
 export function MuscleRankingList({ data, loading, weightUnit, convertVolume }: MuscleRankingListProps) {
+  const { t } = useTranslation();
+
   if (loading) {
     return (
       <div className="space-y-3">
@@ -24,7 +29,7 @@ export function MuscleRankingList({ data, loading, weightUnit, convertVolume }: 
   if (data.ranking.length === 0) {
     return (
       <p className="py-4 text-center text-sm text-muted-foreground">
-        Sin datos para este período
+        {t('stats.noData')}
       </p>
     );
   }

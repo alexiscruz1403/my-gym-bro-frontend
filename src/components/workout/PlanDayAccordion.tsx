@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslation } from 'react-i18next';
 import {
   Accordion,
   AccordionContent,
@@ -9,18 +12,7 @@ import { Separator } from '@/components/ui/separator';
 import { Link } from 'lucide-react';
 import type { PlanDay, ExerciseConfig } from '@/types/domain.types';
 
-const DAY_LABELS: Record<string, string> = {
-  monday: 'Monday',
-  tuesday: 'Tuesday',
-  wednesday: 'Wednesday',
-  thursday: 'Thursday',
-  friday: 'Friday',
-  saturday: 'Saturday',
-  sunday: 'Sunday',
-};
-
 // Group consecutive exercises that share the same supersetGroupId.
-// Returns an array of either a standalone exercise or a superset group.
 type StandaloneItem = { type: 'standalone'; exercise: ExerciseConfig };
 type SupersetItem = { type: 'superset'; groupId: string; exercises: ExerciseConfig[] };
 type ExerciseGroupItem = StandaloneItem | SupersetItem;
@@ -50,6 +42,8 @@ interface PlanDayAccordionProps {
 }
 
 export function PlanDayAccordion({ days }: PlanDayAccordionProps) {
+  const { t } = useTranslation();
+
   return (
     <Accordion multiple className="w-full">
       {days.map((day) => {
@@ -58,12 +52,12 @@ export function PlanDayAccordion({ days }: PlanDayAccordionProps) {
         return (
           <AccordionItem key={day.dayOfWeek} value={day.dayOfWeek}>
             <AccordionTrigger className="cursor-pointer text-sm font-medium">
-              {DAY_LABELS[day.dayOfWeek]}
+              {t(`days.${day.dayOfWeek}`)}
               {day.dayName && (
                 <span className="text-muted-foreground font-normal"> · {day.dayName}</span>
               )}
               <span className="text-muted-foreground ml-auto mr-2 text-xs">
-                {day.exercises.length} {day.exercises.length === 1 ? 'exercise' : 'exercises'}
+                {t('plans.exerciseCount', { count: day.exercises.length })}
               </span>
             </AccordionTrigger>
             <AccordionContent>

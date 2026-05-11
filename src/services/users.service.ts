@@ -1,7 +1,7 @@
 import { apiClient } from '@/lib/axios';
 import { API_ROUTES } from '@/lib/api-routes';
 import type { PaginationParams, PaginatedUserSearchResponse, UpdateProfileRequest } from '@/types/api.types';
-import type { PublicUserProfile, UserResponse, PublicSessionHistoryResponse } from '@/types/domain.types';
+import type { Language, PublicUserProfile, UserResponse, PublicSessionHistoryResponse } from '@/types/domain.types';
 
 export const usersService = {
   getMe: (): Promise<UserResponse> =>
@@ -38,4 +38,7 @@ export const usersService = {
 
   deleteAccount: (): Promise<void> =>
     apiClient.delete(API_ROUTES.users.deleteAccount).then(() => undefined),
+
+  updateLanguage: (language: Language): Promise<UserResponse> =>
+    apiClient.patch<UserResponse>(API_ROUTES.users.language, { language }).then((r) => r.data),
 };

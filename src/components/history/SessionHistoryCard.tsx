@@ -1,16 +1,12 @@
+'use client';
+
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ExerciseNameList } from '@/components/history/ExerciseNameList';
 import { Clock, Layers } from 'lucide-react';
 import type { SessionHistoryItem, SessionStatus } from '@/types/domain.types';
-
-const STATUS_LABEL: Record<SessionStatus, string> = {
-  completed: 'Completado',
-  partial: 'Parcial',
-  in_progress: 'En progreso',
-  abandoned: 'Abandonado',
-};
 
 const STATUS_VARIANT: Record<
   SessionStatus,
@@ -22,16 +18,6 @@ const STATUS_VARIANT: Record<
   abandoned: 'destructive',
 };
 
-const DAY_LABEL: Record<string, string> = {
-  monday: 'Lunes',
-  tuesday: 'Martes',
-  wednesday: 'Miércoles',
-  thursday: 'Jueves',
-  friday: 'Viernes',
-  saturday: 'Sábado',
-  sunday: 'Domingo',
-};
-
 function formatDuration(seconds: number): string {
   const mins = Math.floor(seconds / 60);
   if (mins < 60) return `${mins} min`;
@@ -40,19 +26,20 @@ function formatDuration(seconds: number): string {
   return m > 0 ? `${h}h ${m}min` : `${h}h`;
 }
 
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('es', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
-}
-
 interface SessionHistoryCardProps {
   session: SessionHistoryItem;
 }
 
 export function SessionHistoryCard({ session }: SessionHistoryCardProps) {
+  const { t, i18n } = useTranslation();
+
+  const formatDate = (iso: string) =>
+    new Date(iso).toLocaleDateString(i18n.language, {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
+
   return (
     <Link href={`/history/${session._id}`} className="block">
       <Card className="transition-colors hover:bg-muted/50">
@@ -61,11 +48,11 @@ export function SessionHistoryCard({ session }: SessionHistoryCardProps) {
             <div className="min-w-0">
               <p className="truncate font-semibold">{session.planName}</p>
               <p className="text-muted-foreground text-sm">
-                {DAY_LABEL[session.dayOfWeek]}{session.dayName ? ` · ${session.dayName}` : ''} · {formatDate(session.startedAt)}
+                {t(`days.${session.dayOfWeek}`)}{session.dayName ? ` · ${session.dayName}` : ''} · {formatDate(session.startedAt)}
               </p>
             </div>
             <Badge variant={STATUS_VARIANT[session.status]} className="shrink-0">
-              {STATUS_LABEL[session.status]}
+              {t(`history.status.${session.status}`)}
             </Badge>
           </div>
 
@@ -76,7 +63,7 @@ export function SessionHistoryCard({ session }: SessionHistoryCardProps) {
             </div>
             <div className="flex items-center gap-1.5">
               <Layers className="h-4 w-4" />
-              <span>{session.totalSetsLogged} series</span>
+              <span>{session.totalSetsLogged} {t('history.sets')}</span>
             </div>
           </div>
 
