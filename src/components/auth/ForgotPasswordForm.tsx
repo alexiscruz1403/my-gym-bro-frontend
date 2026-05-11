@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,6 +15,7 @@ import { authService } from '@/services/auth.service';
 import { forgotPasswordSchema, type ForgotPasswordFormValues } from '@/lib/validations/auth.schemas';
 
 export function ForgotPasswordForm() {
+  const { t } = useTranslation();
   const [sent, setSent] = useState(false);
 
   const {
@@ -29,7 +31,7 @@ export function ForgotPasswordForm() {
       await authService.forgotPassword(data.email);
       setSent(true);
     } catch {
-      toast.error('Ocurrió un error. Intenta de nuevo.');
+      toast.error(t('auth.error.generic'));
     }
   };
 
@@ -37,18 +39,17 @@ export function ForgotPasswordForm() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="font-display text-2xl">Revisá tu correo</CardTitle>
+          <CardTitle className="font-display text-2xl">{t('auth.forgotPasswordFlow.success.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            Si existe una cuenta asociada a ese email, recibirás un enlace para restablecer tu
-            contraseña en los próximos minutos. El enlace es válido por 30 minutos.
+            {t('auth.forgotPasswordFlow.success.description')}
           </p>
         </CardContent>
         <CardFooter>
           <p className="text-center text-sm text-muted-foreground w-full">
             <Link href="/login" className="text-primary hover:underline">
-              Volver al inicio de sesión
+              {t('auth.forgotPasswordFlow.success.backToLogin')}
             </Link>
           </p>
         </CardFooter>
@@ -59,20 +60,20 @@ export function ForgotPasswordForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-display text-2xl">Olvidé mi contraseña</CardTitle>
+        <CardTitle className="font-display text-2xl">{t('auth.forgotPasswordFlow.title')}</CardTitle>
       </CardHeader>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-4 pb-6">
           <p className="text-sm text-muted-foreground">
-            Ingresá tu email y te enviaremos un enlace para restablecer tu contraseña.
+            {t('auth.forgotPasswordFlow.description')}
           </p>
           <div className="space-y-1.5">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t('auth.emailLabel')}</Label>
             <Input
               id="email"
               type="email"
-              placeholder="tu@email.com"
+              placeholder={t('auth.emailPlaceholder')}
               autoComplete="email"
               disabled={isSubmitting}
               {...register('email')}
@@ -86,11 +87,11 @@ export function ForgotPasswordForm() {
         <CardFooter className="flex flex-col gap-3">
           <Button type="submit" className="w-full cursor-pointer" disabled={isSubmitting}>
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {isSubmitting ? 'Enviando...' : 'Enviar enlace'}
+            {isSubmitting ? t('auth.forgotPasswordFlow.submitting') : t('auth.forgotPasswordFlow.submit')}
           </Button>
           <p className="text-center text-sm text-muted-foreground">
             <Link href="/login" className="text-primary hover:underline">
-              Volver al inicio de sesión
+              {t('auth.forgotPasswordFlow.backToLogin')}
             </Link>
           </p>
         </CardFooter>

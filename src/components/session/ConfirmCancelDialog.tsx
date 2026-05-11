@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -17,6 +18,7 @@ interface ConfirmCancelDialogProps {
 }
 
 export function ConfirmCancelDialog({ open, onOpenChange, onConfirm }: ConfirmCancelDialogProps) {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
   const handleConfirm = async () => {
@@ -33,9 +35,9 @@ export function ConfirmCancelDialog({ open, onOpenChange, onConfirm }: ConfirmCa
       <DialogContent>
         <div className="flex flex-col items-center gap-3 py-2 text-center">
           <Trash2 className="text-destructive h-12 w-12" />
-          <DialogTitle>Cancel session?</DialogTitle>
+          <DialogTitle>{t('session.confirmCancel.title')}</DialogTitle>
           <DialogDescription>
-            This session will be permanently deleted. No sets or progress will be saved.
+            {t('session.confirmCancel.description')}
           </DialogDescription>
         </div>
 
@@ -46,7 +48,7 @@ export function ConfirmCancelDialog({ open, onOpenChange, onConfirm }: ConfirmCa
             disabled={loading}
             className="flex-1 cursor-pointer"
           >
-            Keep going
+            {t('session.confirmCancel.keepGoing')}
           </Button>
           <Button
             variant="destructive"
@@ -54,7 +56,7 @@ export function ConfirmCancelDialog({ open, onOpenChange, onConfirm }: ConfirmCa
             disabled={loading}
             className="flex-1 cursor-pointer"
           >
-            {loading ? 'Cancelling…' : 'Cancel session'}
+            {loading ? t('session.confirmCancel.cancelling') : t('session.cancelSession')}
           </Button>
         </div>
       </DialogContent>

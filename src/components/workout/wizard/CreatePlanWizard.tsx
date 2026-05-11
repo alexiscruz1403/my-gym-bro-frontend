@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { WizardStepper } from './WizardStepper';
 import { WizardStep1Name } from './WizardStep1Name';
 import { WizardStep2Days } from './WizardStep2Days';
@@ -14,6 +15,7 @@ import { toast } from 'sonner';
 import type { CreatePlanRequest } from '@/types/api.types';
 
 export function CreatePlanWizard() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
 
@@ -78,14 +80,16 @@ export function CreatePlanWizard() {
       router.push(`/workout/${saved.id}`);
       reset();
       toast.success(
-        mode === 'edit' ? `"${saved.name}" updated` : `"${saved.name}" created`,
+        mode === 'edit'
+          ? t('plans.updatedToast', { name: saved.name })
+          : t('plans.createdToast', { name: saved.name }),
       );
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response?.status;
       if (status === 422) {
-        toast.error('You already have 3 plans. Delete one before creating a new one.');
+        toast.error(t('plans.error.maxPlans'));
       } else {
-        toast.error('Failed to save plan. Please try again.');
+        toast.error(t('plans.error.saveFailed'));
       }
     } finally {
       setIsSaving(false);

@@ -3,35 +3,35 @@
 import { useState } from 'react';
 import { Loader2, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { checkout } from '@/services/subscription.service';
 import type { SubscriptionPlan } from '@/types/domain.types';
 
-interface PlanOption {
-  plan: SubscriptionPlan;
-  label: string;
-  price: string;
-  description: string;
-}
-
-const PLAN_OPTIONS: PlanOption[] = [
-  {
-    plan: 'monthly',
-    label: 'Mensual',
-    price: 'ARS 100 / mes',
-    description: 'Acceso Premium mensual',
-  },
-  {
-    plan: 'annual',
-    label: 'Anual',
-    price: 'ARS 1.000 / año',
-    description: 'Ahorrá con el plan anual',
-  },
-];
+const PLAN_PRICES: Record<SubscriptionPlan, string> = {
+  monthly: 'ARS 100 / mes',
+  annual: 'ARS 1.000 / año',
+};
 
 export function PremiumCtaCard() {
+  const { t } = useTranslation();
   const [loadingPlan, setLoadingPlan] = useState<SubscriptionPlan | null>(null);
+
+  const PLAN_OPTIONS: { plan: SubscriptionPlan; label: string; price: string; description: string }[] = [
+    {
+      plan: 'monthly',
+      label: t('subscription.monthly'),
+      price: PLAN_PRICES.monthly,
+      description: t('subscription.monthlyDescription'),
+    },
+    {
+      plan: 'annual',
+      label: t('subscription.annual'),
+      price: PLAN_PRICES.annual,
+      description: t('subscription.annualDescription'),
+    },
+  ];
 
   async function handleSubscribe(plan: SubscriptionPlan) {
     if (loadingPlan) return;
@@ -40,7 +40,7 @@ export function PremiumCtaCard() {
       const { initPoint } = await checkout(plan);
       window.location.href = initPoint;
     } catch {
-      toast.error('No se pudo iniciar el pago. Intentá de nuevo.');
+      toast.error(t('subscription.error'));
       setLoadingPlan(null);
     }
   }
@@ -50,9 +50,9 @@ export function PremiumCtaCard() {
       <CardHeader className="pb-2">
         <div className="flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-amber-500" />
-          <CardTitle className="text-base">Pasate a Premium</CardTitle>
+          <CardTitle className="text-base">{t('dashboard.premiumCta.title')}</CardTitle>
         </div>
-        <CardDescription>Desbloqueá todas las funcionalidades de la app</CardDescription>
+        <CardDescription>{t('dashboard.premiumCta.subtitle')}</CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-3">
@@ -75,7 +75,7 @@ export function PremiumCtaCard() {
               {loadingPlan === plan ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
               ) : (
-                'Suscribirse'
+                t('subscription.subscribe')
               )}
             </Button>
           </div>

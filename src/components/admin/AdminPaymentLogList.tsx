@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Pagination } from '@/components/shared/Pagination';
@@ -8,22 +9,11 @@ import { AdminPaymentLogRow } from './AdminPaymentLogRow';
 import { useAdminPaymentLogs } from '@/hooks/useAdminPaymentLogs';
 import type { SubscriptionPlan, SubscriptionStatus } from '@/types/domain.types';
 
-const PLAN_OPTIONS: { value: SubscriptionPlan | ''; label: string }[] = [
-  { value: '', label: 'All plans' },
-  { value: 'monthly', label: 'Monthly' },
-  { value: 'annual', label: 'Annual' },
-];
-
-const STATUS_OPTIONS: { value: SubscriptionStatus | ''; label: string }[] = [
-  { value: '', label: 'All statuses' },
-  { value: 'authorized', label: 'Authorized' },
-  { value: 'paused', label: 'Paused' },
-  { value: 'cancelled', label: 'Cancelled' },
-  { value: 'pending', label: 'Pending' },
-  { value: 'payment_failed', label: 'Payment failed' },
-];
+const PLAN_VALUES: (SubscriptionPlan | '')[] = ['', 'monthly', 'annual'];
+const STATUS_VALUES: (SubscriptionStatus | '')[] = ['', 'authorized', 'paused', 'cancelled', 'pending', 'payment_failed'];
 
 export function AdminPaymentLogList() {
+  const { t } = useTranslation();
   const {
     logs,
     meta,
@@ -48,7 +38,7 @@ export function AdminPaymentLogList() {
         <Input
           value={userId}
           onChange={(e) => handleUserIdFilter(e.target.value)}
-          placeholder="Filter by user ID…"
+          placeholder={t('admin.payments.userIdPlaceholder')}
           className="max-w-xs font-mono"
         />
         <select
@@ -56,8 +46,10 @@ export function AdminPaymentLogList() {
           onChange={(e) => handlePlanFilter(e.target.value as SubscriptionPlan | '')}
           className="rounded-lg border border-input bg-background px-3 py-2 text-sm"
         >
-          {PLAN_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>{o.label}</option>
+          {PLAN_VALUES.map((v) => (
+            <option key={v} value={v}>
+              {v === '' ? t('admin.payments.allPlans') : t(`admin.payments.${v}`)}
+            </option>
           ))}
         </select>
         <select
@@ -65,8 +57,10 @@ export function AdminPaymentLogList() {
           onChange={(e) => handleStatusFilter(e.target.value as SubscriptionStatus | '')}
           className="rounded-lg border border-input bg-background px-3 py-2 text-sm"
         >
-          {STATUS_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>{o.label}</option>
+          {STATUS_VALUES.map((v) => (
+            <option key={v} value={v}>
+              {v === '' ? t('admin.payments.allStatuses') : t(`admin.payments.${v === 'payment_failed' ? 'paymentFailed' : v}`)}
+            </option>
           ))}
         </select>
       </div>
@@ -80,7 +74,7 @@ export function AdminPaymentLogList() {
       )}
 
       {!isLoading && logs.length === 0 && (
-        <p className="text-sm text-muted-foreground">No payment logs found.</p>
+        <p className="text-sm text-muted-foreground">{t('admin.payments.empty')}</p>
       )}
 
       {!isLoading && logs.length > 0 && (

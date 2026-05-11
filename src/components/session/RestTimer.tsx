@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { X } from 'lucide-react';
@@ -11,6 +12,7 @@ interface RestTimerProps {
 }
 
 export function RestTimer({ exerciseId }: RestTimerProps) {
+  const { t } = useTranslation();
   const restTimer = useSessionStore((s) => s.restTimer);
   const { secondsLeft, isRunning, stop, adjust, exerciseId: timerExerciseId } = useRestTimer();
 
@@ -25,13 +27,13 @@ export function RestTimer({ exerciseId }: RestTimerProps) {
   return (
     <div className="rounded-xl border bg-card p-4 shadow-sm">
       <div className="flex items-center justify-between">
-        <p className="text-muted-foreground text-sm font-medium">Rest</p>
+        <p className="text-muted-foreground text-sm font-medium">{t('session.rest.label')}</p>
         <Button
           size="icon"
           variant="ghost"
           onClick={stop}
           className="h-11 w-11 cursor-pointer"
-          aria-label="Skip rest"
+          aria-label={t('session.rest.skipAriaLabel')}
         >
           <X className="h-4 w-4" />
         </Button>
@@ -45,7 +47,7 @@ export function RestTimer({ exerciseId }: RestTimerProps) {
           size="sm"
           onClick={() => adjust(-10)}
           className="cursor-pointer px-3 min-h-11"
-          aria-label="Subtract 10 seconds"
+          aria-label={t('session.rest.subtractAriaLabel')}
         >
           -10s
         </Button>
@@ -55,12 +57,12 @@ export function RestTimer({ exerciseId }: RestTimerProps) {
           size="sm"
           onClick={() => adjust(10)}
           className="cursor-pointer px-3 min-h-11"
-          aria-label="Add 10 seconds"
+          aria-label={t('session.rest.addAriaLabel')}
         >
           +10s
         </Button>
       </div>
-      <p className="text-muted-foreground mt-2 text-center text-xs">Tap × to skip</p>
+      <p className="text-muted-foreground mt-2 text-center text-xs">{t('session.rest.skipInstruction')}</p>
     </div>
   );
 }

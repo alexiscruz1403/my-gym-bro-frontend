@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Pagination } from '@/components/shared/Pagination';
@@ -8,6 +9,7 @@ import { AdminUserRow } from './AdminUserRow';
 import { useAdminUsers } from '@/hooks/useAdminUsers';
 
 export function AdminUserList() {
+  const { t } = useTranslation();
   const {
     users,
     meta,
@@ -36,7 +38,7 @@ export function AdminUserList() {
         <Input
           value={username}
           onChange={(e) => handleUsernameSearch(e.target.value)}
-          placeholder="Search by username…"
+          placeholder={t('admin.users.searchPlaceholder')}
           className="max-w-xs"
         />
         <select
@@ -44,7 +46,7 @@ export function AdminUserList() {
           onChange={(e) => handleRoleFilter(e.target.value as typeof role)}
           className="rounded-lg border border-input bg-background px-3 py-2 text-sm"
         >
-          <option value="">All roles</option>
+          <option value="">{t('admin.users.allRoles')}</option>
           <option value="user">User</option>
           <option value="admin">Admin</option>
         </select>
@@ -53,7 +55,7 @@ export function AdminUserList() {
           onChange={(e) => handleTierFilter(e.target.value as typeof membershipTier)}
           className="rounded-lg border border-input bg-background px-3 py-2 text-sm"
         >
-          <option value="">All memberships</option>
+          <option value="">{t('admin.users.allMemberships')}</option>
           <option value="free">Free</option>
           <option value="premium">Premium</option>
         </select>

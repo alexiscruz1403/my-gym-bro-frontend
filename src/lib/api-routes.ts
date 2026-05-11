@@ -19,6 +19,7 @@ export const API_ROUTES = {
   users: {
     me: '/users/me',
     avatar: '/users/me/avatar',
+    language: '/users/me/language',
     search: '/users',
     publicProfile: (id: string) => `/users/${id}`,
     sessionHistory: (id: string) => `/users/${id}/sessions`,

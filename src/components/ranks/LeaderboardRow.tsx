@@ -1,5 +1,8 @@
+'use client';
+
 import Image from 'next/image';
 import { User } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { RankBadge } from '@/components/ranks/RankBadge';
 import type { LeaderboardUserEntry, MuscleGroup } from '@/types/domain.types';
 
@@ -10,7 +13,8 @@ interface LeaderboardRowProps {
 }
 
 function PositionLabel({ position, isSelf }: { position: number; isSelf: boolean }) {
-  if (isSelf) return <span className="text-xs font-bold text-primary w-6 text-center">tú</span>;
+  const { t } = useTranslation();
+  if (isSelf) return <span className="text-xs font-bold text-primary w-6 text-center">{t('ranks.leaderboard.you')}</span>;
   if (position === 1) return <span className="text-base w-6 text-center">🥇</span>;
   if (position === 2) return <span className="text-base w-6 text-center">🥈</span>;
   if (position === 3) return <span className="text-base w-6 text-center">🥉</span>;
@@ -18,6 +22,8 @@ function PositionLabel({ position, isSelf }: { position: number; isSelf: boolean
 }
 
 export function LeaderboardRow({ entry, position, selectedMuscle }: LeaderboardRowProps) {
+  const { t } = useTranslation();
+
   const relevantRank = selectedMuscle
     ? entry.muscleRanks.find((mr) => mr.muscle === selectedMuscle)
     : entry.muscleRanks.reduce(
@@ -52,7 +58,7 @@ export function LeaderboardRow({ entry, position, selectedMuscle }: LeaderboardR
       {relevantRank ? (
         <RankBadge rank={relevantRank.rank} size="sm" />
       ) : (
-        <span className="text-xs text-muted-foreground">Sin rango</span>
+        <span className="text-xs text-muted-foreground">{t('ranks.leaderboard.unranked')}</span>
       )}
     </div>
   );

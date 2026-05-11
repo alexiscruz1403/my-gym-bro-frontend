@@ -1,7 +1,10 @@
+'use client';
+
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { MuscleGroupBadge } from '@/components/exercises/MuscleGroupBadge';
 import { Dumbbell, Info } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { Exercise, WeightInstruction } from '@/types/domain.types';
 
 const LOAD_TYPE_LABELS: Record<string, string> = {
@@ -30,13 +33,16 @@ interface GuideTabProps {
 }
 
 export function GuideTab({ exercise }: GuideTabProps) {
+  const { i18n } = useTranslation();
+  const displayName = exercise.name[i18n.language as 'es' | 'en'] ?? exercise.name.en;
+
   return (
     <div className="space-y-6 pt-4">
       {exercise.gifUrl ? (
         <div className="overflow-hidden rounded-xl">
           <img
             src={exercise.gifUrl}
-            alt={exercise.name}
+            alt={displayName}
             className="w-full object-cover"
           />
         </div>
@@ -52,13 +58,13 @@ export function GuideTab({ exercise }: GuideTabProps) {
             src={exercise.videoUrl}
             controls
             className="w-full"
-            aria-label={`Video de ${exercise.name}`}
+            aria-label={`Video de ${displayName}`}
           />
         </div>
       )}
 
       <div className="space-y-1">
-        <h2 className="font-display text-xl font-bold">{exercise.name}</h2>
+        <h2 className="font-display text-xl font-bold">{displayName}</h2>
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="outline">{LOAD_TYPE_LABELS[exercise.loadType]}</Badge>
           <Badge variant="outline">{exercise.bilateral ? 'Bilateral' : 'Unilateral'}</Badge>

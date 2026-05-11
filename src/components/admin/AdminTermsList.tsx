@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Loader2, Plus, TriangleAlert, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,21 +19,22 @@ import {
 } from '@/components/ui/dialog';
 import { AdminTermsRow } from './AdminTermsRow';
 import { useAdminTerms } from '@/hooks/useAdminTerms';
-import type { CreateTermsSectionDto } from '@/types/domain.types';
+import type { CreateAdminTermsSectionDto } from '@/types/domain.types';
 
-const EMPTY_FORM: CreateTermsSectionDto = {
-  header: '',
-  content: '',
+const EMPTY_FORM: CreateAdminTermsSectionDto = {
+  header: { es: '', en: '' },
+  content: { es: '', en: '' },
   order: 1,
   isActive: true,
 };
 
 export function AdminTermsList() {
+  const { t } = useTranslation();
   const { sections, isLoading, isSaving, fetchSections, createSection, updateSection, deleteSection } =
     useAdminTerms();
 
   const [showCreate, setShowCreate] = useState(false);
-  const [form, setForm] = useState<CreateTermsSectionDto>(EMPTY_FORM);
+  const [form, setForm] = useState<CreateAdminTermsSectionDto>(EMPTY_FORM);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   useEffect(() => {
@@ -59,8 +61,8 @@ export function AdminTermsList() {
   async function submitCreate() {
     const ok = await createSection({
       ...form,
-      header: form.header.trim(),
-      content: form.content.trim(),
+      header: { es: form.header.es.trim(), en: form.header.en.trim() },
+      content: { es: form.content.es.trim(), en: form.content.en.trim() },
     });
     if (ok) setShowCreate(false);
   }
@@ -71,7 +73,11 @@ export function AdminTermsList() {
   }
 
   const isFormValid =
-    form.header.trim().length > 0 && form.content.trim().length > 0 && form.order > 0;
+    form.header.es.trim().length > 0 &&
+    form.header.en.trim().length > 0 &&
+    form.content.es.trim().length > 0 &&
+    form.content.en.trim().length > 0 &&
+    form.order > 0;
 
   return (
     <div className="space-y-4">
@@ -84,12 +90,12 @@ export function AdminTermsList() {
           className="cursor-pointer"
         >
           <Plus className="h-4 w-4 mr-1" />
-          Nueva sección
+          {t('admin.terms.newSection')}
         </Button>
       ) : (
         <div className="rounded-lg border bg-card px-4 py-4 space-y-3">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-medium">Nueva sección</p>
+            <p className="text-sm font-medium">{t('admin.terms.newSection')}</p>
             <Button
               size="icon-sm"
               variant="ghost"
@@ -101,30 +107,52 @@ export function AdminTermsList() {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="new-header" className="text-xs">Header</Label>
+            <Label htmlFor="new-header-es" className="text-xs">{t('admin.terms.headerEs')}</Label>
             <Input
-              id="new-header"
-              value={form.header}
-              onChange={(e) => setForm((f) => ({ ...f, header: e.target.value }))}
+              id="new-header-es"
+              value={form.header.es}
+              onChange={(e) => setForm((f) => ({ ...f, header: { ...f.header, es: e.target.value } }))}
               disabled={isSaving}
               placeholder="Ej: Aceptación de los términos"
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="new-content" className="text-xs">Content</Label>
+            <Label htmlFor="new-header-en" className="text-xs">{t('admin.terms.headerEn')}</Label>
+            <Input
+              id="new-header-en"
+              value={form.header.en}
+              onChange={(e) => setForm((f) => ({ ...f, header: { ...f.header, en: e.target.value } }))}
+              disabled={isSaving}
+              placeholder="e.g. Acceptance of terms"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="new-content-es" className="text-xs">{t('admin.terms.contentEs')}</Label>
             <textarea
-              id="new-content"
-              value={form.content}
-              onChange={(e) => setForm((f) => ({ ...f, content: e.target.value }))}
+              id="new-content-es"
+              value={form.content.es}
+              onChange={(e) => setForm((f) => ({ ...f, content: { ...f.content, es: e.target.value } }))}
               disabled={isSaving}
               rows={4}
               placeholder="Contenido de la sección..."
               className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm resize-y disabled:opacity-50"
             />
           </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="new-content-en" className="text-xs">{t('admin.terms.contentEn')}</Label>
+            <textarea
+              id="new-content-en"
+              value={form.content.en}
+              onChange={(e) => setForm((f) => ({ ...f, content: { ...f.content, en: e.target.value } }))}
+              disabled={isSaving}
+              rows={4}
+              placeholder="Section content..."
+              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm resize-y disabled:opacity-50"
+            />
+          </div>
           <div className="flex items-center gap-4">
             <div className="space-y-1.5">
-              <Label htmlFor="new-order" className="text-xs">Orden</Label>
+              <Label htmlFor="new-order" className="text-xs">{t('admin.terms.order')}</Label>
               <Input
                 id="new-order"
                 type="number"
@@ -143,7 +171,7 @@ export function AdminTermsList() {
                 disabled={isSaving}
               />
               <Label htmlFor="new-active" className="text-xs cursor-pointer">
-                Activo
+                {t('admin.terms.active')}
               </Label>
             </div>
           </div>
@@ -155,7 +183,7 @@ export function AdminTermsList() {
               disabled={isSaving}
               className="cursor-pointer"
             >
-              Cancelar
+              {t('admin.terms.cancel')}
             </Button>
             <Button
               size="sm"
@@ -164,7 +192,7 @@ export function AdminTermsList() {
               className="cursor-pointer"
             >
               {isSaving && <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" />}
-              Crear
+              {isSaving ? t('admin.terms.creating') : t('admin.terms.create')}
             </Button>
           </div>
         </div>
@@ -180,7 +208,7 @@ export function AdminTermsList() {
       )}
 
       {!isLoading && sections.length === 0 && (
-        <p className="text-sm text-muted-foreground">No hay secciones de términos.</p>
+        <p className="text-sm text-muted-foreground">{t('admin.terms.empty')}</p>
       )}
 
       {!isLoading && sections.length > 0 && (
@@ -203,12 +231,10 @@ export function AdminTermsList() {
           <DialogHeader>
             <div className="flex items-center gap-2">
               <TriangleAlert className="h-5 w-5 text-amber-500 shrink-0" />
-              <DialogTitle>Confirmar creación</DialogTitle>
+              <DialogTitle>{t('admin.terms.confirmCreate.title')}</DialogTitle>
             </div>
             <DialogDescription className="pt-1">
-              Esta sección se creará como <strong className="text-foreground">activa</strong>. Al
-              confirmar, se enviará una notificación a todos los usuarios activos informando que
-              los Términos y condiciones fueron actualizados. ¿Querés continuar?
+              {t('admin.terms.confirmCreate.description')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -217,11 +243,11 @@ export function AdminTermsList() {
                 <Button variant="outline" disabled={isSaving} className="cursor-pointer" />
               }
             >
-              Cancelar
+              {t('admin.terms.cancel')}
             </DialogClose>
             <Button onClick={handleConfirmCreate} disabled={isSaving} className="cursor-pointer">
               {isSaving && <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" />}
-              Sí, crear y notificar
+              {t('admin.terms.confirmCreate.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -3,17 +3,10 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { Sparkles, CheckCircle2, AlertCircle, Calendar, Dumbbell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { GeneratePlanResponse } from '@/types/domain.types';
-
-const LOADING_MESSAGES = [
-  'Analizando tu perfil...',
-  'Seleccionando ejercicios...',
-  'Estructurando la semana...',
-  'Calibrando progresiones...',
-  'Finalizando tu plan...',
-];
 
 interface AiStep6GeneratingProps {
   isLoading: boolean;
@@ -28,21 +21,23 @@ export function AiStep6Generating({
   error,
   onRetry,
 }: AiStep6GeneratingProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [msgIndex, setMsgIndex] = useState(0);
+
+  const messages = t('ai.wizard.generating.messages', { returnObjects: true }) as string[];
 
   useEffect(() => {
     if (!isLoading) return;
     const interval = setInterval(() => {
-      setMsgIndex((i) => (i + 1) % LOADING_MESSAGES.length);
+      setMsgIndex((i) => (i + 1) % messages.length);
     }, 1800);
     return () => clearInterval(interval);
-  }, [isLoading]);
+  }, [isLoading, messages.length]);
 
   if (isLoading) {
     return (
       <div className="flex flex-col items-center gap-8 py-8">
-        {/* Animated orb */}
         <div className="relative">
           <motion.div
             animate={{
@@ -66,7 +61,6 @@ export function AiStep6Generating({
           </motion.div>
         </div>
 
-        {/* Message carousel */}
         <div className="h-6 overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.p
@@ -77,12 +71,11 @@ export function AiStep6Generating({
               transition={{ duration: 0.4 }}
               className="text-center text-sm text-muted-foreground font-medium"
             >
-              {LOADING_MESSAGES[msgIndex]}
+              {messages[msgIndex]}
             </motion.p>
           </AnimatePresence>
         </div>
 
-        {/* Pulsing dots */}
         <div className="flex gap-2">
           {[0, 1, 2].map((i) => (
             <motion.div
@@ -99,7 +92,7 @@ export function AiStep6Generating({
         </div>
 
         <p className="text-xs text-muted-foreground text-center max-w-xs">
-          La IA está diseñando tu plan personalizado. Esto puede tomar unos segundos.
+          {t('ai.wizard.generating.note')}
         </p>
       </div>
     );
@@ -116,12 +109,12 @@ export function AiStep6Generating({
           <AlertCircle className="h-16 w-16 text-destructive" />
         </motion.div>
         <div className="text-center space-y-2">
-          <p className="font-semibold">No se pudo generar el plan</p>
+          <p className="font-semibold">{t('ai.wizard.generating.errorTitle')}</p>
           <p className="text-sm text-muted-foreground">{error}</p>
         </div>
         <Button onClick={onRetry} variant="outline" className="gap-2">
           <Sparkles className="h-4 w-4" />
-          Intentar de nuevo
+          {t('ai.wizard.generating.retry')}
         </Button>
       </div>
     );
@@ -148,13 +141,12 @@ export function AiStep6Generating({
         </motion.div>
 
         <div className="text-center space-y-1">
-          <h3 className="text-xl font-bold">¡Plan generado!</h3>
+          <h3 className="text-xl font-bold">{t('ai.wizard.generating.successTitle')}</h3>
           <p className="text-sm text-muted-foreground">
             {result.message}
           </p>
         </div>
 
-        {/* Plan preview card */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -177,20 +169,19 @@ export function AiStep6Generating({
             <div className="flex items-center gap-2 rounded-xl bg-muted/50 p-3">
               <Calendar className="h-4 w-4 text-muted-foreground" />
               <div>
-                <p className="text-xs text-muted-foreground">Días</p>
+                <p className="text-xs text-muted-foreground">{t('ai.wizard.generating.days')}</p>
                 <p className="text-sm font-bold">{result.plan.days.length}</p>
               </div>
             </div>
             <div className="flex items-center gap-2 rounded-xl bg-muted/50 p-3">
               <Dumbbell className="h-4 w-4 text-muted-foreground" />
               <div>
-                <p className="text-xs text-muted-foreground">Ejercicios</p>
+                <p className="text-xs text-muted-foreground">{t('ai.wizard.generating.exercises')}</p>
                 <p className="text-sm font-bold">{totalExercises}</p>
               </div>
             </div>
           </div>
 
-          {/* Days preview */}
           <div className="space-y-2">
             {result.plan.days.map((day) => (
               <div
@@ -201,7 +192,7 @@ export function AiStep6Generating({
                   {day.dayName ?? day.dayOfWeek}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  {day.exercises.length} ejercicios
+                  {t('plans.exerciseCount', { count: day.exercises.length })}
                 </span>
               </div>
             ))}
@@ -214,7 +205,7 @@ export function AiStep6Generating({
           onClick={() => router.push(`/workout/${result.plan.id}`)}
         >
           <CheckCircle2 className="h-4 w-4" />
-          Ver mi plan
+          {t('ai.wizard.generating.viewPlan')}
         </Button>
       </motion.div>
     );

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, X, Plus, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useExercises } from '@/hooks/useExercises';
@@ -27,12 +28,14 @@ interface ExerciseSelectorProps {
 }
 
 function ExerciseSelector({ title, description, selected, onAdd, onRemove }: ExerciseSelectorProps) {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language as 'es' | 'en';
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
   useEffect(() => {
-    const t = setTimeout(() => setDebouncedSearch(search), 300);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(timer);
   }, [search]);
 
   const { data, loading } = useExercises(
@@ -50,7 +53,6 @@ function ExerciseSelector({ title, description, selected, onAdd, onRemove }: Exe
         <p className="text-xs text-muted-foreground">{description}</p>
       </div>
 
-      {/* Selected chips */}
       {selected.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
           {selected.map((ex) => (
@@ -60,7 +62,7 @@ function ExerciseSelector({ title, description, selected, onAdd, onRemove }: Exe
               animate={{ scale: 1, opacity: 1 }}
               className="inline-flex items-center gap-1 rounded-full border bg-primary/10 border-primary/30 px-2.5 py-1 text-xs font-medium text-primary"
             >
-              {ex.name}
+              {ex.name[lang] ?? ex.name.en}
               <button
                 type="button"
                 onClick={() => onRemove(ex.id)}
@@ -73,14 +75,13 @@ function ExerciseSelector({ title, description, selected, onAdd, onRemove }: Exe
         </div>
       )}
 
-      {/* Search input — only show if under limit */}
       {selected.length < MAX_EACH && (
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar ejercicio..."
+            placeholder={t('ai.wizard.step6.searchPlaceholder')}
             className="pl-8 text-sm h-9"
           />
           {loading && (
@@ -89,7 +90,6 @@ function ExerciseSelector({ title, description, selected, onAdd, onRemove }: Exe
         </div>
       )}
 
-      {/* Results dropdown */}
       {results.length > 0 && (
         <div className="rounded-xl border bg-card divide-y overflow-hidden">
           {results.map((ex) => (
@@ -103,7 +103,7 @@ function ExerciseSelector({ title, description, selected, onAdd, onRemove }: Exe
               }}
               className="flex w-full items-center justify-between px-3 py-2.5 text-left hover:bg-muted/50 transition-colors"
             >
-              <span className="text-sm font-medium truncate">{ex.name}</span>
+              <span className="text-sm font-medium truncate">{ex.name[lang] ?? ex.name.en}</span>
               <Plus className="h-3.5 w-3.5 text-muted-foreground shrink-0 ml-2" />
             </button>
           ))}
@@ -111,17 +111,18 @@ function ExerciseSelector({ title, description, selected, onAdd, onRemove }: Exe
       )}
 
       {debouncedSearch.length >= 2 && !loading && results.length === 0 && (
-        <p className="text-xs text-muted-foreground text-center py-2">Sin resultados</p>
+        <p className="text-xs text-muted-foreground text-center py-2">{t('ai.wizard.step6.noResults')}</p>
       )}
 
       {selected.length >= MAX_EACH && (
-        <p className="text-xs text-muted-foreground">Máximo {MAX_EACH} ejercicios</p>
+        <p className="text-xs text-muted-foreground">{t('ai.wizard.step6.maxExercises', { max: MAX_EACH })}</p>
       )}
     </div>
   );
 }
 
-export function AiStep6Exercises({ defaultValues, onNext, onBack }: AiStep6ExercisesProps) {
+export function AiStep6Exercises({ defaultValues: _defaultValues, onNext, onBack }: AiStep6ExercisesProps) {
+  const { t } = useTranslation();
   const [excluded, setExcluded] = useState<Exercise[]>([]);
   const [included, setIncluded] = useState<Exercise[]>([]);
 
@@ -135,15 +136,15 @@ export function AiStep6Exercises({ defaultValues, onNext, onBack }: AiStep6Exerc
   return (
     <div className="space-y-7">
       <div className="text-center space-y-1">
-        <h2 className="text-xl font-bold">Personaliza ejercicios</h2>
+        <h2 className="text-xl font-bold">{t('ai.wizard.step6.title')}</h2>
         <p className="text-sm text-muted-foreground">
-          Opcional. La IA tendrá esto en cuenta al construir tu plan.
+          {t('ai.wizard.step6.description')}
         </p>
       </div>
 
       <ExerciseSelector
-        title="Excluir ejercicios"
-        description={`Ejercicios que la IA evitará incluir. Máx. ${MAX_EACH}.`}
+        title={t('ai.wizard.step6.excludeTitle')}
+        description={t('ai.wizard.step6.excludeDescription', { max: MAX_EACH })}
         selected={excluded}
         onAdd={(ex) => setExcluded((prev) => [...prev, ex])}
         onRemove={(id) => setExcluded((prev) => prev.filter((e) => e.id !== id))}
@@ -152,17 +153,17 @@ export function AiStep6Exercises({ defaultValues, onNext, onBack }: AiStep6Exerc
       <div className="border-t" />
 
       <ExerciseSelector
-        title="Incluir ejercicios"
-        description={`Ejercicios que la IA intentará incluir. Máx. ${MAX_EACH}.`}
+        title={t('ai.wizard.step6.includeTitle')}
+        description={t('ai.wizard.step6.includeDescription', { max: MAX_EACH })}
         selected={included}
         onAdd={(ex) => setIncluded((prev) => [...prev, ex])}
         onRemove={(id) => setIncluded((prev) => prev.filter((e) => e.id !== id))}
       />
 
-      <div className={cn('flex gap-3', excluded.length === 0 && included.length === 0 ? 'flex-col-reverse' : 'flex-col-reverse')}>
+      <div className={cn('flex gap-3', 'flex-col-reverse')}>
         <div className="flex gap-3">
           <Button type="button" variant="outline" className="flex-1 cursor-pointer" onClick={onBack}>
-            Atrás
+            {t('common.back')}
           </Button>
           <Button
             type="button"
@@ -170,7 +171,7 @@ export function AiStep6Exercises({ defaultValues, onNext, onBack }: AiStep6Exerc
             className="flex-1 cursor-pointer text-muted-foreground"
             onClick={() => onNext({ excludedExerciseIds: [], includedExerciseIds: [] })}
           >
-            Omitir
+            {t('ai.wizard.step6.skip')}
           </Button>
         </div>
         <Button
@@ -179,7 +180,7 @@ export function AiStep6Exercises({ defaultValues, onNext, onBack }: AiStep6Exerc
           size="lg"
           onClick={handleSubmit}
         >
-          Generar plan ✨
+          {t('common.continue')}
         </Button>
       </div>
     </div>

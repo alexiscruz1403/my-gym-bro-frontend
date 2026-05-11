@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,6 +25,7 @@ const MUSCLE_GROUPS: MuscleGroup[] = [
 ];
 
 export function AdminExerciseList() {
+  const { t } = useTranslation();
   const {
     exercises,
     total,
@@ -40,6 +42,8 @@ export function AdminExerciseList() {
   } = useAdminExercises();
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Exercise | null>(null);
+
+  const muscleLabels = t('exercises.muscle', { returnObjects: true }) as Record<MuscleGroup, string>;
 
   const LIMIT = 20;
 
@@ -72,7 +76,7 @@ export function AdminExerciseList() {
         <Input
           value={nameSearch}
           onChange={(e) => handleNameSearch(e.target.value)}
-          placeholder="Search by name…"
+          placeholder={t('admin.exercises.searchPlaceholder')}
           className="max-w-xs"
         />
         <select
@@ -80,16 +84,18 @@ export function AdminExerciseList() {
           onChange={(e) => handleMuscleFilter(e.target.value as MuscleGroup | '')}
           className="rounded-lg border border-input bg-background px-3 py-2 text-sm"
         >
-          <option value="">All muscles</option>
+          <option value="">{t('admin.exercises.allMuscles')}</option>
           {MUSCLE_GROUPS.map((m) => (
-            <option key={m} value={m}>{m.replace(/_/g, ' ')}</option>
+            <option key={m} value={m}>{muscleLabels[m]}</option>
           ))}
         </select>
         <div className="ml-auto flex items-center gap-2">
-          <p className="text-sm text-muted-foreground">{total} exercises</p>
+          <p className="text-sm text-muted-foreground">
+            {t('admin.exercises.exerciseCount', { count: total })}
+          </p>
           <Button size="sm" onClick={() => setFormOpen(true)} className="cursor-pointer min-h-9 gap-1">
             <Plus className="h-4 w-4" />
-            New Exercise
+            {t('admin.exercises.newExercise')}
           </Button>
         </div>
       </div>

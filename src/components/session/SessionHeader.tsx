@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -11,16 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Flag, MoreVertical, Timer, Trash2 } from 'lucide-react';
 import useSessionStore from '@/store/session.store';
-
-const DAY_LABEL: Record<string, string> = {
-  monday: 'Monday',
-  tuesday: 'Tuesday',
-  wednesday: 'Wednesday',
-  thursday: 'Thursday',
-  friday: 'Friday',
-  saturday: 'Saturday',
-  sunday: 'Sunday',
-};
+import type { DayOfWeek } from '@/types/domain.types';
 
 function formatElapsed(startTime: number | null): string {
   const elapsed = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
@@ -39,22 +31,25 @@ interface SessionHeaderProps {
 }
 
 export function SessionHeader({ onFinish, onCancel, onToggleCountdown, countdownActive }: SessionHeaderProps) {
+  const { t } = useTranslation();
   const { sessionStartTime, activeSession } = useSessionStore();
   const [, tick] = useState(0);
 
+  const dayLabels = t('days', { returnObjects: true }) as Record<DayOfWeek, string>;
+
   useEffect(() => {
-    const id = setInterval(() => tick((t) => t + 1), 1000);
+    const id = setInterval(() => tick((v) => v + 1), 1000);
     return () => clearInterval(id);
   }, []);
 
   return (
     <div className="flex items-center justify-between border-b px-4 py-3">
       <div>
-        <p className="text-muted-foreground text-xs">In progress</p>
-        <p className="font-display text-lg font-bold">{activeSession?.planName ?? 'Workout'}</p>
+        <p className="text-muted-foreground text-xs">{t('session.inProgress')}</p>
+        <p className="font-display text-lg font-bold">{activeSession?.planName ?? t('session.workout')}</p>
         {activeSession && (
           <p className="text-muted-foreground text-xs">
-            {DAY_LABEL[activeSession.dayOfWeek]}
+            {dayLabels[activeSession.dayOfWeek as DayOfWeek]}
             {activeSession.dayName && ` · ${activeSession.dayName}`}
           </p>
         )}
@@ -70,7 +65,7 @@ export function SessionHeader({ onFinish, onCancel, onToggleCountdown, countdown
           variant={countdownActive ? 'secondary' : 'ghost'}
           onClick={onToggleCountdown}
           className="min-h-11 min-w-9 cursor-pointer"
-          aria-label="Temporizador de sesión"
+          aria-label={t('session.options.ariaLabel')}
         >
           <Timer className="h-4 w-4" />
         </Button>
@@ -84,7 +79,7 @@ export function SessionHeader({ onFinish, onCancel, onToggleCountdown, countdown
             className="min-h-11 cursor-pointer gap-1.5 text-destructive hover:text-destructive"
           >
             <Trash2 className="h-4 w-4" />
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             size="sm"
@@ -93,7 +88,7 @@ export function SessionHeader({ onFinish, onCancel, onToggleCountdown, countdown
             className="min-h-11 cursor-pointer gap-1.5"
           >
             <Flag className="h-4 w-4" />
-            Finish
+            {t('session.finish')}
           </Button>
         </div>
 
@@ -106,7 +101,7 @@ export function SessionHeader({ onFinish, onCancel, onToggleCountdown, countdown
                   size="icon"
                   variant="ghost"
                   className="min-h-11 min-w-9 cursor-pointer"
-                  aria-label="Session options"
+                  aria-label={t('session.options.ariaLabel')}
                 />
               }
             >
@@ -115,12 +110,12 @@ export function SessionHeader({ onFinish, onCancel, onToggleCountdown, countdown
             <DropdownMenuContent side="bottom" align="end" className="bg-background">
               <DropdownMenuItem onClick={onFinish}>
                 <Flag className="h-4 w-4" />
-                Finish workout
+                {t('session.finishMobile')}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem variant="destructive" onClick={onCancel}>
                 <Trash2 className="h-4 w-4" />
-                Cancel session
+                {t('session.cancelSession')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

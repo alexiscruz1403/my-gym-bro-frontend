@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,7 +23,9 @@ interface AdminExerciseFormProps {
 }
 
 export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminExerciseFormProps) {
-  const [name, setName] = useState('');
+  const { t } = useTranslation();
+  const [nameEs, setNameEs] = useState('');
+  const [nameEn, setNameEn] = useState('');
   const [trackingType, setTrackingType] = useState<TrackingType>('reps');
   const [loadType, setLoadType] = useState<LoadType>('barbell');
   const [musclesPrimary, setMusclesPrimary] = useState<MuscleGroup[]>([]);
@@ -37,14 +40,16 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
 
   useEffect(() => {
     if (exercise) {
-      setName(exercise.name);
+      setNameEs(exercise.name.es);
+      setNameEn(exercise.name.en);
       setTrackingType(exercise.trackingType);
       setLoadType(exercise.loadType);
       setMusclesPrimary(exercise.musclesPrimary);
       setMusclesSecondary(exercise.musclesSecondary);
       setBilateral(exercise.bilateral);
     } else {
-      setName('');
+      setNameEs('');
+      setNameEn('');
       setTrackingType('reps');
       setLoadType('barbell');
       setMusclesPrimary([]);
@@ -71,17 +76,16 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || musclesPrimary.length === 0) return;
+    if (!nameEs.trim() || !nameEn.trim() || musclesPrimary.length === 0) return;
     setBusy(true);
     try {
       const formData = new FormData();
-      formData.append('name', name.trim());
+      formData.append('name', JSON.stringify({ es: nameEs.trim(), en: nameEn.trim() }));
       formData.append('trackingType', trackingType);
       formData.append('loadType', loadType);
       formData.append('bilateral', String(bilateral));
       musclesPrimary.forEach((m) => formData.append('musclesPrimary', m));
       musclesSecondary.forEach((m) => formData.append('musclesSecondary', m));
-      console.log('gifFile', gifFile);
       if (gifFile) formData.append('gif', gifFile);
       if (videoFile) formData.append('video', videoFile);
       await onSubmit(formData);
@@ -94,22 +98,35 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
     <Sheet open={open} onOpenChange={(isOpen) => { if (!isOpen) onClose(); }}>
       <SheetContent side="bottom" className="max-h-[80dvh] overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>{exercise ? 'Edit Exercise' : 'New Exercise'}</SheetTitle>
+          <SheetTitle>{exercise ? t('admin.exercises.editTitle') : t('admin.exercises.newTitle')}</SheetTitle>
         </SheetHeader>
         <form onSubmit={handleSubmit} className="px-4 pb-6 space-y-4">
+          {/* Name ES */}
           <div className="space-y-1.5">
-            <Label htmlFor="ex-name">Name</Label>
+            <Label htmlFor="ex-name-es">{t('admin.exercises.nameEs')}</Label>
             <Input
-              id="ex-name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              id="ex-name-es"
+              value={nameEs}
+              onChange={(e) => setNameEs(e.target.value)}
+              placeholder="Ej: Sentadilla con barra"
+              required
+            />
+          </div>
+
+          {/* Name EN */}
+          <div className="space-y-1.5">
+            <Label htmlFor="ex-name-en">{t('admin.exercises.nameEn')}</Label>
+            <Input
+              id="ex-name-en"
+              value={nameEn}
+              onChange={(e) => setNameEn(e.target.value)}
               placeholder="e.g. Barbell Squat"
               required
             />
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="ex-tracking">Tracking Type</Label>
+            <Label htmlFor="ex-tracking">{t('admin.exercises.trackingType')}</Label>
             <select
               id="ex-tracking"
               value={trackingType}
@@ -122,7 +139,7 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="ex-load">Load Type</Label>
+            <Label htmlFor="ex-load">{t('admin.exercises.loadType')}</Label>
             <select
               id="ex-load"
               value={loadType}
@@ -141,7 +158,7 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
 
           {/* Bilateral toggle */}
           <div className="space-y-1.5">
-            <Label>Movement</Label>
+            <Label>{t('admin.exercises.movement')}</Label>
             <div className="flex gap-2">
               <button
                 type="button"
@@ -152,7 +169,7 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
                     : 'border-input bg-background text-foreground'
                 }`}
               >
-                Bilateral
+                {t('admin.exercises.bilateral')}
               </button>
               <button
                 type="button"
@@ -163,16 +180,24 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
                     : 'border-input bg-background text-foreground'
                 }`}
               >
-                Unilateral
+                {t('admin.exercises.unilateral')}
               </button>
             </div>
           </div>
 
           {/* GIF upload */}
           <div className="space-y-1.5">
-            <Label htmlFor="ex-gif">GIF <span className="text-muted-foreground text-xs">(optional)</span></Label>
+            <Label htmlFor="ex-gif">
+              {t('admin.exercises.gif')}{' '}
+              <span className="text-muted-foreground text-xs">{t('admin.exercises.gifOptional')}</span>
+            </Label>
             {exercise?.gifUrl && !gifFile && (
-              <p className="text-xs text-muted-foreground">Current GIF: <a href={exercise.gifUrl} target="_blank" rel="noreferrer" className="underline">view</a></p>
+              <p className="text-xs text-muted-foreground">
+                {t('admin.exercises.gifCurrent')}{' '}
+                <a href={exercise.gifUrl} target="_blank" rel="noreferrer" className="underline">
+                  {t('admin.exercises.view')}
+                </a>
+              </p>
             )}
             <input
               id="ex-gif"
@@ -182,14 +207,24 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
               onChange={(e) => setGifFile(e.target.files?.[0] ?? null)}
               className="w-full text-sm text-muted-foreground file:mr-3 file:rounded-lg file:border file:border-input file:bg-background file:px-3 file:py-1 file:text-xs file:cursor-pointer"
             />
-            {gifFile && <p className="text-xs text-muted-foreground">Selected: {gifFile.name}</p>}
+            {gifFile && (
+              <p className="text-xs text-muted-foreground">{t('admin.exercises.selected', { name: gifFile.name })}</p>
+            )}
           </div>
 
           {/* Video upload */}
           <div className="space-y-1.5">
-            <Label htmlFor="ex-video">Video <span className="text-muted-foreground text-xs">(optional, max 50 MB)</span></Label>
+            <Label htmlFor="ex-video">
+              {t('admin.exercises.video')}{' '}
+              <span className="text-muted-foreground text-xs">{t('admin.exercises.videoOptional')}</span>
+            </Label>
             {exercise?.videoUrl && !videoFile && (
-              <p className="text-xs text-muted-foreground">Current video: <a href={exercise.videoUrl} target="_blank" rel="noreferrer" className="underline">view</a></p>
+              <p className="text-xs text-muted-foreground">
+                {t('admin.exercises.videoCurrent')}{' '}
+                <a href={exercise.videoUrl} target="_blank" rel="noreferrer" className="underline">
+                  {t('admin.exercises.view')}
+                </a>
+              </p>
             )}
             <input
               id="ex-video"
@@ -199,12 +234,16 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
               onChange={(e) => setVideoFile(e.target.files?.[0] ?? null)}
               className="w-full text-sm text-muted-foreground file:mr-3 file:rounded-lg file:border file:border-input file:bg-background file:px-3 file:py-1 file:text-xs file:cursor-pointer"
             />
-            {videoFile && <p className="text-xs text-muted-foreground">Selected: {videoFile.name}</p>}
+            {videoFile && (
+              <p className="text-xs text-muted-foreground">{t('admin.exercises.selected', { name: videoFile.name })}</p>
+            )}
           </div>
 
           {/* Primary muscles */}
           <div className="space-y-1.5">
-            <Label>Primary Muscles <span className="text-destructive">*</span></Label>
+            <Label>
+              {t('admin.exercises.primaryMuscles')} <span className="text-destructive">*</span>
+            </Label>
             <div className="flex flex-wrap gap-2">
               {MUSCLE_GROUPS.map((muscle) => {
                 const isPrimary = musclesPrimary.includes(muscle);
@@ -231,7 +270,10 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
 
           {/* Secondary muscles */}
           <div className="space-y-1.5">
-            <Label>Secondary Muscles <span className="text-muted-foreground text-xs">(optional)</span></Label>
+            <Label>
+              {t('admin.exercises.secondaryMuscles')}{' '}
+              <span className="text-muted-foreground text-xs">{t('admin.exercises.secondaryOptional')}</span>
+            </Label>
             <div className="flex flex-wrap gap-2">
               {MUSCLE_GROUPS.map((muscle) => {
                 const isPrimary = musclesPrimary.includes(muscle);
@@ -257,11 +299,15 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
           </div>
 
           <div className="flex flex-col gap-2 pt-2">
-            <Button type="submit" disabled={busy || musclesPrimary.length === 0} className="cursor-pointer w-full">
-              {exercise ? 'Save Changes' : 'Create Exercise'}
+            <Button
+              type="submit"
+              disabled={busy || !nameEs.trim() || !nameEn.trim() || musclesPrimary.length === 0}
+              className="cursor-pointer w-full"
+            >
+              {exercise ? t('admin.exercises.saveChanges') : t('admin.exercises.createExercise')}
             </Button>
             <Button type="button" variant="ghost" onClick={onClose} disabled={busy} className="cursor-pointer w-full">
-              Cancel
+              {t('common.cancel')}
             </Button>
           </div>
         </form>

@@ -1,21 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DayExerciseList } from './DayExerciseList';
 import type { DayOfWeek } from '@/types/domain.types';
 import type { ExerciseConfigDraft } from '@/types/ui.types';
-
-const DAY_SHORT: Record<DayOfWeek, string> = {
-  monday:    'Mon',
-  tuesday:   'Tue',
-  wednesday: 'Wed',
-  thursday:  'Thu',
-  friday:    'Fri',
-  saturday:  'Sat',
-  sunday:    'Sun',
-};
 
 interface WizardStep3ExercisesProps {
   selectedDays: DayOfWeek[];
@@ -42,7 +33,10 @@ export function WizardStep3Exercises({
   onNext,
   onBack,
 }: WizardStep3ExercisesProps) {
+  const { t } = useTranslation();
   const [activeDay, setActiveDay] = useState<string>(selectedDays[0] ?? '');
+
+  const dayShortLabels = t('daysShort', { returnObjects: true }) as Record<DayOfWeek, string>;
 
   const totalExercises = selectedDays.reduce(
     (acc, day) => acc + (exercisesByDay[day]?.length ?? 0),
@@ -52,9 +46,9 @@ export function WizardStep3Exercises({
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h2 className="font-display text-xl font-bold">Add exercises</h2>
+        <h2 className="font-display text-xl font-bold">{t('plans.wizard.step3.title')}</h2>
         <p className="text-muted-foreground text-sm">
-          Assign exercises to each training day.
+          {t('plans.wizard.step3.description')}
         </p>
       </div>
 
@@ -63,7 +57,7 @@ export function WizardStep3Exercises({
           <TabsList className="flex w-max gap-1">
             {selectedDays.map((day) => (
               <TabsTrigger key={day} value={day} className="shrink-0 cursor-pointer">
-                {DAY_SHORT[day]}
+                {dayShortLabels[day]}
                 {(exercisesByDay[day]?.length ?? 0) > 0 && (
                   <span className="bg-primary/20 text-primary ml-1 rounded-full px-1.5 text-xs">
                     {exercisesByDay[day]!.length}
@@ -91,10 +85,10 @@ export function WizardStep3Exercises({
 
       <div className="flex gap-3">
         <Button variant="outline" onClick={onBack} className="flex-1 cursor-pointer">
-          Back
+          {t('common.back')}
         </Button>
         <Button onClick={onNext} disabled={totalExercises === 0} className="flex-1 cursor-pointer">
-          Review
+          {t('common.review')}
         </Button>
       </div>
     </div>

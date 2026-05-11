@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -25,6 +26,7 @@ interface PlanDetailViewProps {
 
 export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
   const router = useRouter();
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { data: plans } = usePlans();
   const [confirmingActivate, setConfirmingActivate] = useState(false);
@@ -38,7 +40,7 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
   const canCopy = normalPlanCount < 3;
 
   const { copy, isCopying } = useCopyAiPlan((newPlan) => {
-    toast.success(`"${newPlan.name}" guardado como plan normal`);
+    toast.success(t('plans.copiedAsNormal', { name: newPlan.name }));
   });
 
   const handleCopy = () => {
@@ -46,9 +48,9 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
       onError: (err: unknown) => {
         const status = (err as { response?: { status?: number } })?.response?.status;
         if (status === 422) {
-          toast.error('Ya tienes 3 planes normales. Elimina uno para continuar.');
+          toast.error(t('plans.error.maxPlans'));
         } else {
-          toast.error('No se pudo copiar el plan.');
+          toast.error(t('plans.copyError'));
         }
       },
     });
@@ -58,11 +60,11 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
     setActivating(true);
     try {
       await activatePlan(plan.id);
-      toast.success(`"${plan.name}" is now your active plan`);
+      toast.success(t('plans.activated', { name: plan.name }));
       invalidatePlanCache(plan.id);
       onUpdate();
     } catch {
-      toast.error('Failed to activate plan');
+      toast.error(t('plans.activateError'));
     } finally {
       setActivating(false);
       setConfirmingActivate(false);
@@ -71,7 +73,7 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
 
   const handleDelete = async () => {
     await deletePlan(plan.id);
-    toast.success(`"${plan.name}" deleted`);
+    toast.success(t('plans.deleted', { name: plan.name }));
     invalidatePlanCache(plan.id);
     router.push('/workout');
   };
@@ -82,7 +84,7 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
         <div className="flex items-center gap-2 flex-wrap">
           <h1 className="font-display text-2xl font-bold">{plan.name}</h1>
           {plan.isActive && (
-            <Badge className="bg-green-500 text-white hover:bg-green-600">Active</Badge>
+            <Badge className="bg-green-500 text-white hover:bg-green-600">{t('plans.status.active')}</Badge>
           )}
           {plan.isAiGenerated && (
             <Badge variant="outline" className="border-primary/40 text-primary gap-1">
@@ -92,7 +94,7 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
           )}
         </div>
         <p className="text-muted-foreground text-sm">
-          {plan.days.length} {plan.days.length === 1 ? 'day' : 'days'}
+          {t('plans.dayCount', { count: plan.days.length })}
         </p>
       </div>
 
@@ -102,7 +104,7 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
             <div className="flex flex-wrap items-center gap-2 rounded-lg border border-orange-500/30 bg-orange-500/5 px-3 py-2">
               <AlertTriangle className="h-4 w-4 shrink-0 text-orange-500" />
               <p className="text-xs text-orange-600 dark:text-orange-400">
-                Your current streak will reset. Continue?
+                {t('plans.confirmActivate.warning')}
               </p>
               <Button
                 size="sm"
@@ -111,7 +113,7 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
                 disabled={activating}
                 className="min-h-11 cursor-pointer px-3 text-xs"
               >
-                Cancel
+                {t('common.cancel')}
               </Button>
               <Button
                 size="sm"
@@ -119,20 +121,20 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
                 disabled={activating}
                 className="min-h-11 cursor-pointer px-3 text-xs"
               >
-                {activating ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Activate'}
+                {activating ? <Loader2 className="h-4 w-4 animate-spin" /> : t('plans.activate')}
               </Button>
             </div>
           ) : (
             <Button size="sm" onClick={() => setConfirmingActivate(true)} className="flex cursor-pointer items-center gap-1.5">
               <Zap className="h-4 w-4" />
-              Activate
+              {t('plans.activate')}
             </Button>
           )
         )}
         {!plan.isAiGenerated && (
           <Button size="sm" variant="outline" render={<Link href={`/workout/${plan.id}/edit`} />} className="flex cursor-pointer items-center gap-1.5">
             <Pencil className="h-4 w-4" />
-            Edit
+            {t('common.edit')}
           </Button>
         )}
         {plan.isAiGenerated && (
@@ -141,7 +143,7 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
             variant="outline"
             onClick={handleCopy}
             disabled={!canCopy || isCopying}
-            title={!canCopy ? 'Ya tienes 3 planes normales' : undefined}
+            title={!canCopy ? t('plans.maxNormalPlans') : undefined}
             className="flex cursor-pointer items-center gap-1.5"
           >
             {isCopying ? (
@@ -149,7 +151,7 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
             ) : (
               <Copy className="h-4 w-4" />
             )}
-            Copiar como plan normal
+            {t('plans.copyAsNormal')}
           </Button>
         )}
         <DeletePlanDialog planName={plan.name} onConfirm={handleDelete} />
@@ -163,14 +165,14 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
               className="flex-1 gap-1.5 rounded-lg data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
             >
               <LayoutList className="h-3.5 w-3.5" />
-              Plan
+              {t('plans.tabPlan')}
             </TabsTrigger>
             <TabsTrigger
               value="progression"
               className="flex-1 gap-1.5 rounded-lg data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
             >
               <Sparkles className="h-3.5 w-3.5" />
-              Progresión
+              {t('plans.tabProgression')}
             </TabsTrigger>
           </TabsList>
 
@@ -179,7 +181,7 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
               <PlanDayAccordion days={plan.days} />
             ) : (
               <p className="text-muted-foreground py-4 text-center text-sm">
-                No exercises added yet.
+                {t('plans.noExercises')}
               </p>
             )}
           </TabsContent>
@@ -194,7 +196,7 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
             <PlanDayAccordion days={plan.days} />
           ) : (
             <p className="text-muted-foreground py-4 text-center text-sm">
-              No exercises added yet.
+              {t('plans.noExercises')}
             </p>
           )}
         </>

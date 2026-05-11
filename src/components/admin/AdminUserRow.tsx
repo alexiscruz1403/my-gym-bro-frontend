@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,6 +18,7 @@ interface AdminUserRowProps {
 type InlineAction = null | 'gift' | 'revoke';
 
 export function AdminUserRow({ user, onSetStatus, onSetRole, onGiftMembership, onRevokeMembership }: AdminUserRowProps) {
+  const { t } = useTranslation();
   const [busy, setBusy] = useState(false);
   const [action, setAction] = useState<InlineAction>(null);
   const [giftPlan, setGiftPlan] = useState<SubscriptionPlan>('monthly');
@@ -75,7 +77,7 @@ export function AdminUserRow({ user, onSetStatus, onSetRole, onGiftMembership, o
             {user.role}
           </Badge>
           <Badge variant={user.isActive ? 'outline' : 'destructive'} className="text-xs">
-            {user.isActive ? 'Active' : 'Inactive'}
+            {user.isActive ? t('admin.users.active') : t('admin.users.inactive')}
           </Badge>
           <Button
             size="sm"
@@ -84,7 +86,7 @@ export function AdminUserRow({ user, onSetStatus, onSetRole, onGiftMembership, o
             onClick={handleRoleToggle}
             className="min-h-9 text-xs cursor-pointer"
           >
-            {user.role === 'admin' ? 'Demote' : 'Promote'}
+            {user.role === 'admin' ? t('admin.users.demote') : t('admin.users.promote')}
           </Button>
           <Button
             size="sm"
@@ -93,7 +95,7 @@ export function AdminUserRow({ user, onSetStatus, onSetRole, onGiftMembership, o
             onClick={handleStatusToggle}
             className="min-h-9 text-xs cursor-pointer"
           >
-            {user.isActive ? 'Deactivate' : 'Activate'}
+            {user.isActive ? t('admin.users.deactivate') : t('admin.users.activate')}
           </Button>
           <Button
             size="sm"
@@ -102,7 +104,7 @@ export function AdminUserRow({ user, onSetStatus, onSetRole, onGiftMembership, o
             onClick={() => setAction(action === 'gift' ? null : 'gift')}
             className="min-h-9 text-xs cursor-pointer text-amber-600 border-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950"
           >
-            Gift Premium
+            {t('admin.users.giftPremium')}
           </Button>
           {user.membershipTier === 'premium' && (
             <Button
@@ -112,7 +114,7 @@ export function AdminUserRow({ user, onSetStatus, onSetRole, onGiftMembership, o
               onClick={() => setAction(action === 'revoke' ? null : 'revoke')}
               className="min-h-9 text-xs cursor-pointer text-destructive border-destructive/50 hover:bg-destructive/10"
             >
-              Revoke
+              {t('admin.users.revoke')}
             </Button>
           )}
         </div>
@@ -120,20 +122,20 @@ export function AdminUserRow({ user, onSetStatus, onSetRole, onGiftMembership, o
 
       {action === 'gift' && (
         <div className="flex items-center gap-2 pt-1 border-t">
-          <p className="text-xs text-muted-foreground">Plan:</p>
+          <p className="text-xs text-muted-foreground">{t('admin.users.plan')}</p>
           <select
             value={giftPlan}
             onChange={(e) => setGiftPlan(e.target.value as SubscriptionPlan)}
             className="rounded-lg border border-input bg-background px-2 py-1 text-xs"
           >
-            <option value="monthly">Monthly (30 days)</option>
-            <option value="annual">Annual (365 days)</option>
+            <option value="monthly">{t('admin.users.monthly')}</option>
+            <option value="annual">{t('admin.users.annual')}</option>
           </select>
           <Button size="sm" disabled={busy} onClick={handleGiftConfirm} className="min-h-8 text-xs cursor-pointer">
-            Confirm
+            {t('admin.users.confirm')}
           </Button>
           <Button size="sm" variant="ghost" onClick={() => setAction(null)} className="min-h-8 text-xs cursor-pointer">
-            Cancel
+            {t('common.cancel')}
           </Button>
         </div>
       )}
@@ -143,7 +145,7 @@ export function AdminUserRow({ user, onSetStatus, onSetRole, onGiftMembership, o
           <Input
             value={revokeReason}
             onChange={(e) => setRevokeReason(e.target.value)}
-            placeholder="Reason for revocation…"
+            placeholder={t('admin.users.revokeReasonPlaceholder')}
             className="h-8 text-xs"
           />
           <Button
@@ -153,10 +155,10 @@ export function AdminUserRow({ user, onSetStatus, onSetRole, onGiftMembership, o
             onClick={handleRevokeConfirm}
             className="min-h-8 text-xs cursor-pointer shrink-0"
           >
-            Confirm
+            {t('admin.users.confirm')}
           </Button>
           <Button size="sm" variant="ghost" onClick={() => { setAction(null); setRevokeReason(''); }} className="min-h-8 text-xs cursor-pointer shrink-0">
-            Cancel
+            {t('common.cancel')}
           </Button>
         </div>
       )}

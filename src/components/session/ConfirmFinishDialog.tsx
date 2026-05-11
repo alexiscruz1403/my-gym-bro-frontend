@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -23,6 +24,7 @@ export function ConfirmFinishDialog({
   isFullyCompleted,
   onConfirm,
 }: ConfirmFinishDialogProps) {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
   const handleConfirm = async () => {
@@ -44,12 +46,14 @@ export function ConfirmFinishDialog({
             <SkipForward className="text-muted-foreground h-12 w-12" />
           )}
           <DialogTitle>
-            {isFullyCompleted ? 'Finish workout?' : 'End session early?'}
+            {isFullyCompleted
+              ? t('session.confirmFinish.titleCompleted')
+              : t('session.confirmFinish.titlePartial')}
           </DialogTitle>
           <DialogDescription>
             {isFullyCompleted
-              ? 'All sets are done. This will be saved as a completed session.'
-              : 'Some sets are still pending. This will be saved as a partial session.'}
+              ? t('session.confirmFinish.descriptionCompleted')
+              : t('session.confirmFinish.descriptionPartial')}
           </DialogDescription>
         </div>
 
@@ -60,14 +64,14 @@ export function ConfirmFinishDialog({
             disabled={loading}
             className="flex-1 cursor-pointer"
           >
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             onClick={handleConfirm}
             disabled={loading}
             className="flex-1 cursor-pointer"
           >
-            {loading ? 'Saving…' : 'Confirm'}
+            {loading ? t('common.saving') : t('common.confirm')}
           </Button>
         </div>
       </DialogContent>

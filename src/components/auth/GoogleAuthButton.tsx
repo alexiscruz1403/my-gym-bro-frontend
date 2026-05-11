@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 
 // SVG inline — avoids an image dependency for a single icon
@@ -27,6 +28,8 @@ function GoogleIcon() {
 }
 
 export function GoogleAuthButton() {
+  const { t } = useTranslation();
+
   const handleGoogleAuth = (): void => {
     window.location.href = process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL as string;
   };
@@ -39,7 +42,7 @@ export function GoogleAuthButton() {
       onClick={handleGoogleAuth}
     >
       <GoogleIcon />
-      Continuar con Google
+      {t('auth.google.button')}
     </Button>
   );
 }

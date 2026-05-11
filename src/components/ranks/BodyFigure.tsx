@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
 import { getRankColor, UNRANKED_COLOR, FRONT_VIEW_FIGURE, BACK_VIEW_FIGURE } from '@/lib/ranks';
 import type { MuscleGroup, MuscleRankItem } from '@/types/domain.types';
 
@@ -28,6 +29,7 @@ function getMuscleStyle(
 }
 
 export function BodyFigure({ rankMap, selectedMuscle, onMuscleClick }: BodyFigureProps) {
+  const { t } = useTranslation();
   const pp = (muscle: MuscleGroup) => ({
     ...getMuscleStyle(muscle, rankMap, selectedMuscle),
     className: 'cursor-pointer transition-all duration-150 hover:brightness-110',
@@ -41,7 +43,7 @@ export function BodyFigure({ rankMap, selectedMuscle, onMuscleClick }: BodyFigur
 
       {/* ─── FRONT VIEW ─────────────────────────────────────── */}
       <div className="flex flex-col items-center gap-1">
-        <span className="text-[10px] text-muted-foreground uppercase tracking-widest">Frente</span>
+        <span className="text-[10px] text-muted-foreground uppercase tracking-widest">{t('ranks.body.front')}</span>
         <svg
           viewBox="53 30 100 235"
           width="170"
@@ -93,7 +95,7 @@ export function BodyFigure({ rankMap, selectedMuscle, onMuscleClick }: BodyFigur
 
       {/* ─── BACK VIEW ───────────────────────────────────────── */}
       <div className="flex flex-col items-center gap-1">
-        <span className="text-[10px] text-muted-foreground uppercase tracking-widest">Dorso</span>
+        <span className="text-[10px] text-muted-foreground uppercase tracking-widest">{t('ranks.body.back')}</span>
         <svg
           viewBox="57 31 100 235"
           width="170"

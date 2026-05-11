@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { BodyFigure } from '@/components/ranks/BodyFigure';
 import { MuscleDetailPanel } from '@/components/ranks/MuscleDetailPanel';
@@ -13,15 +14,16 @@ import type { MuscleGroup } from '@/types/domain.types';
 
 type RanksTab = 'musculos' | 'leaderboard';
 
-const TABS: { value: RanksTab; label: string }[] = [
-  { value: 'musculos', label: 'Músculos' },
-  { value: 'leaderboard', label: 'Leaderboard' },
-];
-
 export default function RanksPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<RanksTab>('musculos');
   const [selectedMuscle, setSelectedMuscle] = useState<MuscleGroup | null>(null);
   const { rankMap, isLoading, error } = useRanks();
+
+  const TABS: { value: RanksTab; label: string }[] = [
+    { value: 'musculos', label: t('ranks.tabs.muscles') },
+    { value: 'leaderboard', label: t('ranks.tabs.leaderboard') },
+  ];
 
   const handleMuscleClick = (muscle: MuscleGroup) => {
     setSelectedMuscle((prev) => (prev === muscle ? null : muscle));
@@ -30,7 +32,7 @@ export default function RanksPage() {
   return (
     <PageContainer>
       <div className="space-y-4">
-        <h1 className="text-xl font-bold">Rangos</h1>
+        <h1 className="text-xl font-bold">{t('ranks.title')}</h1>
 
         <div className="flex rounded-lg bg-muted p-1">
           {TABS.map((tab) => (
@@ -61,8 +63,8 @@ export default function RanksPage() {
 
             {!isLoading && error && (
               <EmptyState
-                title="Error al cargar rangos"
-                description="No se pudieron obtener los datos de rango. Intenta de nuevo."
+                title={t('ranks.error.title')}
+                description={t('ranks.error.description')}
               />
             )}
 
@@ -83,9 +85,7 @@ export default function RanksPage() {
 
             {selectedMuscle && !rankMap.has(selectedMuscle) && (
               <div className="rounded-xl border bg-card p-4">
-                <p className="text-sm text-muted-foreground">
-                  Sin datos de rango para este músculo todavía. Completa sesiones que trabajen este grupo muscular.
-                </p>
+                <p className="text-sm text-muted-foreground">{t('ranks.noData')}</p>
               </div>
             )}
           </div>

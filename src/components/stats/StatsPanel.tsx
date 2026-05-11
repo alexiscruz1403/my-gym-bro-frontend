@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslation } from 'react-i18next';
 import dynamic from 'next/dynamic';
 import { PeriodSelector } from '@/components/stats/PeriodSelector';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -60,6 +63,8 @@ export function StatsPanel({
   onWeightUnitChange,
   convertVolume,
 }: StatsPanelProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="space-y-6">
       <PeriodSelector
@@ -70,7 +75,7 @@ export function StatsPanel({
       />
 
       <div className="flex items-center gap-2">
-        <span className="text-xs text-muted-foreground">Unidad:</span>
+        <span className="text-xs text-muted-foreground">{t('stats.unit')}</span>
         <div className="flex overflow-hidden rounded-md border text-xs">
           {(['kg', 'lbs'] as const).map((unit, i) => (
             <button
@@ -93,11 +98,11 @@ export function StatsPanel({
 
       {!loading && error && (
         <EmptyState
-          title="Error al cargar estadísticas"
-          description="No se pudieron obtener los datos. Intenta de nuevo."
+          title={t('stats.errorTitle')}
+          description={t('stats.errorDescription')}
           action={
             <Button variant="outline" size="sm" onClick={onRetry}>
-              Reintentar
+              {t('common.retry')}
             </Button>
           }
         />
@@ -105,7 +110,7 @@ export function StatsPanel({
 
       {(loading || (!error && volumeData)) && (
         <div className="space-y-2">
-          <h2 className="text-sm font-medium">Volumen por período</h2>
+          <h2 className="text-sm font-medium">{t('stats.sectionVolume')}</h2>
           {loading || !volumeData ? (
             <VolumeChart
               data={{ period, date, from: '', to: '', totalVolume: 0, totalSets: 0, totalSessions: 0, breakdown: [], hasLbsExercises: false, previousTotalVolume: 0, changePercent: null }}
@@ -122,7 +127,7 @@ export function StatsPanel({
 
       {(loading || (!error && muscleData)) && (
         <div className="space-y-2">
-          <h2 className="text-sm font-medium">Volumen por músculo</h2>
+          <h2 className="text-sm font-medium">{t('stats.sectionMuscle')}</h2>
           {loading || !muscleData ? (
             <MuscleRankingList
               data={{ period, date, from: '', to: '', ranking: [], hasLbsExercises: false }}
@@ -138,7 +143,7 @@ export function StatsPanel({
 
       {(loading || (!error && muscleData)) && (
         <div className="space-y-2">
-          <h2 className="text-sm font-medium">Distribución muscular</h2>
+          <h2 className="text-sm font-medium">{t('stats.sectionRadar')}</h2>
           {loading || !muscleData ? (
             <MuscleRadarChart
               data={{ period, date, from: '', to: '', ranking: [], hasLbsExercises: false }}

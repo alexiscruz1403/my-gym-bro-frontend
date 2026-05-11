@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
 import { LeaderboardRow } from '@/components/ranks/LeaderboardRow';
 import { Pagination } from '@/components/shared/Pagination';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -7,36 +8,21 @@ import { EmptyState } from '@/components/shared/EmptyState';
 import { useLeaderboard } from '@/hooks/useLeaderboard';
 import type { MuscleGroup } from '@/types/domain.types';
 
-const MUSCLE_OPTIONS: { value: MuscleGroup; label: string }[] = [
-  { value: 'chest', label: 'Pecho' },
-  { value: 'front_delts', label: 'Deltoides ant.' },
-  { value: 'side_delts', label: 'Deltoides lat.' },
-  { value: 'rear_delts', label: 'Deltoides post.' },
-  { value: 'triceps', label: 'Tríceps' },
-  { value: 'biceps', label: 'Bíceps' },
-  { value: 'forearms', label: 'Antebrazos' },
-  { value: 'traps', label: 'Trapecios' },
-  { value: 'lats', label: 'Dorsales' },
-  { value: 'upper_back', label: 'Espalda alta' },
-  { value: 'lower_back', label: 'Lumbar' },
-  { value: 'abs', label: 'Abdominales' },
-  { value: 'obliques', label: 'Oblicuos' },
-  { value: 'quads', label: 'Cuádriceps' },
-  { value: 'hamstrings', label: 'Isquiotibiales' },
-  { value: 'glutes', label: 'Glúteos' },
-  { value: 'adductors', label: 'Aductores' },
-  { value: 'abductors', label: 'Abductores' },
-  { value: 'calves', label: 'Gemelos' },
+const MUSCLE_VALUES: MuscleGroup[] = [
+  'chest', 'front_delts', 'side_delts', 'rear_delts', 'triceps', 'biceps',
+  'forearms', 'traps', 'lats', 'upper_back', 'lower_back', 'abs', 'obliques',
+  'quads', 'hamstrings', 'glutes', 'adductors', 'abductors', 'calves',
 ];
 
 export function LeaderboardPanel() {
+  const { t } = useTranslation();
   const { data, isLoading, error, selectedMuscle, setSelectedMuscle, page, setPage } =
     useLeaderboard();
 
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <span className="text-xs text-muted-foreground shrink-0">Músculo:</span>
+        <span className="text-xs text-muted-foreground shrink-0">{t('ranks.leaderboard.muscle')}</span>
         <select
           value={selectedMuscle ?? ''}
           onChange={(e) =>
@@ -46,10 +32,10 @@ export function LeaderboardPanel() {
           }
           className="flex-1 rounded-md border bg-background px-2 py-1.5 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
         >
-          <option value="">Todos</option>
-          {MUSCLE_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
+          <option value="">{t('ranks.leaderboard.all')}</option>
+          {MUSCLE_VALUES.map((value) => (
+            <option key={value} value={value}>
+              {t(`exercises.muscle.${value}`)}
             </option>
           ))}
         </select>
@@ -65,14 +51,13 @@ export function LeaderboardPanel() {
 
       {!isLoading && error && (
         <EmptyState
-          title="Error al cargar el leaderboard"
-          description="No se pudo obtener la clasificación. Intenta de nuevo."
+          title={t('ranks.leaderboard.errorTitle')}
+          description={t('ranks.leaderboard.errorDescription')}
         />
       )}
 
       {!isLoading && !error && data && (
         <div className="space-y-2">
-          {/* Self — always pinned */}
           <LeaderboardRow
             entry={data.self}
             position={0}
@@ -81,7 +66,7 @@ export function LeaderboardPanel() {
 
           {data.data.length === 0 && (
             <p className="py-4 text-center text-sm text-muted-foreground">
-              No sigues a ningún usuario aún.
+              {t('ranks.leaderboard.empty')}
             </p>
           )}
 

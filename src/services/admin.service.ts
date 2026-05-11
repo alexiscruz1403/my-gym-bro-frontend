@@ -10,9 +10,9 @@ import type {
   PaginatedPaymentLogResponse,
   SubscriptionPlan,
   SubscriptionStatus,
-  TermsSection,
-  CreateTermsSectionDto,
-  UpdateTermsSectionDto,
+  AdminTermsSection,
+  CreateAdminTermsSectionDto,
+  UpdateAdminTermsSectionDto,
 } from '@/types/domain.types';
 import type { PaginationParams } from '@/types/api.types';
 
@@ -47,15 +47,16 @@ export const adminService = {
   listPaymentLogs: (params?: AdminPaymentLogsParams): Promise<PaginatedPaymentLogResponse> =>
     apiClient.get<PaginatedPaymentLogResponse>(API_ROUTES.admin.paymentLogs, { params }).then((r) => r.data),
 
-  listAllTerms: (): Promise<TermsSection[]> =>
-    apiClient.get<TermsSection[]>(API_ROUTES.terms.adminList).then((r) => r.data),
+  listAllTerms: (): Promise<AdminTermsSection[]> =>
+    apiClient.get<AdminTermsSection[]>(API_ROUTES.terms.adminList).then((r) => r.data),
 
-  createTermsSection: (dto: CreateTermsSectionDto): Promise<TermsSection> =>
-    apiClient.post<TermsSection>(API_ROUTES.terms.create, dto).then((r) => r.data),
 
-  updateTermsSection: (id: string, dto: UpdateTermsSectionDto): Promise<TermsSection> =>
-    apiClient.patch<TermsSection>(API_ROUTES.terms.update(id), dto).then((r) => r.data),
+  createAdminTermsSection: (dto: CreateAdminTermsSectionDto): Promise<AdminTermsSection> =>
+    apiClient.post<AdminTermsSection>(API_ROUTES.terms.create, dto).then((r) => r.data),
 
-  deleteTermsSection: (id: string): Promise<void> =>
+  updateAdminTermsSection: (id: string, dto: UpdateAdminTermsSectionDto): Promise<AdminTermsSection> =>
+    apiClient.patch<AdminTermsSection>(API_ROUTES.terms.update(id), dto).then((r) => r.data),
+
+  deleteAdminTermsSection: (id: string): Promise<void> =>
     apiClient.delete(API_ROUTES.terms.delete(id)).then(() => undefined),
 };
