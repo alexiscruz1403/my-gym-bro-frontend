@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { Pagination } from '@/components/shared/Pagination';
@@ -44,13 +45,15 @@ export function FeedList({
   onCommentOpen,
   highlightPostId,
 }: FeedListProps) {
+  const { t } = useTranslation();
+
   if (isLoading) return <FeedSkeletons />;
 
   if (posts.length === 0) {
     return (
       <EmptyState
-        title="Your feed is empty"
-        description="Follow other users to see their workouts here."
+        title={t('feed.empty.title')}
+        description={t('feed.empty.description')}
       />
     );
   }

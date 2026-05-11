@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
 import {
   Sheet,
   SheetContent,
@@ -35,6 +36,7 @@ export function ExerciseHistorySheet({
   exerciseId,
   exerciseName,
 }: ExerciseHistorySheetProps) {
+  const { t } = useTranslation();
   const { data, meta, bilateral, loading, error, page, setPage, refetch } = useExerciseHistory(exerciseId);
 
   return (
@@ -49,11 +51,11 @@ export function ExerciseHistorySheet({
 
           {!loading && error && (
             <EmptyState
-              title="Error al cargar el historial"
-              description="No se pudo obtener el historial. Intenta de nuevo."
+              title={t('history.errorTitle')}
+              description={t('history.errorDescription')}
               action={
                 <Button variant="outline" size="sm" onClick={refetch}>
-                  Reintentar
+                  {t('common.retry')}
                 </Button>
               }
             />
@@ -61,8 +63,8 @@ export function ExerciseHistorySheet({
 
           {!loading && !error && data.length === 0 && (
             <EmptyState
-              title="No hay historial para este ejercicio"
-              description="Aún no has registrado sesiones con este ejercicio."
+              title={t('history.emptyTitle')}
+              description={t('history.emptyDescription')}
             />
           )}
 

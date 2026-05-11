@@ -3,21 +3,25 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Home, Dumbbell, Users, User, ShieldCheck } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Home, Dumbbell, Users, User, ShieldCheck, Trophy, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import useAuthStore from '@/store/auth.store';
 
-const NAV_ITEMS = [
-  { href: '/dashboard', icon: Home, label: 'Inicio' },
-  { href: '/workout', icon: Dumbbell, label: 'Rutinas' },
-  { href: '/feed', icon: Users, label: 'Feed' },
-  { href: '/profile', icon: User, label: 'Perfil' },
-] as const;
-
 export function SideNav() {
+  const { t } = useTranslation();
   const pathname = usePathname();
   const user = useAuthStore((s) => s.user);
   const isAdmin = user?.role === 'admin';
+
+  const NAV_ITEMS = [
+    { href: '/dashboard', icon: Home, label: t('nav.home') },
+    { href: '/workout', icon: Dumbbell, label: t('nav.workouts') },
+    { href: '/feed', icon: Users, label: t('nav.feed') },
+    { href: '/ranks', icon: Trophy, label: t('nav.ranks') },
+    { href: '/ai', icon: Sparkles, label: t('nav.ai') },
+    { href: '/profile', icon: User, label: t('nav.profile') },
+  ];
 
   return (
     <aside className="hidden lg:flex lg:fixed lg:inset-y-0 lg:w-60 flex-col bg-card border-r border-border z-40">
@@ -65,7 +69,7 @@ export function SideNav() {
             )}
           >
             <ShieldCheck size={20} />
-            Admin
+            {t('nav.admin')}
           </Link>
         )}
       </nav>

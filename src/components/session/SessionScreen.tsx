@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { SessionHeader } from './SessionHeader';
 import { ExerciseNavigator } from './ExerciseNavigator';
 import { ConfirmFinishDialog } from './ConfirmFinishDialog';
@@ -12,18 +13,20 @@ import { GlobalCountdownTimerOverlay } from './GlobalCountdownTimerOverlay';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSession } from '@/hooks/useSession';
 import { toast } from 'sonner';
-import type { WorkoutSession } from '@/types/domain.types';
+import type { WorkoutSession, ExerciseRankSummaryItem } from '@/types/domain.types';
 
 export function SessionScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { session, loading, logSet, modifyExercise, replaceExercise, cancelSession, finishSession } = useSession();
   const [finishOpen, setFinishOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [finishedSession, setFinishedSession] = useState<WorkoutSession | null>(null);
+  const [rankSummary, setRankSummary] = useState<ExerciseRankSummaryItem[]>([]);
   const [showCountdown, setShowCountdown] = useState(false);
 
   if (finishedSession) {
-    return <SessionSummary session={finishedSession} />;
+    return <SessionSummary session={finishedSession} rankSummary={rankSummary} />;
   }
 
   if (loading) {
@@ -46,6 +49,10 @@ export function SessionScreen() {
     return null;
   }
 
+  const hasAnyCompletedSet = session.exercises.some(
+    (ex) => ex.sets.some((s) => s.completed),
+  );
+
   // Determine status automatically: completed only if every planned set in
   // every exercise has been logged as completed.
   const isFullyCompleted = session.exercises.every(
@@ -56,14 +63,21 @@ export function SessionScreen() {
     const status = isFullyCompleted ? 'completed' : 'partial';
     const result = await finishSession({ status });
     setFinishOpen(false);
-    setFinishedSession(result);
-    toast.success(status === 'completed' ? 'Workout completed!' : 'Session saved');
+    setFinishedSession(result.session);
+    setRankSummary(result.rankSummary);
+    toast.success(status === 'completed' ? t('session.success.completed') : t('session.success.partialSaved'));
   };
 
   return (
     <div className="flex h-full flex-col">
       <SessionHeader
-        onFinish={() => setFinishOpen(true)}
+        onFinish={() => {
+            if (!hasAnyCompletedSet) {
+              toast.error(t('session.error.noSetsCompleted'));
+              return;
+            }
+            setFinishOpen(true);
+          }}
         onCancel={() => setCancelOpen(true)}
         onToggleCountdown={() => setShowCountdown((v) => !v)}
         countdownActive={showCountdown}

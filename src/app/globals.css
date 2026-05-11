@@ -49,6 +49,11 @@
   --text-stat-lg: 2rem;
   --text-stat-lg--line-height: 1.1;
   --text-stat-lg--font-weight: 600;
+
+  /* Streak flame animations */
+  --animate-flame-gentle: flame-gentle 2s ease-in-out infinite;
+  --animate-flame-moderate: flame-moderate 1.4s ease-in-out infinite;
+  --animate-flame-strong: flame-strong 0.9s ease-in-out infinite;
 }
 
 /* ─── Color variables — Light mode ──────────────────────────────── */
@@ -159,5 +164,23 @@
     transition: background-color 9999s ease-in-out 0s;
     caret-color: var(--foreground);
     box-shadow: 0 0 0px 1000px var(--background) inset !important;
+  }
+
+  @keyframes flame-gentle {
+    0%, 100% { transform: scale(1) rotate(-1deg); opacity: 0.85; }
+    50%       { transform: scale(1.08) rotate(1deg); opacity: 1; }
+  }
+
+  @keyframes flame-moderate {
+    0%, 100% { transform: scale(1) rotate(-2deg); opacity: 0.9; }
+    33%       { transform: scale(1.12) rotate(2deg); opacity: 1; }
+    66%       { transform: scale(0.96) rotate(-1deg); opacity: 0.95; }
+  }
+
+  @keyframes flame-strong {
+    0%, 100% { transform: scale(1) rotate(-3deg); opacity: 0.88; }
+    25%       { transform: scale(1.15) rotate(3deg); opacity: 1; }
+    50%       { transform: scale(1.05) rotate(-2deg); opacity: 0.95; }
+    75%       { transform: scale(1.18) rotate(2deg); opacity: 1; }
   }
 }

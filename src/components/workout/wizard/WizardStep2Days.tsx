@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { DaySelector } from './DaySelector';
 import type { DayOfWeek } from '@/types/domain.types';
@@ -12,12 +13,14 @@ interface WizardStep2DaysProps {
 }
 
 export function WizardStep2Days({ selected, onChange, onNext, onBack }: WizardStep2DaysProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h2 className="font-display text-xl font-bold">Select training days</h2>
+        <h2 className="font-display text-xl font-bold">{t('plans.wizard.step2.title')}</h2>
         <p className="text-muted-foreground text-sm">
-          Choose which days of the week you&apos;ll train.
+          {t('plans.wizard.step2.description')}
         </p>
       </div>
 
@@ -25,16 +28,18 @@ export function WizardStep2Days({ selected, onChange, onNext, onBack }: WizardSt
 
       {selected.length > 0 && (
         <p className="text-muted-foreground text-center text-sm">
-          {selected.length} {selected.length === 1 ? 'day' : 'days'} selected
+          {selected.length === 1
+            ? t('plans.wizard.step2.selectedOne', { count: selected.length })
+            : t('plans.wizard.step2.selectedOther', { count: selected.length })}
         </p>
       )}
 
       <div className="flex gap-3">
         <Button variant="outline" onClick={onBack} className="flex-1 cursor-pointer">
-          Back
+          {t('common.back')}
         </Button>
         <Button onClick={onNext} disabled={selected.length === 0} className="flex-1 cursor-pointer">
-          Continue
+          {t('common.continue')}
         </Button>
       </div>
     </div>

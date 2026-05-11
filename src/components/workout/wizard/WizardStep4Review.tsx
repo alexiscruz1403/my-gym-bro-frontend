@@ -1,15 +1,11 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { CalendarDays, Dumbbell } from 'lucide-react';
 import type { DayOfWeek } from '@/types/domain.types';
 import type { ExerciseConfigDraft } from '@/types/ui.types';
-
-const DAY_LABELS: Record<DayOfWeek, string> = {
-  monday: 'Monday', tuesday: 'Tuesday', wednesday: 'Wednesday',
-  thursday: 'Thursday', friday: 'Friday', saturday: 'Saturday', sunday: 'Sunday',
-};
 
 interface WizardStep4ReviewProps {
   name: string;
@@ -28,12 +24,15 @@ export function WizardStep4Review({
   onSave,
   onBack,
 }: WizardStep4ReviewProps) {
+  const { t } = useTranslation();
+  const dayLabels = t('days', { returnObjects: true }) as Record<DayOfWeek, string>;
+
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h2 className="font-display text-xl font-bold">Review your plan</h2>
+        <h2 className="font-display text-xl font-bold">{t('plans.wizard.step4.title')}</h2>
         <p className="text-muted-foreground text-sm">
-          Check everything looks good before saving.
+          {t('plans.wizard.step4.description')}
         </p>
       </div>
 
@@ -47,10 +46,10 @@ export function WizardStep4Review({
               <div key={day}>
                 <div className="flex items-center gap-1.5 mb-1.5">
                   <CalendarDays className="text-muted-foreground h-3.5 w-3.5" />
-                  <span className="text-sm font-medium">{DAY_LABELS[day]}</span>
+                  <span className="text-sm font-medium">{dayLabels[day]}</span>
                 </div>
                 {exercises.length === 0 ? (
-                  <p className="text-muted-foreground pl-5 text-xs">No exercises</p>
+                  <p className="text-muted-foreground pl-5 text-xs">{t('plans.wizard.step4.noExercises')}</p>
                 ) : (
                   <ul className="space-y-0.5 pl-5">
                     {exercises.map((ex, i) => {
@@ -79,10 +78,10 @@ export function WizardStep4Review({
 
       <div className="flex gap-3">
         <Button variant="outline" onClick={onBack} disabled={isSaving} className="flex-1 cursor-pointer">
-          Back
+          {t('common.back')}
         </Button>
         <Button onClick={onSave} disabled={isSaving} className="flex-1 cursor-pointer">
-          {isSaving ? 'Saving...' : 'Save plan'}
+          {isSaving ? t('plans.wizard.step4.saving') : t('plans.wizard.step4.save')}
         </Button>
       </div>
     </div>

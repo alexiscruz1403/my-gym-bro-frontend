@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
 import {
   BarChart,
   Bar,
@@ -24,6 +25,8 @@ interface VolumeChartProps {
 }
 
 export function VolumeChart({ data, period, loading, weightUnit, convertVolume }: VolumeChartProps) {
+  const { t, i18n } = useTranslation();
+
   if (loading) {
     return <Skeleton className="h-48 w-full rounded-xl" />;
   }
@@ -38,9 +41,9 @@ export function VolumeChart({ data, period, loading, weightUnit, convertVolume }
     <div className="space-y-3">
       <div className="flex gap-6 text-sm">
         <div>
-          <p className="text-muted-foreground text-xs">Volumen total</p>
+          <p className="text-muted-foreground text-xs">{t('stats.totalVolume')}</p>
           <p className="font-display font-bold flex items-center">
-            {convertVolume(data.totalVolume).toLocaleString('es')}
+            {convertVolume(data.totalVolume).toLocaleString(i18n.language)}
             <span className="text-muted-foreground ml-1 text-xs font-normal">{weightUnit}</span>
             {data.changePercent !== null && data.changePercent !== undefined && (
               <span className={cn(
@@ -55,18 +58,18 @@ export function VolumeChart({ data, period, loading, weightUnit, convertVolume }
           </p>
         </div>
         <div>
-          <p className="text-muted-foreground text-xs">Series</p>
+          <p className="text-muted-foreground text-xs">{t('stats.sets')}</p>
           <p className="font-display font-bold">{data.totalSets}</p>
         </div>
         <div>
-          <p className="text-muted-foreground text-xs">Sesiones</p>
+          <p className="text-muted-foreground text-xs">{t('stats.sessions')}</p>
           <p className="font-display font-bold">{data.totalSessions}</p>
         </div>
       </div>
 
       {chartData.length === 0 ? (
         <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
-          Sin datos para este período
+          {t('stats.noData')}
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={192}>
@@ -84,7 +87,7 @@ export function VolumeChart({ data, period, loading, weightUnit, convertVolume }
               width={40}
             />
             <Tooltip
-              formatter={(value) => [`${value} ${weightUnit}`, 'Volumen']}
+              formatter={(value) => [`${value} ${weightUnit}`, t('stats.volumeTooltip')]}
               cursor={{ fill: 'rgba(255,255,255,0.08)' }}
               contentStyle={{
                 fontSize: 12,

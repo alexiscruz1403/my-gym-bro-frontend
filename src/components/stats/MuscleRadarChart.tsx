@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
 import {
   RadarChart,
   Radar,
@@ -11,28 +12,6 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import type { VolumeByMuscleResponse } from '@/types/domain.types';
 
-const SHORT_LABEL: Record<string, string> = {
-  chest: 'Pecho',
-  front_delts: 'D. Ant',
-  side_delts: 'D. Lat',
-  triceps: 'Tríceps',
-  lats: 'Dorsal',
-  upper_back: 'Esp. Alta',
-  rear_delts: 'D. Post',
-  biceps: 'Bíceps',
-  forearms: 'Antebr.',
-  traps: 'Trapecio',
-  abs: 'Abs',
-  obliques: 'Oblicuos',
-  lower_back: 'Lumbar',
-  quads: 'Cuáds',
-  hamstrings: 'Isquios',
-  glutes: 'Glúteos',
-  calves: 'Gemelos',
-  adductors: 'Aductor',
-  abductors: 'Abductor',
-};
-
 interface MuscleRadarChartProps {
   data: VolumeByMuscleResponse;
   loading: boolean;
@@ -40,6 +19,8 @@ interface MuscleRadarChartProps {
 }
 
 export function MuscleRadarChart({ data, loading, convertVolume }: MuscleRadarChartProps) {
+  const { t } = useTranslation();
+
   if (loading) {
     return <Skeleton className="h-75 w-full rounded-xl" />;
   }
@@ -47,14 +28,14 @@ export function MuscleRadarChart({ data, loading, convertVolume }: MuscleRadarCh
   const chartData = data.ranking
     .filter((item) => item.volume > 0)
     .map((item) => ({
-      muscle: SHORT_LABEL[item.muscle] ?? item.muscle,
+      muscle: t(`exercises.muscleShort.${item.muscle}`, { defaultValue: item.muscle }),
       volume: convertVolume ? convertVolume(item.volume) : item.volume,
     }));
 
   if (chartData.length === 0) {
     return (
       <div className="flex h-75 items-center justify-center text-sm text-muted-foreground">
-        Sin datos para este período
+        {t('stats.noData')}
       </div>
     );
   }

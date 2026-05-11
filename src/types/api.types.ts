@@ -96,6 +96,7 @@ export type UpdatePlanRequest = CreatePlanRequest;
 // Sessions
 export interface StartSessionRequest {
   dayOfWeek: DayOfWeek;
+  planId?: string;
 }
 
 export interface LogSetRequest {
@@ -161,6 +162,16 @@ export interface StatsVolumeParams {
 export interface StatsMuscleParams {
   period: StatsPeriod;
   date: string;
+}
+
+// Ranks params
+
+export interface MuscleRanksParams {
+  muscle?: string;
+}
+
+export interface LeaderboardParams extends PaginationParams {
+  muscle?: MuscleGroup;
 }
 
 // Social & Feed

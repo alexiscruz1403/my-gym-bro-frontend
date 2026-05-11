@@ -30,7 +30,9 @@ export function OAuthCallback() {
         router.replace('/dashboard');
       } catch {
         toast.error('Error al procesar el inicio de sesión. Intenta de nuevo.');
-        router.replace('/login');
+        setTimeout(() => {
+          router.replace('/login');
+        }, 2000)
       }
     };
 

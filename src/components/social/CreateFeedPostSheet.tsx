@@ -5,6 +5,7 @@ import { Camera, Loader2, X } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { createPost } from '@/services/feed.service';
@@ -29,6 +30,7 @@ function formatDuration(seconds: number): string {
 }
 
 export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSheetProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -65,11 +67,11 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
     try {
       await createPost({ sessionId: session._id, caption: caption.trim() || undefined, file: file ?? undefined });
       clearSessionData();
-      toast.success('Workout shared!');
+      toast.success(t('feed.createPost.success'));
       handleClose();
       router.push('/feed');
     } catch {
-      toast.error('Failed to share workout.');
+      toast.error(t('feed.createPost.error'));
     } finally {
       setIsSubmitting(false);
     }
@@ -88,7 +90,7 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
     <Sheet open={open} onOpenChange={(isOpen) => { if (!isOpen) handleClose(); }}>
       <SheetContent side="bottom" className="max-h-[90dvh] overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>Share your workout</SheetTitle>
+          <SheetTitle>{t('feed.createPost.title')}</SheetTitle>
         </SheetHeader>
 
         <div className="px-4 pb-6 space-y-4">
@@ -112,7 +114,7 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
                       const weight = s.weight ? ` · ${s.weight} kg` : '';
                       return (
                         <p key={s.setIndex} className="text-xs text-muted-foreground">
-                          Set {s.setIndex + 1}: {metric}{weight}
+                          {t('feed.createPost.setLabel', { num: s.setIndex + 1 })}: {metric}{weight}
                         </p>
                       );
                     })}
@@ -126,7 +128,7 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
                 onClick={() => setShowAll(true)}
                 className="text-xs text-primary hover:underline"
               >
-                Show more ({hiddenCount} more)
+                {t('feed.createPost.showMore', { count: hiddenCount })}
               </button>
             )}
           </div>
@@ -138,7 +140,7 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
               <button
                 type="button"
                 onClick={removePhoto}
-                aria-label="Remove photo"
+                aria-label={t('feed.createPost.removePhotoAriaLabel')}
                 className="absolute top-2 right-2 flex items-center justify-center h-8 w-8 rounded-full bg-black/60 text-white"
               >
                 <X size={16} />
@@ -151,7 +153,7 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
               className="flex flex-col items-center justify-center w-full aspect-square rounded-xl border-2 border-dashed border-border text-muted-foreground gap-2"
             >
               <Camera size={28} />
-              <span className="text-sm">Add a photo (optional)</span>
+              <span className="text-sm">{t('feed.createPost.photoLabel')}</span>
             </button>
           )}
 
@@ -169,7 +171,7 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
             <textarea
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
-              placeholder="Write a caption…"
+              placeholder={t('feed.createPost.captionPlaceholder')}
               maxLength={MAX_CAPTION}
               rows={3}
               className="w-full resize-none rounded-lg border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
@@ -183,10 +185,10 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
           <div className="flex flex-col gap-2">
             <Button onClick={handleShare} disabled={isSubmitting} className="w-full">
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Share
+              {t('feed.createPost.submit')}
             </Button>
             <Button variant="ghost" onClick={handleClose} disabled={isSubmitting} className="w-full">
-              Skip
+              {t('feed.createPost.skip')}
             </Button>
           </div>
         </div>

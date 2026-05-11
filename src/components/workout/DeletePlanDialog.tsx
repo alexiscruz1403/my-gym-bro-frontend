@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
 
@@ -10,6 +11,7 @@ interface DeletePlanDialogProps {
 }
 
 export function DeletePlanDialog({ planName, onConfirm }: DeletePlanDialogProps) {
+  const { t } = useTranslation();
   const [confirming, setConfirming] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -27,7 +29,7 @@ export function DeletePlanDialog({ planName, onConfirm }: DeletePlanDialogProps)
     return (
       <div className="flex flex-wrap items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2">
         <p className="text-destructive mr-1 text-xs">
-          Delete &quot;{planName}&quot;?
+          {t('plans.delete.title', { name: planName })}
         </p>
         <Button
           size="sm"
@@ -36,7 +38,7 @@ export function DeletePlanDialog({ planName, onConfirm }: DeletePlanDialogProps)
           disabled={loading}
           className="min-h-11 cursor-pointer px-3 text-xs"
         >
-          Cancel
+          {t('common.cancel')}
         </Button>
         <Button
           size="sm"
@@ -45,7 +47,7 @@ export function DeletePlanDialog({ planName, onConfirm }: DeletePlanDialogProps)
           disabled={loading}
           className="min-h-11 cursor-pointer px-3 text-xs"
         >
-          {loading ? 'Deleting…' : 'Confirm'}
+          {loading ? t('plans.delete.deleting') : t('plans.delete.confirm')}
         </Button>
       </div>
     );
@@ -59,7 +61,7 @@ export function DeletePlanDialog({ planName, onConfirm }: DeletePlanDialogProps)
       className="flex cursor-pointer items-center gap-1.5"
     >
       <Trash2 className="h-4 w-4" />
-      Delete
+      {t('common.delete')}
     </Button>
   );
 }

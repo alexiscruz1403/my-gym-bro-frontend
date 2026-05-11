@@ -1,36 +1,67 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import { getExercises, createExercise, updateExercise, deleteExercise } from '@/services/exercises.service';
-import type { Exercise } from '@/types/domain.types';
+import type { Exercise, MuscleGroup } from '@/types/domain.types';
 
 export function useAdminExercises() {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [nameSearch, setNameSearch] = useState('');
+  const [primaryMuscle, setPrimaryMuscle] = useState<MuscleGroup | ''>('');
 
-  const fetchPage = useCallback((targetPage: number) => {
-    setIsLoading(true);
-    getExercises({ page: targetPage, limit: 20 })
-      .then(({ data, total: t }) => {
-        setExercises(data);
-        setTotal(t);
-        setPage(targetPage);
+  const nameSearchRef = useRef('');
+  const primaryMuscleRef = useRef<MuscleGroup | ''>('');
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const fetchPage = useCallback(
+    (targetPage: number, overrides?: { nameSearch?: string; primaryMuscle?: MuscleGroup | '' }) => {
+      const name = overrides?.nameSearch ?? nameSearchRef.current;
+      const muscle = overrides?.primaryMuscle ?? primaryMuscleRef.current;
+      setIsLoading(true);
+      getExercises({
+        page: targetPage,
+        limit: 20,
+        search: name || undefined,
+        muscle: (muscle as MuscleGroup) || undefined,
       })
-      .catch(() => toast.error('Failed to load exercises.'))
-      .finally(() => setIsLoading(false));
-  }, []);
+        .then(({ data, total: t }) => {
+          setExercises(data);
+          setTotal(t);
+          setPage(targetPage);
+        })
+        .catch(() => toast.error('Failed to load exercises.'))
+        .finally(() => setIsLoading(false));
+    },
+    [],
+  );
 
-  const create = async (dto: Partial<Exercise>) => {
-    const created = await createExercise(dto);
+  const handleNameSearch = (q: string) => {
+    setNameSearch(q);
+    nameSearchRef.current = q;
+    if (searchTimer.current) clearTimeout(searchTimer.current);
+    searchTimer.current = setTimeout(() => {
+      fetchPage(1, { nameSearch: q });
+    }, 400);
+  };
+
+  const handleMuscleFilter = (m: MuscleGroup | '') => {
+    setPrimaryMuscle(m);
+    primaryMuscleRef.current = m;
+    fetchPage(1, { primaryMuscle: m });
+  };
+
+  const create = async (formData: FormData) => {
+    const created = await createExercise(formData);
     setExercises((prev) => [created, ...prev]);
     setTotal((t) => t + 1);
   };
 
-  const update = async (id: string, dto: Partial<Exercise>) => {
-    const updated = await updateExercise(id, dto);
+  const update = async (id: string, formData: FormData) => {
+    const updated = await updateExercise(id, formData);
     setExercises((prev) => prev.map((e) => (e.id === id ? updated : e)));
   };
 
@@ -40,5 +71,18 @@ export function useAdminExercises() {
     setTotal((t) => t - 1);
   };
 
-  return { exercises, total, page, isLoading, fetchPage, create, update, remove };
+  return {
+    exercises,
+    total,
+    page,
+    isLoading,
+    nameSearch,
+    primaryMuscle,
+    fetchPage,
+    handleNameSearch,
+    handleMuscleFilter,
+    create,
+    update,
+    remove,
+  };
 }

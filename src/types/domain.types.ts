@@ -1,4 +1,5 @@
 export type UserRole = 'user' | 'admin';
+export type Language = 'es' | 'en';
 
 export interface UserResponse {
   id: string;
@@ -11,6 +12,15 @@ export interface UserResponse {
   isActive: boolean;
   isPrivate: boolean;
   createdAt: string;
+  membershipTier: MembershipTier;
+  membershipStatus: MembershipStatus | null;
+  autoRenew: boolean;
+  language: Language;
+}
+
+export interface BilingualString {
+  es: string;
+  en: string;
 }
 
 export type MuscleGroup =
@@ -54,9 +64,19 @@ export type DayOfWeek =
 
 export type TrackingType = 'reps' | 'duration';
 
+export type WeightInstruction =
+  | 'barbell_sum'
+  | 'machine_display'
+  | 'machine_sum_sides'
+  | 'bodyweight'
+  | 'no_weight'
+  | 'cable_display'
+  | 'cable_sum_sides'
+  | 'each_side_weight';
+
 export interface Exercise {
   id: string;
-  name: string;
+  name: BilingualString;
   musclesPrimary: MuscleGroup[];
   musclesSecondary: MuscleGroup[];
   loadType: LoadType;
@@ -64,6 +84,7 @@ export interface Exercise {
   trackingType: TrackingType;
   gifUrl?: string;
   videoUrl?: string;
+  weightGuide?: { instruction: WeightInstruction; note: string | null };
 }
 
 export interface ExerciseSide {
@@ -77,6 +98,7 @@ export interface ExerciseConfig {
   exerciseName: string;
   sets: number;
   reps?: number;
+  repsMax?: number;
   duration?: number;
   weight?: number;
   weightUnit?: 'kg' | 'lbs';
@@ -98,6 +120,7 @@ export interface WorkoutPlan {
   id: string;
   name: string;
   isActive: boolean;
+  isAiGenerated?: boolean;
   days: PlanDay[];
   createdAt: string;
   updatedAt: string;
@@ -107,6 +130,7 @@ export interface PlanListItem {
   id: string;
   name: string;
   isActive: boolean;
+  isAiGenerated?: boolean;
   daysCount: number;
 }
 
@@ -280,6 +304,7 @@ export interface SessionSummarySetSnapshot {
   reps?: number;
   durationSeconds?: number;
   weightKg?: number;
+  weightUnit?: 'kg' | 'lbs';
   completed: boolean;
   left?: ExerciseSide | null;
   right?: ExerciseSide | null;
@@ -388,7 +413,99 @@ export interface PublicSessionHistoryResponse {
   meta: PaginatedMeta;
 }
 
-// Admin (C-11)
+// Ranks
+
+export type RankLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
+export interface ExerciseRankItem {
+  exerciseId: string;
+  exerciseName: string;
+  rank: RankLevel;
+  rankName: string;
+  bestValue: number;
+  updatedAt: string;
+}
+
+export interface MuscleRankItem {
+  muscle: MuscleGroup;
+  rank: RankLevel;
+  rankName: string;
+  exercises: ExerciseRankItem[];
+}
+
+export interface ExerciseRankSummaryItem {
+  exerciseId: string;
+  exerciseName: string;
+  rankBefore: number | null;
+  rankNameBefore: string | null;
+  rankAfter: number;
+  rankNameAfter: string;
+  bestValueBefore: number | null;
+  bestValueAfter: number;
+}
+
+export interface FinishSessionResponse {
+  session: WorkoutSession;
+  rankSummary: ExerciseRankSummaryItem[];
+}
+
+export interface LeaderboardUserEntry {
+  userId: string;
+  username: string;
+  avatar: string | null;
+  isSelf: boolean;
+  muscleRanks: MuscleRankItem[];
+}
+
+export interface LeaderboardResponse {
+  self: LeaderboardUserEntry;
+  data: LeaderboardUserEntry[];
+  meta: PaginatedMeta;
+}
+
+// Feature 8 — Exercise detail tabs
+
+export interface ExerciseVolumeResponse extends VolumeByPeriodResponse {
+  exerciseId: string;
+}
+
+export interface ExerciseRankResponse {
+  exerciseId: string;
+  exerciseName: string | null;
+  rank: RankLevel | null;
+  rankName: string | null;
+  bestValue: number | null;
+  updatedAt: string | null;
+}
+
+// Membership / Subscription (Feature 9)
+
+export type MembershipTier = 'free' | 'premium';
+
+export type MembershipStatus = 'active' | 'expired' | 'cancelled' | 'pending';
+
+export type SubscriptionPlan = 'monthly' | 'annual';
+
+export type SubscriptionStatus = 'authorized' | 'paused' | 'cancelled' | 'pending' | 'payment_failed';
+
+export interface SubscriptionResponse {
+  _id: string;
+  userId: string;
+  preapprovalId: string;
+  plan: SubscriptionPlan;
+  status: SubscriptionStatus;
+  amountArs: number;
+  orderNumber: string;
+  autoRenew: boolean;
+  nextBillingDate?: string;
+  lastPaymentDate?: string;
+  cancelledAt?: string;
+  failureCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Admin (C-11 / Feature 12)
 
 export interface AdminUserItem {
   _id: string;
@@ -397,11 +514,42 @@ export interface AdminUserItem {
   avatar: string | null;
   role: UserRole;
   isActive: boolean;
+  membershipTier: MembershipTier;
   createdAt: string;
+}
+
+export interface GiftMembershipDto {
+  plan: SubscriptionPlan;
+}
+
+export interface RevokeMembershipDto {
+  reason: string;
 }
 
 export interface PaginatedAdminUserResponse {
   data: AdminUserItem[];
+  meta: PaginatedMeta;
+}
+
+export interface PaymentLog {
+  _id: string;
+  userId: string;
+  subscriptionId: string;
+  preapprovalId: string;
+  plan: SubscriptionPlan;
+  status: SubscriptionStatus;
+  amountArs?: number;
+  orderNumber?: string;
+  nextBillingDate?: string;
+  lastPaymentDate?: string;
+  cancelledAt?: string;
+  failureCount: number;
+  error?: string;
+  createdAt: string;
+}
+
+export interface PaginatedPaymentLogResponse {
+  data: PaymentLog[];
   meta: PaginatedMeta;
 }
 
@@ -472,3 +620,176 @@ export interface AppNotification {
   createdAt: string;
   updatedAt: string;
 }
+
+// AI Features (10 & 11)
+
+export type AiFitnessGoal =
+  | 'muscle_gain'
+  | 'fat_loss'
+  | 'body_recomposition'
+  | 'strength'
+  | 'endurance'
+  | 'general_health'
+  | 'mobility';
+
+export type AiExperienceLevel = 'beginner' | 'intermediate' | 'advanced';
+
+export type AiEquipment =
+  | 'no_equipment'
+  | 'dumbbells'
+  | 'bands'
+  | 'barbell_plates'
+  | 'full_gym';
+
+export type AiPhysicalLimitation =
+  | 'knee_injury'
+  | 'lower_back_pain'
+  | 'shoulder_sensitivity'
+  | 'previous_surgery';
+
+export type AiPreference =
+  | 'heavy_lifting'
+  | 'prefers_machines'
+  | 'prefers_free_weights'
+  | 'hates_cardio';
+
+export type AiSex = 'male' | 'female';
+
+export type ProgressionChangeType =
+  | 'weight_increase'
+  | 'weight_decrease'
+  | 'weight_maintain'
+  | 'sets_change'
+  | 'reps_change'
+  | 'deload';
+
+export interface PhysicalProfile {
+  age: number;
+  sex: AiSex;
+  heightCm: number;
+  currentWeightKg: number;
+  targetWeightKg?: number;
+  estimatedBodyFatPercent?: number;
+}
+
+export interface GeneratePlanRequest {
+  physicalProfile: PhysicalProfile;
+  goal: AiFitnessGoal;
+  experience: AiExperienceLevel;
+  daysPerWeek: number;
+  minutesPerSession: number;
+  equipment: AiEquipment[];
+  physicalLimitations?: AiPhysicalLimitation[];
+  preferences?: AiPreference[];
+  excludedExerciseIds?: string[];
+  includedExerciseIds?: string[];
+}
+
+export interface AiPlanProfile {
+  id: string;
+  planId: string;
+  physicalProfile: PhysicalProfile;
+  goal: AiFitnessGoal;
+  experience: AiExperienceLevel;
+  daysPerWeek: number;
+  minutesPerSession: number;
+  equipment: AiEquipment[];
+  physicalLimitations: AiPhysicalLimitation[];
+  preferences: AiPreference[];
+  templateUsed: string;
+  createdAt: string;
+}
+
+export interface GeneratePlanResponse {
+  plan: WorkoutPlan;
+  profileId: string;
+  templateUsed: string;
+  message: string;
+}
+
+export interface ExerciseChange {
+  exerciseId: string;
+  exerciseName: string;
+  changeType: ProgressionChangeType;
+  previousWeight: number;
+  newWeight: number;
+  previousSets: number;
+  newSets: number;
+  previousReps: number;
+  newReps: number;
+  reasoning: string;
+}
+
+export type ProgressionLogStatus = 'pending' | 'applied' | 'rejected' | 'failed';
+
+export interface ProgressionAnalysisResponse {
+  logId: string;
+  planId: string;
+  isDeloadWeek: boolean;
+  status: ProgressionLogStatus;
+  changesApplied: ExerciseChange[];
+  message: string;
+}
+
+export interface ConfirmProgressionRequest {
+  logId: string;
+  apply: boolean;
+}
+
+export interface SuggestChangeRequest {
+  planId: string;
+  exerciseId: string;
+  newSets?: number;
+  newReps?: number;
+  newWeight?: number;
+  userReasoning?: string;
+}
+
+export interface SuggestChangeResponse {
+  approved: boolean;
+  reasoning: string;
+  appliedChange: ExerciseChange | null;
+}
+
+export interface StreakResponse {
+  currentStreak: number;
+  longestStreak: number;
+  lastActivityDate: string | null;
+}
+
+export interface TermsSection {
+  _id: string;
+  header: string;
+  content: string;
+  order: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdminTermsSection {
+  _id: string;
+  header: BilingualString;
+  content: BilingualString;
+  order: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateTermsSectionDto {
+  header: BilingualString;
+  content: BilingualString;
+  order: number;
+  isActive?: boolean;
+}
+
+export interface UpdateTermsSectionDto {
+  header?: BilingualString;
+  content?: BilingualString;
+  order?: number;
+  isActive?: boolean;
+}
+
+export type CreateAdminTermsSectionDto = CreateTermsSectionDto;
+export type UpdateAdminTermsSectionDto = UpdateTermsSectionDto;

@@ -2,6 +2,7 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslation } from 'react-i18next';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { planNameSchema, type PlanNameFormValues } from '@/lib/validations/workout-plan.schemas';
@@ -12,6 +13,7 @@ interface WizardStep1NameProps {
 }
 
 export function WizardStep1Name({ defaultValue, onNext }: WizardStep1NameProps) {
+  const { t } = useTranslation();
   const {
     register,
     handleSubmit,
@@ -26,16 +28,16 @@ export function WizardStep1Name({ defaultValue, onNext }: WizardStep1NameProps) 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="space-y-2">
-        <h2 className="font-display text-xl font-bold">Name your plan</h2>
+        <h2 className="font-display text-xl font-bold">{t('plans.wizard.step1.title')}</h2>
         <p className="text-muted-foreground text-sm">
-          Give your workout plan a memorable name.
+          {t('plans.wizard.step1.description')}
         </p>
       </div>
 
       <div className="space-y-1.5">
         <Input
           {...register('name')}
-          placeholder="e.g. Push Pull Legs"
+          placeholder={t('plans.wizard.step1.placeholder')}
           autoFocus
           aria-invalid={!!errors.name}
         />
@@ -45,7 +47,7 @@ export function WizardStep1Name({ defaultValue, onNext }: WizardStep1NameProps) 
       </div>
 
       <Button type="submit" className="w-full cursor-pointer">
-        Continue
+        {t('common.continue')}
       </Button>
     </form>
   );

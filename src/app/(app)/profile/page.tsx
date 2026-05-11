@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Loader2, LogOut } from 'lucide-react';
+import { Loader2, LogOut, Trash2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { Button } from '@/components/ui/button';
@@ -22,26 +23,11 @@ import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useSessionHistory } from '@/hooks/useSessionHistory';
 import { useStats } from '@/hooks/useStats';
+import { DeleteAccountDialog } from '@/components/profile/DeleteAccountDialog';
 import { cn } from '@/lib/utils';
 
-const editProfileSchema = z.object({
-  username: z
-    .string()
-    .min(3, 'Mínimo 3 caracteres')
-    .max(20, 'Máximo 20 caracteres')
-    .regex(/^[a-zA-Z0-9_ ]+$/, 'Solo letras, números, guión bajo y espacios')
-    .refine((val) => val === val.trim(), 'No puede comenzar ni terminar con espacios')
-    .refine((val) => val.trim().length > 0, 'El usuario no puede ser solo espacios'),
-});
-
-type EditProfileValues = z.infer<typeof editProfileSchema>;
+type EditProfileValues = { username: string };
 type ProfileTab = 'profile' | 'history' | 'stats';
-
-const TABS: { value: ProfileTab; label: string }[] = [
-  { value: 'profile', label: 'Perfil' },
-  { value: 'history', label: 'Historial' },
-  { value: 'stats', label: 'Estadísticas' },
-];
 
 function SessionHistorySkeletons() {
   return (
@@ -54,9 +40,11 @@ function SessionHistorySkeletons() {
 }
 
 export default function ProfilePage() {
+  const { t } = useTranslation();
   const { logout } = useAuth();
   const { user, isLoading, updateProfile } = useProfile();
   const [activeTab, setActiveTab] = useState<ProfileTab>('profile');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const { data, meta, loading: histLoading, error: histError, page, setPage, refetch } = useSessionHistory();
   const {
@@ -66,6 +54,19 @@ export default function ProfilePage() {
     weightUnit, setWeightUnit, convertVolume,
   } = useStats();
 
+  const editProfileSchema = useMemo(() =>
+    z.object({
+      username: z
+        .string()
+        .min(3, t('profile.validation.minChars'))
+        .max(20, t('profile.validation.maxChars'))
+        .regex(/^[a-zA-Z0-9_ ]+$/, t('profile.validation.invalidChars'))
+        .refine((val) => val === val.trim(), t('profile.validation.trimError'))
+        .refine((val) => val.trim().length > 0, t('profile.validation.emptySpaces')),
+    }),
+    [t]
+  );
+
   const {
     register,
     handleSubmit,
@@ -74,6 +75,12 @@ export default function ProfilePage() {
     resolver: zodResolver(editProfileSchema),
     values: { username: user?.username ?? '' },
   });
+
+  const TABS: { value: ProfileTab; label: string }[] = [
+    { value: 'profile', label: t('profile.tabs.profile') },
+    { value: 'history', label: t('profile.tabs.history') },
+    { value: 'stats', label: t('profile.tabs.stats') },
+  ];
 
   const onSubmit = async (data: EditProfileValues): Promise<void> => {
     await updateProfile(data);
@@ -120,12 +127,12 @@ export default function ProfilePage() {
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Editar perfil</CardTitle>
+                <CardTitle className="text-base">{t('profile.edit.title')}</CardTitle>
               </CardHeader>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <CardContent className="space-y-4">
                   <div className="space-y-1.5">
-                    <Label htmlFor="username">Nombre de usuario</Label>
+                    <Label htmlFor="username">{t('profile.edit.usernameLabel')}</Label>
                     <Input id="username" {...register('username')} />
                     {errors.username && (
                       <p className="text-xs text-destructive">
@@ -140,7 +147,7 @@ export default function ProfilePage() {
                     disabled={isSubmitting || !isDirty}
                   >
                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Guardar cambios
+                    {isSubmitting ? t('profile.edit.saving') : t('profile.edit.save')}
                   </Button>
                 </CardContent>
               </form>
@@ -152,8 +159,22 @@ export default function ProfilePage() {
               onClick={logout}
             >
               <LogOut className="mr-2 h-4 w-4" />
-              Cerrar sesión
+              {t('profile.logout')}
             </Button>
+
+            <Button
+              variant="ghost"
+              className="w-full text-muted-foreground hover:text-destructive cursor-pointer"
+              onClick={() => setDeleteDialogOpen(true)}
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              {t('profile.deleteAccount')}
+            </Button>
+
+            <DeleteAccountDialog
+              open={deleteDialogOpen}
+              onOpenChange={setDeleteDialogOpen}
+            />
           </div>
         )}
 
@@ -164,11 +185,11 @@ export default function ProfilePage() {
 
             {!histLoading && histError && (
               <EmptyState
-                title="Error al cargar el historial"
-                description="No se pudieron obtener las sesiones. Intenta de nuevo."
+                title={t('profile.history.error.title')}
+                description={t('profile.history.error.description')}
                 action={
                   <Button variant="outline" size="sm" className="min-h-11" onClick={refetch}>
-                    Reintentar
+                    {t('profile.history.retry')}
                   </Button>
                 }
               />
@@ -176,11 +197,11 @@ export default function ProfilePage() {
 
             {!histLoading && !histError && data.length === 0 && (
               <EmptyState
-                title="Sin entrenamientos registrados"
-                description="Aún no has completado ninguna sesión."
+                title={t('profile.history.empty.title')}
+                description={t('profile.history.empty.description')}
                 action={
                   <Button size="sm" className="min-h-11" render={<Link href="/dashboard" />}>
-                    Ir al inicio
+                    {t('profile.history.goToDashboard')}
                   </Button>
                 }
               />

@@ -59,9 +59,9 @@ export function ExerciseConfigForm({
   onCancel,
 }: ExerciseConfigFormProps) {
   const initialMetric: MetricMode =
-    defaultValues?.duration !== undefined ||
-    defaultValues?.left?.duration !== undefined ||
-    defaultValues?.right?.duration !== undefined
+    (defaultValues?.duration !== undefined && defaultValues?.duration !== null) ||
+    (defaultValues?.left?.duration !== undefined && defaultValues?.left?.duration !== null) ||
+    (defaultValues?.right?.duration !== undefined && defaultValues?.right?.duration !== null)
       ? 'duration'
       : 'reps';
 
@@ -109,7 +109,6 @@ export function ExerciseConfigForm({
 
   const handleModeSwitch = (mode: MetricMode) => {
     if (bilateral) {
-      // BUG 1 FIX: clear the inactive field from RHF state when switching modes
       if (mode === 'reps') {
         setValue('duration', undefined);
         setValue('reps', 10);

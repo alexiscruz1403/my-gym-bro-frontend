@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Pagination } from '@/components/shared/Pagination';
@@ -8,7 +9,24 @@ import { AdminUserRow } from './AdminUserRow';
 import { useAdminUsers } from '@/hooks/useAdminUsers';
 
 export function AdminUserList() {
-  const { users, meta, page, isLoading, search, fetchPage, handleSearch, setStatus, setRole } = useAdminUsers();
+  const { t } = useTranslation();
+  const {
+    users,
+    meta,
+    page,
+    isLoading,
+    username,
+    role,
+    membershipTier,
+    fetchPage,
+    handleUsernameSearch,
+    handleRoleFilter,
+    handleTierFilter,
+    setStatus,
+    setRole,
+    giftMembership,
+    revokeMembership,
+  } = useAdminUsers();
 
   useEffect(() => {
     fetchPage(1);
@@ -16,12 +34,32 @@ export function AdminUserList() {
 
   return (
     <div className="space-y-4">
-      <Input
-        value={search}
-        onChange={(e) => handleSearch(e.target.value)}
-        placeholder="Search by username…"
-        className="max-w-sm"
-      />
+      <div className="flex flex-wrap gap-2">
+        <Input
+          value={username}
+          onChange={(e) => handleUsernameSearch(e.target.value)}
+          placeholder={t('admin.users.searchPlaceholder')}
+          className="max-w-xs"
+        />
+        <select
+          value={role}
+          onChange={(e) => handleRoleFilter(e.target.value as typeof role)}
+          className="rounded-lg border border-input bg-background px-3 py-2 text-sm"
+        >
+          <option value="">{t('admin.users.allRoles')}</option>
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+        <select
+          value={membershipTier}
+          onChange={(e) => handleTierFilter(e.target.value as typeof membershipTier)}
+          className="rounded-lg border border-input bg-background px-3 py-2 text-sm"
+        >
+          <option value="">{t('admin.users.allMemberships')}</option>
+          <option value="free">Free</option>
+          <option value="premium">Premium</option>
+        </select>
+      </div>
 
       {isLoading && (
         <div className="space-y-2">
@@ -39,6 +77,8 @@ export function AdminUserList() {
               user={user}
               onSetStatus={setStatus}
               onSetRole={setRole}
+              onGiftMembership={giftMembership}
+              onRevokeMembership={revokeMembership}
             />
           ))}
         </div>

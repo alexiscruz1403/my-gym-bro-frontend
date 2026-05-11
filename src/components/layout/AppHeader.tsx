@@ -1,6 +1,7 @@
 'use client';
 
 import { Moon, Sun, Settings } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import useUIStore from '@/store/ui.store';
 import useAuthStore from '@/store/auth.store';
@@ -15,6 +16,7 @@ interface AppHeaderProps {
 }
 
 export function AppHeader({ title, action }: AppHeaderProps) {
+  const { t } = useTranslation();
   const { isDarkMode, toggleDarkMode } = useUIStore();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
@@ -48,7 +50,7 @@ export function AppHeader({ title, action }: AppHeaderProps) {
               variant="ghost"
               size="icon"
               render={<Link href="/settings" />}
-              aria-label="Ajustes"
+              aria-label={t('header.settings')}
               className="cursor-pointer"
             >
               <Settings size={20} />
@@ -58,7 +60,7 @@ export function AppHeader({ title, action }: AppHeaderProps) {
             variant="ghost"
             size="icon"
             onClick={toggleDarkMode}
-            aria-label={isDarkMode ? 'Activar modo claro' : 'Activar modo oscuro'}
+            aria-label={isDarkMode ? t('header.toggleLight') : t('header.toggleDark')}
             className={'cursor-pointer'}
           >
             {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}

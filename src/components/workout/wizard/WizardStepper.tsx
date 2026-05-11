@@ -1,17 +1,22 @@
-import { cn } from '@/lib/utils';
+'use client';
 
-const STEPS = [
-  { number: 1, label: 'Name' },
-  { number: 2, label: 'Days' },
-  { number: 3, label: 'Exercises' },
-  { number: 4, label: 'Review' },
-];
+import { useTranslation } from 'react-i18next';
+import { cn } from '@/lib/utils';
 
 interface WizardStepperProps {
   currentStep: 1 | 2 | 3 | 4;
 }
 
 export function WizardStepper({ currentStep }: WizardStepperProps) {
+  const { t } = useTranslation();
+
+  const STEPS = [
+    { number: 1, label: t('plans.wizard.steps.name') },
+    { number: 2, label: t('plans.wizard.steps.days') },
+    { number: 3, label: t('plans.wizard.steps.exercises') },
+    { number: 4, label: t('plans.wizard.steps.review') },
+  ];
+
   return (
     <div className="flex w-full items-center">
       {STEPS.map((step, index) => {

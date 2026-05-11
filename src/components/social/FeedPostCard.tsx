@@ -4,6 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Heart, MessageCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { es, enUS } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -44,18 +46,19 @@ interface SummarySlideProps {
 }
 
 function SummarySlide({ exercises, durationSeconds, totalSets, showHeader }: SummarySlideProps) {
+  const { t } = useTranslation();
   return (
     <div className="w-full shrink-0 snap-center bg-muted/30 p-4 space-y-3">
       {showHeader && (
         <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>{totalSets} sets</span>
+          <span>{t('plans.setCount', { count: totalSets })}</span>
           <span>{formatDuration(durationSeconds)}</span>
         </div>
       )}
       {exercises.map((ex, i) => {
         const completedSets = ex.sets.filter((s) => s.completed);
         const isUni = ex.bilateral === false;
-        const fmtSide = (side?: { reps?: number; duration?: number; weight?: number } | null) => {
+        const fmtSide = (side?: { reps?: number; duration?: number; weight?: number } | null, unit?: string) => {
           if (!side) return '—';
           const m =
             side.reps !== undefined
@@ -63,7 +66,7 @@ function SummarySlide({ exercises, durationSeconds, totalSets, showHeader }: Sum
               : side.duration !== undefined
                 ? `${side.duration}s`
                 : '—';
-          return side.weight ? `${m} · ${side.weight} kg` : m;
+          return side.weight ? `${m} · ${side.weight} ${unit ?? 'kg'}` : m;
         };
         return (
           <div key={i} className="space-y-0.5">
@@ -72,24 +75,22 @@ function SummarySlide({ exercises, durationSeconds, totalSets, showHeader }: Sum
               <div className="text-muted-foreground text-xs space-y-0.5">
                 {completedSets.map((s, j) => (
                   <div key={j}>
-                    <p className="pl-2">L: {fmtSide(s.left)}</p>
-                    <p className="pl-2">R: {fmtSide(s.right)}</p>
+                    <p className="pl-2">L: {fmtSide(s.left, s.weightUnit)}</p>
+                    <p className="pl-2">R: {fmtSide(s.right, s.weightUnit)}</p>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground text-xs">
-                {completedSets
-                  .map((s) => {
-                    const metric =
-                      s.durationSeconds !== undefined
-                        ? `${s.durationSeconds}s`
-                        : `${s.reps ?? 0} reps`;
-                    const weight = s.weightKg ? ` · ${s.weightKg} kg` : '';
-                    return `${metric}${weight}`;
-                  })
-                  .join(' · ')}
-              </p>
+              <div className="text-muted-foreground text-xs space-y-0.5">
+                {completedSets.map((s, j) => {
+                  const metric =
+                    s.durationSeconds !== undefined
+                      ? `${s.durationSeconds}s`
+                      : `${s.reps ?? 0} reps`;
+                  const weight = s.weightKg ? ` · ${s.weightKg} ${s.weightUnit ?? 'kg'}` : '';
+                  return <p key={j} className="pl-2">{metric}{weight}</p>;
+                })}
+              </div>
             )}
           </div>
         );
@@ -99,6 +100,7 @@ function SummarySlide({ exercises, durationSeconds, totalSets, showHeader }: Sum
 }
 
 export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: FeedPostCardProps) {
+  const { t, i18n } = useTranslation();
   const { userReacted, reactionsCount, toggle } = usePostInteraction(
     post._id,
     post.userReacted,
@@ -110,7 +112,8 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: Feed
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const initials = post.author.username.slice(0, 2).toUpperCase();
-  const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true });
+  const dateLocale = i18n.language === 'en' ? enUS : es;
+  const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true, locale: dateLocale });
 
   const hasPhoto = !!post.photoUrl;
   const hasSummary = !!post.sessionSummary;
@@ -155,7 +158,7 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: Feed
                 {post.author.username}
               </Link>
               {isOwnPost && (
-                <Badge variant="secondary" className="shrink-0">Your post</Badge>
+                <Badge variant="secondary" className="shrink-0">{t('feed.yourPost')}</Badge>
               )}
             </div>
             <p className="text-xs text-muted-foreground">{timeAgo}</p>
@@ -175,7 +178,7 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: Feed
               <div className="relative w-full shrink-0 snap-center aspect-square overflow-hidden">
                 <Image
                   src={post.photoUrl!}
-                  alt="Workout photo"
+                  alt={t('feed.workoutPhoto')}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 600px"
@@ -198,7 +201,7 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: Feed
             <button
               type="button"
               onClick={() => goTo(activeSlide - 1)}
-              aria-label="Previous slide"
+              aria-label={t('feed.prevSlide')}
               className="cursor-pointer absolute left-2 top-1/2 -translate-y-1/2 hidden lg:flex items-center justify-center h-8 w-8 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -208,7 +211,7 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: Feed
             <button
               type="button"
               onClick={() => goTo(activeSlide + 1)}
-              aria-label="Next slide"
+              aria-label={t('feed.nextSlide')}
               className="cursor-pointer absolute right-2 top-1/2 -translate-y-1/2 hidden lg:flex items-center justify-center h-8 w-8 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
             >
               <ChevronRight className="h-4 w-4" />
@@ -231,7 +234,7 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: Feed
         <div className="relative w-full aspect-square overflow-hidden">
           <Image
             src={post.photoUrl!}
-            alt="Workout photo"
+            alt={t('feed.workoutPhoto')}
             fill
             className="object-cover"
             sizes="(max-width: 768px) 100vw, 600px"

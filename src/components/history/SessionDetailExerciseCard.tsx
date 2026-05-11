@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { SessionDetailSetRow } from '@/components/history/SessionDetailSetRow';
@@ -13,6 +14,7 @@ interface SessionDetailExerciseCardProps {
 }
 
 export function SessionDetailExerciseCard({ exercise }: SessionDetailExerciseCardProps) {
+  const { t } = useTranslation();
   const [sheetOpen, setSheetOpen] = useState(false);
   const completedSets = exercise.sets.filter((s) => s.completed).length;
 
@@ -24,7 +26,7 @@ export function SessionDetailExerciseCard({ exercise }: SessionDetailExerciseCar
             <div className="min-w-0">
               <p className="truncate font-semibold">{exercise.exerciseName}</p>
               <p className="text-muted-foreground text-sm">
-                {completedSets}/{exercise.plannedSets} series
+                {completedSets}/{exercise.plannedSets} {t('history.sets')}
               </p>
             </div>
             <Button
@@ -34,7 +36,7 @@ export function SessionDetailExerciseCard({ exercise }: SessionDetailExerciseCar
               onClick={() => setSheetOpen(true)}
             >
               <History className="h-4 w-4" />
-              Ver historial
+              {t('history.viewHistory')}
             </Button>
           </div>
 

@@ -19,4 +19,11 @@ export const authService = {
 
   logout: (): Promise<void> =>
     apiClient.post<void>(API_ROUTES.auth.logout).then((r) => r.data),
+
+  // Always returns 200 regardless of whether the email exists (prevents enumeration)
+  forgotPassword: (email: string): Promise<void> =>
+    apiClient.post<void>(API_ROUTES.auth.forgotPassword, { email }).then(() => undefined),
+
+  resetPassword: (token: string, password: string): Promise<void> =>
+    apiClient.post<void>(API_ROUTES.auth.resetPassword, { token, password }).then(() => undefined),
 };

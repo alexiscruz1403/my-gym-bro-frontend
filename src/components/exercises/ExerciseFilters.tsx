@@ -1,40 +1,19 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, X } from 'lucide-react';
 import type { MuscleGroup, LoadType } from '@/types/domain.types';
 
-const MUSCLE_OPTIONS: { value: MuscleGroup; label: string }[] = [
-  { value: 'chest', label: 'Chest' },
-  { value: 'lats', label: 'Lats' },
-  { value: 'upper_back', label: 'Upper Back' },
-  { value: 'traps', label: 'Traps' },
-  { value: 'front_delts', label: 'Front Delts' },
-  { value: 'side_delts', label: 'Side Delts' },
-  { value: 'rear_delts', label: 'Rear Delts' },
-  { value: 'biceps', label: 'Biceps' },
-  { value: 'triceps', label: 'Triceps' },
-  { value: 'forearms', label: 'Forearms' },
-  { value: 'abs', label: 'Abs' },
-  { value: 'obliques', label: 'Obliques' },
-  { value: 'lower_back', label: 'Lower Back' },
-  { value: 'quads', label: 'Quads' },
-  { value: 'hamstrings', label: 'Hamstrings' },
-  { value: 'glutes', label: 'Glutes' },
-  { value: 'calves', label: 'Calves' },
-  { value: 'adductors', label: 'Adductors' },
-  { value: 'abductors', label: 'Abductors' },
+const LOAD_TYPE_VALUES: LoadType[] = [
+  'barbell', 'dumbbell', 'machine', 'bodyweight', 'cable', 'kettlebell', 'resistance_band',
 ];
 
-const LOAD_TYPE_OPTIONS: { value: LoadType; label: string }[] = [
-  { value: 'barbell', label: 'Barbell' },
-  { value: 'dumbbell', label: 'Dumbbell' },
-  { value: 'machine', label: 'Machine' },
-  { value: 'bodyweight', label: 'Bodyweight' },
-  { value: 'cable', label: 'Cable' },
-  { value: 'kettlebell', label: 'Kettlebell' },
-  { value: 'resistance_band', label: 'Band' },
+const MUSCLE_VALUES: MuscleGroup[] = [
+  'chest', 'lats', 'upper_back', 'traps', 'front_delts', 'side_delts', 'rear_delts',
+  'biceps', 'triceps', 'forearms', 'abs', 'obliques', 'lower_back',
+  'quads', 'hamstrings', 'glutes', 'calves', 'adductors', 'abductors',
 ];
 
 export interface ExerciseFiltersValue {
@@ -49,6 +28,10 @@ interface ExerciseFiltersProps {
 }
 
 export function ExerciseFilters({ value, onChange }: ExerciseFiltersProps) {
+  const { t } = useTranslation();
+  const muscleLabels = t('exercises.muscle', { returnObjects: true }) as Record<MuscleGroup, string>;
+  const loadTypeLabels = t('exercises.loadType', { returnObjects: true }) as Record<LoadType, string>;
+
   const hasActiveFilters = value.muscle !== undefined || value.loadType !== undefined;
 
   return (
@@ -56,7 +39,7 @@ export function ExerciseFilters({ value, onChange }: ExerciseFiltersProps) {
       <div className="relative">
         <Search className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
         <Input
-          placeholder="Search exercises..."
+          placeholder={t('exercises.searchPlaceholder')}
           value={value.search}
           onChange={(e) => onChange({ ...value, search: e.target.value })}
           className="pl-9 cursor-text"
@@ -65,7 +48,7 @@ export function ExerciseFilters({ value, onChange }: ExerciseFiltersProps) {
           <button
             onClick={() => onChange({ ...value, search: '' })}
             className="text-muted-foreground hover:text-foreground absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-            aria-label="Clear search"
+            aria-label={t('exercises.clearSearch')}
             type="button"
             tabIndex={0}
           >
@@ -76,22 +59,22 @@ export function ExerciseFilters({ value, onChange }: ExerciseFiltersProps) {
 
       <div className="w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:overflow-x-visible md:[scrollbar-width:auto] md:[&::-webkit-scrollbar]:block">
         <div className="flex flex-nowrap gap-2 pb-1 md:flex-wrap">
-          {LOAD_TYPE_OPTIONS.map((opt) => (
+          {LOAD_TYPE_VALUES.map((lt) => (
             <Button
-              key={opt.value}
+              key={lt}
               size="sm"
-              variant={value.loadType === opt.value ? 'default' : 'outline'}
+              variant={value.loadType === lt ? 'default' : 'outline'}
               onClick={() =>
                 onChange({
                   ...value,
-                  loadType: value.loadType === opt.value ? undefined : opt.value,
+                  loadType: value.loadType === lt ? undefined : lt,
                 })
               }
               className="shrink-0 cursor-pointer"
               type="button"
               tabIndex={0}
             >
-              {opt.label}
+              {loadTypeLabels[lt]}
             </Button>
           ))}
         </div>
@@ -99,22 +82,22 @@ export function ExerciseFilters({ value, onChange }: ExerciseFiltersProps) {
 
       <div className="w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:overflow-x-visible md:[scrollbar-width:auto] md:[&::-webkit-scrollbar]:block">
         <div className="flex flex-nowrap gap-2 pb-1 md:flex-wrap">
-          {MUSCLE_OPTIONS.map((opt) => (
+          {MUSCLE_VALUES.map((muscle) => (
             <Button
-              key={opt.value}
+              key={muscle}
               size="sm"
-              variant={value.muscle === opt.value ? 'default' : 'outline'}
+              variant={value.muscle === muscle ? 'default' : 'outline'}
               onClick={() =>
                 onChange({
                   ...value,
-                  muscle: value.muscle === opt.value ? undefined : opt.value,
+                  muscle: value.muscle === muscle ? undefined : muscle,
                 })
               }
               className="shrink-0 cursor-pointer"
               type="button"
               tabIndex={0}
             >
-              {opt.label}
+              {muscleLabels[muscle]}
             </Button>
           ))}
         </div>
@@ -128,7 +111,7 @@ export function ExerciseFilters({ value, onChange }: ExerciseFiltersProps) {
           tabIndex={0}
         >
           <X className="h-3 w-3" />
-          Clear filters
+          {t('exercises.clearFilters')}
         </button>
       )}
     </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Search } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -15,9 +16,11 @@ const DEBOUNCE_MS = 300;
 interface UserSearchSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onFollowed?: () => void;
 }
 
-export function UserSearchSheet({ open, onOpenChange }: UserSearchSheetProps) {
+export function UserSearchSheet({ open, onOpenChange, onFollowed }: UserSearchSheetProps) {
+  const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<PublicUserProfile[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -66,7 +69,7 @@ export function UserSearchSheet({ open, onOpenChange }: UserSearchSheetProps) {
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="max-h-[80dvh] flex flex-col">
         <SheetHeader>
-          <SheetTitle>Find people</SheetTitle>
+          <SheetTitle>{t('social.search.title')}</SheetTitle>
         </SheetHeader>
 
         <div className="px-4 pb-2">
@@ -75,7 +78,7 @@ export function UserSearchSheet({ open, onOpenChange }: UserSearchSheetProps) {
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by username…"
+              placeholder={t('social.search.placeholder')}
               className="pl-9"
               autoFocus
             />
@@ -93,16 +96,16 @@ export function UserSearchSheet({ open, onOpenChange }: UserSearchSheetProps) {
 
           {!isLoading && !hasSearched && (
             <EmptyState
-              title="Search for users"
-              description="Type a username to find people to follow."
+              title={t('social.search.emptyTitle')}
+              description={t('social.search.emptyDescription')}
               className="pt-8"
             />
           )}
 
           {!isLoading && hasSearched && results.length === 0 && (
             <EmptyState
-              title="No users found"
-              description="Try a different username."
+              title={t('social.search.notFoundTitle')}
+              description={t('social.search.notFoundDescription')}
               className="pt-8"
             />
           )}
@@ -110,7 +113,7 @@ export function UserSearchSheet({ open, onOpenChange }: UserSearchSheetProps) {
           {!isLoading && results.length > 0 && (
             <div className="space-y-1 mt-2">
               {results.map((user) => (
-                <UserListItem key={user._id} user={user} />
+                <UserListItem key={user._id} user={user} onFollowed={onFollowed} />
               ))}
             </div>
           )}

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getDay } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,11 +15,6 @@ import { startSession } from '@/services/sessions.service';
 import useSessionStore from '@/store/session.store';
 import { StartSessionSheet } from '@/components/session/StartSessionSheet';
 import type { WorkoutPlan, DayOfWeek } from '@/types/domain.types';
-
-const DAY_SHORT: Record<string, string> = {
-  monday: 'Mon', tuesday: 'Tue', wednesday: 'Wed',
-  thursday: 'Thu', friday: 'Fri', saturday: 'Sat', sunday: 'Sun',
-};
 
 const DAY_INDEX_MAP: DayOfWeek[] = [
   'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday',
@@ -33,9 +29,12 @@ interface ActivePlanCardProps {
 }
 
 export function ActivePlanCard({ plan }: ActivePlanCardProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const { startSession: storeStartSession } = useSessionStore();
   const [sheetOpen, setSheetOpen] = useState(false);
+
+  const dayShortLabels = t('daysShort', { returnObjects: true }) as Record<DayOfWeek, string>;
 
   const totalExercises = plan.days.reduce((acc, day) => acc + day.exercises.length, 0);
   const todayDow = getTodayDayOfWeek();
@@ -49,9 +48,9 @@ export function ActivePlanCard({ plan }: ActivePlanCardProps) {
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response?.status;
       if (status === 422) {
-        toast.error('No exercises found for that day in your active plan.');
+        toast.error(t('session.error.noExercisesForDay'));
       } else {
-        toast.error('Could not start workout. Please try again.');
+        toast.error(t('session.error.startFailed'));
       }
     }
   };
@@ -65,7 +64,7 @@ export function ActivePlanCard({ plan }: ActivePlanCardProps) {
               <div className="flex items-center gap-2">
                 <p className="truncate font-semibold">{plan.name}</p>
                 <Badge className="shrink-0 bg-green-500 text-white hover:bg-green-600">
-                  Active
+                  {t('plans.status.active')}
                 </Badge>
               </div>
             </div>
@@ -76,11 +75,11 @@ export function ActivePlanCard({ plan }: ActivePlanCardProps) {
           <div className="flex gap-4 text-sm">
             <div className="flex items-center gap-1.5">
               <CalendarDays className="text-muted-foreground h-4 w-4" />
-              <span>{plan.days.length} {plan.days.length === 1 ? 'day' : 'days'}</span>
+              <span>{t('plans.dayCount', { count: plan.days.length })}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Dumbbell className="text-muted-foreground h-4 w-4" />
-              <span>{totalExercises} {totalExercises === 1 ? 'exercise' : 'exercises'}</span>
+              <span>{t('plans.exerciseCount', { count: totalExercises })}</span>
             </div>
           </div>
 
@@ -90,7 +89,7 @@ export function ActivePlanCard({ plan }: ActivePlanCardProps) {
                 key={day.dayOfWeek}
                 variant={day.dayOfWeek === todayDow ? 'default' : 'secondary'}
               >
-                {DAY_SHORT[day.dayOfWeek]}
+                {dayShortLabels[day.dayOfWeek]}
               </Badge>
             ))}
           </div>
@@ -101,7 +100,7 @@ export function ActivePlanCard({ plan }: ActivePlanCardProps) {
             className="w-full cursor-pointer gap-2"
           >
             <Play className="h-4 w-4" />
-            Start workout
+            {t('session.startWorkout')}
           </Button>
 
           <Button
@@ -110,7 +109,7 @@ export function ActivePlanCard({ plan }: ActivePlanCardProps) {
             render={<Link href={`/workout/${plan.id}`} />}
             className="w-full gap-1"
           >
-            View full plan
+            {t('plans.viewFull')}
             <ChevronRight className="h-4 w-4" />
           </Button>
         </CardContent>

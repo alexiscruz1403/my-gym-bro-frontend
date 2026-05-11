@@ -9,6 +9,7 @@ export function useFollow(
   userId: string,
   initialIsFollowing: boolean,
   initialIsRequestPending = false,
+  onFollowed?: () => void,
 ) {
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
   const [isRequestPending, setIsRequestPending] = useState(initialIsRequestPending);
@@ -48,6 +49,7 @@ export function useFollow(
           const previousFollowingCount = user?.followingCount ?? 0;
           setIsFollowing(true);
           if (user) setUser({ ...user, followingCount: previousFollowingCount + 1 });
+          onFollowed?.();
         }
       } catch {
         toast.error('Error al seguir.');

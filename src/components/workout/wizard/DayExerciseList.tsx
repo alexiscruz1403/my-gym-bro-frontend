@@ -28,6 +28,7 @@ const ExercisePickerDrawer = dynamic(
   { ssr: false },
 );
 import { Trash2, Plus, Pencil, GripVertical } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { SupersetGroupIndicator } from '@/components/workout/SupersetGroupIndicator';
 import type { Exercise } from '@/types/domain.types';
 import type { ExerciseConfigDraft } from '@/types/ui.types';
@@ -109,12 +110,23 @@ function SortableExerciseItem({
             <p className="truncate text-sm font-medium">{ex.exerciseName}</p>
             {ex.bilateral === false ? (
               <p className="text-muted-foreground text-xs">
-                {ex.sets} × L/R
+                {ex.sets} ×{' '}
+                {ex.left?.reps !== undefined && ex.left?.reps !== null
+                  ? `${ex.left.reps} reps`
+                  : ex.left?.duration !== undefined && ex.left?.duration !== null
+                    ? `${ex.left.duration}s`
+                    : 'L/R'}{' '}
+                L/R
                 {` · ${ex.rest}s rest`}
               </p>
             ) : (
               <p className="text-muted-foreground text-xs">
-                {ex.sets} × {ex.reps !== undefined ? `${ex.reps} reps` : `${ex.duration}s`}
+                {ex.sets} ×{' '}
+                {ex.reps !== undefined && ex.reps !== null
+                  ? `${ex.reps} reps`
+                  : ex.duration !== undefined && ex.duration !== null
+                    ? `${ex.duration}s`
+                    : '—'}
                 {ex.weight ? ` · ${ex.weight}${ex.weightUnit ?? 'kg'}` : ''}
                 {` · ${ex.rest}s rest`}
               </p>
@@ -166,6 +178,8 @@ export function DayExerciseList({
 }: DayExerciseListProps) {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language as 'es' | 'en';
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -176,7 +190,7 @@ export function DayExerciseList({
     for (const exercise of exercises) {
       const base = {
         exerciseId: exercise.id,
-        exerciseName: exercise.name,
+        exerciseName: exercise.name[lang] ?? exercise.name.en,
         sets: 3,
         rest: 60,
         bilateral: exercise.bilateral,
@@ -213,11 +227,11 @@ export function DayExerciseList({
     <div className="space-y-3">
       <div className="space-y-1">
         <label className="text-xs font-medium text-muted-foreground">
-          Day name <span className="font-normal">(optional)</span>
+          {t('plans.wizard.dayNameLabel')} <span className="font-normal">{t('plans.wizard.dayNameOptional')}</span>
         </label>
         <Input
           type="text"
-          placeholder='e.g. "Push", "Legs A"'
+          placeholder={t('plans.wizard.dayNamePlaceholder')}
           value={dayName}
           onChange={(e) => onDayNameChange(e.target.value)}
           maxLength={50}
@@ -227,7 +241,7 @@ export function DayExerciseList({
 
       {exercises.length === 0 && (
         <p className="text-muted-foreground py-4 text-center text-sm">
-          No exercises added for this day.
+          {t('plans.wizard.noExercisesDay')}
         </p>
       )}
 
@@ -259,7 +273,7 @@ export function DayExerciseList({
         className="w-full cursor-pointer gap-1.5"
       >
         <Plus className="h-4 w-4" />
-        Add exercise
+        {t('plans.wizard.addExercise')}
       </Button>
 
       <ExercisePickerDrawer

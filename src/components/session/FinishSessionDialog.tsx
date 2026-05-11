@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -17,6 +18,7 @@ interface FinishSessionDialogProps {
 }
 
 export function FinishSessionDialog({ open, onOpenChange, onFinish }: FinishSessionDialogProps) {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
   const handle = async (status: 'completed' | 'partial') => {
@@ -31,9 +33,9 @@ export function FinishSessionDialog({ open, onOpenChange, onFinish }: FinishSess
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
-        <DialogTitle>Finish workout?</DialogTitle>
+        <DialogTitle>{t('session.finishDialog.title')}</DialogTitle>
         <DialogDescription>
-          Choose how to record this session.
+          {t('session.finishDialog.description')}
         </DialogDescription>
 
         <div className="mt-2 flex flex-col gap-3">
@@ -44,9 +46,9 @@ export function FinishSessionDialog({ open, onOpenChange, onFinish }: FinishSess
           >
             <span className="flex items-center gap-2 font-semibold">
               <CheckCircle className="h-5 w-5" />
-              Completed
+              {t('session.finishDialog.completed.label')}
             </span>
-            <span className="text-xs font-normal opacity-80">All sets done</span>
+            <span className="text-xs font-normal opacity-80">{t('session.finishDialog.completed.subtitle')}</span>
           </Button>
 
           <Button
@@ -57,9 +59,9 @@ export function FinishSessionDialog({ open, onOpenChange, onFinish }: FinishSess
           >
             <span className="flex items-center gap-2 font-semibold">
               <SkipForward className="h-5 w-5" />
-              Partial
+              {t('session.finishDialog.partial.label')}
             </span>
-            <span className="text-xs font-normal opacity-80">Ended early</span>
+            <span className="text-xs font-normal opacity-80">{t('session.finishDialog.partial.subtitle')}</span>
           </Button>
         </div>
       </DialogContent>

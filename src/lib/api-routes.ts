@@ -6,6 +6,8 @@ export const API_ROUTES = {
     logout: '/auth/logout',
     google: '/auth/callback',
     wsToken: '/auth/ws-token',
+    forgotPassword: '/auth/password-reset/request',
+    resetPassword: '/auth/password-reset/confirm',
   },
   notifications: {
     list: '/notifications',
@@ -17,9 +19,11 @@ export const API_ROUTES = {
   users: {
     me: '/users/me',
     avatar: '/users/me/avatar',
+    language: '/users/me/language',
     search: '/users',
     publicProfile: (id: string) => `/users/${id}`,
     sessionHistory: (id: string) => `/users/${id}/sessions`,
+    deleteAccount: '/users/me',
   },
   exercises: {
     list: '/exercises',
@@ -47,6 +51,7 @@ export const API_ROUTES = {
   },
   stats: {
     exerciseHistory: (exerciseId: string) => `/stats/exercises/${exerciseId}/history`,
+    exerciseVolume: (exerciseId: string) => `/stats/exercises/${exerciseId}/volume`,
     volume: '/stats/volume',
     muscles: '/stats/muscles',
   },
@@ -73,7 +78,37 @@ export const API_ROUTES = {
   },
   admin: {
     users: '/admin/users',
+    paymentLogs: '/admin/payment-logs',
     setUserStatus: (id: string) => `/admin/users/${id}/status`,
     setUserRole: (id: string) => `/admin/users/${id}/role`,
+    giftMembership: (id: string) => `/admin/users/${id}/membership/gift`,
+    revokeMembership: (id: string) => `/admin/users/${id}/membership/revoke`,
+  },
+  ranks: {
+    muscles: '/ranks/muscles',
+    leaderboard: '/ranks/leaderboard',
+    exercise: (exerciseId: string) => `/ranks/exercises/${exerciseId}`,
+  },
+  subscriptions: {
+    checkout: '/subscriptions/checkout',
+    me: '/subscriptions/me',
+    autoRenew: '/subscriptions/auto-renew',
+  },
+  streaks: {
+    me: '/streaks',
+  },
+  terms: {
+    adminList: '/terms/admin',
+    create: '/terms',
+    update: (id: string) => `/terms/${id}`,
+    delete: (id: string) => `/terms/${id}`,
+  },
+  ai: {
+    generatePlan: '/ai/plans/generate',
+    profiles: '/ai/plans/profiles',
+    analyzeProgression: '/ai/progression/analyze',
+    confirmProgression: '/ai/progression/confirm',
+    currentWeekProgression: '/ai/progression/current-week',
+    copyAsPlan: (id: string) => `/workout-plans/${id}/copy`,
   },
 } as const;
