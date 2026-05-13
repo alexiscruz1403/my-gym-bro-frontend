@@ -13,22 +13,16 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import type { PhysicalData, UserResponse } from '@/types/domain.types';
 
+const toNullableNumber = (v: unknown): number | null =>
+  v === '' || v == null || (typeof v === 'number' && isNaN(v)) ? null : Number(v);
+
 function buildSchema(t: (key: string) => string) {
   return z.object({
-    weightValue: z.preprocess(
-      (v) => (v === '' || v == null || (typeof v === 'number' && isNaN(v)) ? null : Number(v)),
-      z.number().min(20, t('profile.physicalData.weightRange')).max(300, t('profile.physicalData.weightRange')).nullable(),
-    ),
+    weightValue: z.number().min(20, t('profile.physicalData.weightRange')).max(300, t('profile.physicalData.weightRange')).nullable(),
     weightUnit: z.enum(['kg', 'lbs']),
-    heightValue: z.preprocess(
-      (v) => (v === '' || v == null || (typeof v === 'number' && isNaN(v)) ? null : Number(v)),
-      z.number().min(1, t('profile.physicalData.heightRange')).max(300, t('profile.physicalData.heightRange')).nullable(),
-    ),
+    heightValue: z.number().min(1, t('profile.physicalData.heightRange')).max(300, t('profile.physicalData.heightRange')).nullable(),
     heightUnit: z.enum(['cm', 'ft']),
-    bodyFatPercent: z.preprocess(
-      (v) => (v === '' || v == null || (typeof v === 'number' && isNaN(v)) ? null : Number(v)),
-      z.number().min(1, t('profile.physicalData.bodyFatRange')).max(70, t('profile.physicalData.bodyFatRange')).nullable(),
-    ),
+    bodyFatPercent: z.number().min(1, t('profile.physicalData.bodyFatRange')).max(70, t('profile.physicalData.bodyFatRange')).nullable(),
   });
 }
 
@@ -108,7 +102,7 @@ export function BodyMetricsSection({ user, onSave }: BodyMetricsSectionProps) {
                 max="300"
                 step="0.1"
                 className="flex-1"
-                {...register('weightValue', { valueAsNumber: true })}
+                {...register('weightValue', { setValueAs: toNullableNumber })}
               />
               <div className="flex overflow-hidden rounded-md border text-sm">
                 {(['kg', 'lbs'] as const).map((unit, i) => (
@@ -144,7 +138,7 @@ export function BodyMetricsSection({ user, onSave }: BodyMetricsSectionProps) {
                 max="300"
                 step="0.1"
                 className="flex-1"
-                {...register('heightValue', { valueAsNumber: true })}
+                {...register('heightValue', { setValueAs: toNullableNumber })}
               />
               <div className="flex overflow-hidden rounded-md border text-sm">
                 {(['cm', 'ft'] as const).map((unit, i) => (
@@ -183,7 +177,7 @@ export function BodyMetricsSection({ user, onSave }: BodyMetricsSectionProps) {
                 max="70"
                 step="0.1"
                 className="pr-8"
-                {...register('bodyFatPercent', { valueAsNumber: true })}
+                {...register('bodyFatPercent', { setValueAs: toNullableNumber })}
               />
               <span className="text-muted-foreground pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm">
                 {t('profile.physicalData.bodyFatUnit')}
