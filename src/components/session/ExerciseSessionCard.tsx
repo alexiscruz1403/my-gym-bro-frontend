@@ -16,7 +16,6 @@ import { toast } from 'sonner';
 import type { SessionExercise, Exercise } from '@/types/domain.types';
 import type { LogSetRequest, ModifyExerciseRequest, ReplaceExerciseRequest } from '@/types/api.types';
 import type { SetCompletePayload } from './SetRow';
-import { formatSide, isUnilateral } from '@/lib/set-format';
 
 interface ExerciseSessionCardProps {
   exercise: SessionExercise;
@@ -27,12 +26,11 @@ interface ExerciseSessionCardProps {
 }
 
 export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, onExerciseCompleted }: ExerciseSessionCardProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { start: startTimer } = useRestTimer();
   const [replaceOpen, setReplaceOpen] = useState(false);
   const { data: catalogExercise } = useExerciseCatalog(exercise.exerciseId);
-
-  const unilateral = isUnilateral(exercise);
+  const lang = i18n.language as 'es' | 'en';
 
   const handleReplaceSelect = async (newExercise: Exercise) => {
     try {
@@ -136,7 +134,7 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
           <div className="flex items-start gap-2 min-w-0 flex-1">
             <ExerciseGifThumbnail
               gifUrl={catalogExercise?.gifUrl}
-              exerciseName={exercise.exerciseName}
+              exerciseName={exercise.exerciseName[lang] ?? exercise.exerciseName.en}
               exerciseId={exercise.exerciseId}
               size="md"
             />
@@ -146,7 +144,7 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
                   href={`/workout/exercises/${exercise.exerciseId}`}
                   className="font-display text-xl font-bold leading-tight hover:underline"
                 >
-                  {exercise.exerciseName}
+                  {exercise.exerciseName[lang] ?? exercise.exerciseName.en}
                 </NextLink>
                 {exercise.supersetGroupId && (
                   <Badge variant="secondary" className="gap-1 text-xs">
