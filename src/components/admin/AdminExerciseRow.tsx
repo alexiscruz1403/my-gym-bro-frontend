@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { ExerciseGifThumbnail } from '@/components/shared/ExerciseGifThumbnail';
 import type { Exercise } from '@/types/domain.types';
 
 interface AdminExerciseRowProps {
@@ -28,6 +29,12 @@ export function AdminExerciseRow({ exercise, onEdit, onDelete }: AdminExerciseRo
 
   return (
     <div className="flex items-center justify-between gap-3 rounded-lg border bg-card px-4 py-3">
+      <ExerciseGifThumbnail
+        gifUrl={exercise.gifUrl}
+        exerciseName={displayName}
+        exerciseId={exercise.id}
+        size="sm"
+      />
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">{displayName}</p>
         <div className="mt-1 flex flex-wrap gap-1">

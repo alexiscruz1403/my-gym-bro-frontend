@@ -10,6 +10,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { ExerciseGifThumbnail } from '@/components/shared/ExerciseGifThumbnail';
 import { useState, useRef } from 'react';
 import { usePostInteraction } from '@/hooks/usePostInteraction';
 import type { FeedPost, SessionSummaryExerciseSnapshot } from '@/types/domain.types';
@@ -36,7 +37,7 @@ function chunk<T>(arr: T[], size: number): T[][] {
   );
 }
 
-const EXERCISES_PER_SLIDE = 4;
+const EXERCISES_PER_SLIDE = 3;
 
 interface SummarySlideProps {
   exercises: SessionSummaryExerciseSnapshot[];
@@ -70,7 +71,23 @@ function SummarySlide({ exercises, durationSeconds, totalSets, showHeader }: Sum
         };
         return (
           <div key={i} className="space-y-0.5">
-            <p className="text-sm font-medium">{ex.name}</p>
+            <div className="flex items-center gap-1.5">
+              <ExerciseGifThumbnail
+                gifUrl={ex.gifUrl}
+                exerciseName={ex.exerciseName}
+                exerciseId={ex.exerciseId}
+              />
+              {ex.exerciseId ? (
+                <Link
+                  href={`/workout/exercises/${ex.exerciseId}`}
+                  className="text-sm font-medium hover:underline truncate"
+                >
+                  {ex.exerciseName}
+                </Link>
+              ) : (
+                <p className="text-sm font-medium">{ex.exerciseName}</p>
+              )}
+            </div>
             {isUni || completedSets.some((s) => s.left || s.right) ? (
               <div className="text-muted-foreground text-xs space-y-0.5">
                 {completedSets.map((s, j) => (

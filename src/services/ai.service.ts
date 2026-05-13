@@ -3,6 +3,7 @@ import { API_ROUTES } from '@/lib/api-routes';
 import type {
   AiPlanProfile,
   ConfirmProgressionRequest,
+  ExerciseSwapProposal,
   GeneratePlanRequest,
   GeneratePlanResponse,
   ProgressionAnalysisResponse,
@@ -47,7 +48,28 @@ export async function confirmProgression(
   return data;
 }
 
-export async function copyAiPlan(planId: string): Promise<WorkoutPlan> {
-  const { data } = await apiClient.post<WorkoutPlan>(API_ROUTES.ai.copyAsPlan(planId));
+export async function suggestReplacement(
+  planId: string,
+  exerciseId: string,
+  reason: string,
+): Promise<ExerciseSwapProposal> {
+  const { data } = await apiClient.post<ExerciseSwapProposal>(
+    API_ROUTES.ai.suggestReplacement(planId, exerciseId),
+    { reason },
+    { timeout: 40_000 },
+  );
   return data;
 }
+
+export async function confirmReplacement(
+  planId: string,
+  exerciseId: string,
+  newExerciseId: string,
+): Promise<WorkoutPlan> {
+  const { data } = await apiClient.post<WorkoutPlan>(
+    API_ROUTES.ai.confirmReplacement(planId, exerciseId),
+    { newExerciseId },
+  );
+  return data;
+}
+

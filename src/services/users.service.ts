@@ -1,7 +1,7 @@
 import { apiClient } from '@/lib/axios';
 import { API_ROUTES } from '@/lib/api-routes';
 import type { PaginationParams, PaginatedUserSearchResponse, UpdateProfileRequest } from '@/types/api.types';
-import type { Language, PublicUserProfile, UserResponse, PublicSessionHistoryResponse } from '@/types/domain.types';
+import type { PhysicalData, Language, PublicUserProfile, UserResponse, PublicSessionHistoryResponse } from '@/types/domain.types';
 
 export const usersService = {
   getMe: (): Promise<UserResponse> =>
@@ -41,4 +41,7 @@ export const usersService = {
 
   updateLanguage: (language: Language): Promise<UserResponse> =>
     apiClient.patch<UserResponse>(API_ROUTES.users.language, { language }).then((r) => r.data),
+
+  updatePhysicalData: (data: PhysicalData): Promise<UserResponse> =>
+    apiClient.patch<UserResponse>(API_ROUTES.users.physicalData, data).then((r) => r.data),
 };

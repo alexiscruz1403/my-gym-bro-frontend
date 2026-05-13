@@ -1,6 +1,9 @@
+import Link from 'next/link';
 import { X } from 'lucide-react';
 import { RankBadge } from '@/components/ranks/RankBadge';
-import type { MuscleRankItem } from '@/types/domain.types';
+import { ExerciseGifThumbnail } from '@/components/shared/ExerciseGifThumbnail';
+import { useExerciseCatalog } from '@/hooks/useExerciseCatalog';
+import type { MuscleRankItem, ExerciseRankItem } from '@/types/domain.types';
 
 const MUSCLE_LABEL: Record<string, string> = {
   chest: 'Pecho',
@@ -23,6 +26,31 @@ const MUSCLE_LABEL: Record<string, string> = {
   adductors: 'Aductores',
   abductors: 'Abductores',
 };
+
+function ExerciseRankRow({ ex }: { ex: ExerciseRankItem }) {
+  const { data: catalogExercise } = useExerciseCatalog(ex.exerciseId);
+  return (
+    <div className="flex items-center gap-2">
+      <ExerciseGifThumbnail
+        gifUrl={catalogExercise?.gifUrl}
+        exerciseName={ex.exerciseName}
+        exerciseId={ex.exerciseId}
+      />
+      <Link
+        href={`/workout/exercises/${ex.exerciseId}`}
+        className="text-sm truncate flex-1 hover:underline"
+      >
+        {ex.exerciseName}
+      </Link>
+      <div className="flex items-center gap-2 shrink-0">
+        <span className="text-xs text-muted-foreground tabular-nums">
+          {ex.bestValue.toLocaleString('es', { maximumFractionDigits: 1 })}
+        </span>
+        <RankBadge rank={ex.rank} size="sm" />
+      </div>
+    </div>
+  );
+}
 
 interface MuscleDetailPanelProps {
   item: MuscleRankItem;
@@ -52,15 +80,7 @@ export function MuscleDetailPanel({ item, onClose }: MuscleDetailPanelProps) {
       ) : (
         <div className="space-y-2">
           {item.exercises.map((ex) => (
-            <div key={ex.exerciseId} className="flex items-center justify-between gap-2">
-              <span className="text-sm truncate">{ex.exerciseName}</span>
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="text-xs text-muted-foreground tabular-nums">
-                  {ex.bestValue.toLocaleString('es', { maximumFractionDigits: 1 })}
-                </span>
-                <RankBadge rank={ex.rank} size="sm" />
-              </div>
-            </div>
+            <ExerciseRankRow key={ex.exerciseId} ex={ex} />
           ))}
         </div>
       )}

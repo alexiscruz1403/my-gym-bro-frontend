@@ -29,7 +29,9 @@ const ExercisePickerDrawer = dynamic(
 );
 import { Trash2, Plus, Pencil, GripVertical } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import Link from 'next/link';
 import { SupersetGroupIndicator } from '@/components/workout/SupersetGroupIndicator';
+import { ExerciseGifThumbnail } from '@/components/shared/ExerciseGifThumbnail';
 import type { Exercise } from '@/types/domain.types';
 import type { ExerciseConfigDraft } from '@/types/ui.types';
 
@@ -83,6 +85,8 @@ function SortableExerciseItem({
     nextEx?.supersetGroupId &&
     ex.supersetGroupId === nextEx.supersetGroupId;
 
+    console.log('Rendering exercise item', { exerciseName: ex.exerciseName, gifUrl: ex.gifUrl });
+
   return (
     <div ref={setNodeRef} style={style}>
       {isEditing ? (
@@ -106,8 +110,19 @@ function SortableExerciseItem({
             <GripVertical className="h-4 w-4" />
           </button>
 
+          <ExerciseGifThumbnail
+            gifUrl={ex.gifUrl}
+            exerciseName={ex.exerciseName}
+            exerciseId={ex.exerciseId}
+          />
+
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium">{ex.exerciseName}</p>
+            <Link
+              href={`/workout/exercises/${ex.exerciseId}`}
+              className="truncate text-sm font-medium hover:underline"
+            >
+              {ex.exerciseName}
+            </Link>
             {ex.bilateral === false ? (
               <p className="text-muted-foreground text-xs">
                 {ex.sets} ×{' '}
@@ -191,6 +206,7 @@ export function DayExerciseList({
       const base = {
         exerciseId: exercise.id,
         exerciseName: exercise.name[lang] ?? exercise.name.en,
+        gifUrl: exercise.gifUrl,
         sets: 3,
         rest: 60,
         bilateral: exercise.bilateral,

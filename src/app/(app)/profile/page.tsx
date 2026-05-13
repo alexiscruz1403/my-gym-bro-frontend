@@ -24,6 +24,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { useSessionHistory } from '@/hooks/useSessionHistory';
 import { useStats } from '@/hooks/useStats';
 import { DeleteAccountDialog } from '@/components/profile/DeleteAccountDialog';
+import { BodyMetricsSection } from '@/components/profile/BodyMetricsSection';
 import { cn } from '@/lib/utils';
 
 type EditProfileValues = { username: string };
@@ -42,7 +43,7 @@ function SessionHistorySkeletons() {
 export default function ProfilePage() {
   const { t } = useTranslation();
   const { logout } = useAuth();
-  const { user, isLoading, updateProfile } = useProfile();
+  const { user, isLoading, updateProfile, updatePhysicalData } = useProfile();
   const [activeTab, setActiveTab] = useState<ProfileTab>('profile');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
@@ -58,11 +59,13 @@ export default function ProfilePage() {
     z.object({
       username: z
         .string()
-        .min(3, t('profile.validation.minChars'))
+        .min(5, t('profile.validation.minChars'))
         .max(20, t('profile.validation.maxChars'))
-        .regex(/^[a-zA-Z0-9_ ]+$/, t('profile.validation.invalidChars'))
-        .refine((val) => val === val.trim(), t('profile.validation.trimError'))
-        .refine((val) => val.trim().length > 0, t('profile.validation.emptySpaces')),
+        .regex(/^[a-zA-Z0-9\-._]+$/, t('profile.validation.invalidChars'))
+        .refine(
+          (val) => !/^(admin|support|root|api|system)/i.test(val),
+          t('profile.validation.reservedUsername'),
+        ),
     }),
     [t]
   );
@@ -152,6 +155,8 @@ export default function ProfilePage() {
                 </CardContent>
               </form>
             </Card>
+
+            <BodyMetricsSection user={user} onSave={updatePhysicalData} />
 
             <Button
               variant="outline"

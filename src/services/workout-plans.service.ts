@@ -1,7 +1,12 @@
 import { apiClient } from '@/lib/axios';
 import { API_ROUTES } from '@/lib/api-routes';
 import type { CreatePlanRequest, UpdatePlanRequest } from '@/types/api.types';
-import type { PlanListItem, WorkoutPlan } from '@/types/domain.types';
+import type { AiFitnessGoal, MuscleGroup, PlanListItem, WorkoutPlan } from '@/types/domain.types';
+
+export interface UpdatePlanGoalsRequest {
+  mainGoal?: AiFitnessGoal | null;
+  focusMuscles?: MuscleGroup[];
+}
 
 export async function getPlans(): Promise<PlanListItem[]> {
   const { data } = await apiClient.get<PlanListItem[]>(
@@ -56,6 +61,17 @@ export async function deletePlan(id: string): Promise<void> {
 export async function activatePlan(id: string): Promise<WorkoutPlan> {
   const { data } = await apiClient.patch<WorkoutPlan>(
     API_ROUTES.workoutPlans.activate(id),
+  );
+  return data;
+}
+
+export async function updatePlanGoals(
+  id: string,
+  dto: UpdatePlanGoalsRequest,
+): Promise<WorkoutPlan> {
+  const { data } = await apiClient.patch<WorkoutPlan>(
+    API_ROUTES.workoutPlans.goals(id),
+    dto,
   );
   return data;
 }
