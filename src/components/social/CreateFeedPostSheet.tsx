@@ -30,7 +30,7 @@ function formatDuration(seconds: number): string {
 }
 
 export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSheetProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -39,6 +39,7 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const { clearSessionData } = useSession();
+  const lang = i18n.language as 'es' | 'en';
 
   const completedExercises = session.exercises.filter(
     (ex) => ex.sets.some((s) => s.completed),
@@ -104,7 +105,7 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
               const completedSets = ex.sets.filter((s) => s.completed);
               return (
                 <div key={ex.exerciseId} className="space-y-1">
-                  <p className="text-sm font-medium">{ex.exerciseName}</p>
+                  <p className="text-sm font-medium">{ex.exerciseName[lang] ?? ex.exerciseName.en}</p>
                   <div className="space-y-0.5 pl-1">
                     {completedSets.map((s) => {
                       const metric =
