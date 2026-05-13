@@ -133,6 +133,7 @@ const usePlanBuilderStore = create<PlanBuilderState & PlanBuilderActions>()(
             duration: ex.duration,
             weight: ex.weight,
             weightUnit: ex.weightUnit,
+            gifUrl: ex.gifUrl,
             rest: ex.rest,
             notes: ex.notes,
             supersetGroupId: ex.supersetGroupId,

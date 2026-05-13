@@ -1,6 +1,17 @@
 export type UserRole = 'user' | 'admin';
 export type Language = 'es' | 'en';
 
+export type WeightUnit = 'kg' | 'lbs';
+export type HeightUnit = 'cm' | 'ft';
+
+export interface PhysicalData {
+  weightValue?: number | null;
+  weightUnit?: WeightUnit;
+  heightValue?: number | null;
+  heightUnit?: HeightUnit;
+  bodyFatPercent?: number | null;
+}
+
 export interface UserResponse {
   id: string;
   email: string;
@@ -16,6 +27,7 @@ export interface UserResponse {
   membershipStatus: MembershipStatus | null;
   autoRenew: boolean;
   language: Language;
+  physicalData?: PhysicalData | null;
 }
 
 export interface BilingualString {
@@ -100,6 +112,7 @@ export interface ExerciseConfig {
   reps?: number;
   repsMax?: number;
   duration?: number;
+  gifUrl?: string;
   weight?: number;
   weightUnit?: 'kg' | 'lbs';
   rest: number;
@@ -122,6 +135,7 @@ export interface WorkoutPlan {
   isActive: boolean;
   isAiGenerated?: boolean;
   days: PlanDay[];
+  goals?: { mainGoal?: AiFitnessGoal | null; focusMuscles?: MuscleGroup[] } | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -151,7 +165,7 @@ export interface SessionSet {
 
 export interface SessionExercise {
   exerciseId: string;
-  exerciseName: string;
+  exerciseName: BilingualString;
   orderIndex: number;
   supersetGroupId?: string | null;
   weightUnit?: 'kg' | 'lbs';
@@ -311,9 +325,11 @@ export interface SessionSummarySetSnapshot {
 }
 
 export interface SessionSummaryExerciseSnapshot {
-  name: string;
+  exerciseName: string;
   sets: SessionSummarySetSnapshot[];
   bilateral?: boolean;
+  gifUrl?: string;
+  exerciseId?: string;
 }
 
 export interface SessionSummarySnapshot {
@@ -619,6 +635,18 @@ export interface AppNotification {
   isRead: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ExerciseSwapProposal {
+  suggestedExercise: {
+    id: string;
+    name: BilingualString;
+    musclesPrimary: MuscleGroup[];
+    loadType: LoadType;
+    bilateral: boolean;
+    trackingType: TrackingType;
+  };
+  justification: string;
 }
 
 // AI Features (10 & 11)

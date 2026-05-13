@@ -9,14 +9,13 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PlanDayAccordion } from './PlanDayAccordion';
 import { DeletePlanDialog } from './DeletePlanDialog';
+import { PlanGoalsSection } from './PlanGoalsSection';
 import { ProgressionTab } from '@/components/ai/progression/ProgressionTab';
 import { deletePlan, activatePlan } from '@/services/workout-plans.service';
 import { invalidatePlanCache } from '@/hooks/usePlan';
-import { usePlans } from '@/hooks/usePlans';
-import { useCopyAiPlan } from '@/hooks/useCopyAiPlan';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
-import { Pencil, Zap, Sparkles, Copy, LayoutList, Loader2, AlertTriangle } from 'lucide-react';
+import { Pencil, Zap, Sparkles, LayoutList, Loader2, AlertTriangle } from 'lucide-react';
 import type { WorkoutPlan } from '@/types/domain.types';
 
 interface PlanDetailViewProps {
@@ -28,33 +27,12 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
   const router = useRouter();
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { data: plans } = usePlans();
   const [confirmingActivate, setConfirmingActivate] = useState(false);
   const [activating, setActivating] = useState(false);
 
   const isPremium =
     user?.membershipTier === 'premium' && user?.membershipStatus === 'active';
   const showProgressionTab = isPremium && plan.isActive;
-
-  const normalPlanCount = plans.filter((p) => !p.isAiGenerated).length;
-  const canCopy = normalPlanCount < 3;
-
-  const { copy, isCopying } = useCopyAiPlan((newPlan) => {
-    toast.success(t('plans.copiedAsNormal', { name: newPlan.name }));
-  });
-
-  const handleCopy = () => {
-    copy(plan.id, {
-      onError: (err: unknown) => {
-        const status = (err as { response?: { status?: number } })?.response?.status;
-        if (status === 422) {
-          toast.error(t('plans.error.maxPlans'));
-        } else {
-          toast.error(t('plans.copyError'));
-        }
-      },
-    });
-  };
 
   const handleActivate = async () => {
     setActivating(true);
@@ -137,23 +115,6 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
             {t('common.edit')}
           </Button>
         )}
-        {plan.isAiGenerated && (
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={handleCopy}
-            disabled={!canCopy || isCopying}
-            title={!canCopy ? t('plans.maxNormalPlans') : undefined}
-            className="flex cursor-pointer items-center gap-1.5"
-          >
-            {isCopying ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Copy className="h-4 w-4" />
-            )}
-            {t('plans.copyAsNormal')}
-          </Button>
-        )}
         <DeletePlanDialog planName={plan.name} onConfirm={handleDelete} />
       </div>
 
@@ -178,7 +139,11 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
 
           <TabsContent value="overview" className="mt-4">
             {plan.days.length > 0 ? (
-              <PlanDayAccordion days={plan.days} />
+              <PlanDayAccordion
+                days={plan.days}
+                planId={plan.id}
+                showSwap={isPremium && !!plan.isAiGenerated}
+              />
             ) : (
               <p className="text-muted-foreground py-4 text-center text-sm">
                 {t('plans.noExercises')}
@@ -193,7 +158,11 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
       ) : (
         <>
           {plan.days.length > 0 ? (
-            <PlanDayAccordion days={plan.days} />
+            <PlanDayAccordion
+              days={plan.days}
+              planId={plan.id}
+              showSwap={isPremium && !!plan.isAiGenerated}
+            />
           ) : (
             <p className="text-muted-foreground py-4 text-center text-sm">
               {t('plans.noExercises')}
@@ -201,6 +170,8 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
           )}
         </>
       )}
+
+      <PlanGoalsSection plan={plan} isPremium={isPremium} />
     </div>
   );
 }

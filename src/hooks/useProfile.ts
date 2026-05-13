@@ -6,7 +6,7 @@ import useAuthStore from '@/store/auth.store';
 import { queryClient } from '@/lib/query-client';
 import { usersService } from '@/services/users.service';
 import type { UpdateProfileRequest, ApiError } from '@/types/api.types';
-import type { UserResponse } from '@/types/domain.types';
+import type { PhysicalData, UserResponse } from '@/types/domain.types';
 
 export function useProfile() {
   const { user, setUser, isAuthenticated } = useAuthStore();
@@ -79,12 +79,38 @@ export function useProfile() {
     [setUser],
   );
 
+  const updatePhysicalData = useCallback(
+    async (data: PhysicalData): Promise<boolean> => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const updatedUser = await usersService.updatePhysicalData(data);
+        setUser(updatedUser);
+        queryClient.invalidateQueries({ queryKey: ['profile'] });
+        toast.success('Datos corporales actualizados.');
+        return true;
+      } catch (err) {
+        const axiosError = err as AxiosError<ApiError>;
+        const message = axiosError.response?.data?.message;
+        const displayMessage = Array.isArray(message) ? message[0] : message;
+        const errorMessage = displayMessage ?? 'Error al actualizar los datos corporales.';
+        setError(errorMessage);
+        toast.error(errorMessage);
+        return false;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [setUser],
+  );
+
   return {
     user: user as UserResponse | null,
     isLoading,
     error,
     updateProfile,
     uploadAvatar,
+    updatePhysicalData,
     refetch: fetchProfile,
   };
 }
