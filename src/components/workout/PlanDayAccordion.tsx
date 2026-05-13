@@ -39,9 +39,11 @@ function groupExercises(exercises: ExerciseConfig[]): ExerciseGroupItem[] {
 
 interface PlanDayAccordionProps {
   days: PlanDay[];
+  planId?: string;
+  showSwap?: boolean;
 }
 
-export function PlanDayAccordion({ days }: PlanDayAccordionProps) {
+export function PlanDayAccordion({ days, planId, showSwap }: PlanDayAccordionProps) {
   const { t } = useTranslation();
 
   return (
@@ -65,7 +67,12 @@ export function PlanDayAccordion({ days }: PlanDayAccordionProps) {
                 {groups.map((group, gi) => (
                   <div key={gi}>
                     {group.type === 'standalone' ? (
-                      <ExerciseConfigRow config={group.exercise} />
+                      <ExerciseConfigRow
+                        config={group.exercise}
+                        planId={planId}
+
+                        showSwap={showSwap}
+                      />
                     ) : (
                       <div className="border-primary/40 rounded-lg border-l-2 pl-2">
                         <div className="text-primary mb-1 flex items-center gap-1 px-1 pt-1 text-xs font-medium">
@@ -74,7 +81,12 @@ export function PlanDayAccordion({ days }: PlanDayAccordionProps) {
                         </div>
                         {group.exercises.map((ex, ei) => (
                           <div key={`${ex.exerciseId}-${ei}`}>
-                            <ExerciseConfigRow config={ex} />
+                            <ExerciseConfigRow
+                              config={ex}
+                              planId={planId}
+      
+                              showSwap={showSwap}
+                            />
                             {ei < group.exercises.length - 1 && (
                               <Separator className="ml-1" />
                             )}

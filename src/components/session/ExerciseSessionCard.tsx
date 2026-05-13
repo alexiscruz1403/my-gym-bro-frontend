@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import NextLink from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Link, Plus, Minus, ArrowLeftRight } from 'lucide-react';
@@ -8,6 +9,9 @@ import { SetList } from './SetList';
 import { LastPerformanceRow } from './LastPerformanceRow';
 import { ReplaceExerciseSheet } from './ReplaceExerciseSheet';
 import { useRestTimer } from '@/hooks/useRestTimer';
+import { useExerciseCatalog } from '@/hooks/useExerciseCatalog';
+import { ExerciseGifThumbnail } from '@/components/shared/ExerciseGifThumbnail';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import type { SessionExercise, Exercise } from '@/types/domain.types';
 import type { LogSetRequest, ModifyExerciseRequest, ReplaceExerciseRequest } from '@/types/api.types';
@@ -23,8 +27,10 @@ interface ExerciseSessionCardProps {
 }
 
 export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, onExerciseCompleted }: ExerciseSessionCardProps) {
+  const { t } = useTranslation();
   const { start: startTimer } = useRestTimer();
   const [replaceOpen, setReplaceOpen] = useState(false);
+  const { data: catalogExercise } = useExerciseCatalog(exercise.exerciseId);
 
   const unilateral = isUnilateral(exercise);
 
@@ -127,19 +133,46 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
       {/* Header */}
       <div className="min-w-0">
         <div className="flex items-start justify-between gap-2">
-          <div className="flex min-w-0 flex-wrap items-center gap-2">
-            <h2 className="font-display text-xl font-bold leading-tight">
-              {exercise.exerciseName}
-            </h2>
-            {exercise.supersetGroupId && (
-              <Badge variant="secondary" className="gap-1 text-xs">
-                <Link className="h-3 w-3" />
-                {exercise.supersetGroupId}
-              </Badge>
-            )}
-            {allDone && (
-              <Badge className="bg-green-500 text-white hover:bg-green-600 text-xs">Done</Badge>
-            )}
+          <div className="flex items-start gap-2 min-w-0 flex-1">
+            <ExerciseGifThumbnail
+              gifUrl={catalogExercise?.gifUrl}
+              exerciseName={exercise.exerciseName}
+              exerciseId={exercise.exerciseId}
+              size="md"
+            />
+            <div className="min-w-0 flex-1">
+              <div className="flex min-w-0 flex-wrap items-center gap-2">
+                <NextLink
+                  href={`/workout/exercises/${exercise.exerciseId}`}
+                  className="font-display text-xl font-bold leading-tight hover:underline"
+                >
+                  {exercise.exerciseName}
+                </NextLink>
+                {exercise.supersetGroupId && (
+                  <Badge variant="secondary" className="gap-1 text-xs">
+                    <Link className="h-3 w-3" />
+                    {exercise.supersetGroupId}
+                  </Badge>
+                )}
+                {allDone && (
+                  <Badge className="bg-green-500 text-white hover:bg-green-600 text-xs">Done</Badge>
+                )}
+              </div>
+              {(exercise.bilateral !== undefined || catalogExercise?.loadType) && (
+                <div className="flex flex-wrap gap-1.5 mt-1">
+                  {exercise.bilateral !== undefined && (
+                    <Badge variant="secondary" className="text-xs">
+                      {exercise.bilateral === false ? t('exercises.unilateral') : t('exercises.bilateral')}
+                    </Badge>
+                  )}
+                  {catalogExercise?.loadType && (
+                    <Badge variant="outline" className="text-xs">
+                      {t(`exercises.loadType.${catalogExercise.loadType}`)}
+                    </Badge>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
           <Button
             type="button"
@@ -156,7 +189,6 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
 
       {/* Weight unit toggle */}
       <div className="flex items-center gap-2">
-        <span className="text-muted-foreground text-xs">Unit:</span>
         {(['kg', 'lbs'] as const).map((unit) => (
           <button
             key={unit}

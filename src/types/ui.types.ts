@@ -10,6 +10,7 @@ import type { ExerciseSide } from '@/types/domain.types';
 export interface ExerciseConfigDraft {
   exerciseId: string;
   exerciseName: string;
+  gifUrl?: string;
   sets: number;
   reps?: number;
   duration?: number;

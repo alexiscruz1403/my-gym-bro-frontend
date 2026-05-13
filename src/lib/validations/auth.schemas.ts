@@ -7,11 +7,13 @@ export const registerSchema = z.object({
     .email('Formato de email inválido'),
   username: z
     .string()
-    .min(3, 'El usuario debe tener al menos 3 caracteres')
+    .min(5, 'El usuario debe tener al menos 5 caracteres')
     .max(20, 'El usuario no puede tener más de 20 caracteres')
-    .regex(/^[a-zA-Z0-9_ ]+$/, 'Solo letras, números, guión bajo y espacios')
-    .refine((val) => val === val.trim(), 'No puede comenzar ni terminar con espacios')
-    .refine((val) => val.trim().length > 0, 'El usuario no puede ser solo espacios'),
+    .regex(/^[a-zA-Z0-9\-._]+$/, 'Solo letras, números, guión, punto y guión bajo')
+    .refine(
+      (val) => !/^(admin|support|root|api|system)/i.test(val),
+      'Este nombre de usuario no está disponible',
+    ),
   password: z
     .string()
     .min(8, 'La contraseña debe tener al menos 8 caracteres'),

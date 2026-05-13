@@ -3,7 +3,8 @@
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { CalendarDays, Dumbbell } from 'lucide-react';
+import { CalendarDays } from 'lucide-react';
+import { ExerciseGifThumbnail } from '@/components/shared/ExerciseGifThumbnail';
 import type { DayOfWeek } from '@/types/domain.types';
 import type { ExerciseConfigDraft } from '@/types/ui.types';
 
@@ -60,9 +61,14 @@ export function WizardStep4Review({
                             ? `${ex.reps}reps`
                             : `${ex.duration}s`;
                       return (
-                        <li key={i} className="flex items-center gap-1.5 text-xs">
-                          <Dumbbell className="text-muted-foreground h-3 w-3 shrink-0" />
-                          <span className="text-muted-foreground">
+                        <li key={i} className="flex items-center gap-2">
+                          <ExerciseGifThumbnail
+                            gifUrl={ex.gifUrl}
+                            exerciseName={ex.exerciseName}
+                            exerciseId={ex.exerciseId}
+                            size="sm"
+                          />
+                          <span className="text-muted-foreground text-xs">
                             {ex.exerciseName} — {ex.sets}×{metric}
                           </span>
                         </li>

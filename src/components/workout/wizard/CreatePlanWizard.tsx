@@ -38,6 +38,8 @@ export function CreatePlanWizard() {
     reset,
   } = usePlanBuilderStore();
 
+  console.log("exercisesByDay in CreatePlanWizard", exercisesByDay);
+
   const handleStep1Next = (planName: string) => {
     setName(planName);
     setStep(2);
@@ -57,6 +59,7 @@ export function CreatePlanWizard() {
         reps: ex.reps,
         duration: ex.duration,
         weight: ex.weight,
+        gifUrl: ex.gifUrl,
         weightUnit: ex.weightUnit || undefined,
         rest: ex.rest,
         notes: ex.notes,

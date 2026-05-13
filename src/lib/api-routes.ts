@@ -20,6 +20,7 @@ export const API_ROUTES = {
     me: '/users/me',
     avatar: '/users/me/avatar',
     language: '/users/me/language',
+    physicalData: '/users/me/physical-data',
     search: '/users',
     publicProfile: (id: string) => `/users/${id}`,
     sessionHistory: (id: string) => `/users/${id}/sessions`,
@@ -37,6 +38,7 @@ export const API_ROUTES = {
     active: '/workout-plans/active',
     detail: (id: string) => `/workout-plans/${id}`,
     activate: (id: string) => `/workout-plans/${id}/activate`,
+    goals: (id: string) => `/workout-plans/${id}/goals`,
   },
   sessions: {
     start: '/sessions',
@@ -109,6 +111,9 @@ export const API_ROUTES = {
     analyzeProgression: '/ai/progression/analyze',
     confirmProgression: '/ai/progression/confirm',
     currentWeekProgression: '/ai/progression/current-week',
-    copyAsPlan: (id: string) => `/workout-plans/${id}/copy`,
+    suggestReplacement: (planId: string, exerciseId: string) =>
+      `/ai/plans/${planId}/exercises/${exerciseId}/suggest-replacement`,
+    confirmReplacement: (planId: string, exerciseId: string) =>
+      `/ai/plans/${planId}/exercises/${exerciseId}/confirm-replacement`,
   },
 } as const;
