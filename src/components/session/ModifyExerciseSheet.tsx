@@ -27,11 +27,12 @@ export function ModifyExerciseSheet({
   exercise,
   onSave,
 }: ModifyExerciseSheetProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [weight, setWeight] = useState(String(exercise.plannedWeight ?? 0));
   const [reps, setReps] = useState(String(exercise.plannedReps ?? ''));
   const [rest, setRest] = useState(String(exercise.plannedRest));
   const [saving, setSaving] = useState(false);
+  const lang = i18n.language as 'es' | 'en';
 
   const handleSave = async () => {
     setSaving(true);
@@ -54,7 +55,7 @@ export function ModifyExerciseSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom">
         <SheetHeader>
-          <SheetTitle>{t('session.modify.titlePrefix')} — {exercise.exerciseName}</SheetTitle>
+          <SheetTitle>{t('session.modify.titlePrefix')} — {exercise.exerciseName[lang] ?? exercise.exerciseName.en}</SheetTitle>
         </SheetHeader>
 
         <div className="space-y-4 px-4 pb-2">
