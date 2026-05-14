@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { SessionDetailSetRow } from '@/components/history/SessionDetailSetRow';
 import { ExerciseHistorySheet } from '@/components/history/ExerciseHistorySheet';
 import { ExerciseGifThumbnail } from '@/components/shared/ExerciseGifThumbnail';
-import { useExerciseCatalog } from '@/hooks/useExerciseCatalog';
 import { History } from 'lucide-react';
 import type { SessionExercise } from '@/types/domain.types';
 
@@ -17,11 +16,9 @@ interface SessionDetailExerciseCardProps {
 }
 
 export function SessionDetailExerciseCard({ exercise }: SessionDetailExerciseCardProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [sheetOpen, setSheetOpen] = useState(false);
-  const { data: catalogExercise } = useExerciseCatalog(exercise.exerciseId);
   const completedSets = exercise.sets.filter((s) => s.completed).length;
-  const lang = i18n.language as 'es' | 'en';
 
   return (
     <>
@@ -30,8 +27,8 @@ export function SessionDetailExerciseCard({ exercise }: SessionDetailExerciseCar
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
               <ExerciseGifThumbnail
-                gifUrl={catalogExercise?.gifUrl}
-                exerciseName={exercise.exerciseName[lang] ?? exercise.exerciseName.en}
+                gifUrl={exercise.gifUrl ?? undefined}
+                exerciseName={exercise.exerciseName}
                 exerciseId={exercise.exerciseId}
               />
               <div className="min-w-0">
@@ -39,7 +36,7 @@ export function SessionDetailExerciseCard({ exercise }: SessionDetailExerciseCar
                   href={`/workout/exercises/${exercise.exerciseId}`}
                   className="truncate font-semibold hover:underline block"
                 >
-                  {exercise.exerciseName[lang] ?? exercise.exerciseName.en}
+                  {exercise.exerciseName}
                 </Link>
                 <p className="text-muted-foreground text-sm">
                   {completedSets}/{exercise.plannedSets} {t('history.sets')}
@@ -76,7 +73,7 @@ export function SessionDetailExerciseCard({ exercise }: SessionDetailExerciseCar
         open={sheetOpen}
         onOpenChange={setSheetOpen}
         exerciseId={exercise.exerciseId}
-        exerciseName={exercise.exerciseName[lang] ?? exercise.exerciseName.en}
+        exerciseName={exercise.exerciseName}
       />
     </>
   );

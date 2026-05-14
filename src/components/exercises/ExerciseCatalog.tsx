@@ -28,7 +28,7 @@ const LIMIT = 15;
 
 export function ExerciseCatalog(props: ExerciseCatalogProps) {
   const router = useRouter();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [filters, setFilters] = useState<ExerciseFiltersValue>({
     search: '',
     muscle: undefined,
@@ -135,7 +135,7 @@ export function ExerciseCatalog(props: ExerciseCatalogProps) {
           >
             {singleSelect
               ? selected.length > 0
-                ? t('exercises.catalog.selectOne', { name: selected[0].name[i18n.language as 'es' | 'en'] ?? selected[0].name.en })
+                ? t('exercises.catalog.selectOne', { name: selected[0].name })
                 : t('exercises.catalog.selectPrompt')
               : selected.length > 0
                 ? t('exercises.catalog.addCount', { count: selected.length })

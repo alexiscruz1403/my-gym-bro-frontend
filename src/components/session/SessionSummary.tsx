@@ -7,7 +7,6 @@ import { CheckCircle, Clock, Dumbbell, BarChart2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
-import { useTranslation } from 'react-i18next';
 
 const CreateFeedPostSheet = dynamic(
   () => import('@/components/social/CreateFeedPostSheet').then((m) => m.CreateFeedPostSheet),
@@ -52,9 +51,6 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
   const [shareOpen, setShareOpen] = useState(false);
   const [slide, setSlide] = useState(0);
   const { clearSessionData } = useSession();
-  const { i18n } = useTranslation();
-  const lang = i18n.language as 'es' | 'en';
-
   // Clear session store on unmount regardless of how the user leaves this screen
   useEffect(() => {
     return () => { clearSessionData(); };
@@ -206,7 +202,7 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
                   const completedSets = ex.sets.filter((s) => s.completed);
                   return (
                     <div key={ex.exerciseId} className="rounded-xl border bg-card px-4 py-3">
-                      <p className="text-sm font-semibold">{ex.exerciseName[lang] ?? ex.exerciseName.en}</p>
+                      <p className="text-sm font-semibold">{ex.exerciseName}</p>
                       <div className="mt-1.5 space-y-0.5">
                         {completedSets.map((s, i) => {
                           const unit = ex.weightUnit ?? 'kg';

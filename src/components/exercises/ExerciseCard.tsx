@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { MuscleGroupBadge } from './MuscleGroupBadge';
 import { Dumbbell, Plus, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useTranslation } from 'react-i18next';
 import type { Exercise } from '@/types/domain.types';
 
 const LOAD_TYPE_LABELS: Record<string, string> = {
@@ -36,9 +35,6 @@ type ExerciseCardProps = ExerciseCardBrowseProps | ExerciseCardPickerProps;
 
 export function ExerciseCard(props: ExerciseCardProps) {
   const { exercise, mode } = props;
-  const { i18n } = useTranslation();
-  const displayName = exercise.name[i18n.language as 'es' | 'en'] ?? exercise.name.en;
-
   const handleCardClick = () => {
     if (mode === 'browse') props.onClick();
     else props.onToggle(exercise);
@@ -68,7 +64,7 @@ export function ExerciseCard(props: ExerciseCardProps) {
         {exercise.gifUrl ? (
           <img
             src={exercise.gifUrl}
-            alt={displayName}
+            alt={exercise.name}
             className="h-12 w-12 rounded-md object-cover"
           />
         ) : (
@@ -78,7 +74,7 @@ export function ExerciseCard(props: ExerciseCardProps) {
         )}
 
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium">{displayName}</p>
+          <p className="truncate text-sm font-medium">{exercise.name}</p>
           <div className="mt-1 flex flex-wrap gap-1">
             {exercise.musclesPrimary.slice(0, 2).map((m) => (
               <MuscleGroupBadge key={m} muscle={m} variant="secondary" />

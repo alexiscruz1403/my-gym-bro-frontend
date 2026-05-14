@@ -13,9 +13,10 @@ export async function getExercises(
   return data;
 }
 
-export async function getExercise(id: string): Promise<Exercise> {
+export async function getExercise(id: string, language?: string): Promise<Exercise> {
   const { data } = await apiClient.get<Exercise>(
     API_ROUTES.exercises.detail(id),
+    { params: language ? { language } : undefined },
   );
   return data;
 }

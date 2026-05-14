@@ -25,7 +25,7 @@ export function ExerciseSwapDialog({
   exerciseId,
   exerciseName,
 }: ExerciseSwapDialogProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState('');
   const reasonError = reason.length > 0 && reason.length < 10
@@ -54,10 +54,7 @@ export function ExerciseSwapDialog({
     setOpen(false);
   };
 
-  const lang = i18n.language as 'es' | 'en';
-  const proposalName = proposal
-    ? (proposal.suggestedExercise.name[lang] ?? proposal.suggestedExercise.name.es)
-    : '';
+  const proposalName = proposal?.suggestedExercise.name ?? '';
 
   return (
     <>
