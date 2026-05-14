@@ -4,7 +4,6 @@ import NextLink from 'next/link';
 import type { ExerciseConfig } from '@/types/domain.types';
 import { formatSide, isUnilateral } from '@/lib/set-format';
 import { ExerciseSwapDialog } from './ExerciseSwapDialog';
-import { useExerciseCatalog } from '@/hooks/useExerciseCatalog';
 import { ExerciseGifThumbnail } from '@/components/shared/ExerciseGifThumbnail';
 
 interface ExerciseConfigRowProps {
@@ -14,7 +13,6 @@ interface ExerciseConfigRowProps {
 }
 
 export function ExerciseConfigRow({ config, planId, showSwap }: ExerciseConfigRowProps) {
-  const { data: catalogExercise } = useExerciseCatalog(config.exerciseId);
   const unilateral = isUnilateral(config);
   const weightUnit = config.weightUnit ?? 'kg';
 
@@ -31,7 +29,7 @@ export function ExerciseConfigRow({ config, planId, showSwap }: ExerciseConfigRo
       <div className="flex items-start justify-between gap-2 px-1 py-2">
         <div className="flex items-start gap-2 min-w-0 flex-1">
           <ExerciseGifThumbnail
-            gifUrl={catalogExercise?.gifUrl}
+            gifUrl={config.gifUrl}
             exerciseName={config.exerciseName}
             exerciseId={config.exerciseId}
           />
