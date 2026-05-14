@@ -193,8 +193,7 @@ export function DayExerciseList({
 }: DayExerciseListProps) {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const { t, i18n } = useTranslation();
-  const lang = i18n.language as 'es' | 'en';
+  const { t } = useTranslation();
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -205,7 +204,7 @@ export function DayExerciseList({
     for (const exercise of exercises) {
       const base = {
         exerciseId: exercise.id,
-        exerciseName: exercise.name[lang] ?? exercise.name.en,
+        exerciseName: exercise.name,
         gifUrl: exercise.gifUrl,
         sets: 3,
         rest: 60,

@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { getExercise } from '@/services/exercises.service';
 import type { Exercise, MuscleGroup, TrackingType, LoadType } from '@/types/domain.types';
 
 const MUSCLE_GROUPS: MuscleGroup[] = [
@@ -40,8 +41,8 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
 
   useEffect(() => {
     if (exercise) {
-      setNameEs(exercise.name.es);
-      setNameEn(exercise.name.en);
+      getExercise(exercise.id, 'es').then((r) => setNameEs(r.name));
+      getExercise(exercise.id, 'en').then((r) => setNameEn(r.name));
       setTrackingType(exercise.trackingType);
       setLoadType(exercise.loadType);
       setMusclesPrimary(exercise.musclesPrimary);

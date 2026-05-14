@@ -28,8 +28,7 @@ interface ExerciseSelectorProps {
 }
 
 function ExerciseSelector({ title, description, selected, onAdd, onRemove }: ExerciseSelectorProps) {
-  const { t, i18n } = useTranslation();
-  const lang = i18n.language as 'es' | 'en';
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
@@ -62,7 +61,7 @@ function ExerciseSelector({ title, description, selected, onAdd, onRemove }: Exe
               animate={{ scale: 1, opacity: 1 }}
               className="inline-flex items-center gap-1 rounded-full border bg-primary/10 border-primary/30 px-2.5 py-1 text-xs font-medium text-primary"
             >
-              {ex.name[lang] ?? ex.name.en}
+              {ex.name}
               <button
                 type="button"
                 onClick={() => onRemove(ex.id)}
@@ -103,7 +102,7 @@ function ExerciseSelector({ title, description, selected, onAdd, onRemove }: Exe
               }}
               className="flex w-full items-center justify-between px-3 py-2.5 text-left hover:bg-muted/50 transition-colors"
             >
-              <span className="text-sm font-medium truncate">{ex.name[lang] ?? ex.name.en}</span>
+              <span className="text-sm font-medium truncate">{ex.name}</span>
               <Plus className="h-3.5 w-3.5 text-muted-foreground shrink-0 ml-2" />
             </button>
           ))}

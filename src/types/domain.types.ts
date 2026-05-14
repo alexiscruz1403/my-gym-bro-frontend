@@ -88,7 +88,7 @@ export type WeightInstruction =
 
 export interface Exercise {
   id: string;
-  name: BilingualString;
+  name: string;
   musclesPrimary: MuscleGroup[];
   musclesSecondary: MuscleGroup[];
   loadType: LoadType;
@@ -165,7 +165,7 @@ export interface SessionSet {
 
 export interface SessionExercise {
   exerciseId: string;
-  exerciseName: BilingualString;
+  exerciseName: string;
   orderIndex: number;
   supersetGroupId?: string | null;
   weightUnit?: 'kg' | 'lbs';
@@ -181,6 +181,7 @@ export interface SessionExercise {
   bilateral?: boolean;
   plannedLeft?: ExerciseSide | null;
   plannedRight?: ExerciseSide | null;
+  gifUrl?: string | null;
 }
 
 export interface WorkoutSession {
@@ -458,6 +459,7 @@ export interface ExerciseRankSummaryItem {
   rankNameAfter: string;
   bestValueBefore: number | null;
   bestValueAfter: number;
+  gifUrl?: string | null;
 }
 
 export interface FinishSessionResponse {
@@ -640,7 +642,7 @@ export interface AppNotification {
 export interface ExerciseSwapProposal {
   suggestedExercise: {
     id: string;
-    name: BilingualString;
+    name: string;
     musclesPrimary: MuscleGroup[];
     loadType: LoadType;
     bilateral: boolean;

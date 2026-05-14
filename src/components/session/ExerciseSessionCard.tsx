@@ -26,11 +26,10 @@ interface ExerciseSessionCardProps {
 }
 
 export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, onExerciseCompleted }: ExerciseSessionCardProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { start: startTimer } = useRestTimer();
   const [replaceOpen, setReplaceOpen] = useState(false);
   const { data: catalogExercise } = useExerciseCatalog(exercise.exerciseId);
-  const lang = i18n.language as 'es' | 'en';
 
   const handleReplaceSelect = async (newExercise: Exercise) => {
     try {
@@ -133,8 +132,8 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-start gap-2 min-w-0 flex-1">
             <ExerciseGifThumbnail
-              gifUrl={catalogExercise?.gifUrl}
-              exerciseName={exercise.exerciseName[lang] ?? exercise.exerciseName.en}
+              gifUrl={exercise.gifUrl ?? undefined}
+              exerciseName={exercise.exerciseName}
               exerciseId={exercise.exerciseId}
               size="md"
             />
@@ -144,7 +143,7 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
                   href={`/workout/exercises/${exercise.exerciseId}`}
                   className="font-display text-xl font-bold leading-tight hover:underline"
                 >
-                  {exercise.exerciseName[lang] ?? exercise.exerciseName.en}
+                  {exercise.exerciseName}
                 </NextLink>
                 {exercise.supersetGroupId && (
                   <Badge variant="secondary" className="gap-1 text-xs">
