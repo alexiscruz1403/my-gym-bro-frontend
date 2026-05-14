@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Clock, Dumbbell, BarChart2 } from 'lucide-react';
+import { ExerciseGifThumbnail } from '@/components/shared/ExerciseGifThumbnail';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
@@ -202,7 +203,14 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
                   const completedSets = ex.sets.filter((s) => s.completed);
                   return (
                     <div key={ex.exerciseId} className="rounded-xl border bg-card px-4 py-3">
-                      <p className="text-sm font-semibold">{ex.exerciseName}</p>
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <ExerciseGifThumbnail
+                          gifUrl={ex.gifUrl ?? undefined}
+                          exerciseName={ex.exerciseName}
+                          exerciseId={ex.exerciseId}
+                        />
+                        <p className="text-sm font-semibold truncate">{ex.exerciseName}</p>
+                      </div>
                       <div className="mt-1.5 space-y-0.5">
                         {completedSets.map((s, i) => {
                           const unit = ex.weightUnit ?? 'kg';
@@ -261,7 +269,14 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
                     return (
                       <div key={item.exerciseId} className="space-y-2 rounded-xl border bg-card px-4 py-3">
                         <div className="flex items-center justify-between gap-2">
-                          <p className="truncate text-sm font-semibold">{item.exerciseName}</p>
+                          <div className="flex items-center gap-2 min-w-0">
+                            <ExerciseGifThumbnail
+                              gifUrl={item.gifUrl ?? undefined}
+                              exerciseName={item.exerciseName}
+                              exerciseId={item.exerciseId}
+                            />
+                            <p className="truncate text-sm font-semibold">{item.exerciseName}</p>
+                          </div>
                           {isRankUp && (
                             <span className="shrink-0 rounded-full bg-green-500/15 px-2 py-0.5 text-[10px] font-semibold text-green-600">
                               Rank up!

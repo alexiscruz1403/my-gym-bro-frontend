@@ -335,6 +335,7 @@ const en = {
     rest: {
       label: 'Rest',
       skipInstruction: 'Tap × to skip',
+      dragInstruction: 'Hold to drag · × to skip',
       skipAriaLabel: 'Skip rest',
       subtractAriaLabel: 'Subtract 10 seconds',
       addAriaLabel: 'Add 10 seconds',
@@ -367,6 +368,7 @@ const en = {
   },
 
   exercises: {
+    title: 'Exercise Catalog',
     searchPlaceholder: 'Search exercises...',
     clearFilters: 'Clear filters',
     clearSearch: 'Clear search',

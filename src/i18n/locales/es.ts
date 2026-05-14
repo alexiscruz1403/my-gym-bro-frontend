@@ -336,6 +336,7 @@ const es = {
     rest: {
       label: 'Descanso',
       skipInstruction: 'Tocá × para saltear',
+      dragInstruction: 'Mantené presionado para mover · × para saltear',
       skipAriaLabel: 'Saltear descanso',
       subtractAriaLabel: 'Restar 10 segundos',
       addAriaLabel: 'Agregar 10 segundos',
@@ -368,6 +369,7 @@ const es = {
   },
 
   exercises: {
+    title: 'Catálogo de ejercicios',
     searchPlaceholder: 'Buscar ejercicios...',
     clearFilters: 'Limpiar filtros',
     clearSearch: 'Limpiar búsqueda',

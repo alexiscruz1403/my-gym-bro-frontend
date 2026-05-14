@@ -459,6 +459,7 @@ export interface ExerciseRankSummaryItem {
   rankNameAfter: string;
   bestValueBefore: number | null;
   bestValueAfter: number;
+  gifUrl?: string | null;
 }
 
 export interface FinishSessionResponse {

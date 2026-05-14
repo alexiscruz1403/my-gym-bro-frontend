@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { X, ChevronDown, ChevronUp } from 'lucide-react';
@@ -16,6 +17,7 @@ function getDefaultPosition() {
 }
 
 export function GlobalRestTimerOverlay() {
+  const { t } = useTranslation();
   const restTimer = useSessionStore((s) => s.restTimer);
   const { secondsLeft, isRunning, stop, adjust } = useRestTimer();
   const [minimized, setMinimized] = useState(false);
@@ -84,7 +86,7 @@ export function GlobalRestTimerOverlay() {
       {...pointerHandlers}
     >
       <div className="flex items-center justify-between" style={{ cursor: 'grab' }}>
-        <p className="text-muted-foreground text-sm font-medium select-none">Rest</p>
+        <p className="text-muted-foreground text-sm font-medium select-none">{t('session.rest.label')}</p>
         <div className="flex items-center gap-1">
           <Button
             size="icon"
@@ -100,7 +102,7 @@ export function GlobalRestTimerOverlay() {
             variant="ghost"
             onClick={stop}
             className="h-11 w-11 cursor-pointer"
-            aria-label="Skip rest"
+            aria-label={t('session.rest.skipAriaLabel')}
           >
             <X className="h-4 w-4" />
           </Button>
@@ -115,7 +117,7 @@ export function GlobalRestTimerOverlay() {
           size="sm"
           onClick={() => adjust(-10)}
           className="cursor-pointer px-3 min-h-11"
-          aria-label="Subtract 10 seconds"
+          aria-label={t('session.rest.subtractAriaLabel')}
         >
           -10s
         </Button>
@@ -125,13 +127,13 @@ export function GlobalRestTimerOverlay() {
           size="sm"
           onClick={() => adjust(10)}
           className="cursor-pointer px-3 min-h-11"
-          aria-label="Add 10 seconds"
+          aria-label={t('session.rest.addAriaLabel')}
         >
           +10s
         </Button>
       </div>
       <p className="text-muted-foreground mt-2 text-center text-xs select-none">
-        Mantén presionado para mover · × para saltar
+        {t('session.rest.dragInstruction')}
       </p>
     </div>
   );
