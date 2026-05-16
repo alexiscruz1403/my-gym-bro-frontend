@@ -823,3 +823,59 @@ export interface UpdateTermsSectionDto {
 
 export type CreateAdminTermsSectionDto = CreateTermsSectionDto;
 export type UpdateAdminTermsSectionDto = UpdateTermsSectionDto;
+
+// Monitoring
+export interface MonitoringUsersResponse {
+  activeUsers: number;
+  inactiveUsers: number;
+  realTimeActiveUsers: number;
+}
+
+export interface SubscriptionActivationLog {
+  id: string;
+  userId: string;
+  subscriptionId: string;
+  activationType: 'manual' | 'auto_renewal';
+  plan: 'monthly' | 'annual';
+  amountPaid: number;
+  actor: 'user' | 'system';
+  createdAt: string;
+}
+
+export interface MonitoringSubscriptionsResponse {
+  totalSubscriptions: number;
+  stoppedRenewing: number;
+  activeMonthly: number;
+  activeAnnual: number;
+  momChangePercent: number | null;
+  recentActivations: SubscriptionActivationLog[];
+}
+
+export interface AiUsageLog {
+  id: string;
+  userId: string;
+  actionType: 'plan_generation' | 'progression_analysis';
+  actor: 'user' | 'system';
+  createdAt: string;
+}
+
+export interface MonitoringAiResponse {
+  planGenerationsThisMonth: number;
+  progressionAnalysesThisMonth: number;
+  momChangePercent: number | null;
+  recentUsages: AiUsageLog[];
+}
+
+export interface ErrorLog {
+  id: string;
+  statusCode: number;
+  message: string;
+  endpoint: string;
+  userId: string | null;
+  createdAt: string;
+}
+
+export interface MonitoringErrorsResponse {
+  data: ErrorLog[];
+  meta: PaginatedMeta;
+}

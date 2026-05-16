@@ -13,6 +13,10 @@ import type {
   AdminTermsSection,
   CreateAdminTermsSectionDto,
   UpdateAdminTermsSectionDto,
+  MonitoringUsersResponse,
+  MonitoringSubscriptionsResponse,
+  MonitoringAiResponse,
+  MonitoringErrorsResponse,
 } from '@/types/domain.types';
 import type { PaginationParams } from '@/types/api.types';
 
@@ -59,4 +63,18 @@ export const adminService = {
 
   deleteAdminTermsSection: (id: string): Promise<void> =>
     apiClient.delete(API_ROUTES.terms.delete(id)).then(() => undefined),
+
+  getMonitoringUsers: (): Promise<MonitoringUsersResponse> =>
+    apiClient.get<MonitoringUsersResponse>(API_ROUTES.admin.monitoring.users).then((r) => r.data),
+
+  getMonitoringSubscriptions: (): Promise<MonitoringSubscriptionsResponse> =>
+    apiClient.get<MonitoringSubscriptionsResponse>(API_ROUTES.admin.monitoring.subscriptions).then((r) => r.data),
+
+  getMonitoringAi: (): Promise<MonitoringAiResponse> =>
+    apiClient.get<MonitoringAiResponse>(API_ROUTES.admin.monitoring.ai).then((r) => r.data),
+
+  getMonitoringErrors: (page = 1, limit = 50): Promise<MonitoringErrorsResponse> =>
+    apiClient
+      .get<MonitoringErrorsResponse>(API_ROUTES.admin.monitoring.errors, { params: { page, limit } })
+      .then((r) => r.data),
 };
