@@ -23,5 +23,4 @@ export function invalidatePlanCache(id: string) {
   queryClient.invalidateQueries({ queryKey: ['plan', id] });
   queryClient.invalidateQueries({ queryKey: ['plans'] });
   queryClient.invalidateQueries({ queryKey: ['active-plan'] });
-  queryClient.invalidateQueries({ queryKey: ['streaks', 'me'] });
 }
