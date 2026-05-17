@@ -11,6 +11,7 @@ import { useNotificationPreferences } from '@/hooks/useNotificationPreferences';
 import { useSubscription } from '@/hooks/useSubscription';
 import useAuthStore from '@/store/auth.store';
 import { usersService } from '@/services/users.service';
+import { queryClient } from '@/lib/query-client';
 import type { Language } from '@/types/domain.types';
 
 export default function SettingsPage() {
@@ -63,6 +64,7 @@ export default function SettingsPage() {
     try {
       const updated = await usersService.updateLanguage(lang);
       setUser(updated);
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
     } catch {
       setUser({ ...user, language: previous });
     }

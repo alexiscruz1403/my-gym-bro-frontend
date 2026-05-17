@@ -144,6 +144,7 @@ export function useSession() {
       queryClient.invalidateQueries({ queryKey: ['stats'] });
       queryClient.invalidateQueries({ queryKey: ['exercise-history'] });
       queryClient.invalidateQueries({ queryKey: ['streaks', 'me'] });
+      queryClient.invalidateQueries({ queryKey: ['ranks'] });
       return result;
     },
     [activeSessionId],
