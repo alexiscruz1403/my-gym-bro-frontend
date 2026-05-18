@@ -2,7 +2,10 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import type { ApiError } from '@/types/api.types';
 import { API_ROUTES } from '@/lib/api-routes';
 import { logout, setAuthenticated } from '@/store/auth.store';
-import { request } from 'http';
+
+export function isNetworkError(error: unknown): boolean {
+  return !navigator.onLine || (axios.isAxiosError(error) && !(error as AxiosError).response);
+}
 
 // ─── Axios instance ───────────────────────────────────────────────
 // withCredentials: true ensures httpOnly cookies are sent on every request.

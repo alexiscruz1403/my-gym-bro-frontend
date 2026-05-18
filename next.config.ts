@@ -16,8 +16,17 @@ export default withPWA({
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
   workboxOptions: {
-    // Never cache API routes — session data from cache would corrupt the store
     runtimeCaching: [
+      // Cache visited HTML pages with NetworkFirst so they're available offline
+      {
+        urlPattern: ({ request }) => request.destination === 'document',
+        handler: 'NetworkFirst',
+        options: {
+          cacheName: 'html-pages',
+          networkTimeoutSeconds: 3,
+        },
+      },
+      // Never cache API routes — stale session data would corrupt the store
       {
         urlPattern: /^https?:\/\/.*\/api\//,
         handler: 'NetworkOnly',
