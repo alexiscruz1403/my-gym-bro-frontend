@@ -754,6 +754,19 @@ const en = {
     annualDescription: 'Save with the annual plan',
     subscribe: 'Subscribe',
     error: 'Could not initiate payment. Please try again.',
+    success: {
+      title: 'Subscription activated!',
+      subtitle: "You're now a Premium member of MyGymBro",
+      cta: 'Go to dashboard',
+      processing: {
+        title: 'Processing your payment...',
+        subtitle: 'This may take a few seconds',
+      },
+      fallback: {
+        title: 'Your payment is being processed',
+        subtitle: "You'll receive an email once your subscription is confirmed",
+      },
+    },
   },
 
   ai: {
