@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { NotificationBell } from '@/components/notifications/NotificationBell';
+import { SyncStatusIndicator } from '@/components/shared/SyncStatusIndicator';
 
 interface AppHeaderProps {
   title?: string;
@@ -44,6 +45,7 @@ export function AppHeader({ title, action }: AppHeaderProps) {
 
         <div className="flex items-center gap-2">
           {action}
+          {isAuthenticated && <SyncStatusIndicator />}
           {isAuthenticated && <NotificationBell />}
           {isAuthenticated && (
             <Button

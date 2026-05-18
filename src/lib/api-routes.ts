@@ -49,6 +49,7 @@ export const API_ROUTES = {
     modifyExercise: (id: string, exerciseId: string) => `/sessions/${id}/exercises/${exerciseId}`,
     replaceExercise: (id: string, exerciseId: string) => `/sessions/${id}/exercises/${exerciseId}`,
     finish: (id: string) => `/sessions/${id}/finish`,
+    sync: '/sessions/sync',
     history: '/sessions',
   },
   stats: {
