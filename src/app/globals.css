@@ -42,6 +42,17 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
+  /* Warning (amber) — premium banners, alerts */
+  --color-warning:            var(--warning);
+  --color-warning-foreground: var(--warning-fg);
+  --color-warning-soft:       var(--warning-soft);
+
+  /* Elevation shadows — 4 levels, adapt to dark mode */
+  --shadow-1: var(--shadow-elevation-1);
+  --shadow-2: var(--shadow-elevation-2);
+  --shadow-3: var(--shadow-elevation-3);
+  --shadow-4: var(--shadow-elevation-4);
+
   /* Stats typography */
   --text-stat-xl: 3rem;
   --text-stat-xl--line-height: 1;
@@ -59,60 +70,94 @@
 /* ─── Color variables — Light mode ──────────────────────────────── */
 @layer base {
   :root {
-    --background: hsl(210 33% 98%);
-    --foreground: hsl(222 47% 11%);
+    /* Backgrounds — diferenciación visible entre capas */
+    --background: oklch(98.5% 0.004 245);   /* bg de página */
+    --card:       oklch(96.5% 0.006 245);   /* surface (cards) — 2% L por debajo de bg */
+    --card-foreground: oklch(18% 0.015 245);
 
-    --card: hsl(210 25% 96%);
-    --card-foreground: hsl(222 47% 11%);
+    --foreground: oklch(18% 0.015 245);
 
-    --primary: hsl(22 100% 52%);       /* Naranja energético #F95B0A */
-    --primary-foreground: hsl(0 0% 100%);
+    /* Primary — naranja moderado, energético sin ser agresivo */
+    --primary:            oklch(62% 0.20 35);
+    --primary-foreground: oklch(99% 0 0);
 
-    --secondary: hsl(222 47% 11%);     /* Casi negro */
-    --secondary-foreground: hsl(0 0% 98%);
+    /* Secondary — surface-2 para botones secundarios */
+    --secondary:            oklch(94% 0.008 245);
+    --secondary-foreground: oklch(18% 0.015 245);
 
-    --muted: hsl(210 30% 94%);
-    --muted-foreground: hsl(215 20% 44%);
+    /* Muted — surface-2, fondo de inputs, hover states */
+    --muted:            oklch(94% 0.008 245);
+    --muted-foreground: oklch(48% 0.015 245); /* ≥ 4.6:1 contraste sobre --card */
 
-    --accent: hsl(142 76% 36%);        /* Verde de éxito — sets completados */
-    --accent-foreground: hsl(0 0% 100%);
+    /* Accent — verde de éxito (sets completados, estado activo) */
+    --accent:            oklch(60% 0.175 145);
+    --accent-foreground: oklch(99% 0 0);
 
-    --destructive: hsl(0 84% 60%);
-    --destructive-foreground: hsl(0 0% 100%);
+    --destructive:            oklch(57% 0.22 20);
+    --destructive-foreground: oklch(99% 0 0);
 
-    --border: hsl(214 32% 89%);
-    --input: hsl(214 32% 89%);
-    --ring: hsl(22 100% 52%);
+    /* Border e input — visible contra surfaces */
+    --border: oklch(88% 0.010 245);
+    --input:  oklch(88% 0.010 245);
+    --ring:   oklch(62% 0.20 35);
 
     --radius: 0.75rem;
+
+    /* Warning */
+    --warning:      oklch(78% 0.17 85);
+    --warning-soft: oklch(97% 0.04 85);
+    --warning-fg:   oklch(25% 0.05 85);
+
+    /* Elevations — light mode */
+    --shadow-elevation-1: 0 1px 2px oklch(18% 0.015 245 / 0.05);
+    --shadow-elevation-2: 0 2px 8px oklch(18% 0.015 245 / 0.08), 0 1px 2px oklch(18% 0.015 245 / 0.04);
+    --shadow-elevation-3: 0 8px 24px oklch(18% 0.015 245 / 0.10), 0 2px 6px oklch(18% 0.015 245 / 0.06);
+    --shadow-elevation-4: 0 20px 48px oklch(18% 0.015 245 / 0.14), 0 4px 12px oklch(18% 0.015 245 / 0.08);
   }
 
   /* ─── Color variables — Dark mode ─────────────────────────────── */
   .dark {
-    --background: hsl(222 47% 8%);     /* Casi negro azulado */
-    --foreground: hsl(210 40% 96%);
+    /* Backgrounds — 3 capas claramente distintas */
+    --background: oklch(12%   0.018 245);   /* bg de página */
+    --card:       oklch(17%   0.018 245);   /* surface (cards) — 5% L por encima */
+    --card-foreground: oklch(94% 0.006 245);
 
-    --card: hsl(222 47% 11%);          /* Cards ligeramente más claras */
-    --card-foreground: hsl(210 40% 96%);
+    --foreground: oklch(94% 0.006 245);
 
-    --primary: hsl(22 100% 52%);       /* Naranja — igual en dark */
-    --primary-foreground: hsl(0 0% 100%);
+    /* Primary — ligeramente más brillante en dark */
+    --primary:            oklch(64% 0.20 35);
+    --primary-foreground: oklch(99% 0 0);
 
-    --secondary: hsl(217 33% 17%);
-    --secondary-foreground: hsl(210 40% 96%);
+    /* Secondary — surface-2 */
+    --secondary:            oklch(21% 0.018 245);
+    --secondary-foreground: oklch(94% 0.006 245);
 
-    --muted: hsl(217 33% 17%);
-    --muted-foreground: hsl(215 20% 65%);
+    /* Muted — surface-2 · DIFERENTE de border (crítico en dark mode) */
+    --muted:            oklch(21% 0.018 245);
+    --muted-foreground: oklch(65% 0.012 245);
 
-    --accent: hsl(142 76% 36%);
-    --accent-foreground: hsl(0 0% 100%);
+    /* Accent — verde ligeramente más brillante en dark */
+    --accent:            oklch(62% 0.175 145);
+    --accent-foreground: oklch(99% 0 0);
 
-    --destructive: hsl(0 63% 55%);
-    --destructive-foreground: hsl(0 0% 100%);
+    --destructive:            oklch(60% 0.22 20);
+    --destructive-foreground: oklch(99% 0 0);
 
-    --border: hsl(217 33% 17%);
-    --input: hsl(217 33% 17%);
-    --ring: hsl(22 100% 52%);
+    /* Border e input — MÁS CLARO que muted para ser visible como separador */
+    --border: oklch(25% 0.018 245);
+    --input:  oklch(25% 0.018 245);
+    --ring:   oklch(64% 0.20 35);
+
+    /* Warning */
+    --warning:      oklch(75% 0.17 85);
+    --warning-soft: oklch(20% 0.05 85);
+    --warning-fg:   oklch(92% 0.04 85);
+
+    /* Elevations — dark mode (sombras más pronunciadas) */
+    --shadow-elevation-1: 0 1px 2px oklch(0% 0 0 / 0.30);
+    --shadow-elevation-2: 0 2px 8px oklch(0% 0 0 / 0.40), 0 1px 2px oklch(0% 0 0 / 0.20);
+    --shadow-elevation-3: 0 8px 24px oklch(0% 0 0 / 0.50), 0 2px 6px oklch(0% 0 0 / 0.25);
+    --shadow-elevation-4: 0 20px 48px oklch(0% 0 0 / 0.60), 0 4px 12px oklch(0% 0 0 / 0.30);
   }
 
   /* ─── Utilities ───────────────────────────────────────────────── */
@@ -185,10 +230,16 @@
     --primary:            oklch(62% 0.20 35);
     --primary-foreground: oklch(99.5% 0 0);
     --muted-foreground:   oklch(48% 0.015 248);
+    --destructive:        oklch(57% 0.22 20);
     --border:             oklch(88% 0.010 248);
     --input:              oklch(85% 0.012 248);
     --ring:               oklch(62% 0.20 35);
     color-scheme: light;
+  }
+
+  @keyframes flame-badge {
+    0%, 100% { transform: scale(1) rotate(-1deg); opacity: 0.85; }
+    50%       { transform: scale(1.12) rotate(1deg); opacity: 1; }
   }
 
   @keyframes flame-gentle {

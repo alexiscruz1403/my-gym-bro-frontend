@@ -1,44 +1,55 @@
-import { Flame } from 'lucide-react';
-import { cn } from '@/lib/utils';
+'use client';
 
-type StreakLevel = 'off' | 'low' | 'medium' | 'high' | 'golden';
+import { useTranslation } from 'react-i18next';
 
-function getStreakLevel(streak: number): StreakLevel {
+type StreakLevel = 'off' | 'low' | 'medium' | 'high';
+
+const FLAME_COLORS: Record<StreakLevel, string> = {
+  off:    'oklch(68% .008 248)',
+  low:    'oklch(74% .18 50)',
+  medium: 'oklch(68% .20 35)',
+  high:   'oklch(78% .17 80)',
+};
+
+function getLevel(streak: number): StreakLevel {
   if (streak === 0) return 'off';
   if (streak < 30) return 'low';
   if (streak < 180) return 'medium';
-  if (streak < 365) return 'high';
-  return 'golden';
+  return 'high';
 }
-
-const levelConfig: Record<StreakLevel, { colorClass: string; animation?: string; glow?: boolean }> = {
-  off: { colorClass: 'text-muted-foreground' },
-  low: { colorClass: 'text-orange-400', animation: 'var(--animate-flame-gentle)' },
-  medium: { colorClass: 'text-orange-500', animation: 'var(--animate-flame-moderate)' },
-  high: { colorClass: 'text-red-500', animation: 'var(--animate-flame-strong)' },
-  golden: { colorClass: 'text-yellow-400', animation: 'var(--animate-flame-strong)', glow: true },
-};
 
 interface StreakBadgeProps {
   streak: number;
 }
 
 export function StreakBadge({ streak }: StreakBadgeProps) {
-  const level = getStreakLevel(streak);
-  const config = levelConfig[level];
+  const { t } = useTranslation();
+  const level = getLevel(streak);
+  const color = FLAME_COLORS[level];
 
   return (
-    <div className="flex items-center gap-1">
-      <Flame
-        className={cn('h-5 w-5', config.colorClass)}
+    <div className="flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2 shadow-1">
+      <span
+        className="text-[22px] leading-none"
         style={{
-          animation: config.animation,
-          filter: config.glow ? 'drop-shadow(0 0 6px rgba(250,204,21,0.7))' : undefined,
+          color,
+          animation: level !== 'off' ? 'flame-badge 1.6s ease-in-out infinite' : undefined,
         }}
-      />
-      <span className={cn('text-sm font-semibold tabular-nums', config.colorClass)}>
-        {streak}
+        aria-hidden="true"
+      >
+        🔥
       </span>
+      <div>
+        <div
+          className="font-display text-[20px] font-bold leading-none tracking-tight tabular-nums"
+          style={{ color }}
+        >
+          {streak}
+        </div>
+        <div className="text-[11px] font-medium text-muted-foreground">
+          {t('dashboard.streakDays')}
+        </div>
+      </div>
     </div>
   );
 }

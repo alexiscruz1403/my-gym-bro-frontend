@@ -201,14 +201,19 @@ const es = {
     activePlan: 'Plan activo',
     myPlans: 'Mis rutinas',
     aiPlans: 'Planes IA',
+    streakDays: 'días',
     noActivePlan: {
       title: 'Sin plan activo',
-      description: 'Creá una rutina para comenzar.',
+      description: 'Creá tu propio plan de entrenamiento o generá uno personalizado con IA.',
       button: 'Crear mi primer plan',
+      createButton: 'Crear plan',
+      aiButton: 'Generar con IA',
+      aiButtonFree: 'IA (Premium)',
     },
     premiumCta: {
-      title: 'Pasate a Premium',
-      subtitle: 'Desbloqueá todas las funcionalidades de la app',
+      title: 'Llevá tu entreno al siguiente nivel',
+      subtitle: 'Planes con IA y progresión automática. Desde ARS 100/mes.',
+      cta: 'Ver planes',
     },
   },
 

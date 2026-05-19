@@ -1,6 +1,7 @@
 import { AppHeader } from '@/components/layout/AppHeader';
 import { BottomNav } from '@/components/layout/BottomNav';
 import { SideNav } from '@/components/layout/SideNav';
+import { PageTransition } from '@/components/layout/PageTransition';
 import { SessionGuard } from '@/components/layout/SessionGuard';
 import { UserLoader } from '@/components/layout/UserLoader';
 import { OfflineBanner } from '@/components/shared/OfflineBanner';
@@ -20,7 +21,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="flex flex-col flex-1 min-w-0 lg:pl-60">
         <AppHeader />
         <OfflineBanner />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1"><PageTransition>{children}</PageTransition></main>
         <ActiveSessionWidget />
         <BottomNav />
       </div>

@@ -199,14 +199,19 @@ const en = {
     activePlan: 'Active Plan',
     myPlans: 'My Plans',
     aiPlans: 'AI Plans',
+    streakDays: 'days',
     noActivePlan: {
       title: 'No active plan',
-      description: 'Create a workout plan to get started.',
+      description: 'Create your own workout plan or generate a personalized one with AI.',
       button: 'Create your first plan',
+      createButton: 'Create plan',
+      aiButton: 'Generate with AI',
+      aiButtonFree: 'AI (Premium)',
     },
     premiumCta: {
-      title: 'Go Premium',
-      subtitle: 'Unlock all app features',
+      title: 'Take your training to the next level',
+      subtitle: 'AI plans and automatic progression. From ARS 100/month.',
+      cta: 'See plans',
     },
   },
 
