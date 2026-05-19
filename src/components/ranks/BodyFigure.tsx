@@ -1,8 +1,8 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import { getRankColor, UNRANKED_COLOR, FRONT_VIEW_FIGURE, BACK_VIEW_FIGURE } from '@/lib/ranks';
-import type { MuscleGroup, MuscleRankItem } from '@/types/domain.types';
+import { getRankColor, UNRANKED_COLOR, RANK_COLORS, RANK_NAMES, FRONT_VIEW_FIGURE, BACK_VIEW_FIGURE } from '@/lib/ranks';
+import type { MuscleGroup, MuscleRankItem, RankLevel } from '@/types/domain.types';
 
 interface BodyFigureProps {
   rankMap: Map<MuscleGroup, MuscleRankItem>;
@@ -20,9 +20,9 @@ function getMuscleStyle(
   const isSelected = selectedMuscle === muscle;
   return {
     fill,
-    stroke: isSelected ? 'hsl(var(--foreground))' : 'rgba(0,0,0,0.35)',
+    stroke: 'currentColor',
+    strokeOpacity: isSelected ? 1 : 0.3,
     strokeWidth: isSelected ? 1.2 : 0.6,
-    opacity: item ? 1 : 0.35,
     strokeLinejoin: 'round' as const,
     strokeLinecap: 'round' as const,
   };
@@ -39,7 +39,8 @@ export function BodyFigure({ rankMap, selectedMuscle, onMuscleClick }: BodyFigur
   });
 
   return (
-    <div className="flex justify-center gap-4 select-none">
+    <div className="flex select-none flex-col gap-2">
+      <div className="flex justify-center gap-4">
 
       {/* ─── FRONT VIEW ─────────────────────────────────────── */}
       <div className="flex flex-col items-center gap-1">
@@ -50,9 +51,10 @@ export function BodyFigure({ rankMap, selectedMuscle, onMuscleClick }: BodyFigur
           height="342"
           xmlns="http://www.w3.org/2000/svg"
           aria-label="Vista frontal del cuerpo"
+          className="text-foreground"
         >
           <g id="layer1">
-            <path id="path129" d={FRONT_VIEW_FIGURE.join("")} />
+            <path id="path129" d={FRONT_VIEW_FIGURE.join("")} fill="currentColor" />
             <path id="front_delts_1" d="M139.968 95.403c.518-1.748.521-4.946.006-6.974-1.712-6.734-7.17-11.291-13.505-11.276-3.075.007-5.058.913-4.417 2.018.109.188 1.13 1.21 2.27 2.272 2.152 2.003 3.443 3.713 4.934 6.534 1.025 1.94 2.264 3.1 5.435 5.093 1.274.8 2.747 1.957 3.272 2.57.526.614 1.1 1.12 1.277 1.125s.503-.608.727-1.362z" {...pp('front_delts')} />
             <path id="front_delts_2" d="M66.755 95.71c.5-.586 2.249-1.945 3.885-3.02 3.214-2.114 4.044-2.931 5.09-5.016 1.129-2.248 2.814-4.418 5.101-6.567 1.433-1.347 2.142-2.202 2.084-2.514-.281-1.521-5.28-1.957-8.722-.76-7.345 2.554-11.551 11.17-9.086 18.61.194.587.716.355 1.648-.733" {...pp('front_delts')}/>
             <path id="chest" d="M119.849 101.192c3.156-1.463 5.846-4.167 7.728-7.769.818-1.566.926-1.978.798-3.07-.22-1.883-1.863-4.768-3.881-6.814-1.967-1.994-5.179-3.776-7.619-4.226-2.363-.435-7.899.614-11.078 2.1-2.63 1.23-2.729 1.554-2.729 9.009 0 6.53.122 7.284 1.36 8.455.999.943 3.045 1.872 5.63 2.555 1.975.522 2.922.622 5.314.56 2.524-.064 3.118-.17 4.477-.8" {...pp('chest')} />
@@ -93,7 +95,7 @@ export function BodyFigure({ rankMap, selectedMuscle, onMuscleClick }: BodyFigur
         </svg>
       </div>
 
-      {/* ─── BACK VIEW ───────────────────────────────────────── */}
+      {/* ─── BACK VIEW ─────────────────────────────────────── */}
       <div className="flex flex-col items-center gap-1">
         <span className="text-[10px] text-muted-foreground uppercase tracking-widest">{t('ranks.body.back')}</span>
         <svg
@@ -102,9 +104,10 @@ export function BodyFigure({ rankMap, selectedMuscle, onMuscleClick }: BodyFigur
           height="342"
           xmlns="http://www.w3.org/2000/svg"
           aria-label="Vista dorsal del cuerpo"
+          className="text-foreground"
         >
-          <g id="layer1" fill="#000">
-            <path id="path54" stroke="#000" stroke-dasharray="none" stroke-opacity="1" stroke-width=".1"
+          <g id="layer1" fill="currentColor">
+            <path id="path54" stroke="currentColor" strokeDasharray="none" strokeOpacity={1} strokeWidth={0.1}
               d={BACK_VIEW_FIGURE.join("")}
             />
             <path id="lower_back_1" d="M110.892 136.24c5-3.79 5.58-4.275 6.058-5.058 1-1.64.44-5.64-1.164-8.324-1.042-1.742-6.684-7.973-7.22-7.973-.214 0-.495.279-.624.62-.29.76-.464 21.624-.185 22.075.36.582.91.347 3.135-1.34" {...pp('lower_back')}/>
@@ -143,6 +146,20 @@ export function BodyFigure({ rankMap, selectedMuscle, onMuscleClick }: BodyFigur
             <path id="calves_6" d="M127.565 245.594c.563-.641.594-.769 1.91-7.922 1.305-7.097 1.906-11.424 1.671-12.036-.089-.232-.649-.485-1.303-.59-1.216-.194-3.396-1.324-3.396-1.76 0-.143-.303-.397-.672-.566-.615-.28-.742-.222-1.481.675-.445.54-1.259 1.21-1.809 1.492-.55.28-1.061.669-1.136.863-.074.195.263 1.74.75 3.434s1.193 4.725 1.57 6.735c1.305 6.982 1.796 8.911 2.425 9.543.714.716.94.736 1.471.132" {...pp('calves')}/>
           </g>
                 </svg>
+      </div>
+      </div>
+
+      {/* ─── RANK LEGEND ─────────────────────────────────────── */}
+      <div className="flex flex-wrap items-center justify-center gap-2.5 py-1">
+        {(Object.entries(RANK_NAMES) as [string, string][]).map(([rank, name]) => (
+          <div key={rank} className="flex items-center gap-1 text-[11px] text-muted-foreground">
+            <span
+              className="h-2 w-2 shrink-0 rounded-full"
+              style={{ background: RANK_COLORS[Number(rank) as RankLevel] }}
+            />
+            <span>{name}</span>
+          </div>
+        ))}
       </div>
     </div>
   );

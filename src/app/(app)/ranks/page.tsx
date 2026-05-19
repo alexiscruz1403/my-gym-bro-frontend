@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AnimatePresence, motion } from 'framer-motion';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { BodyFigure } from '@/components/ranks/BodyFigure';
 import { MuscleDetailPanel } from '@/components/ranks/MuscleDetailPanel';
@@ -34,16 +35,16 @@ export default function RanksPage() {
       <div className="space-y-4">
         <h1 className="text-xl font-bold">{t('ranks.title')}</h1>
 
-        <div className="flex rounded-lg bg-muted p-1">
+        <div className="flex h-11 rounded-xl bg-muted/60 p-1">
           {TABS.map((tab) => (
             <button
               key={tab.value}
               type="button"
               onClick={() => setActiveTab(tab.value)}
               className={cn(
-                'flex-1 rounded-md py-1.5 text-sm font-medium transition-colors min-h-11 cursor-pointer',
+                'flex-1 cursor-pointer rounded-lg text-[13px] font-semibold transition-colors',
                 activeTab === tab.value
-                  ? 'bg-background text-foreground shadow-sm'
+                  ? 'bg-primary text-white shadow-sm'
                   : 'text-muted-foreground hover:text-foreground',
               )}
             >
@@ -52,46 +53,49 @@ export default function RanksPage() {
           ))}
         </div>
 
-        {activeTab === 'musculos' && (
-          <div className="space-y-4">
-            {isLoading && (
-              <div className="flex justify-center gap-6">
-                <Skeleton className="h-72 w-28 rounded-xl" />
-                <Skeleton className="h-72 w-28 rounded-xl" />
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
+          >
+            {activeTab === 'musculos' && (
+              <div className="space-y-4">
+                {isLoading && (
+                  <div className="flex justify-center gap-6">
+                    <Skeleton className="h-72 w-28 rounded-xl" />
+                    <Skeleton className="h-72 w-28 rounded-xl" />
+                  </div>
+                )}
+
+                {!isLoading && error && (
+                  <EmptyState
+                    title={t('ranks.error.title')}
+                    description={t('ranks.error.description')}
+                  />
+                )}
+
+                {!isLoading && !error && (
+                  <BodyFigure
+                    rankMap={rankMap}
+                    selectedMuscle={selectedMuscle}
+                    onMuscleClick={handleMuscleClick}
+                  />
+                )}
+
+                <MuscleDetailPanel
+                  item={selectedMuscle ? (rankMap.get(selectedMuscle) ?? null) : null}
+                  open={!!selectedMuscle}
+                  onClose={() => setSelectedMuscle(null)}
+                />
               </div>
             )}
 
-            {!isLoading && error && (
-              <EmptyState
-                title={t('ranks.error.title')}
-                description={t('ranks.error.description')}
-              />
-            )}
-
-            {!isLoading && !error && (
-              <BodyFigure
-                rankMap={rankMap}
-                selectedMuscle={selectedMuscle}
-                onMuscleClick={handleMuscleClick}
-              />
-            )}
-
-            {selectedMuscle && rankMap.has(selectedMuscle) && (
-              <MuscleDetailPanel
-                item={rankMap.get(selectedMuscle)!}
-                onClose={() => setSelectedMuscle(null)}
-              />
-            )}
-
-            {selectedMuscle && !rankMap.has(selectedMuscle) && (
-              <div className="rounded-xl border bg-card p-4">
-                <p className="text-sm text-muted-foreground">{t('ranks.noData')}</p>
-              </div>
-            )}
-          </div>
-        )}
-
-        {activeTab === 'leaderboard' && <LeaderboardPanel />}
+            {activeTab === 'leaderboard' && <LeaderboardPanel />}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </PageContainer>
   );

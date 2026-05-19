@@ -28,7 +28,7 @@ export function getRankName(rank: RankLevel): string {
   return RANK_NAMES[rank];
 }
 
-export const UNRANKED_COLOR = 'hsl(var(--muted))';
+export const UNRANKED_COLOR = 'oklch(30% 0 0)';
 
 export const FRONT_VIEW_FIGURE: string[] = [
   'M99.565 33.263c-.349 0-2.365 1.372-3.562 2.424-.774.679-.952.734-1.424.44-.64-.4-.855-.174-2.173 2.2',
