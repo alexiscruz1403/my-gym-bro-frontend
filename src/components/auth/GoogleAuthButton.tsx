@@ -2,8 +2,8 @@
 
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
-// SVG inline — avoids an image dependency for a single icon
 function GoogleIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
@@ -27,7 +27,11 @@ function GoogleIcon() {
   );
 }
 
-export function GoogleAuthButton() {
+interface GoogleAuthButtonProps {
+  className?: string;
+}
+
+export function GoogleAuthButton({ className }: GoogleAuthButtonProps) {
   const { t } = useTranslation();
 
   const handleGoogleAuth = (): void => {
@@ -38,7 +42,7 @@ export function GoogleAuthButton() {
     <Button
       type="button"
       variant="outline"
-      className="w-full gap-2 cursor-pointer"
+      className={cn('w-full gap-2 cursor-pointer', className)}
       onClick={handleGoogleAuth}
     >
       <GoogleIcon />

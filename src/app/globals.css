@@ -166,6 +166,31 @@
     box-shadow: 0 0 0px 1000px var(--background) inset !important;
   }
 
+  /* ─── Auth page animation ──────────────────────────────────── */
+  @keyframes auth-fade-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .auth-page-animate {
+    animation: auth-fade-up 0.28s cubic-bezier(0, 0, 0.2, 1) both;
+  }
+
+  /* ─── Auth card: always light, regardless of dark mode ────── */
+  [data-auth-card],
+  .dark [data-auth-card] {
+    --background:         oklch(99.5% 0.001 248);
+    --foreground:         oklch(18% 0.015 248);
+    --card:               oklch(99.5% 0.001 248);
+    --card-foreground:    oklch(18% 0.015 248);
+    --primary:            oklch(62% 0.20 35);
+    --primary-foreground: oklch(99.5% 0 0);
+    --muted-foreground:   oklch(48% 0.015 248);
+    --border:             oklch(88% 0.010 248);
+    --input:              oklch(85% 0.012 248);
+    --ring:               oklch(62% 0.20 35);
+    color-scheme: light;
+  }
+
   @keyframes flame-gentle {
     0%, 100% { transform: scale(1) rotate(-1deg); opacity: 0.85; }
     50%       { transform: scale(1.08) rotate(1deg); opacity: 1; }

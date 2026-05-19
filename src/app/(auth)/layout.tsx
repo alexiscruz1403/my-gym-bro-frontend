@@ -5,23 +5,41 @@ export const metadata: Metadata = {
   title: 'MyGymBro — Acceso',
 };
 
-export default function AuthLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function AuthLogo() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-background to-secondary/20 px-4">
-      <div className="w-full max-w-sm md:max-w-md">
-        {/* Logo / branding */}
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <Image src="/MyGymBro.svg" alt="MyGymBro" width={56} height={24} priority />
-          <h1 className="font-display text-4xl font-bold tracking-wide">
-            <span className="text-primary">My</span>
-            <span className="text-foreground">Gym</span>
-            <span className="text-primary">Bro</span>
-          </h1>
-        </div>
+    <div className="flex items-center gap-2.5 select-none">
+      <Image
+        src="/MyGymBro.svg"
+        alt=""
+        width={52}
+        height={23}
+        priority
+        aria-hidden="true"
+      />
+      <span
+        className="font-display text-[26px] font-bold tracking-[0.04em] leading-none"
+        style={{ color: 'oklch(94% 0.006 248)' }}
+      >
+        <span style={{ color: 'oklch(62% 0.20 35)' }}>My</span>Gym
+        <span style={{ color: 'oklch(62% 0.20 35)' }}>Bro</span>
+      </span>
+    </div>
+  );
+}
+
+export default function AuthLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      className="min-h-screen flex flex-col items-center justify-center px-6 py-10"
+      style={{
+        background: `
+          radial-gradient(ellipse 480px 280px at 50% 0px, oklch(35% 0.14 35 / 0.22) 0%, transparent 65%),
+          oklch(13% 0.018 248)
+        `,
+      }}
+    >
+      <div className="w-full max-w-sm flex flex-col items-center gap-6 auth-page-animate">
+        <AuthLogo />
         {children}
       </div>
     </div>

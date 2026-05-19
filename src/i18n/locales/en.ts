@@ -81,11 +81,14 @@ const en = {
     },
     login: {
       title: 'Log in',
+      heading: 'Welcome back',
+      subtitle: 'Sign in to continue your training.',
       submit: 'Log in',
       submitting: 'Logging in...',
     },
     register: {
       title: 'Create account',
+      subtitle: 'Start your fitness journey today.',
       submit: 'Create account',
       submitting: 'Creating account...',
       termsPrefix: 'By signing up you agree to our',
@@ -96,10 +99,14 @@ const en = {
     },
     forgotPasswordFlow: {
       title: 'Forgot password',
+      heading: 'Reset password',
+      subtitle: "We'll send you a link to create a new password.",
       description: "Enter your email and we'll send you a link to reset your password.",
-      submit: 'Send link',
+      submit: 'Send recovery link',
       submitting: 'Sending...',
       backToLogin: 'Back to log in',
+      backLink: 'Back to login',
+      remembered: 'Remembered your password?',
       success: {
         title: 'Check your inbox',
         description:
@@ -115,6 +122,9 @@ const en = {
       submitting: 'Saving...',
       backToLogin: 'Back to log in',
       success: 'Password reset. Log in with your new password.',
+      successTitle: 'Password updated!',
+      successBody: 'Your password was changed successfully. You can now sign in with your new credentials.',
+      goToLogin: 'Go to login',
       invalidLink: {
         title: 'Invalid link',
         description: 'This link is invalid or has already been used. Request a new link to reset your password.',

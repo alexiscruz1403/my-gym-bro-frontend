@@ -81,11 +81,14 @@ const es = {
     },
     login: {
       title: 'Iniciar sesión',
+      heading: 'Bienvenido de vuelta',
+      subtitle: 'Ingresá para continuar tu entrenamiento.',
       submit: 'Ingresar',
       submitting: 'Iniciando sesión...',
     },
     register: {
       title: 'Crear cuenta',
+      subtitle: 'Empezá tu journey de fitness hoy.',
       submit: 'Crear cuenta',
       submitting: 'Creando cuenta...',
       termsPrefix: 'Al registrarte aceptás nuestros',
@@ -96,10 +99,14 @@ const es = {
     },
     forgotPasswordFlow: {
       title: 'Olvidé mi contraseña',
+      heading: 'Recuperar contraseña',
+      subtitle: 'Te enviamos un link para que puedas crear una nueva contraseña.',
       description: 'Ingresá tu email y te enviaremos un enlace para restablecer tu contraseña.',
-      submit: 'Enviar enlace',
+      submit: 'Enviar link de recuperación',
       submitting: 'Enviando...',
       backToLogin: 'Volver al inicio de sesión',
+      backLink: 'Volver al login',
+      remembered: '¿Acordaste la contraseña?',
       success: {
         title: 'Revisá tu correo',
         description:
@@ -115,6 +122,10 @@ const es = {
       submitting: 'Guardando...',
       backToLogin: 'Volver al inicio de sesión',
       success: 'Contraseña restablecida. Iniciá sesión con tu nueva contraseña.',
+      successTitle: '¡Contraseña actualizada!',
+      successBody:
+        'Tu contraseña fue cambiada exitosamente. Ya podés iniciar sesión con tus nuevas credenciales.',
+      goToLogin: 'Ir al login',
       invalidLink: {
         title: 'Enlace inválido',
         description:
