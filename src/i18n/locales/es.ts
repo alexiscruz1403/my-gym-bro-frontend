@@ -321,6 +321,10 @@ const es = {
     cancelSession: 'Cancelar sesión',
     workout: 'Entrenamiento',
     today: 'Hoy',
+    prev: 'Anterior',
+    next: 'Siguiente',
+    last: 'Último',
+    done: 'Completado',
     startSession: {
       title: 'Elegí un entrenamiento',
       description: 'Seleccioná qué día querés entrenar hoy.',
@@ -352,6 +356,7 @@ const es = {
     },
     rest: {
       label: 'Descanso',
+      skip: 'Saltear',
       skipInstruction: 'Tocá × para saltear',
       dragInstruction: 'Mantené presionado para mover · × para saltear',
       skipAriaLabel: 'Saltear descanso',

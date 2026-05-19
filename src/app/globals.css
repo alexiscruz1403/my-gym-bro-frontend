@@ -108,6 +108,9 @@
     --warning-soft: oklch(97% 0.04 85);
     --warning-fg:   oklch(25% 0.05 85);
 
+    /* Sheet surface — blanco puro en light */
+    --sheet-bg: oklch(100% 0 0);
+
     /* Elevations — light mode */
     --shadow-elevation-1: 0 1px 2px oklch(18% 0.015 245 / 0.05);
     --shadow-elevation-2: 0 2px 8px oklch(18% 0.015 245 / 0.08), 0 1px 2px oklch(18% 0.015 245 / 0.04);
@@ -147,6 +150,9 @@
     --border: oklch(25% 0.018 245);
     --input:  oklch(25% 0.018 245);
     --ring:   oklch(64% 0.20 35);
+
+    /* Sheet surface — azul oscuro profundo en dark */
+    --sheet-bg: oklch(16% 0.016 248);
 
     /* Warning */
     --warning:      oklch(75% 0.17 85);

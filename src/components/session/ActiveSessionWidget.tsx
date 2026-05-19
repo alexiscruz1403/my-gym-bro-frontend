@@ -16,7 +16,7 @@ export function ActiveSessionWidget() {
       type="button"
       onClick={() => router.push('/session')}
       aria-label="Return to active session"
-      className="fixed bottom-20 right-4 z-50 flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg lg:bottom-6"
+      className="fixed bottom-20 right-4 z-50 flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-2 lg:bottom-6"
     >
       <Dumbbell className="h-4 w-4 shrink-0" />
       Active session

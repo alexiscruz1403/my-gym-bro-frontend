@@ -319,6 +319,10 @@ const en = {
     cancelSession: 'Cancel session',
     workout: 'Workout',
     today: 'Today',
+    prev: 'Prev',
+    next: 'Next',
+    last: 'Last',
+    done: 'Done',
     startSession: {
       title: 'Choose a workout',
       description: "Select which day's routine you want to do today.",
@@ -350,6 +354,7 @@ const en = {
     },
     rest: {
       label: 'Rest',
+      skip: 'Skip',
       skipInstruction: 'Tap × to skip',
       dragInstruction: 'Hold to drag · × to skip',
       skipAriaLabel: 'Skip rest',

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ExerciseSessionCard } from './ExerciseSessionCard';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import type { SessionExercise } from '@/types/domain.types';
 import type { LogSetRequest, ModifyExerciseRequest, ReplaceExerciseRequest } from '@/types/api.types';
@@ -16,6 +17,7 @@ interface ExerciseNavigatorProps {
 }
 
 export function ExerciseNavigator({ exercises, onLogSet, onModify, onReplace }: ExerciseNavigatorProps) {
+  const { t } = useTranslation();
   const [activeIndex, setActiveIndex] = useState(0);
   const current = exercises[activeIndex];
 
@@ -38,12 +40,12 @@ export function ExerciseNavigator({ exercises, onLogSet, onModify, onReplace }: 
               >
                 <span
                   className={cn(
-                    'block h-3 rounded-full transition-all',
+                    'block h-2 rounded-full transition-all',
                     i === activeIndex
                       ? 'bg-primary w-6'
                       : done
-                        ? 'bg-green-500 w-2.5'
-                        : 'bg-muted w-2.5',
+                        ? 'bg-accent w-2'
+                        : 'bg-muted w-2',
                   )}
                 />
               </button>
@@ -52,8 +54,8 @@ export function ExerciseNavigator({ exercises, onLogSet, onModify, onReplace }: 
         </div>
       </div>
 
-      {/* Card */}
-      <div className="flex-1 overflow-y-auto">
+      {/* Card — padding-bottom reserves space for the fixed nav bar */}
+      <div className="flex-1 overflow-y-auto pb-29 lg:pb-13">
         <ExerciseSessionCard
           exercise={current}
           onLogSet={onLogSet}
@@ -67,8 +69,11 @@ export function ExerciseNavigator({ exercises, onLogSet, onModify, onReplace }: 
         />
       </div>
 
-      {/* Prev / Next navigation */}
-      <div className="flex items-center justify-between border-t px-4 py-3">
+      {/* Prev / Next navigation — fixed at bottom of viewport */}
+      <div
+        className="fixed bottom-16 left-0 right-0 z-20 flex h-13 items-center justify-between border-t px-4 lg:bottom-0 lg:left-60"
+        style={{ background: 'var(--sheet-bg)' }}
+      >
         <Button
           variant="ghost"
           size="sm"
@@ -77,10 +82,10 @@ export function ExerciseNavigator({ exercises, onLogSet, onModify, onReplace }: 
           className="cursor-pointer gap-1"
         >
           <ChevronLeft className="h-4 w-4" />
-          Prev
+          {t('session.prev')}
         </Button>
 
-        <span className="text-muted-foreground text-sm tabular-nums">
+        <span className="font-display text-sm font-bold tabular-nums text-muted-foreground">
           {activeIndex + 1} / {exercises.length}
         </span>
 
@@ -91,13 +96,13 @@ export function ExerciseNavigator({ exercises, onLogSet, onModify, onReplace }: 
             onClick={() => setActiveIndex((i) => i + 1)}
             className="cursor-pointer gap-1"
           >
-            Next
+            {t('session.next')}
             <ChevronRight className="h-4 w-4" />
           </Button>
         ) : (
-          <div className="flex items-center gap-1 text-sm text-green-600 font-medium">
+          <div className="flex items-center gap-1 text-sm text-accent font-medium">
             <Check className="h-4 w-4" />
-            Last
+            {t('session.last')}
           </div>
         )}
       </div>

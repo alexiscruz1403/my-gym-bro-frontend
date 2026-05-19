@@ -141,7 +141,7 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
               <div className="flex min-w-0 flex-wrap items-center gap-2">
                 <NextLink
                   href={`/workout/exercises/${exercise.exerciseId}`}
-                  className="font-display text-xl font-bold leading-tight hover:underline"
+                  className="font-display text-[23px] font-bold leading-tight hover:underline"
                 >
                   {exercise.exerciseName}
                 </NextLink>
@@ -152,7 +152,9 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
                   </Badge>
                 )}
                 {allDone && (
-                  <Badge className="bg-green-500 text-white hover:bg-green-600 text-xs">Done</Badge>
+                  <Badge className="bg-accent/10 text-accent hover:bg-accent/15 text-[11px] uppercase tracking-[0.06em]">
+                    ✓ {t('session.done')}
+                  </Badge>
                 )}
               </div>
               {(exercise.bilateral !== undefined || catalogExercise?.loadType) && (
@@ -173,10 +175,10 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
           </div>
           <Button
             type="button"
-            variant="ghost"
+            variant="outline"
             size="icon"
             onClick={() => setReplaceOpen(true)}
-            className="h-11 w-11 shrink-0 cursor-pointer"
+            className="h-9 w-9 shrink-0 cursor-pointer"
             aria-label="Replace exercise"
           >
             <ArrowLeftRight className="h-4 w-4" />
