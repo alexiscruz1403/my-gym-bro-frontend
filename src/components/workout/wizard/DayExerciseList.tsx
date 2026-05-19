@@ -285,7 +285,7 @@ export function DayExerciseList({
         variant="outline"
         size="sm"
         onClick={() => setPickerOpen(true)}
-        className="w-full cursor-pointer gap-1.5"
+        className="w-full cursor-pointer gap-1.5 h-11"
       >
         <Plus className="h-4 w-4" />
         {t('plans.wizard.addExercise')}

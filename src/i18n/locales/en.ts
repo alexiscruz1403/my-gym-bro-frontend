@@ -223,7 +223,8 @@ const en = {
     status: {
       active: 'Active',
     },
-    viewFull: 'View full plan',
+    start: 'Start',
+    viewFull: 'View plan',
     dayCount_one: '{{count}} day',
     dayCount_other: '{{count}} days',
     exerciseCount_one: '{{count}} exercise',
@@ -287,8 +288,9 @@ const en = {
       addExercise: 'Add exercise',
     },
     delete: {
-      title: 'Delete "{{name}}"?',
-      confirm: 'Delete',
+      title: 'Delete plan',
+      description: 'You are about to delete «{{name}}». This action is permanent and cannot be undone.',
+      confirm: 'Delete plan',
       deleting: 'Deleting...',
     },
     error: {

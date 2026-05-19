@@ -41,7 +41,7 @@ const es = {
 
   nav: {
     home: 'Inicio',
-    workouts: 'Rutinas',
+    workouts: 'Planes',
     feed: 'Feed',
     ranks: 'Rangos',
     ai: 'IA',
@@ -199,7 +199,7 @@ const es = {
     greeting: 'Hola, {{username}}',
     subtitle: 'Aquí está tu resumen de entrenamiento.',
     activePlan: 'Plan activo',
-    myPlans: 'Mis rutinas',
+    myPlans: 'Mis planes',
     aiPlans: 'Planes IA',
     streakDays: 'días',
     noActivePlan: {
@@ -218,14 +218,15 @@ const es = {
   },
 
   plans: {
-    title: 'Mis rutinas',
+    title: 'Mis planes',
     maxReached: 'Máximo de 3 planes alcanzado',
-    newPlan: 'Nueva rutina',
-    browseExercises: 'Explorar catálogo de ejercicios',
+    newPlan: 'Nuevo plan',
+    browseExercises: 'Explorar ejercicios',
     status: {
       active: 'Activo',
     },
-    viewFull: 'Ver plan completo',
+    start: 'Iniciar',
+    viewFull: 'Ver plan',
     dayCount_one: '{{count}} día',
     dayCount_other: '{{count}} días',
     exerciseCount_one: '{{count}} ejercicio',
@@ -235,8 +236,8 @@ const es = {
     createdToast: '"{{name}}" creado',
     updatedToast: '"{{name}}" actualizado',
     empty: {
-      title: 'Sin rutinas',
-      description: 'Creá tu primera rutina para comenzar.',
+      title: 'Sin planes',
+      description: 'Creá tu primer plan para comenzar.',
     },
     noExercises: 'No se agregaron ejercicios aún.',
     tabPlan: 'Plan',
@@ -261,7 +262,7 @@ const es = {
         review: 'Revisión',
       },
       step1: {
-        title: 'Poné un nombre a tu rutina',
+        title: 'Poné un nombre a tu plan',
         description: 'Dale un nombre memorable a tu plan de entrenamiento.',
         placeholder: 'Ej: Push Pull Piernas',
       },
@@ -276,10 +277,10 @@ const es = {
         description: 'Asigná ejercicios a cada día de entrenamiento.',
       },
       step4: {
-        title: 'Revisá tu rutina',
+        title: 'Revisá tu plan',
         description: 'Verificá que todo esté bien antes de guardar.',
         noExercises: 'Sin ejercicios',
-        save: 'Guardar rutina',
+        save: 'Guardar plan',
         saving: 'Guardando...',
       },
       dayNameLabel: 'Nombre del día',
@@ -289,8 +290,9 @@ const es = {
       addExercise: 'Agregar ejercicio',
     },
     delete: {
-      title: '¿Eliminar "{{name}}"?',
-      confirm: 'Eliminar',
+      title: 'Eliminar plan',
+      description: 'Estás por eliminar «{{name}}». Esta acción es permanente y no se puede deshacer.',
+      confirm: 'Eliminar plan',
       deleting: 'Eliminando...',
     },
     error: {
@@ -409,7 +411,7 @@ const es = {
   },
 
   exercises: {
-    title: 'Catálogo de ejercicios',
+    title: 'Ejercicios',
     searchPlaceholder: 'Buscar ejercicios...',
     clearFilters: 'Limpiar filtros',
     clearSearch: 'Limpiar búsqueda',

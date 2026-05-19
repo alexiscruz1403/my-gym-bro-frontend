@@ -8,8 +8,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { ExerciseConfigRow } from './ExerciseConfigRow';
-import { Separator } from '@/components/ui/separator';
-import { Link } from 'lucide-react';
+import { ChevronDown, Link } from 'lucide-react';
 import type { PlanDay, ExerciseConfig } from '@/types/domain.types';
 
 // Group consecutive exercises that share the same supersetGroupId.
@@ -47,56 +46,59 @@ export function PlanDayAccordion({ days, planId, showSwap }: PlanDayAccordionPro
   const { t } = useTranslation();
 
   return (
-    <Accordion multiple className="w-full">
+    <Accordion multiple className="flex w-full flex-col gap-2">
       {days.map((day) => {
         const groups = groupExercises(day.exercises);
 
         return (
-          <AccordionItem key={day.dayOfWeek} value={day.dayOfWeek}>
-            <AccordionTrigger className="cursor-pointer text-sm font-medium">
-              {t(`days.${day.dayOfWeek}`)}
-              {day.dayName && (
-                <span className="text-muted-foreground font-normal"> · {day.dayName}</span>
-              )}
-              <span className="text-muted-foreground ml-auto mr-2 text-xs">
+          <AccordionItem
+            key={day.dayOfWeek}
+            value={day.dayOfWeek}
+            className="overflow-hidden rounded-2xl border border-border bg-card shadow-1"
+          >
+            <AccordionTrigger className="cursor-pointer gap-2.5 px-4 py-3.5 hover:bg-muted/30 hover:no-underline">
+              <span className="font-display rounded-lg bg-primary/10 px-2 py-0.5 text-[12px] font-bold tracking-[0.04em] text-primary">
+                {t(`daysShort.${day.dayOfWeek}`)}
+              </span>
+              <span className="flex-1 text-left text-[14px] font-semibold text-foreground">
+                {day.dayName ?? t(`days.${day.dayOfWeek}`)}
+              </span>
+              <span className="text-[12px] text-muted-foreground">
                 {t('plans.exerciseCount', { count: day.exercises.length })}
               </span>
             </AccordionTrigger>
-            <AccordionContent>
-              <div className="space-y-1">
-                {groups.map((group, gi) => (
-                  <div key={gi}>
-                    {group.type === 'standalone' ? (
-                      <ExerciseConfigRow
-                        config={group.exercise}
-                        planId={planId}
-
-                        showSwap={showSwap}
-                      />
-                    ) : (
-                      <div className="border-primary/40 rounded-lg border-l-2 pl-2">
-                        <div className="text-primary mb-1 flex items-center gap-1 px-1 pt-1 text-xs font-medium">
-                          <Link className="h-3 w-3" />
-                          Superset {group.groupId}
-                        </div>
-                        {group.exercises.map((ex, ei) => (
-                          <div key={`${ex.exerciseId}-${ei}`}>
-                            <ExerciseConfigRow
-                              config={ex}
-                              planId={planId}
-      
-                              showSwap={showSwap}
-                            />
-                            {ei < group.exercises.length - 1 && (
-                              <Separator className="ml-1" />
-                            )}
-                          </div>
-                        ))}
+            <AccordionContent className="border-t border-border px-3 pb-2 pt-1">
+              <div>
+                {groups.map((group, gi) =>
+                  group.type === 'standalone' ? (
+                    <ExerciseConfigRow
+                      key={gi}
+                      config={group.exercise}
+                      planId={planId}
+                      showSwap={showSwap}
+                      showBorder={gi < groups.length - 1}
+                    />
+                  ) : (
+                    <div
+                      key={gi}
+                      className="my-1 border-l-[3px] border-primary pl-2"
+                    >
+                      <div className="flex items-center gap-1 px-1 py-1 text-[10px] font-bold uppercase tracking-[0.06em] text-primary">
+                        <Link className="h-3 w-3" />
+                        Superserie {group.groupId}
                       </div>
-                    )}
-                    {gi < groups.length - 1 && <Separator />}
-                  </div>
-                ))}
+                      {group.exercises.map((ex, ei) => (
+                        <ExerciseConfigRow
+                          key={`${ex.exerciseId}-${ei}`}
+                          config={ex}
+                          planId={planId}
+                          showSwap={showSwap}
+                          showBorder={ei < group.exercises.length - 1}
+                        />
+                      ))}
+                    </div>
+                  ),
+                )}
               </div>
             </AccordionContent>
           </AccordionItem>

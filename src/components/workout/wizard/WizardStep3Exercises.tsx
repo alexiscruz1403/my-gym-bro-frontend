@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DayExerciseList } from './DayExerciseList';
+import { cn } from '@/lib/utils';
 import type { DayOfWeek } from '@/types/domain.types';
 import type { ExerciseConfigDraft } from '@/types/ui.types';
 
@@ -52,24 +52,41 @@ export function WizardStep3Exercises({
         </p>
       </div>
 
-      <Tabs value={activeDay} onValueChange={setActiveDay}>
-        <div className="w-full overflow-x-auto overflow-y-hidden">
-          <TabsList className="flex w-max gap-1">
-            {selectedDays.map((day) => (
-              <TabsTrigger key={day} value={day} className="shrink-0 cursor-pointer">
-                {dayShortLabels[day]}
-                {(exercisesByDay[day]?.length ?? 0) > 0 && (
-                  <span className="bg-primary/20 text-primary ml-1 rounded-full px-1.5 text-xs">
-                    {exercisesByDay[day]!.length}
-                  </span>
-                )}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </div>
+      <div className="flex gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none]">
+        {selectedDays.map((day) => {
+          const count = exercisesByDay[day]?.length ?? 0;
+          const isActive = activeDay === day;
+          return (
+            <button
+              key={day}
+              type="button"
+              onClick={() => setActiveDay(day)}
+              className={cn(
+                'flex h-[34px] shrink-0 cursor-pointer items-center gap-[5px] rounded-full border-[1.5px] px-[14px] text-[12px] font-semibold whitespace-nowrap transition-colors',
+                isActive
+                  ? 'border-primary bg-primary text-white'
+                  : 'border-border bg-transparent text-muted-foreground',
+              )}
+            >
+              {dayShortLabels[day]}
+              {count > 0 && (
+                <span
+                  className={cn(
+                    'rounded-full px-[5px] py-[1px] text-[10px]',
+                    isActive ? 'bg-white/25' : 'bg-muted text-muted-foreground',
+                  )}
+                >
+                  {count}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
 
+      <div className="mt-4">
         {selectedDays.map((day) => (
-          <TabsContent key={day} value={day} className="mt-4">
+          <div key={day} className={activeDay === day ? 'block' : 'hidden'}>
             <DayExerciseList
               exercises={exercisesByDay[day] ?? []}
               dayName={dayNamesByDay[day] ?? ''}
@@ -79,15 +96,23 @@ export function WizardStep3Exercises({
               onRemove={(index) => onRemove(day, index)}
               onReorder={(from, to) => onReorder(day, from, to)}
             />
-          </TabsContent>
+          </div>
         ))}
-      </Tabs>
+      </div>
 
-      <div className="flex gap-3">
-        <Button variant="outline" onClick={onBack} className="flex-1 cursor-pointer">
+      <div className="flex gap-2.5">
+        <Button
+          variant="outline"
+          onClick={onBack}
+          className="h-[46px] flex-1 cursor-pointer rounded-2xl border-border text-[14px] font-medium"
+        >
           {t('common.back')}
         </Button>
-        <Button onClick={onNext} disabled={totalExercises === 0} className="flex-1 cursor-pointer">
+        <Button
+          onClick={onNext}
+          disabled={totalExercises === 0}
+          className="h-[46px] flex-1 cursor-pointer rounded-2xl text-[15px] font-semibold disabled:opacity-[.45]"
+        >
           {t('common.review')}
         </Button>
       </div>

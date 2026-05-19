@@ -257,7 +257,7 @@ export function ExerciseConfigForm({
               key={unit}
               type="button"
               onClick={() => setWeightUnit(unit)}
-              className={`cursor-pointer px-2 py-0.5 transition-colors ${i > 0 ? 'border-l' : ''} ${
+              className={`cursor-pointer px-4 py-2 transition-colors ${i > 0 ? 'border-l' : ''} ${
                 weightUnit === unit
                   ? 'bg-primary text-primary-foreground font-medium'
                   : 'text-muted-foreground hover:bg-muted'
@@ -396,11 +396,11 @@ export function ExerciseConfigForm({
           type="button"
           variant="outline"
           onClick={onCancel}
-          className="flex-1 cursor-pointer"
+          className="flex-1 cursor-pointer h-11"
         >
           Cancel
         </Button>
-        <Button type="submit" className="flex-1 cursor-pointer">
+        <Button type="submit" className="flex-1 cursor-pointer h-11">
           Save
         </Button>
       </div>

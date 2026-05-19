@@ -146,6 +146,8 @@ export interface PlanListItem {
   isActive: boolean;
   isAiGenerated?: boolean;
   daysCount: number;
+  configuredDays: string[];
+  totalExercises: number;
 }
 
 export type SessionStatus = 'in_progress' | 'completed' | 'partial' | 'abandoned';

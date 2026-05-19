@@ -46,7 +46,7 @@ export function WizardStep1Name({ defaultValue, onNext }: WizardStep1NameProps) 
         )}
       </div>
 
-      <Button type="submit" className="w-full cursor-pointer">
+      <Button type="submit" className="h-11.5 w-full cursor-pointer rounded-2xl text-[15px] font-semibold">
         {t('common.continue')}
       </Button>
     </form>
