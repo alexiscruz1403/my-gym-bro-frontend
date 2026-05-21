@@ -9,11 +9,6 @@ import { Loader2, LogOut, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { SessionHistoryList } from '@/components/history/SessionHistoryList';
 import { StatsPanel } from '@/components/stats/StatsPanel';
@@ -73,6 +68,7 @@ export default function ProfilePage() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting, isDirty },
   } = useForm<EditProfileValues>({
     resolver: zodResolver(editProfileSchema),
@@ -105,16 +101,16 @@ export default function ProfilePage() {
         <ProfileHeader user={user} />
 
         {/* Tab switcher */}
-        <div className="flex rounded-lg bg-muted p-1">
+        <div className="flex h-11 rounded-xl bg-muted/60 p-1">
           {TABS.map((tab) => (
             <button
               key={tab.value}
               type="button"
               onClick={() => setActiveTab(tab.value)}
               className={cn(
-                'flex-1 rounded-md py-1.5 text-sm font-medium transition-colors min-h-11 cursor-pointer',
+                'flex-1 cursor-pointer rounded-lg text-[13px] font-semibold transition-colors',
                 activeTab === tab.value
-                  ? 'bg-background text-foreground shadow-sm'
+                  ? 'bg-card text-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground',
               )}
             >
@@ -125,56 +121,63 @@ export default function ProfilePage() {
 
         {/* Profile tab */}
         {activeTab === 'profile' && (
-          <div className="space-y-6">
-            <Separator />
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">{t('profile.edit.title')}</CardTitle>
-              </CardHeader>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <CardContent className="space-y-4">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="username">{t('profile.edit.usernameLabel')}</Label>
-                    <Input id="username" {...register('username')} />
-                    {errors.username && (
-                      <p className="text-xs text-destructive">
-                        {errors.username.message}
+          <div className="space-y-4">
+            <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+              <div className="border-b border-border px-4 pb-2.5 pt-3.5">
+                <p className="font-display text-[16px] font-semibold tracking-[0.01em] text-foreground">
+                  {t('profile.edit.title')}
+                </p>
+              </div>
+              <div className="px-4 py-3.5">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+                  <div className="space-y-[5px]">
+                    <label htmlFor="username" className="block text-[13px] font-medium text-foreground">
+                      {t('profile.edit.usernameLabel')}
+                    </label>
+                    <input
+                      id="username"
+                      {...register('username')}
+                      className="h-11 w-full rounded-2xl border-[1.5px] border-border bg-card px-3 text-[14px] text-foreground outline-none transition-all focus:border-primary focus:shadow-[0_0_0_3px_color-mix(in_oklch,var(--primary)_12%,transparent)]"
+                    />
+                    {errors.username ? (
+                      <p className="text-[12px] text-destructive">{errors.username.message}</p>
+                    ) : (
+                      <p className="text-[12px] text-muted-foreground/70">
+                        {t('profile.edit.usernameHint', { count: 20 - (watch('username')?.length ?? 0) })}
                       </p>
                     )}
                   </div>
-
-                  <Button
+                  <button
                     type="submit"
-                    className={cn('w-full', isSubmitting || !isDirty ? 'cursor-not-allowed' : 'cursor-pointer')}
                     disabled={isSubmitting || !isDirty}
+                    className="flex h-11 w-full cursor-pointer items-center justify-center gap-1.5 rounded-2xl bg-primary text-[14px] font-semibold text-white transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-45"
                   >
-                    {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
                     {isSubmitting ? t('profile.edit.saving') : t('profile.edit.save')}
-                  </Button>
-                </CardContent>
-              </form>
-            </Card>
+                  </button>
+                </form>
+              </div>
+            </div>
 
             <BodyMetricsSection user={user} onSave={updatePhysicalData} />
 
-            <Button
-              variant="outline"
-              className="w-full text-destructive hover:text-destructive cursor-pointer"
+            <button
+              type="button"
               onClick={logout}
+              className="flex h-11 w-full cursor-pointer items-center justify-center gap-1.5 rounded-2xl border-[1.5px] border-border bg-transparent text-[14px] font-medium text-foreground transition-all hover:bg-muted"
             >
-              <LogOut className="mr-2 h-4 w-4" />
+              <LogOut className="h-4 w-4" />
               {t('profile.logout')}
-            </Button>
+            </button>
 
-            <Button
-              variant="ghost"
-              className="w-full text-muted-foreground hover:text-destructive cursor-pointer"
+            <button
+              type="button"
               onClick={() => setDeleteDialogOpen(true)}
+              className="flex h-10 w-full cursor-pointer items-center justify-center gap-1.5 text-[13px] font-medium text-muted-foreground transition-colors hover:text-destructive"
             >
-              <Trash2 className="mr-2 h-4 w-4" />
+              <Trash2 className="h-4 w-4" />
               {t('profile.deleteAccount')}
-            </Button>
+            </button>
 
             <DeleteAccountDialog
               open={deleteDialogOpen}
@@ -193,9 +196,13 @@ export default function ProfilePage() {
                 title={t('profile.history.error.title')}
                 description={t('profile.history.error.description')}
                 action={
-                  <Button variant="outline" size="sm" className="min-h-11" onClick={refetch}>
+                  <button
+                    type="button"
+                    onClick={refetch}
+                    className="flex h-11 cursor-pointer items-center rounded-xl border border-border bg-card px-4 text-[13px] font-medium text-foreground transition-colors hover:bg-muted"
+                  >
                     {t('profile.history.retry')}
-                  </Button>
+                  </button>
                 }
               />
             )}
@@ -205,9 +212,12 @@ export default function ProfilePage() {
                 title={t('profile.history.empty.title')}
                 description={t('profile.history.empty.description')}
                 action={
-                  <Button size="sm" className="min-h-11" render={<Link href="/dashboard" />}>
+                  <Link
+                    href="/dashboard"
+                    className="flex h-11 cursor-pointer items-center rounded-xl bg-primary px-4 text-[13px] font-semibold text-white transition-colors hover:bg-primary/90"
+                  >
                     {t('profile.history.goToDashboard')}
-                  </Button>
+                  </Link>
                 }
               />
             )}

@@ -6,10 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import type { PhysicalData, UserResponse } from '@/types/domain.types';
 
@@ -85,37 +81,40 @@ export function BodyMetricsSection({ user, onSave }: BodyMetricsSectionProps) {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-base">{t('profile.physicalData.title')}</CardTitle>
-        <p className="text-muted-foreground text-xs">{t('profile.physicalData.description')}</p>
-      </CardHeader>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <CardContent className="space-y-4">
+    <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+      <div className="border-b border-border px-4 pb-2.5 pt-3.5">
+        <p className="font-display text-[16px] font-semibold tracking-[0.01em] text-foreground">
+          {t('profile.physicalData.title')}
+        </p>
+        <p className="mt-0.5 text-[12px] text-muted-foreground">{t('profile.physicalData.description')}</p>
+      </div>
+
+      <div className="px-4 py-3.5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Weight */}
-          <div className="space-y-1.5">
-            <Label>{t('profile.physicalData.weightLabel')}</Label>
+          <div className="space-y-[5px]">
+            <label className="block text-[13px] font-medium text-foreground">
+              {t('profile.physicalData.weightLabel')}
+            </label>
             <div className="flex gap-2">
-              <Input
+              <input
                 type="number"
                 min="20"
                 max="300"
                 step="0.1"
-                className="flex-1"
+                className="h-11 flex-1 rounded-2xl border-[1.5px] border-border bg-card px-3 text-center font-display text-[17px] font-semibold text-foreground outline-none transition-all focus:border-primary"
                 {...register('weightValue', { setValueAs: toNullableNumber })}
               />
-              <div className="flex overflow-hidden rounded-md border text-sm">
+              <div className="flex overflow-hidden rounded-xl border-[1.5px] border-border">
                 {(['kg', 'lbs'] as const).map((unit, i) => (
                   <button
                     key={unit}
                     type="button"
                     onClick={() => setValue('weightUnit', unit, { shouldDirty: true })}
                     className={cn(
-                      'cursor-pointer px-3 py-2 transition-colors',
-                      i > 0 && 'border-l',
-                      weightUnit === unit
-                        ? 'bg-primary text-primary-foreground font-medium'
-                        : 'text-muted-foreground hover:bg-muted',
+                      'h-11 cursor-pointer px-3 text-[13px] font-semibold transition-colors',
+                      i > 0 && 'border-l border-border',
+                      weightUnit === unit ? 'bg-primary text-white' : 'text-muted-foreground hover:bg-muted',
                     )}
                   >
                     {unit}
@@ -124,34 +123,34 @@ export function BodyMetricsSection({ user, onSave }: BodyMetricsSectionProps) {
               </div>
             </div>
             {errors.weightValue && (
-              <p className="text-destructive text-xs">{errors.weightValue.message as string}</p>
+              <p className="text-[12px] text-destructive">{errors.weightValue.message as string}</p>
             )}
           </div>
 
           {/* Height */}
-          <div className="space-y-1.5">
-            <Label>{t('profile.physicalData.heightLabel')}</Label>
+          <div className="space-y-[5px]">
+            <label className="block text-[13px] font-medium text-foreground">
+              {t('profile.physicalData.heightLabel')}
+            </label>
             <div className="flex gap-2">
-              <Input
+              <input
                 type="number"
                 min="1"
                 max="300"
                 step="0.1"
-                className="flex-1"
+                className="h-11 flex-1 rounded-2xl border-[1.5px] border-border bg-card px-3 text-center font-display text-[17px] font-semibold text-foreground outline-none transition-all focus:border-primary"
                 {...register('heightValue', { setValueAs: toNullableNumber })}
               />
-              <div className="flex overflow-hidden rounded-md border text-sm">
+              <div className="flex overflow-hidden rounded-xl border-[1.5px] border-border">
                 {(['cm', 'ft'] as const).map((unit, i) => (
                   <button
                     key={unit}
                     type="button"
                     onClick={() => setValue('heightUnit', unit, { shouldDirty: true })}
                     className={cn(
-                      'cursor-pointer px-3 py-2 transition-colors',
-                      i > 0 && 'border-l',
-                      heightUnit === unit
-                        ? 'bg-primary text-primary-foreground font-medium'
-                        : 'text-muted-foreground hover:bg-muted',
+                      'h-11 cursor-pointer px-3 text-[13px] font-semibold transition-colors',
+                      i > 0 && 'border-l border-border',
+                      heightUnit === unit ? 'bg-primary text-white' : 'text-muted-foreground hover:bg-muted',
                     )}
                   >
                     {unit}
@@ -160,44 +159,46 @@ export function BodyMetricsSection({ user, onSave }: BodyMetricsSectionProps) {
               </div>
             </div>
             {heightUnit === 'ft' && (
-              <p className="text-muted-foreground text-xs">{t('profile.physicalData.heightHintFt')}</p>
+              <p className="text-[12px] text-muted-foreground">{t('profile.physicalData.heightHintFt')}</p>
             )}
             {errors.heightValue && (
-              <p className="text-destructive text-xs">{errors.heightValue.message as string}</p>
+              <p className="text-[12px] text-destructive">{errors.heightValue.message as string}</p>
             )}
           </div>
 
           {/* Body fat percentage */}
-          <div className="space-y-1.5">
-            <Label>{t('profile.physicalData.bodyFatLabel')}</Label>
+          <div className="space-y-[5px]">
+            <label className="block text-[13px] font-medium text-foreground">
+              {t('profile.physicalData.bodyFatLabel')}
+            </label>
             <div className="relative">
-              <Input
+              <input
                 type="number"
                 min="1"
                 max="70"
                 step="0.1"
-                className="pr-8"
+                className="h-11 w-full rounded-2xl border-[1.5px] border-border bg-card px-3 pr-10 text-[14px] text-foreground outline-none transition-all focus:border-primary focus:shadow-[0_0_0_3px_color-mix(in_oklch,var(--primary)_12%,transparent)]"
                 {...register('bodyFatPercent', { setValueAs: toNullableNumber })}
               />
-              <span className="text-muted-foreground pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm">
+              <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-[13px] text-muted-foreground">
                 {t('profile.physicalData.bodyFatUnit')}
               </span>
             </div>
             {errors.bodyFatPercent && (
-              <p className="text-destructive text-xs">{errors.bodyFatPercent.message as string}</p>
+              <p className="text-[12px] text-destructive">{errors.bodyFatPercent.message as string}</p>
             )}
           </div>
 
-          <Button
+          <button
             type="submit"
-            className={cn('w-full', !isDirty || isSubmitting ? 'cursor-not-allowed' : 'cursor-pointer')}
             disabled={!isDirty || isSubmitting}
+            className="flex h-11 w-full cursor-pointer items-center justify-center gap-1.5 rounded-2xl bg-primary text-[14px] font-semibold text-white transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-45"
           >
-            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
             {isSubmitting ? t('profile.physicalData.saving') : t('profile.physicalData.save')}
-          </Button>
-        </CardContent>
-      </form>
-    </Card>
+          </button>
+        </form>
+      </div>
+    </div>
   );
 }

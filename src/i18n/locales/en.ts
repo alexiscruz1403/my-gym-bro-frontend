@@ -516,6 +516,7 @@ const en = {
       usernameLabel: 'Username',
       save: 'Save changes',
       saving: 'Saving...',
+      usernameHint: 'Only letters, numbers, hyphens and dots. {{count}} characters left.',
     },
     logout: 'Log out',
     deleteAccount: 'Delete account',
@@ -557,6 +558,16 @@ const en = {
       maxChars: 'Maximum 20 characters',
       invalidChars: 'Only letters, numbers, hyphens ( - ), dots ( . ) and underscores ( _ )',
       reservedUsername: 'This username is not available',
+    },
+    followList: {
+      followers: 'Followers',
+      following: 'Following',
+      error: {
+        title: 'Failed to load list',
+        description: 'Could not fetch the list. Please try again.',
+      },
+      emptyFollowers: 'No followers yet',
+      emptyFollowing: 'Not following anyone yet',
     },
     physicalData: {
       title: 'Body metrics',

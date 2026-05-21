@@ -29,7 +29,6 @@ const MuscleRadarChart = dynamic(
   () => import('@/components/stats/MuscleRadarChart').then((m) => m.MuscleRadarChart),
   { ssr: false, loading: () => <Skeleton className="h-75 w-full rounded-xl" /> },
 );
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { WeightUnit } from '@/hooks/useStats';
 import type { StatsPeriod, VolumeByPeriodResponse, VolumeByMuscleResponse } from '@/types/domain.types';
@@ -96,14 +95,53 @@ export function StatsPanel({
         </div>
       </div>
 
+      {(loading || (!error && volumeData)) && (
+        <div className="grid grid-cols-3 gap-2.5">
+          {loading || !volumeData ? (
+            <>
+              <Skeleton className="h-[72px] rounded-2xl" />
+              <Skeleton className="h-[72px] rounded-2xl" />
+              <Skeleton className="h-[72px] rounded-2xl" />
+            </>
+          ) : (
+            <>
+              <div className="rounded-2xl border border-border bg-card p-3 text-center shadow-sm">
+                <p className="font-display text-[22px] font-bold leading-none text-foreground">
+                  {convertVolume(volumeData.totalVolume).toLocaleString()}
+                  <span className="text-[11px] font-normal text-muted-foreground"> {weightUnit}</span>
+                </p>
+                <p className="mt-1 text-[11px] text-muted-foreground">{t('stats.totalVolume')}</p>
+                {volumeData.changePercent !== null && (
+                  <p className={cn('mt-0.5 text-[10px] font-semibold', volumeData.changePercent >= 0 ? 'text-green-500' : 'text-destructive')}>
+                    {volumeData.changePercent >= 0 ? '▲ +' : '▼ '}{Math.abs(volumeData.changePercent).toFixed(1)}%
+                  </p>
+                )}
+              </div>
+              <div className="rounded-2xl border border-border bg-card p-3 text-center shadow-sm">
+                <p className="font-display text-[22px] font-bold leading-none text-foreground">{volumeData.totalSessions}</p>
+                <p className="mt-1 text-[11px] text-muted-foreground">{t('stats.sessions')}</p>
+              </div>
+              <div className="rounded-2xl border border-border bg-card p-3 text-center shadow-sm">
+                <p className="font-display text-[22px] font-bold leading-none text-foreground">{volumeData.totalSets}</p>
+                <p className="mt-1 text-[11px] text-muted-foreground">{t('stats.sets')}</p>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
       {!loading && error && (
         <EmptyState
           title={t('stats.errorTitle')}
           description={t('stats.errorDescription')}
           action={
-            <Button variant="outline" size="sm" onClick={onRetry}>
+            <button
+              type="button"
+              onClick={onRetry}
+              className="flex h-9 cursor-pointer items-center rounded-xl border border-border bg-card px-4 text-[13px] font-medium text-foreground transition-colors hover:bg-muted"
+            >
               {t('common.retry')}
-            </Button>
+            </button>
           }
         />
       )}

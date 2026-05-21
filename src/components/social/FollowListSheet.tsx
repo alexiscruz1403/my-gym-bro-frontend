@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { useTranslation } from 'react-i18next';
+import { Sheet, SheetContent, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { Pagination } from '@/components/shared/Pagination';
@@ -33,39 +34,59 @@ export function FollowListSheet({
   onOpenChange,
   highlightUserId,
 }: FollowListSheetProps) {
+  const { t } = useTranslation();
   const { users, meta, page, isLoading, error, fetchPage, goToPage } = useFollowList(userId, type);
 
   useEffect(() => {
     if (open) fetchPage(1);
   }, [open, fetchPage]);
 
-  const title = type === 'followers' ? 'Followers' : 'Following';
+  const title = type === 'followers'
+    ? t('profile.followList.followers')
+    : t('profile.followList.following');
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="max-h-[80dvh] overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle>{title}</SheetTitle>
-        </SheetHeader>
+      <SheetContent
+        side="bottom"
+        showCloseButton={false}
+        className="flex max-h-[80dvh] flex-col rounded-t-[20px] border-0 p-0"
+      >
+        <div className="mx-auto mt-3 h-1 w-10 shrink-0 rounded-full bg-border" />
 
-        <div className="px-4 pb-6">
+        <div className="shrink-0 px-5 pb-3 pt-4">
+          <SheetTitle className="font-display text-[19px] font-bold tracking-[0.02em]">
+            {title}
+          </SheetTitle>
+          <SheetDescription className="sr-only">{title}</SheetDescription>
+        </div>
+
+        <div className="flex-1 overflow-y-auto pb-6">
           {isLoading && <FollowListSkeletons />}
 
           {!isLoading && error && (
-            <EmptyState
-              title="Failed to load list"
-              description="Could not fetch the list. Please try again."
-            />
+            <div className="px-4">
+              <EmptyState
+                title={t('profile.followList.error.title')}
+                description={t('profile.followList.error.description')}
+              />
+            </div>
           )}
 
           {!isLoading && !error && users.length === 0 && (
-            <EmptyState
-              title={type === 'followers' ? 'No followers yet' : 'Not following anyone yet'}
-            />
+            <div className="px-4">
+              <EmptyState
+                title={
+                  type === 'followers'
+                    ? t('profile.followList.emptyFollowers')
+                    : t('profile.followList.emptyFollowing')
+                }
+              />
+            </div>
           )}
 
           {!isLoading && !error && users.length > 0 && (
-            <div className="space-y-1">
+            <div className="space-y-1 px-4">
               {users.map((user) => (
                 <UserListItem
                   key={user._id}
@@ -75,12 +96,14 @@ export function FollowListSheet({
               ))}
 
               {meta && (
-                <Pagination
-                  page={page}
-                  total={meta.total}
-                  limit={meta.limit}
-                  onPageChange={goToPage}
-                />
+                <div className="mt-2">
+                  <Pagination
+                    page={page}
+                    total={meta.total}
+                    limit={meta.limit}
+                    onPageChange={goToPage}
+                  />
+                </div>
               )}
             </div>
           )}

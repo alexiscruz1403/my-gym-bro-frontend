@@ -518,6 +518,7 @@ const es = {
       usernameLabel: 'Nombre de usuario',
       save: 'Guardar cambios',
       saving: 'Guardando...',
+      usernameHint: 'Solo letras, números, guión y punto. {{count}} caracteres restantes.',
     },
     logout: 'Cerrar sesión',
     deleteAccount: 'Eliminar cuenta',
@@ -559,6 +560,16 @@ const es = {
       maxChars: 'Máximo 20 caracteres',
       invalidChars: 'Solo letras, números, guión ( - ), punto ( . ) y guión bajo ( _ )',
       reservedUsername: 'Este nombre de usuario no está disponible',
+    },
+    followList: {
+      followers: 'Seguidores',
+      following: 'Siguiendo',
+      error: {
+        title: 'Error al cargar la lista',
+        description: 'No se pudo obtener la lista. Intentá de nuevo.',
+      },
+      emptyFollowers: 'Sin seguidores todavía',
+      emptyFollowing: 'Sin usuarios seguidos todavía',
     },
     physicalData: {
       title: 'Datos corporales',

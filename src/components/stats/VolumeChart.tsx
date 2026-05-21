@@ -39,34 +39,6 @@ export function VolumeChart({ data, period, loading, weightUnit, convertVolume }
 
   return (
     <div className="space-y-3">
-      <div className="flex gap-6 text-sm">
-        <div>
-          <p className="text-muted-foreground text-xs">{t('stats.totalVolume')}</p>
-          <p className="font-display font-bold flex items-center">
-            {convertVolume(data.totalVolume).toLocaleString(i18n.language)}
-            <span className="text-muted-foreground ml-1 text-xs font-normal">{weightUnit}</span>
-            {data.changePercent !== null && data.changePercent !== undefined && (
-              <span className={cn(
-                'ml-1.5 text-[10px] font-medium rounded-full px-1.5 py-0.5',
-                data.changePercent > 0 && 'bg-accent/15 text-accent',
-                data.changePercent < 0 && 'bg-destructive/15 text-destructive',
-                data.changePercent === 0 && 'bg-muted text-muted-foreground',
-              )}>
-                {data.changePercent > 0 ? '+' : ''}{data.changePercent.toFixed(1)}%
-              </span>
-            )}
-          </p>
-        </div>
-        <div>
-          <p className="text-muted-foreground text-xs">{t('stats.sets')}</p>
-          <p className="font-display font-bold">{data.totalSets}</p>
-        </div>
-        <div>
-          <p className="text-muted-foreground text-xs">{t('stats.sessions')}</p>
-          <p className="font-display font-bold">{data.totalSessions}</p>
-        </div>
-      </div>
-
       {chartData.length === 0 ? (
         <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
           {t('stats.noData')}
