@@ -80,7 +80,7 @@ export function ExerciseDetail({ exercise }: ExerciseDetailProps) {
             className={cn(
               'flex-1 h-9 cursor-pointer rounded-xl text-[12.5px] font-semibold transition-all',
               activeTab === tab.value
-                ? 'bg-card text-foreground shadow-sm'
+                ? 'bg-primary/10 text-primary shadow-sm'
                 : 'text-muted-foreground hover:text-foreground',
             )}
           >
