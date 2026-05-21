@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslation } from 'react-i18next';
 import { SessionDetailExerciseCard } from '@/components/history/SessionDetailExerciseCard';
 import { EmptyState } from '@/components/shared/EmptyState';
 import type { SessionExercise } from '@/types/domain.types';
@@ -7,11 +10,13 @@ interface SessionDetailExerciseListProps {
 }
 
 export function SessionDetailExerciseList({ exercises }: SessionDetailExerciseListProps) {
+  const { t } = useTranslation();
+
   if (exercises.length === 0) {
     return (
       <EmptyState
-        title="Sin ejercicios registrados"
-        description="Esta sesión no tiene ejercicios guardados."
+        title={t('history.noExercisesTitle')}
+        description={t('history.noExercisesDescription')}
       />
     );
   }

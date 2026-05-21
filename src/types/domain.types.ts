@@ -495,6 +495,8 @@ export interface ExerciseRankResponse {
   rank: RankLevel | null;
   rankName: string | null;
   bestValue: number | null;
+  nextRankName: string | null;
+  valueToNextRank: number | null;
   updatedAt: string | null;
 }
 

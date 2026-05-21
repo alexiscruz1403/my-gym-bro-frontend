@@ -2,21 +2,21 @@
 
 import { use } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { PageContainer } from '@/components/layout/PageContainer';
+import { PageHeader } from '@/components/layout/PageHeader';
 import { SessionDetailHeader } from '@/components/history/SessionDetailHeader';
 import { SessionDetailExerciseList } from '@/components/history/SessionDetailExerciseList';
 import { EmptyState } from '@/components/shared/EmptyState';
-import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ChevronLeft } from 'lucide-react';
 import { useSessionDetail } from '@/hooks/useSessionDetail';
 
 function SessionDetailSkeletons() {
   return (
     <div className="space-y-3">
-      <Skeleton className="h-20 w-full rounded-xl" />
+      <Skeleton className="h-24 w-full rounded-2xl" />
       {Array.from({ length: 3 }).map((_, i) => (
-        <Skeleton key={i} className="h-36 w-full rounded-xl" />
+        <Skeleton key={i} className="h-40 w-full rounded-2xl" />
       ))}
     </div>
   );
@@ -29,41 +29,40 @@ interface SessionDetailPageProps {
 export default function SessionDetailPage({ params }: SessionDetailPageProps) {
   const { id } = use(params);
   const router = useRouter();
+  const { t } = useTranslation();
   const { session, loading, error, refetch } = useSessionDetail(id);
 
   return (
-    <PageContainer>
-      <div className="space-y-4">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="text-muted-foreground hover:text-foreground flex min-h-11 items-center gap-1 text-sm transition-colors"
-        >
-          <ChevronLeft className="h-4 w-4" />
-          Volver
-        </button>
+    <>
+      <PageHeader title={t('history.sessionDetailTitle')} onBack={() => router.back()} />
+      <PageContainer>
+        <div className="space-y-4">
+          {loading && <SessionDetailSkeletons />}
 
-        {loading && <SessionDetailSkeletons />}
+          {!loading && error && (
+            <EmptyState
+              title={t('history.sessionErrorTitle')}
+              description={t('history.sessionErrorDescription')}
+              action={
+                <button
+                  type="button"
+                  onClick={refetch}
+                  className="flex h-11 cursor-pointer items-center rounded-xl border border-border bg-card px-4 text-[13px] font-medium text-foreground transition-colors hover:bg-muted"
+                >
+                  {t('common.retry')}
+                </button>
+              }
+            />
+          )}
 
-        {!loading && error && (
-          <EmptyState
-            title="Error al cargar la sesión"
-            description="No se pudo obtener el detalle. Intenta de nuevo."
-            action={
-              <Button variant="outline" size="sm" className="min-h-11" onClick={refetch}>
-                Reintentar
-              </Button>
-            }
-          />
-        )}
-
-        {!loading && !error && session && (
-          <>
-            <SessionDetailHeader session={session} />
-            <SessionDetailExerciseList exercises={session.exercises} />
-          </>
-        )}
-      </div>
-    </PageContainer>
+          {!loading && !error && session && (
+            <>
+              <SessionDetailHeader session={session} />
+              <SessionDetailExerciseList exercises={session.exercises} />
+            </>
+          )}
+        </div>
+      </PageContainer>
+    </>
   );
 }

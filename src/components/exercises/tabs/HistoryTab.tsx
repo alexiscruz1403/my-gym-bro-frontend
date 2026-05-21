@@ -1,28 +1,33 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
 import { useExerciseHistory } from '@/hooks/useExerciseHistory';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { Pagination } from '@/components/shared/Pagination';
 import type { ExerciseHistorySession, ExerciseHistorySet } from '@/types/domain.types';
 
-const DAY_LABELS: Record<string, string> = {
-  monday: 'Lunes',
-  tuesday: 'Martes',
-  wednesday: 'Miércoles',
-  thursday: 'Jueves',
-  friday: 'Viernes',
-  saturday: 'Sábado',
-  sunday: 'Domingo',
-};
-
-function formatDate(dateStr: string): string {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' });
+function formatDate(dateStr: string, locale: string): string {
+  return new Date(dateStr).toLocaleDateString(locale, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
 }
 
-function SetRow({ set, bilateral, unit }: { set: ExerciseHistorySet; bilateral?: boolean; unit: string }) {
-  const label = `Serie ${set.setIndex + 1}`;
+function SetRow({
+  set,
+  bilateral,
+  unit,
+  index,
+}: {
+  set: ExerciseHistorySet;
+  bilateral?: boolean;
+  unit: string;
+  index: number;
+}) {
+  const { t } = useTranslation();
+  const label = t('history.setLabel', { n: index + 1 });
 
   if (bilateral && (set.left || set.right)) {
     const side = (s: { reps?: number; duration?: number; weight?: number } | undefined | null) => {
@@ -32,11 +37,17 @@ function SetRow({ set, bilateral, unit }: { set: ExerciseHistorySet; bilateral?:
       return `${metric}${weight}`;
     };
     return (
-      <div className="flex items-start justify-between text-sm py-1 border-b border-border/50 last:border-0">
-        <span className="text-muted-foreground w-16 shrink-0">{label}</span>
-        <div className="text-right space-y-0.5">
-          <p><span className="text-muted-foreground text-xs">Izq </span>{side(set.left)}</p>
-          <p><span className="text-muted-foreground text-xs">Der </span>{side(set.right)}</p>
+      <div className="flex items-start justify-between border-b border-border py-1.25 text-[13px] last:border-0">
+        <span className="text-muted-foreground">{label}</span>
+        <div className="space-y-0.5 text-right">
+          <p>
+            <span className="mr-1 text-[11px] text-muted-foreground">{t('history.leftAbbr')}</span>
+            <span className="font-semibold text-foreground">{side(set.left)}</span>
+          </p>
+          <p>
+            <span className="mr-1 text-[11px] text-muted-foreground">{t('history.rightAbbr')}</span>
+            <span className="font-semibold text-foreground">{side(set.right)}</span>
+          </p>
         </div>
       </div>
     );
@@ -46,33 +57,46 @@ function SetRow({ set, bilateral, unit }: { set: ExerciseHistorySet; bilateral?:
   const weight = set.weight != null ? ` · ${set.weight} ${unit}` : '';
 
   return (
-    <div className="flex items-center justify-between text-sm py-1 border-b border-border/50 last:border-0">
+    <div className="flex items-center justify-between border-b border-border py-1.25 text-[13px] last:border-0">
       <span className="text-muted-foreground">{label}</span>
-      <span>{metric}{weight}</span>
+      <span className="font-semibold text-foreground">{metric}{weight}</span>
     </div>
   );
 }
 
 function SessionCard({ session, bilateral }: { session: ExerciseHistorySession; bilateral?: boolean }) {
+  const { t, i18n } = useTranslation();
   const completedSets = session.sets.filter((s) => s.completed);
 
   return (
-    <div className="rounded-xl border bg-card p-4 space-y-3">
+    <div className="flex flex-col gap-2 rounded-2xl border border-border bg-card px-3.5 py-3 shadow-sm">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium">{formatDate(session.sessionDate)}</p>
-          <p className="text-xs text-muted-foreground">{DAY_LABELS[session.dayOfWeek] ?? session.dayOfWeek}</p>
+          <p className="text-[13.5px] font-semibold text-foreground">
+            {formatDate(session.sessionDate, i18n.language)}
+          </p>
+          <p className="text-[12px] text-muted-foreground">
+            {t(`days.${session.dayOfWeek}`, { defaultValue: session.dayOfWeek })}
+          </p>
         </div>
-        <span className="text-xs text-muted-foreground">
-          {completedSets.length} serie{completedSets.length !== 1 ? 's' : ''}
+        <span className="text-[12px] text-muted-foreground">
+          {t('history.setsCount', { count: completedSets.length })}
         </span>
       </div>
 
-      <div>
-        {completedSets.map((set) => (
-          <SetRow key={set.setIndex} set={set} bilateral={bilateral} unit={session.weightUnit} />
-        ))}
-      </div>
+      {completedSets.length > 0 && (
+        <div className="border-t border-border pt-2">
+          {completedSets.map((set, i) => (
+            <SetRow
+              key={set.setIndex}
+              set={set}
+              bilateral={bilateral}
+              unit={session.weightUnit}
+              index={i}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -82,13 +106,14 @@ interface HistoryTabProps {
 }
 
 export function HistoryTab({ exerciseId }: HistoryTabProps) {
+  const { t } = useTranslation();
   const { data, meta, bilateral, loading, error, page, setPage } = useExerciseHistory(exerciseId);
 
   if (loading) {
     return (
-      <div className="space-y-3 pt-4">
+      <div className="space-y-3">
         {Array.from({ length: 3 }).map((_, i) => (
-          <Skeleton key={i} className="h-28 w-full rounded-xl" />
+          <Skeleton key={i} className="h-28 w-full rounded-2xl" />
         ))}
       </div>
     );
@@ -97,9 +122,8 @@ export function HistoryTab({ exerciseId }: HistoryTabProps) {
   if (error) {
     return (
       <EmptyState
-        title="Error al cargar el historial"
-        description="No se pudo obtener el historial. Intenta de nuevo."
-        className="pt-4"
+        title={t('history.errorTitle')}
+        description={t('history.errorDescription')}
       />
     );
   }
@@ -107,15 +131,14 @@ export function HistoryTab({ exerciseId }: HistoryTabProps) {
   if (data.length === 0) {
     return (
       <EmptyState
-        title="Sin historial"
-        description="Aún no has realizado este ejercicio. Completa una sesión para ver tu historial."
-        className="pt-4"
+        title={t('history.emptyTitle')}
+        description={t('history.emptyDescription')}
       />
     );
   }
 
   return (
-    <div className="space-y-3 pt-4">
+    <div className="space-y-3">
       {data.map((session) => (
         <SessionCard key={session.sessionId} session={session} bilateral={bilateral} />
       ))}
