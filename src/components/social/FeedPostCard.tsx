@@ -6,10 +6,9 @@ import { Heart, MessageCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { es, enUS } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { ExerciseGifThumbnail } from '@/components/shared/ExerciseGifThumbnail';
 import { useState, useRef } from 'react';
 import { usePostInteraction } from '@/hooks/usePostInteraction';
@@ -154,34 +153,39 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: Feed
   }
 
   return (
-    <Card className={highlight ? 'ring-2 ring-primary transition-shadow' : ''}>
-      <CardHeader>
-        <div className="flex items-center gap-3">
-          <Link href={`/users/${post.author._id}`}>
-            <Avatar size="default">
-              {post.author.avatar && (
-                <AvatarImage src={post.author.avatar} alt={post.author.username} />
-              )}
-              <AvatarFallback>{initials}</AvatarFallback>
-            </Avatar>
-          </Link>
+    <article className={cn(
+      'bg-card border-b border-border transition-shadow',
+      'lg:rounded-2xl lg:border lg:shadow-sm lg:mb-4 lg:overflow-hidden',
+      highlight && 'ring-2 ring-primary ring-inset',
+    )}>
+      {/* Header */}
+      <div className="flex items-center gap-3 px-3.5 pt-3 pb-2.5">
+        <Link href={`/users/${post.author._id}`}>
+          <Avatar size="default">
+            {post.author.avatar && (
+              <AvatarImage src={post.author.avatar} alt={post.author.username} />
+            )}
+            <AvatarFallback className={cn(isOwnPost && 'bg-primary text-white border-primary')}>
+              {initials}
+            </AvatarFallback>
+          </Avatar>
+        </Link>
 
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <Link
-                href={`/users/${post.author._id}`}
-                className="text-sm font-semibold hover:underline truncate"
-              >
-                {post.author.username}
-              </Link>
-              {isOwnPost && (
-                <Badge variant="secondary" className="shrink-0">{t('feed.yourPost')}</Badge>
-              )}
-            </div>
-            <p className="text-xs text-muted-foreground">{timeAgo}</p>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <Link
+              href={`/users/${post.author._id}`}
+              className="text-sm font-semibold hover:underline truncate"
+            >
+              {post.author.username}
+            </Link>
+            {isOwnPost && (
+              <Badge variant="secondary" className="shrink-0">{t('feed.yourPost')}</Badge>
+            )}
           </div>
+          <p className="text-xs text-muted-foreground">{timeAgo}</p>
         </div>
-      </CardHeader>
+      </div>
 
       {/* Media / summary area */}
       {isCarousel ? (
@@ -236,13 +240,14 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: Feed
           )}
 
           {/* Dot indicators */}
-          <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5">
+          <div className="absolute bottom-2.5 left-0 right-0 flex justify-center gap-[5px]">
             {Array.from({ length: slideCount }, (_, i) => (
               <span
                 key={i}
-                className={`h-1.5 w-1.5 rounded-full transition-colors ${
-                  i === activeSlide ? 'bg-white' : 'bg-white/40'
+                className={`h-[5px] rounded-full transition-all ${
+                  i === activeSlide ? 'w-3.5 bg-white' : 'w-[5px] bg-white/40'
                 }`}
+                style={{ borderRadius: i === activeSlide ? '3px' : undefined }}
               />
             ))}
           </div>
@@ -267,34 +272,32 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: Feed
       ) : null}
 
       {post.caption && (
-        <CardContent>
+        <div className="px-3.5 pb-2 pt-4">
           <p className="text-sm">{post.caption}</p>
-        </CardContent>
+        </div>
       )}
 
-      <CardFooter className="gap-2">
-        <Button
-          variant="ghost"
-          size="sm"
+      <div className="flex items-center px-2 pb-2.5">
+        <button
+          type="button"
           onClick={toggle}
-          className="cursor-pointer flex items-center gap-1.5 min-h-11"
+          className="flex cursor-pointer items-center gap-1.5 rounded-xl px-2 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           aria-label={userReacted ? 'Remove reaction' : 'React to post'}
         >
-          <Heart className={userReacted ? 'fill-destructive text-destructive' : ''} />
-          <span className="text-sm">{reactionsCount}</span>
-        </Button>
+          <Heart className={cn('h-[18px] w-[18px]', userReacted && 'fill-destructive text-destructive')} />
+          <span className="text-[13px] font-medium">{reactionsCount}</span>
+        </button>
 
-        <Button
-          variant="ghost"
-          size="sm"
+        <button
+          type="button"
           onClick={() => onCommentOpen(post._id, () => setCommentsCount((n) => n + 1))}
-          className="cursor-pointer flex items-center gap-1.5 min-h-11"
+          className="flex cursor-pointer items-center gap-1.5 rounded-xl px-2 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           aria-label="View comments"
         >
-          <MessageCircle />
-          <span className="text-sm">{commentsCount}</span>
-        </Button>
-      </CardFooter>
-    </Card>
+          <MessageCircle className="h-[18px] w-[18px]" />
+          <span className="text-[13px] font-medium">{commentsCount}</span>
+        </button>
+      </div>
+    </article>
   );
 }

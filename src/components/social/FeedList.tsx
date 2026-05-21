@@ -9,9 +9,9 @@ import type { FeedPost } from '@/types/domain.types';
 
 function FeedSkeletons() {
   return (
-    <div className="space-y-4">
+    <div className="-mx-4 lg:mx-0 lg:space-y-4">
       {Array.from({ length: 3 }).map((_, i) => (
-        <Skeleton key={i} className="h-64 w-full rounded-xl" />
+        <Skeleton key={i} className="h-64 w-full rounded-none lg:rounded-xl lg:mb-0" />
       ))}
     </div>
   );
@@ -59,25 +59,29 @@ export function FeedList({
   }
 
   return (
-    <div className="space-y-4">
-      {posts.map((post) => (
-        <div key={post._id} id={`feed-post-${post._id}`}>
-          <FeedPostCard
-            post={post}
-            isOwnPost={currentUserId !== null && post.author._id === currentUserId}
-            onCommentOpen={onCommentOpen}
-            highlight={highlightPostId === post._id}
-          />
-        </div>
-      ))}
+    <div>
+      <div className="-mx-4 lg:mx-0">
+        {posts.map((post) => (
+          <div key={post._id} id={`feed-post-${post._id}`}>
+            <FeedPostCard
+              post={post}
+              isOwnPost={currentUserId !== null && post.author._id === currentUserId}
+              onCommentOpen={onCommentOpen}
+              highlight={highlightPostId === post._id}
+            />
+          </div>
+        ))}
+      </div>
 
       {meta && (
-        <Pagination
-          page={page}
-          total={meta.total}
-          limit={meta.limit}
-          onPageChange={onPageChange}
-        />
+        <div className="mt-4">
+          <Pagination
+            page={page}
+            total={meta.total}
+            limit={meta.limit}
+            onPageChange={onPageChange}
+          />
+        </div>
       )}
     </div>
   );

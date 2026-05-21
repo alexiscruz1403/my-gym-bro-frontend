@@ -1,11 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Send, CornerDownRight } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Sheet, SheetContent, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { Pagination } from '@/components/shared/Pagination';
@@ -65,60 +63,60 @@ export function CommentsSheet({ postId, onClose, onCommentAdded }: CommentsSheet
 
   return (
     <Sheet open={open} onOpenChange={(isOpen) => { if (!isOpen) onClose(); }}>
-      <SheetContent side="bottom" className="flex flex-col max-h-[80dvh]">
-        <SheetHeader>
-          <SheetTitle>Comments</SheetTitle>
-        </SheetHeader>
+      <SheetContent side="bottom" showCloseButton={false} className="rounded-t-[20px] border-0 p-0 flex flex-col max-h-[80dvh]">
+        <div className="mx-auto mt-3 h-1 w-10 shrink-0 rounded-full bg-border" />
 
-        <div className="flex-1 overflow-y-auto px-4 pb-2">
-          {isLoading && <CommentsSkeletons />}
+        <div className="flex shrink-0 items-center justify-between border-b border-border px-[18px] pt-2 pb-[14px]">
+          <SheetTitle className="font-display text-[19px] font-bold tracking-[0.02em]">Comentarios</SheetTitle>
+          <SheetDescription className="sr-only">Comentarios de la publicación</SheetDescription>
+        </div>
+
+        <div className="flex-1 overflow-y-auto [scrollbar-width:none]">
+          {isLoading && <div className="px-4 pt-3"><CommentsSkeletons /></div>}
 
           {!isLoading && comments.length === 0 && (
-            <EmptyState title="No comments yet" description="Be the first to comment." />
+            <EmptyState title="Sin comentarios" description="Sé el primero en comentar." className="pt-8" />
           )}
 
           {!isLoading && comments.length > 0 && (
-            <div className="space-y-4">
+            <div>
               {comments.map((comment, i) => (
-                <div key={comment._id ?? i} className="flex flex-col gap-1.5">
+                <div key={comment._id ?? i} className="flex flex-col gap-1 border-b border-border px-4 py-3 last:border-0">
                   {/* Base comment */}
-                  <div className="flex flex-col gap-0.5">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-sm font-semibold">{comment.username}</span>
-                      <span className="text-xs text-muted-foreground">
-                        {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
-                      </span>
-                    </div>
-                    <p className="text-sm">{comment.text}</p>
-                    {comment._id && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setReplyingTo(replyingTo === comment._id ? null : comment._id);
-                          setReplyText('');
-                        }}
-                        className="self-start text-xs text-muted-foreground hover:text-foreground"
-                      >
-                        Reply
-                      </button>
-                    )}
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-[13px] font-semibold">{comment.username}</span>
+                    <span className="text-[11px] text-muted-foreground">
+                      {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
+                    </span>
                   </div>
+                  <p className="text-[13.5px] leading-[1.45]">{comment.text}</p>
+                  {comment._id && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setReplyingTo(replyingTo === comment._id ? null : comment._id);
+                        setReplyText('');
+                      }}
+                      className="self-start text-[11px] font-medium text-muted-foreground transition-colors hover:text-primary"
+                    >
+                      Responder
+                    </button>
+                  )}
 
                   {/* Replies */}
                   {comment.replies.length > 0 && (
-                    <div className="ml-4 space-y-2 border-l pl-3">
+                    <div className="ml-3.5 mt-1 flex flex-col gap-1.5 border-l-2 border-border pl-2.5">
                       {comment.replies
                         .slice(0, visibleReplyCount[comment._id] ?? 3)
                         .map((reply) => (
                           <div key={reply._id} className="flex flex-col gap-0.5">
-                            <div className="flex items-baseline gap-2">
-                              <CornerDownRight className="h-3 w-3 shrink-0 text-muted-foreground" />
-                              <span className="text-sm font-semibold">{reply.username}</span>
-                              <span className="text-xs text-muted-foreground">
+                            <div className="flex items-baseline gap-1.5">
+                              <span className="text-[12px] font-semibold">{reply.username}</span>
+                              <span className="text-[11px] text-muted-foreground">
                                 {formatDistanceToNow(new Date(reply.createdAt), { addSuffix: true })}
                               </span>
                             </div>
-                            <p className="text-sm pl-5">{reply.text}</p>
+                            <p className="text-[12.5px] leading-[1.45]">{reply.text}</p>
                           </div>
                         ))}
                       {comment.replies.length > (visibleReplyCount[comment._id] ?? 3) && (
@@ -130,9 +128,9 @@ export function CommentsSheet({ postId, onClose, onCommentAdded }: CommentsSheet
                               [comment._id]: (prev[comment._id] ?? 3) + 3,
                             }))
                           }
-                          className="text-xs text-muted-foreground hover:text-foreground"
+                          className="self-start text-[11px] text-muted-foreground hover:text-foreground"
                         >
-                          Ver más respuestas ({comment.replies.length - (visibleReplyCount[comment._id] ?? 3)} más)
+                          Ver más ({comment.replies.length - (visibleReplyCount[comment._id] ?? 3)} más)
                         </button>
                       )}
                     </div>
@@ -140,57 +138,63 @@ export function CommentsSheet({ postId, onClose, onCommentAdded }: CommentsSheet
 
                   {/* Inline reply input */}
                   {replyingTo === comment._id && (
-                    <div className="ml-4 flex items-center gap-2 border-l pl-3">
-                      <Input
+                    <div className="ml-3.5 mt-1 flex items-center gap-1.5 border-l-2 border-border pl-2.5">
+                      <input
                         value={replyText}
                         onChange={(e) => setReplyText(e.target.value)}
-                        placeholder={`Reply to ${comment.username}…`}
+                        placeholder={`Responder a @${comment.username}…`}
                         maxLength={300}
-                        className="flex-1"
                         autoFocus
+                        onKeyDown={(e) => e.key === 'Enter' && handleReplySubmit(comment._id)}
+                        className="h-[34px] flex-1 rounded-full border-[1.5px] border-border bg-muted/50 px-3.5 text-[13px] outline-none transition-all focus:border-primary focus:bg-background"
                       />
-                      <Button
+                      <button
                         type="button"
-                        size="icon"
                         disabled={isSubmitting || !replyText.trim()}
                         onClick={() => handleReplySubmit(comment._id)}
-                        aria-label="Post reply"
+                        aria-label="Enviar respuesta"
+                        className="flex h-[34px] w-[34px] shrink-0 cursor-pointer items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-primary/90 disabled:opacity-40"
                       >
-                        <Send />
-                      </Button>
+                        <Send className="h-3.5 w-3.5" />
+                      </button>
                     </div>
                   )}
                 </div>
               ))}
 
               {meta && (
-                <Pagination
-                  page={page}
-                  total={meta.total}
-                  limit={meta.limit}
-                  onPageChange={goToPage}
-                />
+                <div className="px-4 pb-3">
+                  <Pagination
+                    page={page}
+                    total={meta.total}
+                    limit={meta.limit}
+                    onPageChange={goToPage}
+                  />
+                </div>
               )}
             </div>
           )}
         </div>
 
-        <form onSubmit={handleSubmit} className="flex items-center gap-2 border-t px-4 py-3">
-          <Input
+        <form onSubmit={handleSubmit} className="flex shrink-0 items-center gap-2 border-t border-border px-4 py-3 pb-5">
+          <input
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Add a comment…"
+            placeholder="Escribí un comentario…"
             maxLength={300}
-            className="flex-1"
+            className="h-10 flex-1 rounded-full border-[1.5px] border-border bg-muted/50 px-4 text-[14px] outline-none transition-all focus:border-primary focus:bg-background"
           />
-          <Button
+          <button
             type="submit"
-            size="icon"
             disabled={isSubmitting || !text.trim()}
-            aria-label="Post comment"
+            aria-label="Publicar comentario"
+            className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-primary/90 disabled:opacity-40"
           >
-            <Send />
-          </Button>
+            {isSubmitting
+              ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-r-transparent" />
+              : <Send className="h-4 w-4" />
+            }
+          </button>
         </form>
       </SheetContent>
     </Sheet>
