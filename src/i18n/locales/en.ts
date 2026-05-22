@@ -617,6 +617,11 @@ const en = {
       weightRange: 'Weight must be between 20 and 300',
       heightRange: 'Height must be between 1 and 300',
       bodyFatRange: 'Percentage must be between 1 and 70',
+      genderLabel: 'Gender',
+      gender_male: 'Male',
+      gender_female: 'Female',
+      gender_prefer_not_to_say: 'Prefer not to say',
+      ranksHint: 'Complete weight and gender to access ranks.',
     },
   },
 
@@ -664,6 +669,11 @@ const en = {
       empty: "You don't follow anyone yet.",
       errorTitle: 'Error loading leaderboard',
       errorDescription: 'Could not fetch the ranking. Please try again.',
+    },
+    incompleteData: {
+      title: 'Complete your physical data',
+      description: 'We need your weight and gender to personalize your ranks.',
+      action: 'Go to profile',
     },
   },
 

@@ -1,4 +1,4 @@
-import type { RankLevel } from '@/types/domain.types';
+import type { RankLevel, UserResponse } from '@/types/domain.types';
 
 export const RANK_COLORS: Record<RankLevel, string> = {
   1: '#9CA3AF',
@@ -890,3 +890,8 @@ export const BACK_VIEW_FIGURE: string[] = [
   'c-.046.006-.135.007-.203.01l.001-.015h.004l.024.002a.2.2 0 0 0 .041-.006.2.2 0 0 0 .04.006l.025-.002',
   '.024.002a.2.2 0 0 0 .044-.007zm-.498.03v.004h-.006z',
 ];
+
+export function hasCompletePhysicalData(user: UserResponse | null | undefined): boolean {
+  const pd = user?.physicalData;
+  return !!(pd?.weightValue != null && pd?.weightUnit && pd?.gender);
+}

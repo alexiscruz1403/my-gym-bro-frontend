@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Info } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useExerciseRank } from '@/hooks/useExerciseRank';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
-import { getRankColor, getRankName, RANK_NAMES } from '@/lib/ranks';
+import { getRankColor, getRankName, RANK_NAMES, hasCompletePhysicalData } from '@/lib/ranks';
+import useAuthStore from '@/store/auth.store';
 import type { RankLevel } from '@/types/domain.types';
 
 function formatDate(dateStr: string, locale: string): string {
@@ -23,8 +25,26 @@ interface RankTabProps {
 
 export function RankTab({ exerciseId }: RankTabProps) {
   const { t, i18n } = useTranslation();
-  const { data, loading, error } = useExerciseRank(exerciseId);
+  const { user } = useAuthStore();
+  const isComplete = hasCompletePhysicalData(user);
+  const { data, loading, error } = useExerciseRank(exerciseId, isComplete);
   const [showBestMarkInfo, setShowBestMarkInfo] = useState(false);
+
+  if (!isComplete) {
+    return (
+      <EmptyState
+        title={t('ranks.incompleteData.title')}
+        description={t('ranks.incompleteData.description')}
+        action={
+          <Link href="/profile">
+            <button className="mt-1 cursor-pointer rounded-xl bg-primary px-5 py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-primary/90">
+              {t('ranks.incompleteData.action')}
+            </button>
+          </Link>
+        }
+      />
+    );
+  }
 
   if (loading) {
     return (

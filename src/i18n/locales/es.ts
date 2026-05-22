@@ -619,6 +619,11 @@ const es = {
       weightRange: 'El peso debe estar entre 20 y 300',
       heightRange: 'La altura debe estar entre 1 y 300',
       bodyFatRange: 'El porcentaje debe estar entre 1 y 70',
+      genderLabel: 'Género',
+      gender_male: 'Masculino',
+      gender_female: 'Femenino',
+      gender_prefer_not_to_say: 'Prefiero no decirlo',
+      ranksHint: 'Completá peso y género para acceder a los rangos.',
     },
   },
 
@@ -666,6 +671,11 @@ const es = {
       empty: 'No seguís a ningún usuario aún.',
       errorTitle: 'Error al cargar el leaderboard',
       errorDescription: 'No se pudo obtener la clasificación. Intentá de nuevo.',
+    },
+    incompleteData: {
+      title: 'Completá tus datos físicos',
+      description: 'Necesitamos tu peso y género para personalizar tus rangos.',
+      action: 'Ir al perfil',
     },
   },
 
