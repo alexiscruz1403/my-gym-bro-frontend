@@ -171,11 +171,15 @@ const en = {
     },
     subscription: {
       title: 'Subscription',
+      activeStatus: 'ACTIVE',
+      goPremium: 'Go Premium',
+      goPremiumDesc: 'Unlock AI plans, automatic progression, and more.',
       autoRenew: {
         label: 'Auto-renewal',
         description: 'Your subscription will renew automatically when it expires',
       },
       nextBillingDate: 'Next payment: {{date}}',
+      nextBillingLabel: 'Next billing',
     },
     legal: {
       title: 'Legal',
@@ -641,6 +645,7 @@ const en = {
   },
 
   followRequest: {
+    pendingTitle: 'Follow Requests',
     wantsToFollow: 'wants to follow you',
     approve: 'Accept',
     reject: 'Decline',

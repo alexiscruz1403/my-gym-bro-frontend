@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { useNotifications } from '@/hooks/useNotifications';
@@ -46,7 +45,7 @@ export function NotificationsList() {
     return (
       <div className="space-y-2">
         {Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton key={i} className="h-16 w-full rounded-lg" />
+          <Skeleton key={i} className="h-16 w-full rounded-2xl" />
         ))}
       </div>
     );
@@ -72,20 +71,22 @@ export function NotificationsList() {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-end">
-        <Button
+      {/* Header: large title + mark-all */}
+      <div className="flex items-center justify-between">
+        <h2 className="font-display text-[22px] font-bold tracking-[0.01em] text-foreground">
+          {t('notifications.title')}
+        </h2>
+        <button
           type="button"
-          variant="outline"
-          size="sm"
           onClick={() => markAllRead()}
           disabled={!hasUnread || isMarkingAll}
-          className="cursor-pointer"
+          className="h-7 cursor-pointer rounded-full border-[1.5px] border-border bg-transparent px-3 text-[11.5px] font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
         >
           {t('notifications.markAllRead')}
-        </Button>
+        </button>
       </div>
 
-      <div className="space-y-2">
+      <div className="flex flex-col gap-1.5">
         {items.map((n) => (
           <NotificationRow key={n._id} notification={n} onMarkRead={markRead} />
         ))}
@@ -94,9 +95,9 @@ export function NotificationsList() {
       <div ref={sentinelRef} />
 
       {isFetchingNextPage && (
-        <div className="space-y-2">
+        <div className="flex flex-col gap-1.5">
           {Array.from({ length: 2 }).map((_, i) => (
-            <Skeleton key={i} className="h-16 w-full rounded-lg" />
+            <Skeleton key={i} className="h-16 w-full rounded-2xl" />
           ))}
         </div>
       )}

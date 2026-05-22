@@ -1,23 +1,52 @@
 'use client';
 
-import { Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
+import { Skeleton } from '@/components/ui/skeleton';
 import { usePendingFollowRequests } from '@/hooks/usePendingFollowRequests';
 import { PendingFollowRequestRow } from '@/components/notifications/PendingFollowRequestRow';
 
 export function PendingFollowRequestsSection() {
+  const { t } = useTranslation();
   const { requests, isLoading, isFetchingMore, hasMore, goToNextPage, approve, reject } =
     usePendingFollowRequests();
 
-  if (!isLoading && requests.length === 0) return null;
+  if (isLoading) {
+    return (
+      <div className="mb-3 overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+        <div className="border-b border-border px-4 py-3">
+          <Skeleton className="h-4 w-44 rounded" />
+        </div>
+        {Array.from({ length: 2 }).map((_, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-2.5 border-b border-border px-4 py-[11px] last:border-0"
+          >
+            <Skeleton className="h-10 w-10 shrink-0 rounded-full" />
+            <Skeleton className="h-4 flex-1 rounded" />
+            <div className="flex gap-1.5">
+              <Skeleton className="h-[30px] w-16 rounded-full" />
+              <Skeleton className="h-[30px] w-16 rounded-full" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (requests.length === 0) return null;
 
   return (
-    <section className="mb-6">
-      <h2 className="text-sm font-semibold mb-2 text-muted-foreground">
-        Solicitudes de seguimiento{requests.length > 0 ? ` (${requests.length})` : ''}
-      </h2>
+    <div className="mb-3 overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+      <div className="flex items-center justify-between border-b border-border px-4 py-3">
+        <p className="font-display text-[15px] font-semibold tracking-[0.02em] text-foreground">
+          {t('followRequest.pendingTitle')}
+        </p>
+        <span className="min-w-5 rounded-full bg-destructive px-[7px] py-px text-center text-[11px] font-bold text-white">
+          {requests.length}
+        </span>
+      </div>
 
-      <div className="space-y-2">
+      <div className="flex flex-col">
         {requests.map((req) => (
           <PendingFollowRequestRow
             key={req._id}
@@ -29,23 +58,17 @@ export function PendingFollowRequestsSection() {
       </div>
 
       {hasMore && (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={goToNextPage}
-          disabled={isFetchingMore}
-          className="mt-3 w-full cursor-pointer"
-        >
-          {isFetchingMore ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin mr-2" />
-              Cargando...
-            </>
-          ) : (
-            'Mostrar más'
-          )}
-        </Button>
+        <div className="border-t border-border px-4 py-2.5">
+          <button
+            type="button"
+            onClick={goToNextPage}
+            disabled={isFetchingMore}
+            className="w-full cursor-pointer text-center text-[12px] font-medium text-primary transition-colors hover:text-primary/80 disabled:opacity-50"
+          >
+            {isFetchingMore ? t('common.loading') : t('common.review')}
+          </button>
+        </div>
       )}
-    </section>
+    </div>
   );
 }

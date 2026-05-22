@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, CreditCard, FileText, HelpCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { cn } from '@/lib/utils';
 import { PageContainer } from '@/components/layout/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useNotificationPreferences } from '@/hooks/useNotificationPreferences';
@@ -14,14 +14,91 @@ import { usersService } from '@/services/users.service';
 import { queryClient } from '@/lib/query-client';
 import type { Language } from '@/types/domain.types';
 
+function SettingsGroup({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+      <div className="border-b border-border px-4 py-3">
+        <p className="font-display text-[15px] font-semibold tracking-[0.02em] text-foreground">
+          {title}
+        </p>
+      </div>
+      <div className="flex flex-col">{children}</div>
+    </div>
+  );
+}
+
+function SettingToggleRow({
+  label,
+  description,
+  extra,
+  checked,
+  onCheckedChange,
+  disabled,
+}: {
+  label: string;
+  description?: string;
+  extra?: string;
+  checked: boolean;
+  onCheckedChange: (v: boolean) => void;
+  disabled?: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-3 border-b border-border px-4 py-3 last:border-0">
+      <div className="min-w-0 flex-1">
+        <p className="text-[14px] font-medium text-foreground">{label}</p>
+        {description && (
+          <p className="mt-0.5 text-[12px] leading-[1.4] text-muted-foreground">{description}</p>
+        )}
+        {extra && <p className="mt-0.5 text-[11px] text-muted-foreground">{extra}</p>}
+      </div>
+      <Switch
+        checked={checked}
+        onCheckedChange={onCheckedChange}
+        disabled={disabled}
+        aria-label={label}
+        className="cursor-pointer"
+      />
+    </div>
+  );
+}
+
+function SettingLinkRow({
+  icon,
+  label,
+  description,
+  href,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  description?: string;
+  href: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="flex items-center gap-3 border-b border-border px-4 py-3 transition-colors last:border-0 hover:bg-muted/60"
+    >
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-muted-foreground">
+        {icon}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-[14px] font-medium text-foreground">{label}</p>
+        {description && (
+          <p className="mt-0.5 text-[12px] text-muted-foreground">{description}</p>
+        )}
+      </div>
+      <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+    </Link>
+  );
+}
+
 export default function SettingsPage() {
   const { t } = useTranslation();
   const { preferences, isLoading, updatePreferences } = useNotificationPreferences();
   const { user, setUser } = useAuthStore();
   const { subscription, isLoading: subLoading, updateAutoRenew, isToggling } = useSubscription();
 
-  const showAutoRenew =
-    user?.membershipTier === 'premium' && user?.membershipStatus === 'active';
+  const isPremium = user?.membershipTier === 'premium' && user?.membershipStatus === 'active';
 
   const NOTIFICATION_ITEMS = [
     {
@@ -72,170 +149,161 @@ export default function SettingsPage() {
 
   return (
     <PageContainer>
-      <h1 className="font-display text-xl font-semibold mb-6">{t('settings.title')}</h1>
-
-      <div className="space-y-4">
-        {/* Notification preferences */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">{t('settings.notifications.title')}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {isLoading
-              ? Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="flex items-center justify-between gap-3">
-                    <div className="space-y-1 flex-1">
-                      <Skeleton className="h-4 w-36 rounded" />
-                      <Skeleton className="h-3 w-52 rounded" />
-                    </div>
-                    <Skeleton className="h-6 w-11 rounded-full" />
+      <div className="space-y-3">
+        {/* Notifications */}
+        <SettingsGroup title={t('settings.notifications.title')}>
+          {isLoading
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-3 border-b border-border px-4 py-3 last:border-0"
+                >
+                  <div className="min-w-0 flex-1 space-y-1.5">
+                    <Skeleton className="h-4 w-36 rounded" />
+                    <Skeleton className="h-3 w-52 rounded" />
                   </div>
-                ))
-              : NOTIFICATION_ITEMS.map(({ key, label, description }) => (
-                  <div key={key} className="flex items-center justify-between gap-3">
-                    <div className="space-y-0.5 flex-1">
-                      <p className="text-sm font-medium">{label}</p>
-                      <p className="text-xs text-muted-foreground">{description}</p>
-                    </div>
-                    <Switch
-                      checked={preferences?.[key] ?? true}
-                      onCheckedChange={(checked) => updatePreferences({ [key]: checked })}
-                      aria-label={label}
-                      className={'cursor-pointer'}
-                    />
-                  </div>
-                ))}
-          </CardContent>
-        </Card>
+                  <Skeleton className="h-6 w-11 shrink-0 rounded-full" />
+                </div>
+              ))
+            : NOTIFICATION_ITEMS.map(({ key, label, description }) => (
+                <SettingToggleRow
+                  key={key}
+                  label={label}
+                  description={description}
+                  checked={preferences?.[key] ?? true}
+                  onCheckedChange={(checked) => updatePreferences({ [key]: checked })}
+                />
+              ))}
+        </SettingsGroup>
 
         {/* Privacy */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">{t('settings.privacy.title')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between gap-3">
-              <div className="space-y-0.5 flex-1">
-                <p className="text-sm font-medium">{t('settings.privacy.privateProfile.label')}</p>
-                <p className="text-xs text-muted-foreground">
-                  {t('settings.privacy.privateProfile.description')}
-                </p>
-              </div>
-              <Switch
-                checked={user?.isPrivate ?? false}
-                onCheckedChange={handlePrivacyToggle}
-                aria-label={t('settings.privacy.privateProfile.label')}
-                className={'cursor-pointer'}
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <SettingsGroup title={t('settings.privacy.title')}>
+          <SettingToggleRow
+            label={t('settings.privacy.privateProfile.label')}
+            description={t('settings.privacy.privateProfile.description')}
+            checked={user?.isPrivate ?? false}
+            onCheckedChange={handlePrivacyToggle}
+          />
+        </SettingsGroup>
 
         {/* Language */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">{t('settings.language.title')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex gap-2">
-              {(['es', 'en'] as Language[]).map((lang) => (
+        <SettingsGroup title={t('settings.language.title')}>
+          <div className="flex gap-2 px-4 py-3">
+            {(['es', 'en'] as Language[]).map((lang) => {
+              const active = (user?.language ?? 'es') === lang;
+              return (
                 <button
                   key={lang}
                   type="button"
                   onClick={() => handleLanguageChange(lang)}
-                  className={`cursor-pointer flex-1 rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
-                    (user?.language ?? 'es') === lang
-                      ? 'border-primary bg-primary text-primary-foreground'
-                      : 'border-input bg-background text-foreground'
-                  }`}
+                  className={cn(
+                    'h-[38px] flex-1 cursor-pointer rounded-xl border-[1.5px] text-[13.5px] font-medium transition-colors',
+                    active
+                      ? 'border-primary bg-primary font-semibold text-primary-foreground'
+                      : 'border-border text-muted-foreground hover:bg-muted/60 hover:text-foreground',
+                  )}
                 >
                   {t(`settings.language.${lang}`)}
                 </button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              );
+            })}
+          </div>
+        </SettingsGroup>
 
-        {/* Subscription auto-renew — only for active premium users */}
-        {showAutoRenew && (
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">{t('settings.subscription.title')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {subLoading ? (
-                <div className="flex items-center justify-between gap-3">
-                  <div className="space-y-1 flex-1">
-                    <Skeleton className="h-4 w-36 rounded" />
-                    <Skeleton className="h-3 w-52 rounded" />
-                  </div>
-                  <Skeleton className="h-6 w-11 rounded-full" />
+        {/* Subscription */}
+        {isPremium ? (
+          <div className="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-card shadow-sm">
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-amber-500/7 to-transparent" />
+            <div className="border-b border-amber-500/20 px-4 py-3">
+              <p className="font-display text-[15px] font-semibold tracking-[0.02em] text-amber-600 dark:text-amber-400">
+                {t('settings.subscription.title')}
+                <span className="ml-2 rounded-full border border-amber-500/25 bg-amber-500/15 px-[7px] py-px text-[10px] font-bold tracking-[0.04em] text-amber-600 dark:text-amber-400">
+                  {t('settings.subscription.activeStatus')}
+                </span>
+              </p>
+            </div>
+            {subLoading ? (
+              <div className="flex items-center gap-3 px-4 py-3">
+                <div className="min-w-0 flex-1 space-y-1.5">
+                  <Skeleton className="h-4 w-36 rounded" />
+                  <Skeleton className="h-3 w-52 rounded" />
                 </div>
-              ) : (
-                <div className="flex items-center justify-between gap-3">
-                  <div className="space-y-0.5 flex-1">
-                    <p className="text-sm font-medium">{t('settings.subscription.autoRenew.label')}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {t('settings.subscription.autoRenew.description')}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      {t('settings.subscription.nextBillingDate', { date: subscription?.nextBillingDate })}
-                    </p>
-                  </div>
-                  <Switch
-                    checked={subscription?.autoRenew ?? user?.autoRenew ?? false}
-                    onCheckedChange={(checked) => updateAutoRenew(checked)}
-                    disabled={isToggling}
-                    aria-label={t('settings.subscription.autoRenew.label')}
-                    className="cursor-pointer"
-                  />
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                <Skeleton className="h-6 w-11 shrink-0 rounded-full" />
+              </div>
+            ) : (
+              <>
+                {(subscription?.plan || subscription?.nextBillingDate) && (
+                  <>
+                    <div className="px-4 py-3 space-y-2">
+                      {subscription?.plan && (
+                        <div className="flex items-center justify-between text-[13px]">
+                          <span className="text-muted-foreground">Plan</span>
+                          <span className="font-semibold capitalize text-foreground">
+                            {t(`subscription.${subscription.plan}`)}
+                          </span>
+                        </div>
+                      )}
+                      {subscription?.nextBillingDate && (
+                        <div className="flex items-center justify-between text-[13px]">
+                          <span className="text-muted-foreground">
+                            {t('settings.subscription.nextBillingLabel')}
+                          </span>
+                          <span className="font-semibold text-foreground">
+                            {subscription.nextBillingDate}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="mx-4 h-px bg-amber-500/15" />
+                  </>
+                )}
+                <SettingToggleRow
+                  label={t('settings.subscription.autoRenew.label')}
+                  description={t('settings.subscription.autoRenew.description')}
+                  extra={
+                    subscription?.nextBillingDate
+                      ? t('settings.subscription.nextBillingDate', {
+                          date: subscription.nextBillingDate,
+                        })
+                      : undefined
+                  }
+                  checked={subscription?.autoRenew ?? false}
+                  onCheckedChange={updateAutoRenew}
+                  disabled={isToggling}
+                />
+              </>
+            )}
+          </div>
+        ) : (
+          <SettingsGroup title={t('settings.subscription.title')}>
+            <SettingLinkRow
+              href="/subscription"
+              icon={<CreditCard className="h-4 w-4" />}
+              label={t('settings.subscription.goPremium')}
+              description={t('settings.subscription.goPremiumDesc')}
+            />
+          </SettingsGroup>
         )}
 
         {/* Legal */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">{t('settings.legal.title')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Link
-              href="/terms"
-              className="flex items-center justify-between gap-3 hover:opacity-75 transition-opacity"
-            >
-              <div className="space-y-0.5 flex-1">
-                <p className="text-sm font-medium">{t('settings.legal.terms.label')}</p>
-                <p className="text-xs text-muted-foreground">
-                  {t('settings.legal.terms.description')}
-                </p>
-              </div>
-              <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
-            </Link>
-          </CardContent>
-        </Card>
+        <SettingsGroup title={t('settings.legal.title')}>
+          <SettingLinkRow
+            href="/terms"
+            icon={<FileText className="h-4 w-4" />}
+            label={t('settings.legal.terms.label')}
+            description={t('settings.legal.terms.description')}
+          />
+        </SettingsGroup>
 
         {/* Support */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">{t('settings.support.title')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Link
-              href="/faq"
-              className="flex items-center justify-between gap-3 hover:opacity-75 transition-opacity"
-            >
-              <div className="space-y-0.5 flex-1">
-                <p className="text-sm font-medium">{t('settings.support.faq.label')}</p>
-                <p className="text-xs text-muted-foreground">
-                  {t('settings.support.faq.description')}
-                </p>
-              </div>
-              <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
-            </Link>
-          </CardContent>
-        </Card>
+        <SettingsGroup title={t('settings.support.title')}>
+          <SettingLinkRow
+            href="/faq"
+            icon={<HelpCircle className="h-4 w-4" />}
+            label={t('settings.support.faq.label')}
+            description={t('settings.support.faq.description')}
+          />
+        </SettingsGroup>
       </div>
     </PageContainer>
   );

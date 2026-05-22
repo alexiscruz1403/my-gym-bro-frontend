@@ -173,11 +173,15 @@ const es = {
     },
     subscription: {
       title: 'Suscripción',
+      activeStatus: 'ACTIVA',
+      goPremium: 'Ir a Premium',
+      goPremiumDesc: 'Desbloqueá planes IA, progresión automática y más.',
       autoRenew: {
         label: 'Renovación automática',
         description: 'Tu suscripción se renovará automáticamente al vencer',
       },
       nextBillingDate: 'Próximo pago: {{date}}',
+      nextBillingLabel: 'Próximo cobro',
     },
     legal: {
       title: 'Legal',
@@ -643,6 +647,7 @@ const es = {
   },
 
   followRequest: {
+    pendingTitle: 'Solicitudes de seguimiento',
     wantsToFollow: 'quiere seguirte',
     approve: 'Aceptar',
     reject: 'Rechazar',
