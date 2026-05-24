@@ -37,15 +37,15 @@ export function AppHeader({ title, action }: AppHeaderProps) {
           {isAuthenticated && <SyncStatusIndicator />}
           {isAuthenticated && <NotificationBell />}
           {isAuthenticated && (
-            <Button
-              variant="ghost"
-              size="icon"
-              render={<Link href="/settings" />}
-              aria-label={t('header.settings')}
-              className="cursor-pointer"
-            >
-              <Settings size={20} />
-            </Button>
+            <Link href="/settings" aria-label={t('header.settings')}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="cursor-pointer"
+              >
+                <Settings size={20} />
+              </Button>
+            </Link>
           )}
           <Button
             variant="ghost"

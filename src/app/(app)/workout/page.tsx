@@ -26,10 +26,12 @@ export default function WorkoutPage() {
       {t('plans.newPlan')}
     </Button>
   ) : (
-    <Button size="sm" render={<Link href="/workout/new" />} className="h-[34px] cursor-pointer gap-1 px-3 text-[13px]">
-      <Plus className="h-3.5 w-3.5" />
-      {t('plans.newPlan')}
-    </Button>
+    <Link href="/workout/new">
+      <Button size="sm" className="h-[34px] cursor-pointer gap-1 px-3 text-[13px]">
+        <Plus className="h-3.5 w-3.5" />
+        {t('plans.newPlan')}
+      </Button>
+    </Link>
   );
 
   return (

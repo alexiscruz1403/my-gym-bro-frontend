@@ -54,14 +54,15 @@ export function AiLandingPage() {
                 </p>
               </div>
             ) : (
-              <Button
-                render={<Link href="/ai/generate" />}
-                className="h-[46px] w-full gap-2 rounded-2xl text-[15px] font-semibold"
-                size="lg"
-              >
-                <Sparkles className="h-4 w-4" />
-                {t('ai.landing.generate')}
-              </Button>
+              <Link href="/ai/generate" className="w-full">
+                <Button
+                  className="h-[46px] w-full gap-2 rounded-2xl text-[15px] font-semibold"
+                  size="lg"
+                >
+                  <Sparkles className="h-4 w-4" />
+                  {t('ai.landing.generate')}
+                </Button>
+              </Link>
             )}
           </div>
         )}
