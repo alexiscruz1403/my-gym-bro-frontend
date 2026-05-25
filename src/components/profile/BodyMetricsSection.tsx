@@ -22,7 +22,7 @@ function buildSchema(t: (key: string) => string) {
     heightValue: z.number().min(1, t('profile.physicalData.heightRange')).max(300, t('profile.physicalData.heightRange')).nullable(),
     heightUnit: z.enum(['cm', 'ft']),
     bodyFatPercent: z.number().min(1, t('profile.physicalData.bodyFatRange')).max(70, t('profile.physicalData.bodyFatRange')).nullable(),
-    gender: z.enum(['male', 'female', 'prefer_not_to_say']).nullable().optional(),
+    gender: z.enum(['male', 'female', 'prefer_not_to_say']).nullable(),
   });
 }
 
