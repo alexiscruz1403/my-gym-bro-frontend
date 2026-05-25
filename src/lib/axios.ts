@@ -85,7 +85,7 @@ apiClient.interceptors.response.use(
       logout();
       processQueue(refreshError);
       if (typeof window !== 'undefined') {
-        //window.location.href = '/login';
+        window.location.href = '/login';
       }
       return Promise.reject(refreshError);
     } finally {
