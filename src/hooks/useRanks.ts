@@ -5,10 +5,11 @@ import { useQuery } from '@tanstack/react-query';
 import { getMuscleRanks } from '@/services/ranks.service';
 import type { MuscleGroup, MuscleRankItem } from '@/types/domain.types';
 
-export function useRanks() {
+export function useRanks(enabled = true) {
   const { data, isLoading, error } = useQuery({
     queryKey: ['ranks', 'muscles'],
     queryFn: () => getMuscleRanks(),
+    enabled,
   });
 
   const rankMap = useMemo(() => {

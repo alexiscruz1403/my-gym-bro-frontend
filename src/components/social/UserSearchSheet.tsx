@@ -1,10 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Input } from '@/components/ui/input';
+import { Sheet, SheetContent, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { UserListItem } from '@/components/social/UserListItem';
@@ -67,29 +66,48 @@ export function UserSearchSheet({ open, onOpenChange, onFollowed }: UserSearchSh
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="max-h-[80dvh] flex flex-col">
-        <SheetHeader>
-          <SheetTitle>{t('social.search.title')}</SheetTitle>
-        </SheetHeader>
+      <SheetContent side="bottom" showCloseButton={false} className="rounded-t-[20px] border-0 p-0 flex flex-col max-h-[80dvh]">
+        <div className="mx-auto mt-3 h-1 w-10 shrink-0 rounded-full bg-border" />
 
-        <div className="px-4 pb-2">
+        <div className="flex shrink-0 items-center justify-between border-b border-border px-4.5 pt-2 pb-3.5">
+          <SheetTitle className="font-display text-[19px] font-bold tracking-[0.02em]">{t('social.search.title')}</SheetTitle>
+          <SheetDescription className="sr-only">Buscar usuarios para seguir</SheetDescription>
+          <button
+            type="button"
+            onClick={() => onOpenChange(false)}
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            aria-label="Cerrar"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+
+        <div className="flex flex-col gap-3 flex-1 overflow-y-auto px-4 pt-3 pb-6 [scrollbar-width:none]">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-            <Input
+            <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t('social.search.placeholder')}
-              className="pl-9"
               autoFocus
+              className="h-10.5 w-full rounded-2xl border-[1.5px] border-border bg-muted/60 pl-10 pr-9 text-[14px] outline-none transition-all focus:border-primary focus:bg-background focus:shadow-[0_0_0_3px_color-mix(in_oklch,var(--primary)_14%,transparent)]"
             />
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                aria-label="Limpiar búsqueda"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
           </div>
-        </div>
 
-        <div className="flex-1 overflow-y-auto px-4 pb-6">
           {isLoading && (
-            <div className="space-y-2 mt-2">
+            <div className="space-y-2">
               {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-12 w-full rounded-lg" />
+                <Skeleton key={i} className="h-15.5 w-full rounded-xl" />
               ))}
             </div>
           )}
@@ -98,7 +116,7 @@ export function UserSearchSheet({ open, onOpenChange, onFollowed }: UserSearchSh
             <EmptyState
               title={t('social.search.emptyTitle')}
               description={t('social.search.emptyDescription')}
-              className="pt-8"
+              className="pt-6"
             />
           )}
 
@@ -106,14 +124,14 @@ export function UserSearchSheet({ open, onOpenChange, onFollowed }: UserSearchSh
             <EmptyState
               title={t('social.search.notFoundTitle')}
               description={t('social.search.notFoundDescription')}
-              className="pt-8"
+              className="pt-6"
             />
           )}
 
           {!isLoading && results.length > 0 && (
-            <div className="space-y-1 mt-2">
+            <div>
               {results.map((user) => (
-                <UserListItem key={user._id} user={user} onFollowed={onFollowed} />
+                <UserListItem key={user._id} user={user} followersCount={user.followersCount} onFollowed={onFollowed} />
               ))}
             </div>
           )}

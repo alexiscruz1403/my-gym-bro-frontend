@@ -4,9 +4,10 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PlanDayAccordion } from './PlanDayAccordion';
 import { DeletePlanDialog } from './DeletePlanDialog';
 import { PlanGoalsSection } from './PlanGoalsSection';
@@ -15,7 +16,16 @@ import { deletePlan, activatePlan } from '@/services/workout-plans.service';
 import { invalidatePlanCache } from '@/hooks/usePlan';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
-import { Pencil, Zap, Sparkles, LayoutList, Loader2, AlertTriangle } from 'lucide-react';
+import {
+  Pencil,
+  Zap,
+  Sparkles,
+  LayoutList,
+  Loader2,
+  AlertTriangle,
+  CalendarDays,
+  Dumbbell,
+} from 'lucide-react';
 import type { WorkoutPlan } from '@/types/domain.types';
 
 interface PlanDetailViewProps {
@@ -33,6 +43,10 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
   const isPremium =
     user?.membershipTier === 'premium' && user?.membershipStatus === 'active';
   const showProgressionTab = isPremium && plan.isActive;
+
+  const [activeTab, setActiveTab] = useState<'overview' | 'progression'>('overview');
+
+  const totalExercises = plan.days.reduce((sum, d) => sum + d.exercises.length, 0);
 
   const handleActivate = async () => {
     setActivating(true);
@@ -57,103 +71,147 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
+      {/* Hero */}
       <div className="space-y-2">
-        <div className="flex items-center gap-2 flex-wrap">
-          <h1 className="font-display text-2xl font-bold">{plan.name}</h1>
-          {plan.isActive && (
-            <Badge className="bg-green-500 text-white hover:bg-green-600">{t('plans.status.active')}</Badge>
-          )}
-          {plan.isAiGenerated && (
-            <Badge variant="outline" className="border-primary/40 text-primary gap-1">
-              <Sparkles className="h-3 w-3" />
-              IA
-            </Badge>
-          )}
+        <h1 className="font-display text-[26px] font-bold leading-[1.05] tracking-[0.01em]">
+          {plan.name}
+        </h1>
+
+        {(plan.isActive || plan.isAiGenerated) && (
+          <div className="flex flex-wrap gap-1.5">
+            {plan.isActive && (
+              <Badge className="h-auto rounded-full border border-accent/25 bg-accent/10 px-2.5 py-0.5 text-[11px] font-semibold text-accent hover:bg-accent/15">
+                ● {t('plans.status.active')}
+              </Badge>
+            )}
+            {plan.isAiGenerated && (
+              <Badge className="h-auto rounded-full border border-primary/25 bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary hover:bg-primary/15">
+                ✦ IA
+              </Badge>
+            )}
+          </div>
+        )}
+
+        <div className="flex items-center gap-3 text-[13px] text-muted-foreground">
+          <span className="flex items-center gap-1">
+            <CalendarDays className="h-3.5 w-3.5" />
+            {t('plans.dayCount', { count: plan.days.length })}
+          </span>
+          <span className="flex items-center gap-1">
+            <Dumbbell className="h-3.5 w-3.5" />
+            {t('plans.exerciseCount', { count: totalExercises })}
+          </span>
         </div>
-        <p className="text-muted-foreground text-sm">
-          {t('plans.dayCount', { count: plan.days.length })}
-        </p>
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        {!plan.isActive && (
-          confirmingActivate ? (
-            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-orange-500/30 bg-orange-500/5 px-3 py-2">
-              <AlertTriangle className="h-4 w-4 shrink-0 text-orange-500" />
-              <p className="text-xs text-orange-600 dark:text-orange-400">
-                {t('plans.confirmActivate.warning')}
-              </p>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => setConfirmingActivate(false)}
-                disabled={activating}
-                className="min-h-11 cursor-pointer px-3 text-xs"
-              >
-                {t('common.cancel')}
-              </Button>
-              <Button
-                size="sm"
-                onClick={handleActivate}
-                disabled={activating}
-                className="min-h-11 cursor-pointer px-3 text-xs"
-              >
-                {activating ? <Loader2 className="h-4 w-4 animate-spin" /> : t('plans.activate')}
-              </Button>
-            </div>
-          ) : (
-            <Button size="sm" onClick={() => setConfirmingActivate(true)} className="flex cursor-pointer items-center gap-1.5">
-              <Zap className="h-4 w-4" />
+      {/* Actions */}
+      {!confirmingActivate ? (
+        <div className="flex flex-wrap gap-2">
+          {!plan.isActive && (
+            <Button
+              size="sm"
+              onClick={() => setConfirmingActivate(true)}
+              className="h-9 cursor-pointer gap-1.5 px-3.5 text-[13px] font-semibold"
+            >
+              <Zap className="h-3.5 w-3.5" />
               {t('plans.activate')}
             </Button>
-          )
-        )}
-        {!plan.isAiGenerated && (
-          <Button size="sm" variant="outline" render={<Link href={`/workout/${plan.id}/edit`} />} className="flex cursor-pointer items-center gap-1.5">
-            <Pencil className="h-4 w-4" />
-            {t('common.edit')}
-          </Button>
-        )}
-        <DeletePlanDialog planName={plan.name} onConfirm={handleDelete} />
-      </div>
+          )}
+          {!plan.isAiGenerated && (
+            <Button
+              size="sm"
+              variant="outline"
+              render={<Link href={`/workout/${plan.id}/edit`} />}
+              className="h-9 cursor-pointer gap-1.5 px-3.5 text-[13px] font-semibold"
+            >
+              <Pencil className="h-3.5 w-3.5" />
+              {t('common.edit')}
+            </Button>
+          )}
+          <DeletePlanDialog planName={plan.name} onConfirm={handleDelete} />
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-primary/25 bg-primary/7 p-3.5">
+          <div className="mb-2.5 flex items-start gap-1.5 text-[12px] leading-[1.5] text-primary">
+            <AlertTriangle className="mt-px h-3.5 w-3.5 shrink-0" />
+            <span>{t('plans.confirmActivate.warning')}</span>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setConfirmingActivate(false)}
+              disabled={activating}
+              className="h-9 flex-1 cursor-pointer text-[13px]"
+            >
+              {t('common.cancel')}
+            </Button>
+            <Button
+              size="sm"
+              onClick={handleActivate}
+              disabled={activating}
+              className="h-9 flex-1 cursor-pointer text-[13px]"
+            >
+              {activating ? <Loader2 className="h-4 w-4 animate-spin" /> : t('plans.activate')}
+            </Button>
+          </div>
+        </div>
+      )}
 
+      {/* Tabs (AI plans only) */}
       {showProgressionTab ? (
-        <Tabs defaultValue="overview">
-          <TabsList className="w-full bg-muted/60 p-1 rounded-xl">
+        <Tabs
+          value={activeTab}
+          onValueChange={(v) => setActiveTab(v as 'overview' | 'progression')}
+        >
+          <TabsList className="h-11! w-full rounded-xl bg-muted/60 p-1">
             <TabsTrigger
               value="overview"
-              className="flex-1 gap-1.5 rounded-lg data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
+              className="flex-1 gap-1.5 rounded-lg text-[13.5px] font-semibold transition-all data-active:bg-primary data-active:text-white dark:data-active:bg-primary dark:data-active:border-transparent dark:data-active:text-white"
             >
               <LayoutList className="h-3.5 w-3.5" />
               {t('plans.tabPlan')}
             </TabsTrigger>
             <TabsTrigger
               value="progression"
-              className="flex-1 gap-1.5 rounded-lg data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
+              className="flex-1 gap-1.5 rounded-lg text-[13.5px] font-semibold transition-all data-active:bg-primary data-active:text-white dark:data-active:bg-primary dark:data-active:border-transparent dark:data-active:text-white"
             >
               <Sparkles className="h-3.5 w-3.5" />
               {t('plans.tabProgression')}
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="mt-4">
-            {plan.days.length > 0 ? (
-              <PlanDayAccordion
-                days={plan.days}
-                planId={plan.id}
-                showSwap={isPremium && !!plan.isAiGenerated}
-              />
-            ) : (
-              <p className="text-muted-foreground py-4 text-center text-sm">
-                {t('plans.noExercises')}
-              </p>
-            )}
-          </TabsContent>
-
-          <TabsContent value="progression" className="mt-4">
-            <ProgressionTab planId={plan.id} />
-          </TabsContent>
+          <div className="mt-4 overflow-hidden">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.18, ease: 'easeOut' }}
+              >
+                {activeTab === 'overview' ? (
+                  plan.days.length > 0 ? (
+                    <PlanDayAccordion
+                      days={plan.days}
+                      planId={plan.id}
+                      showSwap={isPremium && !!plan.isAiGenerated}
+                    />
+                  ) : (
+                    <p className="py-4 text-center text-sm text-muted-foreground">
+                      {t('plans.noExercises')}
+                    </p>
+                  )
+                ) : (
+                  <div className="space-y-5">
+                    <ProgressionTab planId={plan.id} />
+                    <PlanGoalsSection plan={plan} isPremium={isPremium} />
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </Tabs>
       ) : (
         <>
@@ -164,14 +222,12 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
               showSwap={isPremium && !!plan.isAiGenerated}
             />
           ) : (
-            <p className="text-muted-foreground py-4 text-center text-sm">
+            <p className="py-4 text-center text-sm text-muted-foreground">
               {t('plans.noExercises')}
             </p>
           )}
         </>
       )}
-
-      <PlanGoalsSection plan={plan} isPremium={isPremium} />
     </div>
   );
 }

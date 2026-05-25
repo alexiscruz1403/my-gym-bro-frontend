@@ -8,11 +8,12 @@ import type { PublicUserSummary } from '@/types/domain.types';
 
 interface UserListItemProps {
   user: PublicUserSummary;
+  followersCount?: number;
   highlight?: boolean;
   onFollowed?: () => void;
 }
 
-export function UserListItem({ user, highlight, onFollowed }: UserListItemProps) {
+export function UserListItem({ user, followersCount, highlight, onFollowed }: UserListItemProps) {
   const initials = user.username.slice(0, 2).toUpperCase();
   const rowRef = useRef<HTMLDivElement>(null);
 
@@ -25,19 +26,24 @@ export function UserListItem({ user, highlight, onFollowed }: UserListItemProps)
   return (
     <div
       ref={rowRef}
-      className={`flex items-center justify-between gap-3 py-2 min-h-[44px] rounded-md px-2 -mx-2 transition-colors ${
-        highlight ? 'ring-2 ring-primary bg-primary/5' : ''
+      className={`flex items-center gap-2.5 py-2.5 transition-colors ${
+        highlight ? 'rounded-xl bg-primary/5 px-2 -mx-2' : ''
       }`}
     >
-      <Link
-        href={`/users/${user._id}`}
-        className="flex items-center gap-3 flex-1 min-w-0"
-      >
+      <Link href={`/users/${user._id}`} className="shrink-0">
         <Avatar size="default">
           {user.avatar && <AvatarImage src={user.avatar} alt={user.username} />}
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
-        <span className="text-sm font-medium truncate">{user.username}</span>
+      </Link>
+
+      <Link href={`/users/${user._id}`} className="flex-1 min-w-0">
+        <p className="text-[14px] font-semibold leading-tight truncate">@{user.username}</p>
+        {followersCount !== undefined && (
+          <p className="text-[12px] text-muted-foreground mt-0.5">
+            {followersCount.toLocaleString('es')} seguidores
+          </p>
+        )}
       </Link>
 
       <FollowButton

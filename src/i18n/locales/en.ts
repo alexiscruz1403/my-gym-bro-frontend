@@ -81,11 +81,14 @@ const en = {
     },
     login: {
       title: 'Log in',
+      heading: 'Welcome back',
+      subtitle: 'Sign in to continue your training.',
       submit: 'Log in',
       submitting: 'Logging in...',
     },
     register: {
       title: 'Create account',
+      subtitle: 'Start your fitness journey today.',
       submit: 'Create account',
       submitting: 'Creating account...',
       termsPrefix: 'By signing up you agree to our',
@@ -96,10 +99,14 @@ const en = {
     },
     forgotPasswordFlow: {
       title: 'Forgot password',
+      heading: 'Reset password',
+      subtitle: "We'll send you a link to create a new password.",
       description: "Enter your email and we'll send you a link to reset your password.",
-      submit: 'Send link',
+      submit: 'Send recovery link',
       submitting: 'Sending...',
       backToLogin: 'Back to log in',
+      backLink: 'Back to login',
+      remembered: 'Remembered your password?',
       success: {
         title: 'Check your inbox',
         description:
@@ -115,6 +122,9 @@ const en = {
       submitting: 'Saving...',
       backToLogin: 'Back to log in',
       success: 'Password reset. Log in with your new password.',
+      successTitle: 'Password updated!',
+      successBody: 'Your password was changed successfully. You can now sign in with your new credentials.',
+      goToLogin: 'Go to login',
       invalidLink: {
         title: 'Invalid link',
         description: 'This link is invalid or has already been used. Request a new link to reset your password.',
@@ -161,11 +171,15 @@ const en = {
     },
     subscription: {
       title: 'Subscription',
+      activeStatus: 'ACTIVE',
+      goPremium: 'Go Premium',
+      goPremiumDesc: 'Unlock AI plans, automatic progression, and more.',
       autoRenew: {
         label: 'Auto-renewal',
         description: 'Your subscription will renew automatically when it expires',
       },
       nextBillingDate: 'Next payment: {{date}}',
+      nextBillingLabel: 'Next billing',
     },
     legal: {
       title: 'Legal',
@@ -189,14 +203,19 @@ const en = {
     activePlan: 'Active Plan',
     myPlans: 'My Plans',
     aiPlans: 'AI Plans',
+    streakDays: 'days',
     noActivePlan: {
       title: 'No active plan',
-      description: 'Create a workout plan to get started.',
+      description: 'Create your own workout plan or generate a personalized one with AI.',
       button: 'Create your first plan',
+      createButton: 'Create plan',
+      aiButton: 'Generate with AI',
+      aiButtonFree: 'AI (Premium)',
     },
     premiumCta: {
-      title: 'Go Premium',
-      subtitle: 'Unlock all app features',
+      title: 'Take your training to the next level',
+      subtitle: 'AI plans and automatic progression. From ARS 100/month.',
+      cta: 'See plans',
     },
   },
 
@@ -208,7 +227,8 @@ const en = {
     status: {
       active: 'Active',
     },
-    viewFull: 'View full plan',
+    start: 'Start',
+    viewFull: 'View plan',
     dayCount_one: '{{count}} day',
     dayCount_other: '{{count}} days',
     exerciseCount_one: '{{count}} exercise',
@@ -272,8 +292,9 @@ const en = {
       addExercise: 'Add exercise',
     },
     delete: {
-      title: 'Delete "{{name}}"?',
-      confirm: 'Delete',
+      title: 'Delete plan',
+      description: 'You are about to delete «{{name}}». This action is permanent and cannot be undone.',
+      confirm: 'Delete plan',
       deleting: 'Deleting...',
     },
     error: {
@@ -304,6 +325,10 @@ const en = {
     cancelSession: 'Cancel session',
     workout: 'Workout',
     today: 'Today',
+    prev: 'Prev',
+    next: 'Next',
+    last: 'Last',
+    done: 'Done',
     startSession: {
       title: 'Choose a workout',
       description: "Select which day's routine you want to do today.",
@@ -335,6 +360,7 @@ const en = {
     },
     rest: {
       label: 'Rest',
+      skip: 'Skip',
       skipInstruction: 'Tap × to skip',
       dragInstruction: 'Hold to drag · × to skip',
       skipAriaLabel: 'Skip rest',
@@ -452,6 +478,41 @@ const en = {
       adductors: 'Adduct.',
       abductors: 'Abduct.',
     },
+    detail: {
+      guideTab: 'Guide',
+      historyTab: 'History',
+      statsTab: 'Stats',
+      rankTab: 'Rank',
+      guide: {
+        guideTab: 'Guide',
+        primaryMuscles: 'Primary muscles',
+        secondaryMuscles: 'Secondary muscles',
+        howToLog: 'How to log weight',
+        videoNotAvailable: 'No video available for this exercise',
+        weightInstruction: {
+          barbell_sum: 'Weight is the sum of all plates + bar',
+          machine_display: 'Use the weight shown on the machine',
+          machine_sum_sides: 'Weight is the sum of both sides',
+          bodyweight: 'Bodyweight only',
+          no_weight: 'No additional weight',
+          cable_display: 'Use the weight shown on the cable',
+          cable_sum_sides: 'Weight is the sum of both cable sides',
+          each_side_weight: 'Log the weight for each side separately',
+        },
+      },
+      rank: {
+        bestMark: 'Best mark',
+        lastUpdated: 'Last updated',
+        rankScale: 'Rank scale',
+        current: 'Current',
+        progressTo: '{{pct}}% toward {{rank}}',
+        bestMarkInfo: 'This value is based on an internal scoring system and does not represent the maximum weight lifted.',
+        noRankTitle: 'No rank yet',
+        noRankDescription: 'Complete sessions with this exercise to earn a rank.',
+        errorTitle: 'Error loading rank',
+        errorDescription: 'Could not load rank. Please try again.',
+      },
+    },
   },
 
   feed: {
@@ -494,6 +555,7 @@ const en = {
       usernameLabel: 'Username',
       save: 'Save changes',
       saving: 'Saving...',
+      usernameHint: 'Only letters, numbers, hyphens and dots. {{count}} characters left.',
     },
     logout: 'Log out',
     deleteAccount: 'Delete account',
@@ -536,6 +598,16 @@ const en = {
       invalidChars: 'Only letters, numbers, hyphens ( - ), dots ( . ) and underscores ( _ )',
       reservedUsername: 'This username is not available',
     },
+    followList: {
+      followers: 'Followers',
+      following: 'Following',
+      error: {
+        title: 'Failed to load list',
+        description: 'Could not fetch the list. Please try again.',
+      },
+      emptyFollowers: 'No followers yet',
+      emptyFollowing: 'Not following anyone yet',
+    },
     physicalData: {
       title: 'Body metrics',
       description: 'This information is optional and will help personalize your recommendations.',
@@ -549,6 +621,11 @@ const en = {
       weightRange: 'Weight must be between 20 and 300',
       heightRange: 'Height must be between 1 and 300',
       bodyFatRange: 'Percentage must be between 1 and 70',
+      genderLabel: 'Gender',
+      gender_male: 'Male',
+      gender_female: 'Female',
+      gender_prefer_not_to_say: 'Prefer not to say',
+      ranksHint: 'Complete weight and gender to access ranks.',
     },
   },
 
@@ -568,6 +645,7 @@ const en = {
   },
 
   followRequest: {
+    pendingTitle: 'Follow Requests',
     wantsToFollow: 'wants to follow you',
     approve: 'Accept',
     reject: 'Decline',
@@ -597,6 +675,11 @@ const en = {
       errorTitle: 'Error loading leaderboard',
       errorDescription: 'Could not fetch the ranking. Please try again.',
     },
+    incompleteData: {
+      title: 'Complete your physical data',
+      description: 'We need your weight and gender to personalize your ranks.',
+      action: 'Go to profile',
+    },
   },
 
   social: {
@@ -623,6 +706,17 @@ const en = {
     errorDescription: 'Could not fetch history. Please try again.',
     emptyTitle: 'No history for this exercise',
     emptyDescription: "You haven't logged any sessions with this exercise yet.",
+    sessionDetailTitle: 'Session detail',
+    setsCompleted: '{{count}} sets completed',
+    sessionErrorTitle: 'Error loading session',
+    sessionErrorDescription: 'Could not load the detail. Please try again.',
+    noExercisesTitle: 'No exercises recorded',
+    noExercisesDescription: 'This session has no saved exercises.',
+    setLabel: 'Set {{n}}',
+    leftAbbr: 'L',
+    rightAbbr: 'R',
+    setsCount_one: '{{count}} set',
+    setsCount_other: '{{count}} sets',
   },
 
   stats: {

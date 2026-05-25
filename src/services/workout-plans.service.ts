@@ -33,6 +33,8 @@ export async function getPlans(): Promise<PlanListItem[]> {
         isActive: p.isActive,
         isAiGenerated: p.isAiGenerated,
         daysCount: p.days?.length ?? 0,
+        configuredDays: p.days?.map((d) => d.dayOfWeek) ?? [],
+        totalExercises: p.days?.reduce((sum, d) => sum + d.exercises.length, 0) ?? 0,
         _isOfflinePending: (p as WorkoutPlan & { _isOfflinePending?: boolean })._isOfflinePending,
       })) as PlanListItem[];
     }

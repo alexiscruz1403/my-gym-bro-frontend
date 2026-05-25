@@ -25,7 +25,7 @@ export function RestTimer({ exerciseId }: RestTimerProps) {
   const display = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 
   return (
-    <div className="rounded-xl border bg-card p-4 shadow-sm">
+    <div className="rounded-xl border bg-card p-4 shadow-1">
       <div className="flex items-center justify-between">
         <p className="text-muted-foreground text-sm font-medium">{t('session.rest.label')}</p>
         <Button

@@ -115,7 +115,7 @@ export function SetRow({
       size="icon"
       variant="ghost"
       onClick={handleUncomplete}
-      className="h-11 w-11 shrink-0 cursor-pointer text-primary hover:text-destructive"
+      className="h-11 w-11 shrink-0 cursor-pointer bg-accent text-accent-foreground hover:bg-accent/80"
       aria-label="Undo set completion"
     >
       <Undo2 className="h-5 w-5" />
@@ -125,7 +125,7 @@ export function SetRow({
       size="icon"
       variant="outline"
       onClick={handleComplete}
-      className="h-11 w-11 shrink-0 cursor-pointer"
+      className="h-11 w-11 shrink-0 cursor-pointer hover:bg-accent/10 hover:text-accent hover:border-accent"
       aria-label="Mark set as complete"
     >
       <Check className="h-5 w-5" />
@@ -144,27 +144,27 @@ export function SetRow({
         </span>
         <div className="flex flex-1 items-center gap-2">
           <div className="flex-1 space-y-0.5">
-            <label className="text-muted-foreground text-[10px]">{weightUnit}</label>
+            <label className="block text-center text-muted-foreground text-[10px] font-semibold uppercase tracking-[0.04em]">{weightUnit}</label>
             <Input
               type="number"
               inputMode="decimal"
               value={state.weight}
               onChange={(e) => setState({ ...state, weight: e.target.value })}
               disabled={isCompleted}
-              className="min-h-11 text-center"
+              className="min-h-11 text-center font-display font-bold"
               min={0}
               step={0.5}
             />
           </div>
           <div className="flex-1 space-y-0.5">
-            <label className="text-muted-foreground text-[10px]">reps</label>
+            <label className="block text-center text-muted-foreground text-[10px] font-semibold uppercase tracking-[0.04em]">reps</label>
             <Input
               type="number"
               inputMode="numeric"
               value={state.reps}
               onChange={(e) => setState({ ...state, reps: e.target.value })}
               disabled={isCompleted}
-              className="min-h-11 text-center"
+              className="min-h-11 text-center font-display font-bold"
               min={0}
             />
           </div>
@@ -176,13 +176,13 @@ export function SetRow({
       <div
         className={cn(
           'flex items-center gap-3 rounded-lg px-3 py-2 transition-colors',
-          isCompleted ? 'bg-primary/10' : 'bg-muted/30',
+          isCompleted ? 'bg-accent/10' : 'bg-muted/30',
         )}
       >
         <span
           className={cn(
             'w-8 shrink-0 text-center text-sm font-medium',
-            isCompleted ? 'text-primary' : 'text-muted-foreground',
+            isCompleted ? 'text-accent' : 'text-muted-foreground',
           )}
         >
           {setIndex + 1}
@@ -200,13 +200,13 @@ export function SetRow({
     <div
       className={cn(
         'flex items-center gap-3 rounded-lg px-3 py-2 transition-colors',
-        isCompleted ? 'bg-primary/10' : 'bg-muted/30',
+        isCompleted ? 'bg-accent/10' : 'bg-muted/30',
       )}
     >
       <span
         className={cn(
           'w-8 shrink-0 text-center text-sm font-medium',
-          isCompleted ? 'text-primary' : 'text-muted-foreground',
+          isCompleted ? 'text-accent' : 'text-muted-foreground',
         )}
       >
         {setIndex + 1}
@@ -214,27 +214,27 @@ export function SetRow({
 
       <div className="flex flex-1 items-center gap-2">
         <div className="flex-1 space-y-0.5">
-          <label className="text-muted-foreground text-xs">{weightUnit}</label>
+          <label className="block text-center text-muted-foreground text-[10px] font-semibold uppercase tracking-[0.04em]">{weightUnit}</label>
           <Input
             type="number"
             inputMode="decimal"
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
             disabled={isCompleted}
-            className="min-h-11 text-center"
+            className="min-h-11 text-center font-display font-bold"
             min={0}
             step={0.5}
           />
         </div>
         <div className="flex-1 space-y-0.5">
-          <label className="text-muted-foreground text-xs">reps</label>
+          <label className="block text-center text-muted-foreground text-[10px] font-semibold uppercase tracking-[0.04em]">reps</label>
           <Input
             type="number"
             inputMode="numeric"
             value={reps}
             onChange={(e) => setReps(e.target.value)}
             disabled={isCompleted}
-            className="min-h-11 text-center"
+            className="min-h-11 text-center font-display font-bold"
             min={0}
           />
         </div>

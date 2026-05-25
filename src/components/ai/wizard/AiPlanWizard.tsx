@@ -11,6 +11,7 @@ import { AiStep5Limitations } from './AiStep5Limitations';
 import { AiStep6Exercises } from './AiStep6Exercises';
 import { AiStep6Generating } from './AiStep6Generating';
 import { useGeneratePlan } from '@/hooks/useGeneratePlan';
+import useAuthStore from '@/store/auth.store';
 import type {
   Step1ProfileValues,
   Step2GoalValues,
@@ -19,7 +20,41 @@ import type {
   Step5LimitationsValues,
   Step6ExercisesValues,
 } from '@/lib/validations/ai.schemas';
-import type { GeneratePlanRequest, GeneratePlanResponse } from '@/types/domain.types';
+import type { GeneratePlanRequest, GeneratePlanResponse, PhysicalData } from '@/types/domain.types';
+
+function buildStep1Defaults(pd: PhysicalData | null | undefined): Partial<Step1ProfileValues> {
+  if (!pd) return {};
+  const defaults: Partial<Step1ProfileValues> = {};
+
+  if (pd.gender === 'male' || pd.gender === 'female') {
+    defaults.sex = pd.gender;
+  }
+
+  if (pd.heightValue != null) {
+    let cm: number;
+    if (pd.heightUnit === 'ft') {
+      const feet = Math.floor(pd.heightValue);
+      const inches = Math.round((pd.heightValue - feet) * 10);
+      cm = Math.round(feet * 30.48 + inches * 2.54);
+    } else {
+      cm = Math.round(pd.heightValue);
+    }
+    if (cm >= 140 && cm <= 220) defaults.heightCm = cm;
+  }
+
+  if (pd.weightValue != null) {
+    const kg = pd.weightUnit === 'lbs'
+      ? Math.round((pd.weightValue / 2.20462) * 10) / 10
+      : pd.weightValue;
+    if (kg >= 30 && kg <= 300) defaults.currentWeightKg = kg;
+  }
+
+  if (pd.bodyFatPercent != null && pd.bodyFatPercent >= 3 && pd.bodyFatPercent <= 50) {
+    defaults.estimatedBodyFatPercent = pd.bodyFatPercent;
+  }
+
+  return defaults;
+}
 
 type WizardData = Partial<
   Step1ProfileValues &
@@ -31,8 +66,9 @@ type WizardData = Partial<
 >;
 
 export function AiPlanWizard() {
+  const { user } = useAuthStore();
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState<WizardData>({});
+  const [formData, setFormData] = useState<WizardData>(() => buildStep1Defaults(user?.physicalData));
   const [result, setResult] = useState<GeneratePlanResponse | null>(null);
   const [genError, setGenError] = useState<string | null>(null);
 

@@ -34,11 +34,19 @@ export function WizardStep2Days({ selected, onChange, onNext, onBack }: WizardSt
         </p>
       )}
 
-      <div className="flex gap-3">
-        <Button variant="outline" onClick={onBack} className="flex-1 cursor-pointer">
+      <div className="flex gap-2.5">
+        <Button
+          variant="outline"
+          onClick={onBack}
+          className="h-11.5 flex-1 cursor-pointer rounded-2xl border-border text-[14px] font-medium"
+        >
           {t('common.back')}
         </Button>
-        <Button onClick={onNext} disabled={selected.length === 0} className="flex-1 cursor-pointer">
+        <Button
+          onClick={onNext}
+          disabled={selected.length === 0}
+          className="h-11.5 flex-1 cursor-pointer rounded-2xl text-[15px] font-semibold disabled:opacity-[.45]"
+        >
           {t('common.continue')}
         </Button>
       </div>

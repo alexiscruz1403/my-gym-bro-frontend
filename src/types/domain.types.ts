@@ -3,6 +3,7 @@ export type Language = 'es' | 'en';
 
 export type WeightUnit = 'kg' | 'lbs';
 export type HeightUnit = 'cm' | 'ft';
+export type Gender = 'male' | 'female' | 'prefer_not_to_say';
 
 export interface PhysicalData {
   weightValue?: number | null;
@@ -10,6 +11,7 @@ export interface PhysicalData {
   heightValue?: number | null;
   heightUnit?: HeightUnit;
   bodyFatPercent?: number | null;
+  gender?: Gender | null;
 }
 
 export interface UserResponse {
@@ -146,6 +148,8 @@ export interface PlanListItem {
   isActive: boolean;
   isAiGenerated?: boolean;
   daysCount: number;
+  configuredDays: string[];
+  totalExercises: number;
 }
 
 export type SessionStatus = 'in_progress' | 'completed' | 'partial' | 'abandoned';
@@ -493,6 +497,8 @@ export interface ExerciseRankResponse {
   rank: RankLevel | null;
   rankName: string | null;
   bestValue: number | null;
+  nextRankName: string | null;
+  valueToNextRank: number | null;
   updatedAt: string | null;
 }
 

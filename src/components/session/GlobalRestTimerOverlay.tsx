@@ -3,12 +3,16 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { X, ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useRestTimer } from '@/hooks/useRestTimer';
 import { useDraggable } from '@/hooks/useDraggable';
 import useSessionStore from '@/store/session.store';
 import { playBeep } from '@/lib/audio';
+
+const CIRCLE_SIZE = 112;
+const STROKE = 6;
+const R = (CIRCLE_SIZE - STROKE) / 2;
+const CIRCUMFERENCE = 2 * Math.PI * R;
 
 function getDefaultPosition() {
   if (typeof window === 'undefined') return { x: 16, y: 120 };
@@ -60,7 +64,7 @@ export function GlobalRestTimerOverlay() {
     return (
       <div
         style={baseStyle}
-        className={`flex items-center justify-between rounded-full ${dragBorderClass} bg-card px-4 py-2 shadow-lg`}
+        className={`flex items-center justify-between rounded-full ${dragBorderClass} bg-card px-4 py-2 shadow-2`}
         {...pointerHandlers}
       >
         <span className="flex-1 font-display text-sm font-bold tabular-nums select-none">
@@ -79,62 +83,94 @@ export function GlobalRestTimerOverlay() {
     );
   }
 
+  const dashOffset = CIRCUMFERENCE * (1 - progress / 100);
+
   return (
     <div
       style={baseStyle}
-      className={`rounded-xl ${dragBorderClass} bg-card p-4 shadow-lg`}
+      className={`rounded-xl ${dragBorderClass} bg-card p-3 shadow-2`}
       {...pointerHandlers}
     >
+      {/* Header */}
       <div className="flex items-center justify-between" style={{ cursor: 'grab' }}>
-        <p className="text-muted-foreground text-sm font-medium select-none">{t('session.rest.label')}</p>
-        <div className="flex items-center gap-1">
+        <p className="text-[11px] font-medium uppercase tracking-[0.06em] text-muted-foreground select-none">
+          {t('session.rest.label')}
+        </p>
+        <Button
+          size="icon"
+          variant="ghost"
+          onClick={() => setMinimized(true)}
+          className="h-7 w-7 cursor-pointer"
+          aria-label="Minimize rest timer"
+        >
+          <ChevronDown className="h-3.5 w-3.5" />
+        </Button>
+      </div>
+
+      {/* SVG circle timer */}
+      <div className="flex flex-col items-center gap-2 py-2">
+        <div className="relative flex items-center justify-center" style={{ width: CIRCLE_SIZE, height: CIRCLE_SIZE }}>
+          <svg width={CIRCLE_SIZE} height={CIRCLE_SIZE} style={{ transform: 'rotate(-90deg)' }}>
+            <circle
+              cx={CIRCLE_SIZE / 2}
+              cy={CIRCLE_SIZE / 2}
+              r={R}
+              fill="none"
+              stroke="var(--muted)"
+              strokeWidth={STROKE}
+            />
+            <circle
+              cx={CIRCLE_SIZE / 2}
+              cy={CIRCLE_SIZE / 2}
+              r={R}
+              fill="none"
+              stroke="var(--primary)"
+              strokeWidth={STROKE}
+              strokeLinecap="round"
+              strokeDasharray={CIRCUMFERENCE}
+              strokeDashoffset={dashOffset}
+              style={{ transition: 'stroke-dashoffset 1s linear' }}
+            />
+          </svg>
+          <span className="absolute font-display text-[28px] font-bold tabular-nums select-none">
+            {display}
+          </span>
+        </div>
+
+        {/* Adjust + Skip buttons */}
+        <div className="flex w-full items-center gap-2">
           <Button
-            size="icon"
-            variant="ghost"
-            onClick={() => setMinimized(true)}
-            className="h-11 w-11 cursor-pointer"
-            aria-label="Minimize rest timer"
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => adjust(-10)}
+            className="flex-1 cursor-pointer text-xs min-h-9"
+            aria-label={t('session.rest.subtractAriaLabel')}
           >
-            <ChevronDown className="h-4 w-4" />
+            −10s
           </Button>
           <Button
-            size="icon"
-            variant="ghost"
+            type="button"
+            variant="default"
+            size="sm"
             onClick={stop}
-            className="h-11 w-11 cursor-pointer"
+            className="flex-1 cursor-pointer text-xs min-h-9"
             aria-label={t('session.rest.skipAriaLabel')}
           >
-            <X className="h-4 w-4" />
+            {t('session.rest.skip')}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => adjust(10)}
+            className="flex-1 cursor-pointer text-xs min-h-9"
+            aria-label={t('session.rest.addAriaLabel')}
+          >
+            +10s
           </Button>
         </div>
       </div>
-      <p className="font-display mt-1 text-center text-4xl font-bold tabular-nums select-none">{display}</p>
-      <Progress value={progress} className="mt-3 h-2" />
-      <div className="mt-3 flex items-center justify-center gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => adjust(-10)}
-          className="cursor-pointer px-3 min-h-11"
-          aria-label={t('session.rest.subtractAriaLabel')}
-        >
-          -10s
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => adjust(10)}
-          className="cursor-pointer px-3 min-h-11"
-          aria-label={t('session.rest.addAriaLabel')}
-        >
-          +10s
-        </Button>
-      </div>
-      <p className="text-muted-foreground mt-2 text-center text-xs select-none">
-        {t('session.rest.dragInstruction')}
-      </p>
     </div>
   );
 }

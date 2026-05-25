@@ -51,7 +51,7 @@ export function InstallPwaBanner() {
         <Smartphone className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold">Instala MyGymBro en tu móvil</p>
-          <p className="text-muted-foreground mt-0.5 text-xs">
+          <p className="text-muted-foreground mt-0.5 text-[13px]">
             Accede más rápido desde tu pantalla de inicio.
           </p>
         </div>

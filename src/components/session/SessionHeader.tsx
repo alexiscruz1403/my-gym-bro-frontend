@@ -46,7 +46,7 @@ export function SessionHeader({ onFinish, onCancel, onToggleCountdown, countdown
     <div className="flex items-center justify-between border-b px-4 py-3">
       <div>
         <p className="text-muted-foreground text-xs">{t('session.inProgress')}</p>
-        <p className="font-display text-lg font-bold">{activeSession?.planName ?? t('session.workout')}</p>
+        <p className="font-display text-[17px] font-bold leading-tight">{activeSession?.planName ?? t('session.workout')}</p>
         {activeSession && (
           <p className="text-muted-foreground text-xs">
             {dayLabels[activeSession.dayOfWeek as DayOfWeek]}
@@ -56,15 +56,15 @@ export function SessionHeader({ onFinish, onCancel, onToggleCountdown, countdown
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="font-display text-xl font-bold tabular-nums">
+        <span className="font-display text-[24px] font-bold tabular-nums">
           {formatElapsed(sessionStartTime)}
         </span>
 
         <Button
           size="icon"
-          variant={countdownActive ? 'secondary' : 'ghost'}
+          variant="ghost"
           onClick={onToggleCountdown}
-          className="min-h-11 min-w-9 cursor-pointer"
+          className={`min-h-11 min-w-9 cursor-pointer ${countdownActive ? 'bg-primary/10 text-primary hover:bg-primary/15' : ''}`}
           aria-label={t('session.options.ariaLabel')}
         >
           <Timer className="h-4 w-4" />
@@ -83,7 +83,7 @@ export function SessionHeader({ onFinish, onCancel, onToggleCountdown, countdown
           </Button>
           <Button
             size="sm"
-            variant="outline"
+            variant="default"
             onClick={onFinish}
             className="min-h-11 cursor-pointer gap-1.5"
           >

@@ -1,10 +1,7 @@
 'use client';
 
-import { formatDistanceToNow } from 'date-fns';
-import { es, enUS } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import type { FollowRequestItem } from '@/types/domain.types';
 
 interface PendingFollowRequestRowProps {
@@ -18,48 +15,35 @@ export function PendingFollowRequestRow({
   onApprove,
   onReject,
 }: PendingFollowRequestRowProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const initials = request.username.slice(0, 2).toUpperCase();
-  const dateLocale = i18n.language === 'en' ? enUS : es;
-  const timeAgo = formatDistanceToNow(new Date(request.createdAt), {
-    addSuffix: true,
-    locale: dateLocale,
-  });
 
   return (
-    <div className="flex items-center gap-3 rounded-lg border p-3">
+    <div className="flex items-center gap-2.5 border-b border-border px-4 py-[11px] last:border-0">
       <Avatar size="default" className="shrink-0">
-        {request.avatar && (
-          <AvatarImage src={request.avatar} alt={request.username} />
-        )}
+        {request.avatar && <AvatarImage src={request.avatar} alt={request.username} />}
         <AvatarFallback>{initials}</AvatarFallback>
       </Avatar>
 
-      <div className="min-w-0 flex-1">
-        <p className="text-sm">
-          <span className="font-medium">{request.username}</span>{' '}
-          {t('followRequest.wantsToFollow')}
-        </p>
-        <p className="text-muted-foreground text-xs">{timeAgo}</p>
-      </div>
+      <span className="min-w-0 flex-1 text-[14px] font-semibold text-foreground">
+        @{request.username}
+      </span>
 
-      <div className="flex gap-2 shrink-0">
-        <Button
-          size="sm"
-          variant="default"
-          className="min-h-9 cursor-pointer"
+      <div className="flex shrink-0 gap-1.5">
+        <button
+          type="button"
           onClick={() => onApprove(request.senderId)}
+          className="h-[30px] cursor-pointer rounded-full bg-green-500 px-3 text-[12px] font-semibold text-white transition-all hover:brightness-110"
         >
           {t('followRequest.approve')}
-        </Button>
-        <Button
-          size="sm"
-          variant="outline"
-          className="min-h-9 cursor-pointer"
+        </button>
+        <button
+          type="button"
           onClick={() => onReject(request.senderId)}
+          className="h-[30px] cursor-pointer rounded-full border-[1.5px] border-border bg-muted/60 px-3 text-[12px] font-medium text-muted-foreground transition-colors hover:border-destructive/30 hover:bg-destructive/10 hover:text-destructive"
         >
           {t('followRequest.reject')}
-        </Button>
+        </button>
       </div>
     </div>
   );

@@ -82,11 +82,20 @@ export function WizardStep4Review({
         </div>
       </div>
 
-      <div className="flex gap-3">
-        <Button variant="outline" onClick={onBack} disabled={isSaving} className="flex-1 cursor-pointer">
+      <div className="flex gap-2.5">
+        <Button
+          variant="outline"
+          onClick={onBack}
+          disabled={isSaving}
+          className="h-11.5 flex-1 cursor-pointer rounded-2xl border-border text-[14px] font-medium"
+        >
           {t('common.back')}
         </Button>
-        <Button onClick={onSave} disabled={isSaving} className="flex-1 cursor-pointer">
+        <Button
+          onClick={onSave}
+          disabled={isSaving}
+          className="h-11.5 flex-1 cursor-pointer rounded-2xl text-[15px] font-semibold disabled:opacity-[.45]"
+        >
           {isSaving ? t('plans.wizard.step4.saving') : t('plans.wizard.step4.save')}
         </Button>
       </div>

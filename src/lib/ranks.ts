@@ -1,4 +1,4 @@
-import type { RankLevel } from '@/types/domain.types';
+import type { RankLevel, UserResponse } from '@/types/domain.types';
 
 export const RANK_COLORS: Record<RankLevel, string> = {
   1: '#9CA3AF',
@@ -28,7 +28,7 @@ export function getRankName(rank: RankLevel): string {
   return RANK_NAMES[rank];
 }
 
-export const UNRANKED_COLOR = 'hsl(var(--muted))';
+export const UNRANKED_COLOR = 'oklch(30% 0 0)';
 
 export const FRONT_VIEW_FIGURE: string[] = [
   'M99.565 33.263c-.349 0-2.365 1.372-3.562 2.424-.774.679-.952.734-1.424.44-.64-.4-.855-.174-2.173 2.2',
@@ -890,3 +890,8 @@ export const BACK_VIEW_FIGURE: string[] = [
   'c-.046.006-.135.007-.203.01l.001-.015h.004l.024.002a.2.2 0 0 0 .041-.006.2.2 0 0 0 .04.006l.025-.002',
   '.024.002a.2.2 0 0 0 .044-.007zm-.498.03v.004h-.006z',
 ];
+
+export function hasCompletePhysicalData(user: UserResponse | null | undefined): boolean {
+  const pd = user?.physicalData;
+  return !!(pd?.weightValue != null && pd?.weightUnit && pd?.gender);
+}

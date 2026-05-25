@@ -8,7 +8,7 @@ import { AvatarUpload } from '@/components/profile/AvatarUpload';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { FollowButton } from '@/components/social/FollowButton';
 import { FollowListSheet } from '@/components/social/FollowListSheet';
-import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 import useAuthStore from '@/store/auth.store';
 import type { UserResponse, PublicUserProfile } from '@/types/domain.types';
 
@@ -36,40 +36,47 @@ function OwnProfileHeader({ user }: OwnProfileHeaderProps) {
     }
   }, [searchParams, router, pathname]);
 
+  const isPremium = user.membershipTier === 'premium';
+
   return (
     <>
-      <div className="flex items-start gap-4">
+      <div className="flex items-start gap-[14px]">
         <AvatarUpload />
 
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h2 className="font-display text-xl font-semibold truncate">{user.username}</h2>
-            {user.membershipTier === 'premium' ? (
-              <Badge className="shrink-0 bg-amber-500 text-white hover:bg-amber-500 border-0">
-                {t('profile.membership.premium')}
-              </Badge>
-            ) : (
-              <Badge variant="secondary" className="shrink-0">
-                {t('profile.membership.free')}
-              </Badge>
-            )}
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-[7px]">
+            <h2 className="truncate font-display text-[22px] font-bold tracking-[0.01em] text-foreground">
+              {user.username}
+            </h2>
+            <span className={cn(
+              'shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-bold',
+              isPremium
+                ? 'border-amber-500/30 bg-amber-500/15 text-amber-600'
+                : 'border-border bg-muted text-muted-foreground',
+            )}>
+              {isPremium ? `✦ ${t('profile.membership.premium')}` : t('profile.membership.free')}
+            </span>
           </div>
-          <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+          <p className="mt-0.5 truncate text-[12px] text-muted-foreground">{user.email}</p>
 
-          <div className="flex gap-3 mt-2">
+          <div className="mt-2.5 flex gap-4">
             <button
               onClick={() => setSheet('followers')}
-              className="cursor-pointer text-sm text-left min-h-11 flex items-center"
+              className="flex cursor-pointer flex-col text-left transition-opacity hover:opacity-70"
             >
-              <span className="font-semibold">{user.followersCount}</span>
-              <span className="text-muted-foreground ml-1">{t('profile.followers')}</span>
+              <span className="font-display text-[18px] font-bold leading-none text-foreground">
+                {user.followersCount}
+              </span>
+              <span className="mt-0.5 text-[11px] text-muted-foreground">{t('profile.followers')}</span>
             </button>
             <button
               onClick={() => setSheet('following')}
-              className="cursor-pointer text-sm text-left min-h-11 flex items-center"
+              className="flex cursor-pointer flex-col text-left transition-opacity hover:opacity-70"
             >
-              <span className="font-semibold">{user.followingCount}</span>
-              <span className="text-muted-foreground ml-1">{t('profile.following')}</span>
+              <span className="font-display text-[18px] font-bold leading-none text-foreground">
+                {user.followingCount}
+              </span>
+              <span className="mt-0.5 text-[11px] text-muted-foreground">{t('profile.following')}</span>
             </button>
           </div>
         </div>
@@ -107,35 +114,41 @@ function PublicProfileHeader({ user }: PublicProfileHeaderProps) {
 
   return (
     <>
-      <div className="flex items-start gap-4">
+      <div className="flex items-start gap-[14px]">
         <Avatar size="lg">
           {user.avatar && <AvatarImage src={user.avatar} alt={user.username} />}
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
 
-        <div className="flex-1 min-w-0">
-          <h2 className="font-display text-xl font-semibold truncate">{user.username}</h2>
+        <div className="min-w-0 flex-1">
+          <h2 className="truncate font-display text-[22px] font-bold tracking-[0.01em] text-foreground">
+            {user.username}
+          </h2>
 
           {isPrivateAndBlocked ? (
-            <div className="flex items-center gap-1.5 mt-1 text-muted-foreground text-sm">
+            <div className="mt-1 flex items-center gap-1.5 text-[12px] text-muted-foreground">
               <Lock className="h-3.5 w-3.5 shrink-0" />
               <span>{t('profile.privateProfile')}</span>
             </div>
           ) : (
-            <div className="flex gap-3 mt-2">
+            <div className="mt-2.5 flex gap-4">
               <button
                 onClick={() => setSheet('followers')}
-                className="text-sm text-left min-h-11 flex items-center"
+                className="flex cursor-pointer flex-col text-left transition-opacity hover:opacity-70"
               >
-                <span className="font-semibold">{user.followersCount}</span>
-                <span className="text-muted-foreground ml-1">{t('profile.followers')}</span>
+                <span className="font-display text-[18px] font-bold leading-none text-foreground">
+                  {user.followersCount}
+                </span>
+                <span className="mt-0.5 text-[11px] text-muted-foreground">{t('profile.followers')}</span>
               </button>
               <button
                 onClick={() => setSheet('following')}
-                className="text-sm text-left min-h-11 flex items-center"
+                className="flex cursor-pointer flex-col text-left transition-opacity hover:opacity-70"
               >
-                <span className="font-semibold">{user.followingCount}</span>
-                <span className="text-muted-foreground ml-1">{t('profile.following')}</span>
+                <span className="font-display text-[18px] font-bold leading-none text-foreground">
+                  {user.followingCount}
+                </span>
+                <span className="mt-0.5 text-[11px] text-muted-foreground">{t('profile.following')}</span>
               </button>
             </div>
           )}

@@ -31,6 +31,11 @@ export function LeaderboardRow({ entry, position, selectedMuscle }: LeaderboardR
         null as typeof entry.muscleRanks[0] | null,
       );
 
+  const bestValue =
+    relevantRank && relevantRank.exercises.length > 0
+      ? Math.max(...relevantRank.exercises.map((ex) => ex.bestValue))
+      : null;
+
   return (
     <div
       className={`flex items-center gap-3 rounded-lg px-3 py-2.5 ${
@@ -59,6 +64,12 @@ export function LeaderboardRow({ entry, position, selectedMuscle }: LeaderboardR
         <RankBadge rank={relevantRank.rank} size="sm" />
       ) : (
         <span className="text-xs text-muted-foreground">{t('ranks.leaderboard.unranked')}</span>
+      )}
+
+      {bestValue !== null && (
+        <span className="font-display shrink-0 text-[13px] font-bold text-muted-foreground tabular-nums">
+          {bestValue.toLocaleString('es', { maximumFractionDigits: 1 })}
+        </span>
       )}
     </div>
   );

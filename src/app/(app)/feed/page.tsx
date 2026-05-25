@@ -5,7 +5,8 @@ import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { UserRoundSearch } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PageContainer } from '@/components/layout/PageContainer';
-import { Button } from '@/components/ui/button';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { cn } from '@/lib/utils';
 import { FeedList } from '@/components/social/FeedList';
 import { CommentsSheet } from '@/components/social/CommentsSheet';
 import { UserSearchSheet } from '@/components/social/UserSearchSheet';
@@ -58,38 +59,37 @@ export default function FeedPage() {
     setActivePostId(null);
   }
 
-  return (
-    <PageContainer>
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="font-display text-xl font-semibold">{t('feed.title')}</h1>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setSearchOpen(true)}
-          className="min-h-11 min-w-11 cursor-pointer"
-          aria-label={t('feed.searchAriaLabel')}
-        >
-          <UserRoundSearch className="h-5 w-5" />
-        </Button>
-      </div>
+  const searchAction = (
+    <button
+      type="button"
+      onClick={() => setSearchOpen(true)}
+      aria-label={t('feed.searchAriaLabel')}
+      className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+    >
+      <UserRoundSearch className="h-5 w-5" />
+    </button>
+  );
 
+  return (
+    <>
+      <PageHeader title={t('feed.title')} action={searchAction} />
+      <PageContainer>
       <div className="flex gap-2 mb-4">
-        <Button
-          variant={filter === 'all' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setFilter('all')}
-          className="min-h-11 cursor-pointer"
-        >
-          {t('feed.filter.all')}
-        </Button>
-        <Button
-          variant={filter === 'mine' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setFilter('mine')}
-          className="min-h-11 cursor-pointer"
-        >
-          {t('feed.filter.mine')}
-        </Button>
+        {(['all', 'mine'] as const).map((f) => (
+          <button
+            key={f}
+            type="button"
+            onClick={() => setFilter(f)}
+            className={cn(
+              'h-8 cursor-pointer rounded-full border-[1.5px] px-3.5 text-[13px] font-medium transition-all',
+              filter === f
+                ? 'border-primary bg-primary font-semibold text-white'
+                : 'border-border bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground',
+            )}
+          >
+            {t(f === 'all' ? 'feed.filter.all' : 'feed.filter.mine')}
+          </button>
+        ))}
       </div>
 
       <FeedList
@@ -115,5 +115,6 @@ export default function FeedPage() {
         onFollowed={refresh}
       />
     </PageContainer>
+    </>
   );
 }

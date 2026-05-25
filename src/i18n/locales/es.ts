@@ -41,7 +41,7 @@ const es = {
 
   nav: {
     home: 'Inicio',
-    workouts: 'Rutinas',
+    workouts: 'Planes',
     feed: 'Feed',
     ranks: 'Rangos',
     ai: 'IA',
@@ -81,11 +81,14 @@ const es = {
     },
     login: {
       title: 'Iniciar sesión',
+      heading: 'Bienvenido de vuelta',
+      subtitle: 'Ingresá para continuar tu entrenamiento.',
       submit: 'Ingresar',
       submitting: 'Iniciando sesión...',
     },
     register: {
       title: 'Crear cuenta',
+      subtitle: 'Empezá tu journey de fitness hoy.',
       submit: 'Crear cuenta',
       submitting: 'Creando cuenta...',
       termsPrefix: 'Al registrarte aceptás nuestros',
@@ -96,10 +99,14 @@ const es = {
     },
     forgotPasswordFlow: {
       title: 'Olvidé mi contraseña',
+      heading: 'Recuperar contraseña',
+      subtitle: 'Te enviamos un link para que puedas crear una nueva contraseña.',
       description: 'Ingresá tu email y te enviaremos un enlace para restablecer tu contraseña.',
-      submit: 'Enviar enlace',
+      submit: 'Enviar link de recuperación',
       submitting: 'Enviando...',
       backToLogin: 'Volver al inicio de sesión',
+      backLink: 'Volver al login',
+      remembered: '¿Acordaste la contraseña?',
       success: {
         title: 'Revisá tu correo',
         description:
@@ -115,6 +122,10 @@ const es = {
       submitting: 'Guardando...',
       backToLogin: 'Volver al inicio de sesión',
       success: 'Contraseña restablecida. Iniciá sesión con tu nueva contraseña.',
+      successTitle: '¡Contraseña actualizada!',
+      successBody:
+        'Tu contraseña fue cambiada exitosamente. Ya podés iniciar sesión con tus nuevas credenciales.',
+      goToLogin: 'Ir al login',
       invalidLink: {
         title: 'Enlace inválido',
         description:
@@ -162,11 +173,15 @@ const es = {
     },
     subscription: {
       title: 'Suscripción',
+      activeStatus: 'ACTIVA',
+      goPremium: 'Ir a Premium',
+      goPremiumDesc: 'Desbloqueá planes IA, progresión automática y más.',
       autoRenew: {
         label: 'Renovación automática',
         description: 'Tu suscripción se renovará automáticamente al vencer',
       },
       nextBillingDate: 'Próximo pago: {{date}}',
+      nextBillingLabel: 'Próximo cobro',
     },
     legal: {
       title: 'Legal',
@@ -188,28 +203,34 @@ const es = {
     greeting: 'Hola, {{username}}',
     subtitle: 'Aquí está tu resumen de entrenamiento.',
     activePlan: 'Plan activo',
-    myPlans: 'Mis rutinas',
+    myPlans: 'Mis planes',
     aiPlans: 'Planes IA',
+    streakDays: 'días',
     noActivePlan: {
       title: 'Sin plan activo',
-      description: 'Creá una rutina para comenzar.',
+      description: 'Creá tu propio plan de entrenamiento o generá uno personalizado con IA.',
       button: 'Crear mi primer plan',
+      createButton: 'Crear plan',
+      aiButton: 'Generar con IA',
+      aiButtonFree: 'IA (Premium)',
     },
     premiumCta: {
-      title: 'Pasate a Premium',
-      subtitle: 'Desbloqueá todas las funcionalidades de la app',
+      title: 'Llevá tu entreno al siguiente nivel',
+      subtitle: 'Planes con IA y progresión automática. Desde ARS 100/mes.',
+      cta: 'Ver planes',
     },
   },
 
   plans: {
-    title: 'Mis rutinas',
+    title: 'Mis planes',
     maxReached: 'Máximo de 3 planes alcanzado',
-    newPlan: 'Nueva rutina',
-    browseExercises: 'Explorar catálogo de ejercicios',
+    newPlan: 'Nuevo plan',
+    browseExercises: 'Explorar ejercicios',
     status: {
       active: 'Activo',
     },
-    viewFull: 'Ver plan completo',
+    start: 'Iniciar',
+    viewFull: 'Ver plan',
     dayCount_one: '{{count}} día',
     dayCount_other: '{{count}} días',
     exerciseCount_one: '{{count}} ejercicio',
@@ -219,8 +240,8 @@ const es = {
     createdToast: '"{{name}}" creado',
     updatedToast: '"{{name}}" actualizado',
     empty: {
-      title: 'Sin rutinas',
-      description: 'Creá tu primera rutina para comenzar.',
+      title: 'Sin planes',
+      description: 'Creá tu primer plan para comenzar.',
     },
     noExercises: 'No se agregaron ejercicios aún.',
     tabPlan: 'Plan',
@@ -245,7 +266,7 @@ const es = {
         review: 'Revisión',
       },
       step1: {
-        title: 'Poné un nombre a tu rutina',
+        title: 'Poné un nombre a tu plan',
         description: 'Dale un nombre memorable a tu plan de entrenamiento.',
         placeholder: 'Ej: Push Pull Piernas',
       },
@@ -260,10 +281,10 @@ const es = {
         description: 'Asigná ejercicios a cada día de entrenamiento.',
       },
       step4: {
-        title: 'Revisá tu rutina',
+        title: 'Revisá tu plan',
         description: 'Verificá que todo esté bien antes de guardar.',
         noExercises: 'Sin ejercicios',
-        save: 'Guardar rutina',
+        save: 'Guardar plan',
         saving: 'Guardando...',
       },
       dayNameLabel: 'Nombre del día',
@@ -273,8 +294,9 @@ const es = {
       addExercise: 'Agregar ejercicio',
     },
     delete: {
-      title: '¿Eliminar "{{name}}"?',
-      confirm: 'Eliminar',
+      title: 'Eliminar plan',
+      description: 'Estás por eliminar «{{name}}». Esta acción es permanente y no se puede deshacer.',
+      confirm: 'Eliminar plan',
       deleting: 'Eliminando...',
     },
     error: {
@@ -305,6 +327,10 @@ const es = {
     cancelSession: 'Cancelar sesión',
     workout: 'Entrenamiento',
     today: 'Hoy',
+    prev: 'Anterior',
+    next: 'Siguiente',
+    last: 'Último',
+    done: 'Completado',
     startSession: {
       title: 'Elegí un entrenamiento',
       description: 'Seleccioná qué día querés entrenar hoy.',
@@ -336,6 +362,7 @@ const es = {
     },
     rest: {
       label: 'Descanso',
+      skip: 'Saltear',
       skipInstruction: 'Tocá × para saltear',
       dragInstruction: 'Mantené presionado para mover · × para saltear',
       skipAriaLabel: 'Saltear descanso',
@@ -388,7 +415,7 @@ const es = {
   },
 
   exercises: {
-    title: 'Catálogo de ejercicios',
+    title: 'Ejercicios',
     searchPlaceholder: 'Buscar ejercicios...',
     clearFilters: 'Limpiar filtros',
     clearSearch: 'Limpiar búsqueda',
@@ -453,6 +480,41 @@ const es = {
       adductors: 'Aductor',
       abductors: 'Abductor',
     },
+    detail: {
+      guideTab: 'Guía',
+      historyTab: 'Historial',
+      statsTab: 'Stats',
+      rankTab: 'Rango',
+      guide: {
+        guideTab: 'Guía',
+        primaryMuscles: 'Músculos primarios',
+        secondaryMuscles: 'Músculos secundarios',
+        howToLog: 'Cómo registrar el peso',
+        videoNotAvailable: 'No hay video disponible para este ejercicio',
+        weightInstruction: {
+          barbell_sum: 'El peso es la suma de todos los discos + barra',
+          machine_display: 'Usa el peso que indica la máquina',
+          machine_sum_sides: 'El peso es la suma de ambos lados',
+          bodyweight: 'Solo peso corporal',
+          no_weight: 'Sin carga adicional',
+          cable_display: 'Usa el peso que muestra el cable',
+          cable_sum_sides: 'El peso es la suma de ambos lados del cable',
+          each_side_weight: 'Registrá el peso de cada lado por separado',
+        },
+      },
+      rank: {
+        bestMark: 'Mejor marca',
+        lastUpdated: 'Última actualización',
+        rankScale: 'Escala de rangos',
+        current: 'Actual',
+        progressTo: '{{pct}}% hacia {{rank}}',
+        bestMarkInfo: 'Este valor corresponde a un sistema de puntuación interno y no representa el peso máximo levantado.',
+        noRankTitle: 'Sin rango aún',
+        noRankDescription: 'Completá sesiones con este ejercicio para obtener un rango.',
+        errorTitle: 'Error al cargar el rango',
+        errorDescription: 'No se pudo obtener el rango. Intentá de nuevo.',
+      },
+    },
   },
 
   feed: {
@@ -495,6 +557,7 @@ const es = {
       usernameLabel: 'Nombre de usuario',
       save: 'Guardar cambios',
       saving: 'Guardando...',
+      usernameHint: 'Solo letras, números, guión y punto. {{count}} caracteres restantes.',
     },
     logout: 'Cerrar sesión',
     deleteAccount: 'Eliminar cuenta',
@@ -537,6 +600,16 @@ const es = {
       invalidChars: 'Solo letras, números, guión ( - ), punto ( . ) y guión bajo ( _ )',
       reservedUsername: 'Este nombre de usuario no está disponible',
     },
+    followList: {
+      followers: 'Seguidores',
+      following: 'Siguiendo',
+      error: {
+        title: 'Error al cargar la lista',
+        description: 'No se pudo obtener la lista. Intentá de nuevo.',
+      },
+      emptyFollowers: 'Sin seguidores todavía',
+      emptyFollowing: 'Sin usuarios seguidos todavía',
+    },
     physicalData: {
       title: 'Datos corporales',
       description: 'Esta información es opcional y te ayudará a personalizar tus recomendaciones.',
@@ -550,6 +623,11 @@ const es = {
       weightRange: 'El peso debe estar entre 20 y 300',
       heightRange: 'La altura debe estar entre 1 y 300',
       bodyFatRange: 'El porcentaje debe estar entre 1 y 70',
+      genderLabel: 'Género',
+      gender_male: 'Masculino',
+      gender_female: 'Femenino',
+      gender_prefer_not_to_say: 'Prefiero no decirlo',
+      ranksHint: 'Completá peso y género para acceder a los rangos.',
     },
   },
 
@@ -569,6 +647,7 @@ const es = {
   },
 
   followRequest: {
+    pendingTitle: 'Solicitudes de seguimiento',
     wantsToFollow: 'quiere seguirte',
     approve: 'Aceptar',
     reject: 'Rechazar',
@@ -598,6 +677,11 @@ const es = {
       errorTitle: 'Error al cargar el leaderboard',
       errorDescription: 'No se pudo obtener la clasificación. Intentá de nuevo.',
     },
+    incompleteData: {
+      title: 'Completá tus datos físicos',
+      description: 'Necesitamos tu peso y género para personalizar tus rangos.',
+      action: 'Ir al perfil',
+    },
   },
 
   social: {
@@ -624,6 +708,17 @@ const es = {
     errorDescription: 'No se pudo obtener el historial. Intentá de nuevo.',
     emptyTitle: 'No hay historial para este ejercicio',
     emptyDescription: 'Aún no registraste sesiones con este ejercicio.',
+    sessionDetailTitle: 'Detalle de sesión',
+    setsCompleted: '{{count}} series completadas',
+    sessionErrorTitle: 'Error al cargar la sesión',
+    sessionErrorDescription: 'No se pudo obtener el detalle. Intentá de nuevo.',
+    noExercisesTitle: 'Sin ejercicios registrados',
+    noExercisesDescription: 'Esta sesión no tiene ejercicios guardados.',
+    setLabel: 'Serie {{n}}',
+    leftAbbr: 'Izq',
+    rightAbbr: 'Der',
+    setsCount_one: '{{count}} serie',
+    setsCount_other: '{{count}} series',
   },
 
   stats: {

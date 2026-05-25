@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import useUIStore from '@/store/ui.store';
 import useAuthStore from '@/store/auth.store';
-import { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { NotificationBell } from '@/components/notifications/NotificationBell';
@@ -20,16 +19,6 @@ export function AppHeader({ title, action }: AppHeaderProps) {
   const { t } = useTranslation();
   const { isDarkMode, toggleDarkMode } = useUIStore();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-
-  // Apply .dark class to <html> whenever isDarkMode changes
-  useEffect(() => {
-    const root = document.documentElement;
-    if (isDarkMode) {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-  }, [isDarkMode]);
 
   return (
     <header className="sticky top-0 z-40 bg-card/80 backdrop-blur-sm border-b border-border">
@@ -48,15 +37,15 @@ export function AppHeader({ title, action }: AppHeaderProps) {
           {isAuthenticated && <SyncStatusIndicator />}
           {isAuthenticated && <NotificationBell />}
           {isAuthenticated && (
-            <Button
-              variant="ghost"
-              size="icon"
-              render={<Link href="/settings" />}
-              aria-label={t('header.settings')}
-              className="cursor-pointer"
-            >
-              <Settings size={20} />
-            </Button>
+            <Link href="/settings" aria-label={t('header.settings')}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="cursor-pointer"
+              >
+                <Settings size={20} />
+              </Button>
+            </Link>
           )}
           <Button
             variant="ghost"

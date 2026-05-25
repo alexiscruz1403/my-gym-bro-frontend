@@ -2,10 +2,14 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { Play, Pause, RotateCcw, Check, X } from 'lucide-react';
 import { useCountdownTimer } from '@/hooks/useCountdownTimer';
 import { useDraggable } from '@/hooks/useDraggable';
+
+const CIRCLE_SIZE = 96;
+const STROKE = 5;
+const R = (CIRCLE_SIZE - STROKE) / 2;
+const CIRCUMFERENCE = 2 * Math.PI * R;
 
 const PRESETS = [
   { label: '1m', seconds: 60 },
@@ -77,7 +81,7 @@ export function GlobalCountdownTimerOverlay({ onClose }: GlobalCountdownTimerOve
   return (
     <div
       style={baseStyle}
-      className={`rounded-xl ${dragBorderClass} bg-card p-4 shadow-lg`}
+      className={`rounded-xl ${dragBorderClass} bg-card p-3 shadow-2`}
       {...pointerHandlers}
     >
       {/* Header */}
@@ -95,63 +99,47 @@ export function GlobalCountdownTimerOverlay({ onClose }: GlobalCountdownTimerOve
       </div>
 
       {isActive ? (
-        /* Active mode */
-        <>
-          <p className="font-display mt-1 text-center text-4xl font-bold tabular-nums select-none">
-            {display}
-          </p>
-          <Progress value={progress} className="mt-3 h-2" />
-          <div className="mt-3 flex items-center justify-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              onClick={reset}
-              className="h-11 w-11 cursor-pointer"
-              aria-label="Reiniciar"
-            >
-              <RotateCcw className="h-4 w-4" />
+        /* Active mode — SVG circle */
+        <div className="flex flex-col items-center gap-3 py-2">
+          <div className="relative flex items-center justify-center" style={{ width: CIRCLE_SIZE, height: CIRCLE_SIZE }}>
+            <svg width={CIRCLE_SIZE} height={CIRCLE_SIZE} style={{ transform: 'rotate(-90deg)' }}>
+              <circle cx={CIRCLE_SIZE / 2} cy={CIRCLE_SIZE / 2} r={R} fill="none" stroke="var(--muted)" strokeWidth={STROKE} />
+              <circle
+                cx={CIRCLE_SIZE / 2} cy={CIRCLE_SIZE / 2} r={R}
+                fill="none" stroke="var(--primary)" strokeWidth={STROKE}
+                strokeLinecap="round"
+                strokeDasharray={CIRCUMFERENCE}
+                strokeDashoffset={CIRCUMFERENCE * (1 - progress / 100)}
+                style={{ transition: 'stroke-dashoffset 1s linear' }}
+              />
+            </svg>
+            <span className="absolute font-display text-[22px] font-bold tabular-nums select-none">{display}</span>
+          </div>
+          <div className="flex w-full items-center justify-center gap-2">
+            <Button type="button" variant="outline" size="icon" onClick={reset} className="h-9 w-9 cursor-pointer" aria-label="Reiniciar">
+              <RotateCcw className="h-3.5 w-3.5" />
             </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              onClick={isRunning ? pause : resume}
-              className="h-11 w-11 cursor-pointer"
-              aria-label={isRunning ? 'Pausar' : 'Reanudar'}
-            >
-              {isRunning || secondsLeft === 0 ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+            <Button type="button" variant="outline" size="icon" onClick={isRunning ? pause : resume} className="h-9 w-9 cursor-pointer" aria-label={isRunning ? 'Pausar' : 'Reanudar'}>
+              {isRunning || secondsLeft === 0 ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
             </Button>
-            <Button
-              type="button"
-              variant="default"
-              size="icon"
-              onClick={handleComplete}
-              className="h-11 w-11 cursor-pointer"
-              aria-label="Marcar como listo"
-            >
-              <Check className="h-4 w-4" />
+            <Button type="button" variant="default" size="icon" onClick={handleComplete} className="h-9 w-9 cursor-pointer" aria-label="Marcar como listo">
+              <Check className="h-3.5 w-3.5" />
             </Button>
           </div>
-          <p className="text-muted-foreground mt-2 text-center text-xs select-none">
-            Mantén presionado para mover · ✓ para cerrar
-          </p>
-        </>
+        </div>
       ) : (
         /* Setup mode */
         <>
-          <div className="mt-3 flex gap-2">
+          <div className="mt-3 flex gap-1.5">
             {PRESETS.map((p) => (
-              <Button
+              <button
                 key={p.label}
                 type="button"
-                variant="outline"
-                size="sm"
                 onClick={() => handlePreset(p.seconds)}
-                className="flex-1 cursor-pointer px-1"
+                className="flex-1 cursor-pointer rounded-full border border-border py-1 text-xs font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary"
               >
                 {p.label}
-              </Button>
+              </button>
             ))}
           </div>
           <div className="mt-3 flex items-center gap-2">
@@ -187,9 +175,6 @@ export function GlobalCountdownTimerOverlay({ onClose }: GlobalCountdownTimerOve
               Iniciar
             </Button>
           </div>
-          <p className="text-muted-foreground mt-2 text-center text-xs select-none">
-            Mantén presionado para mover
-          </p>
         </>
       )}
     </div>

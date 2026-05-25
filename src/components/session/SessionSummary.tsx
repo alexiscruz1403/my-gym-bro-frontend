@@ -127,7 +127,7 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
         {/* Fixed header: icon + title + stats + dots */}
         <div className="flex-shrink-0 px-4 pt-8 pb-4 space-y-4">
           <div className="flex flex-col items-center gap-2 text-center">
-            <CheckCircle className="h-16 w-16 text-green-500" />
+            <CheckCircle className="h-16 w-16 text-accent" />
             <h1 className="font-display text-3xl font-bold">
               {session.status === 'completed' ? t('session.summary.titleCompleted') : t('session.summary.titleSaved')}
             </h1>
@@ -136,19 +136,19 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
 
           {/* Stats row */}
           <div className="grid grid-cols-3 gap-3">
-            <div className="rounded-xl border bg-card p-3 text-center">
+            <div className="rounded-xl border bg-card p-3 text-center shadow-1">
               <Clock className="text-primary mx-auto mb-1 h-5 w-5" />
               <p className="font-display text-lg font-bold">
                 {formatDuration(session.durationSeconds ?? 0)}
               </p>
               <p className="text-muted-foreground text-xs">{t('session.summary.duration')}</p>
             </div>
-            <div className="rounded-xl border bg-card p-3 text-center">
+            <div className="rounded-xl border bg-card p-3 text-center shadow-1">
               <Dumbbell className="text-primary mx-auto mb-1 h-5 w-5" />
               <p className="font-display text-lg font-bold">{completedExercises.length}</p>
               <p className="text-muted-foreground text-xs">{t('session.summary.exercises')}</p>
             </div>
-            <div className="rounded-xl border bg-card p-3 text-center">
+            <div className="rounded-xl border bg-card p-3 text-center shadow-1">
               <BarChart2 className="text-primary mx-auto mb-1 h-5 w-5" />
               <p className="font-display text-lg font-bold">{totalSets}</p>
               <p className="text-muted-foreground text-xs">{t('session.summary.sets')}</p>
@@ -280,7 +280,7 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
                             <p className="truncate text-sm font-semibold">{item.exerciseName}</p>
                           </div>
                           {isRankUp && (
-                            <span className="shrink-0 rounded-full bg-green-500/15 px-2 py-0.5 text-[10px] font-semibold text-green-600">
+                            <span className="shrink-0 rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-semibold text-accent uppercase tracking-[0.06em]">
                               {t('session.summary.rankUp')}
                             </span>
                           )}
