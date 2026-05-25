@@ -85,7 +85,15 @@ apiClient.interceptors.response.use(
       logout();
       processQueue(refreshError);
       if (typeof window !== 'undefined') {
-        window.location.href = '/login';
+        // Use fetch (not apiClient) to avoid re-triggering this interceptor.
+        // The backend must clear the httpOnly access_token cookie; otherwise
+        // the middleware sees it and redirects the user away from /login in production.
+        fetch(`${apiClient.defaults.baseURL}${API_ROUTES.auth.logout}`, {
+          method: 'POST',
+          credentials: 'include',
+        }).finally(() => {
+          window.location.href = '/login';
+        });
       }
       return Promise.reject(refreshError);
     } finally {
