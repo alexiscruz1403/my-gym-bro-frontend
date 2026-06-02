@@ -9,7 +9,8 @@ export const planNameSchema = z.object({
 });
 
 export const exerciseSideSchema = z.object({
-  reps: z.number().int().min(1, 'Reps must be at least 1').optional(),
+  minReps: z.number().int().min(1, 'Reps must be at least 1').optional(),
+  maxReps: z.number().int().min(1, 'Reps must be at least 1').optional(),
   duration: z.number().int().min(1, 'Duration must be at least 1 second').optional(),
   weight: z.number().min(0, 'Weight cannot be negative').optional(),
 });
@@ -17,7 +18,8 @@ export const exerciseSideSchema = z.object({
 export const exerciseConfigSchema = z
   .object({
     sets: z.number({ message: 'Sets is required' }).min(1, 'At least 1 set is required'),
-    reps: z.number().min(1, 'Reps must be at least 1').optional(),
+    minReps: z.number().min(1, 'Reps must be at least 1').optional(),
+    maxReps: z.number().min(1, 'Reps must be at least 1').optional(),
     duration: z.number().min(1, 'Duration must be at least 1 second').optional(),
     weight: z.number().min(0, 'Weight cannot be negative').optional(),
     rest: z.number({ message: 'Rest is required' }).min(0, 'Rest cannot be negative'),
@@ -27,20 +29,20 @@ export const exerciseConfigSchema = z
   })
   .refine(
     (data) =>
-      data.reps !== undefined ||
+      data.minReps !== undefined ||
       data.duration !== undefined ||
       data.left !== undefined ||
       data.right !== undefined,
     {
       message: 'Either reps or duration must be specified',
-      path: ['reps'],
+      path: ['minReps'],
     },
   )
   .refine(
-    (data) => !(data.reps !== undefined && data.duration !== undefined),
+    (data) => !(data.minReps !== undefined && data.duration !== undefined),
     {
       message: 'Specify either reps or duration, not both',
-      path: ['reps'],
+      path: ['minReps'],
     },
   );
 

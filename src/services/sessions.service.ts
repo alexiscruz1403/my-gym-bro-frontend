@@ -39,7 +39,7 @@ async function buildLocalSession(
         supersetGroupId: config.supersetGroupId,
         weightUnit: config.weightUnit,
         plannedSets: config.sets,
-        plannedReps: config.reps,
+        plannedReps: config.maxReps ?? config.minReps,
         plannedDuration: config.duration,
         plannedWeight: config.weight,
         plannedRest: config.rest,

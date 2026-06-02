@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Pagination } from '@/components/shared/Pagination';
 import { AdminPaymentLogRow } from './AdminPaymentLogRow';
@@ -32,19 +31,29 @@ export function AdminPaymentLogList() {
     fetchPage(1);
   }, [fetchPage]);
 
+  const selectCls = 'h-10 border-[1.5px] border-border rounded-2xl bg-card text-foreground text-[13px] px-2.5 outline-none cursor-pointer focus:border-primary transition-colors';
+
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-3">
+      {/* Section head */}
+      <div className="flex items-center justify-between gap-2.5">
+        <span className="font-display text-[15px] font-semibold text-foreground tracking-[0.01em]">
+          {t('admin.payments.title', { defaultValue: 'Historial de transacciones' })}
+        </span>
+      </div>
+
+      {/* Filter bar */}
       <div className="flex flex-wrap gap-2">
-        <Input
+        <input
           value={userId}
           onChange={(e) => handleUserIdFilter(e.target.value)}
           placeholder={t('admin.payments.userIdPlaceholder')}
-          className="max-w-xs font-mono"
+          className="h-10 flex-1 min-w-40 border-[1.5px] border-border rounded-2xl bg-card text-foreground text-[13px] font-mono px-3 outline-none focus:border-primary transition-colors placeholder:text-muted-foreground/60 placeholder:font-sans"
         />
         <select
           value={plan}
           onChange={(e) => handlePlanFilter(e.target.value as SubscriptionPlan | '')}
-          className="rounded-lg border border-input bg-background px-3 py-2 text-sm"
+          className={selectCls}
         >
           {PLAN_VALUES.map((v) => (
             <option key={v} value={v}>
@@ -55,7 +64,7 @@ export function AdminPaymentLogList() {
         <select
           value={status}
           onChange={(e) => handleStatusFilter(e.target.value as SubscriptionStatus | '')}
-          className="rounded-lg border border-input bg-background px-3 py-2 text-sm"
+          className={selectCls}
         >
           {STATUS_VALUES.map((v) => (
             <option key={v} value={v}>
@@ -66,19 +75,19 @@ export function AdminPaymentLogList() {
       </div>
 
       {isLoading && (
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="h-16 w-full rounded-lg" />
+            <Skeleton key={i} className="h-16 w-full rounded-2xl" />
           ))}
         </div>
       )}
 
       {!isLoading && logs.length === 0 && (
-        <p className="text-sm text-muted-foreground">{t('admin.payments.empty')}</p>
+        <p className="text-[13px] text-muted-foreground">{t('admin.payments.empty')}</p>
       )}
 
       {!isLoading && logs.length > 0 && (
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           {logs.map((log) => (
             <AdminPaymentLogRow key={log._id} log={log} />
           ))}

@@ -85,8 +85,6 @@ function SortableExerciseItem({
     nextEx?.supersetGroupId &&
     ex.supersetGroupId === nextEx.supersetGroupId;
 
-    console.log('Rendering exercise item', { exerciseName: ex.exerciseName, gifUrl: ex.gifUrl });
-
   return (
     <div ref={setNodeRef} style={style}>
       {isEditing ? (
@@ -126,8 +124,10 @@ function SortableExerciseItem({
             {ex.bilateral === false ? (
               <p className="text-muted-foreground text-xs">
                 {ex.sets} ×{' '}
-                {ex.left?.reps !== undefined && ex.left?.reps !== null
-                  ? `${ex.left.reps} reps`
+                {ex.left?.minReps !== undefined && ex.left?.minReps !== null
+                  ? ex.left?.maxReps !== undefined
+                    ? `${ex.left.minReps}-${ex.left.maxReps} reps`
+                    : `${ex.left.minReps} reps`
                   : ex.left?.duration !== undefined && ex.left?.duration !== null
                     ? `${ex.left.duration}s`
                     : 'L/R'}{' '}
@@ -137,8 +137,10 @@ function SortableExerciseItem({
             ) : (
               <p className="text-muted-foreground text-xs">
                 {ex.sets} ×{' '}
-                {ex.reps !== undefined && ex.reps !== null
-                  ? `${ex.reps} reps`
+                {ex.minReps !== undefined && ex.minReps !== null
+                  ? ex.maxReps !== undefined
+                    ? `${ex.minReps}-${ex.maxReps} reps`
+                    : `${ex.minReps} reps`
                   : ex.duration !== undefined && ex.duration !== null
                     ? `${ex.duration}s`
                     : '—'}
@@ -211,9 +213,9 @@ export function DayExerciseList({
         bilateral: exercise.bilateral,
       };
       if (exercise.bilateral === false) {
-        onAdd({ ...base, left: { reps: 10 }, right: { reps: 10 } });
+        onAdd({ ...base, left: { minReps: 10 }, right: { minReps: 10 } });
       } else {
-        onAdd({ ...base, reps: 10 });
+        onAdd({ ...base, minReps: 10 });
       }
     }
   };

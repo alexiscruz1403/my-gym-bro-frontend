@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Pencil, Trash2 } from 'lucide-react';
 import { ExerciseGifThumbnail } from '@/components/shared/ExerciseGifThumbnail';
 import type { Exercise } from '@/types/domain.types';
 
@@ -17,15 +16,11 @@ export function AdminExerciseRow({ exercise, onEdit, onDelete }: AdminExerciseRo
 
   const handleDelete = async () => {
     setBusy(true);
-    try {
-      await onDelete(exercise.id);
-    } finally {
-      setBusy(false);
-    }
+    try { await onDelete(exercise.id); } finally { setBusy(false); }
   };
 
   return (
-    <div className="flex items-center justify-between gap-3 rounded-lg border bg-card px-4 py-3">
+    <div className="flex items-center gap-3 bg-card border border-border rounded-2xl px-3.5 py-3 shadow-sm">
       <ExerciseGifThumbnail
         gifUrl={exercise.gifUrl}
         exerciseName={exercise.name}
@@ -33,30 +28,39 @@ export function AdminExerciseRow({ exercise, onEdit, onDelete }: AdminExerciseRo
         size="sm"
       />
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium">{exercise.name}</p>
-        <div className="mt-1 flex flex-wrap gap-1">
-          <Badge variant="outline" className="text-xs">{exercise.trackingType}</Badge>
-          <Badge variant="secondary" className="text-xs">{exercise.loadType}</Badge>
+        <p className="text-[14px] font-semibold text-foreground truncate">{exercise.name}</p>
+        <div className="flex gap-1 flex-wrap mt-1.25">
+          <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-muted/60 text-muted-foreground border border-border">
+            {exercise.trackingType}
+          </span>
+          <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-muted/60 text-muted-foreground border border-border">
+            {exercise.loadType}
+          </span>
           {exercise.musclesPrimary.slice(0, 2).map((m) => (
-            <Badge key={m} variant="outline" className="text-xs capitalize">
+            <span key={m} className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-muted/60 text-muted-foreground border border-border capitalize">
               {m.replace('_', ' ')}
-            </Badge>
+            </span>
           ))}
         </div>
       </div>
-      <div className="flex items-center gap-2 shrink-0">
-        <Button size="sm" variant="outline" onClick={() => onEdit(exercise)} className="cursor-pointer min-h-9 text-xs">
-          Edit
-        </Button>
-        <Button
-          size="sm"
-          variant="destructive"
+      <div className="flex items-center gap-1.5 shrink-0">
+        <button
+          type="button"
+          onClick={() => onEdit(exercise)}
+          className="w-8 h-8 rounded-lg border border-border bg-transparent text-muted-foreground hover:bg-muted/60 hover:text-foreground cursor-pointer flex items-center justify-center transition-colors"
+          title="Editar"
+        >
+          <Pencil className="h-3.5 w-3.5" />
+        </button>
+        <button
+          type="button"
           disabled={busy}
           onClick={handleDelete}
-          className="min-h-9 text-xs cursor-pointer"
+          className="w-8 h-8 rounded-lg border border-border bg-transparent text-muted-foreground hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 cursor-pointer flex items-center justify-center transition-colors disabled:opacity-50"
+          title="Eliminar"
         >
-          Delete
-        </Button>
+          <Trash2 className="h-3.5 w-3.5" />
+        </button>
       </div>
     </div>
   );

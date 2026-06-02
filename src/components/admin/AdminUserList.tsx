@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
+import { Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Pagination } from '@/components/shared/Pagination';
 import { AdminUserRow } from './AdminUserRow';
@@ -32,19 +32,25 @@ export function AdminUserList() {
     fetchPage(1);
   }, [fetchPage]);
 
+  const selectCls = 'h-10 border-[1.5px] border-border rounded-2xl bg-card text-foreground text-[13px] px-2.5 outline-none cursor-pointer focus:border-primary transition-colors';
+
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-3">
+      {/* Filter bar */}
       <div className="flex flex-wrap gap-2">
-        <Input
-          value={username}
-          onChange={(e) => handleUsernameSearch(e.target.value)}
-          placeholder={t('admin.users.searchPlaceholder')}
-          className="max-w-xs"
-        />
+        <div className="relative flex-1 min-w-40">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          <input
+            value={username}
+            onChange={(e) => handleUsernameSearch(e.target.value)}
+            placeholder={t('admin.users.searchPlaceholder')}
+            className="w-full h-10 border-[1.5px] border-border rounded-2xl bg-card text-foreground text-[13px] pl-9 pr-3 outline-none focus:border-primary transition-colors placeholder:text-muted-foreground/60"
+          />
+        </div>
         <select
           value={role}
           onChange={(e) => handleRoleFilter(e.target.value as typeof role)}
-          className="rounded-lg border border-input bg-background px-3 py-2 text-sm"
+          className={selectCls}
         >
           <option value="">{t('admin.users.allRoles')}</option>
           <option value="user">User</option>
@@ -53,7 +59,7 @@ export function AdminUserList() {
         <select
           value={membershipTier}
           onChange={(e) => handleTierFilter(e.target.value as typeof membershipTier)}
-          className="rounded-lg border border-input bg-background px-3 py-2 text-sm"
+          className={selectCls}
         >
           <option value="">{t('admin.users.allMemberships')}</option>
           <option value="free">Free</option>
@@ -62,15 +68,15 @@ export function AdminUserList() {
       </div>
 
       {isLoading && (
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="h-16 w-full rounded-lg" />
+            <Skeleton key={i} className="h-18 w-full rounded-2xl" />
           ))}
         </div>
       )}
 
       {!isLoading && (
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           {users.map((user) => (
             <AdminUserRow
               key={user._id}

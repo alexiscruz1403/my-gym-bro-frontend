@@ -35,6 +35,16 @@ export function formatSide(
   weightUnit: 'kg' | 'lbs',
 ): string {
   if (!side) return '—';
+  // Plan config sides use minReps/maxReps; session/logged sides use reps
+  if (side.minReps !== undefined) {
+    const repsStr =
+      side.maxReps !== undefined
+        ? `${side.minReps}-${side.maxReps} reps`
+        : `${side.minReps} reps`;
+    const parts = [repsStr];
+    if (side.weight !== undefined && side.weight > 0) parts.push(`${side.weight} ${weightUnit}`);
+    return parts.join(' · ');
+  }
   return formatMetricAndWeight(side.reps, side.duration, side.weight, weightUnit);
 }
 

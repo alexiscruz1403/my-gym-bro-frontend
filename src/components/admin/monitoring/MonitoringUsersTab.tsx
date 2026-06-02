@@ -16,12 +16,12 @@ interface StatCardProps {
 
 function StatCard({ icon, label, value, iconColor = 'text-muted-foreground', valueColor = 'text-foreground' }: StatCardProps) {
   return (
-    <div className="rounded-xl border bg-card p-5 flex flex-col gap-3">
-      <div className={`flex items-center gap-2 ${iconColor}`}>
+    <div className="rounded-2xl border border-border bg-card p-3.5 shadow-sm flex flex-col gap-2">
+      <div className={`flex items-center gap-1.5 ${iconColor}`}>
         {icon}
-        <span className="text-sm font-medium text-muted-foreground">{label}</span>
+        <span className="text-[12px] font-medium text-muted-foreground">{label}</span>
       </div>
-      <p className={`text-3xl font-bold ${valueColor}`}>{value.toLocaleString()}</p>
+      <p className={`font-display text-[28px] font-bold leading-none ${valueColor}`}>{value.toLocaleString()}</p>
     </div>
   );
 }
@@ -36,9 +36,9 @@ export function MonitoringUsersTab() {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
         {Array.from({ length: 3 }).map((_, i) => (
-          <Skeleton key={i} className="h-32 w-full rounded-xl" />
+          <Skeleton key={i} className="h-24 w-full rounded-2xl" />
         ))}
       </div>
     );
@@ -47,7 +47,7 @@ export function MonitoringUsersTab() {
   if (!data) return null;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
       <StatCard
         icon={<Users size={18} />}
         label={t('monitoring.users.active')}

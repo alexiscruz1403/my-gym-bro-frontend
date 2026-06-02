@@ -69,7 +69,8 @@ export interface ExerciseListResponse {
 export interface CreatePlanExercise {
   exerciseId: string;
   sets: number;
-  reps?: number;
+  minReps?: number;
+  maxReps?: number;
   duration?: number;
   weight?: number;
   weightUnit?: 'kg' | 'lbs';

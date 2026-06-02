@@ -103,6 +103,8 @@ export interface Exercise {
 
 export interface ExerciseSide {
   reps?: number;
+  minReps?: number;
+  maxReps?: number;
   duration?: number;
   weight?: number;
 }
@@ -111,8 +113,8 @@ export interface ExerciseConfig {
   exerciseId: string;
   exerciseName: string;
   sets: number;
-  reps?: number;
-  repsMax?: number;
+  minReps?: number;
+  maxReps?: number;
   duration?: number;
   gifUrl?: string;
   weight?: number;
