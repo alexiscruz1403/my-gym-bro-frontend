@@ -56,7 +56,8 @@ export function CreatePlanWizard() {
       exercises: (exercisesByDay[day] ?? []).map((ex) => ({
         exerciseId: ex.exerciseId,
         sets: ex.sets,
-        reps: ex.reps,
+        minReps: ex.minReps,
+        maxReps: ex.maxReps,
         duration: ex.duration,
         weight: ex.weight,
         gifUrl: ex.gifUrl,

@@ -57,8 +57,10 @@ export function WizardStep4Review({
                       const metric =
                         ex.bilateral === false
                           ? 'L/R'
-                          : ex.reps !== undefined
-                            ? `${ex.reps}reps`
+                          : ex.minReps !== undefined
+                            ? ex.maxReps !== undefined
+                              ? `${ex.minReps}-${ex.maxReps}reps`
+                              : `${ex.minReps}reps`
                             : `${ex.duration}s`;
                       return (
                         <li key={i} className="flex items-center gap-2">

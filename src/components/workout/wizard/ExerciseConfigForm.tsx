@@ -24,14 +24,16 @@ interface ExerciseConfigFormProps {
 type MetricMode = 'reps' | 'duration';
 
 interface SideState {
-  reps: string;
+  minReps: string;
+  maxReps: string;
   duration: string;
   weight: string;
 }
 
 function initialSideState(side: ExerciseSide | null | undefined, mode: MetricMode): SideState {
   return {
-    reps: mode === 'reps' ? String(side?.reps ?? 10) : '',
+    minReps: mode === 'reps' ? String(side?.minReps ?? 10) : '',
+    maxReps: mode === 'reps' ? String(side?.maxReps ?? '') : '',
     duration: mode === 'duration' ? String(side?.duration ?? 30) : '',
     weight: String(side?.weight ?? 0),
   };
@@ -41,8 +43,10 @@ function parseSide(state: SideState, mode: MetricMode): ExerciseSide {
   const weight = parseFloat(state.weight);
   const result: ExerciseSide = {};
   if (mode === 'reps') {
-    const r = parseInt(state.reps, 10);
-    if (!isNaN(r)) result.reps = r;
+    const min = parseInt(state.minReps, 10);
+    const max = parseInt(state.maxReps, 10);
+    if (!isNaN(min)) result.minReps = min;
+    if (!isNaN(max)) result.maxReps = max;
   } else {
     const d = parseInt(state.duration, 10);
     if (!isNaN(d)) result.duration = d;
@@ -88,9 +92,13 @@ export function ExerciseConfigForm({
     resolver: zodResolver(exerciseConfigSchema),
     defaultValues: {
       sets: defaultValues?.sets ?? 3,
-      reps:
+      minReps:
         bilateral && defaultValues?.duration === undefined
-          ? (defaultValues?.reps ?? 10)
+          ? (defaultValues?.minReps ?? 10)
+          : undefined,
+      maxReps:
+        bilateral && defaultValues?.duration === undefined
+          ? (defaultValues?.maxReps ?? undefined)
           : undefined,
       duration: bilateral ? defaultValues?.duration : undefined,
       weight: bilateral ? (defaultValues?.weight ?? 0) : undefined,
@@ -111,21 +119,23 @@ export function ExerciseConfigForm({
     if (bilateral) {
       if (mode === 'reps') {
         setValue('duration', undefined);
-        setValue('reps', 10);
+        setValue('minReps', 10);
+        setValue('maxReps', undefined);
       } else {
-        setValue('reps', undefined);
+        setValue('minReps', undefined);
+        setValue('maxReps', undefined);
         setValue('duration', 30);
       }
     } else {
       setLeftState((s) =>
         mode === 'reps'
-          ? { ...s, reps: s.reps || '10', duration: '' }
-          : { ...s, duration: s.duration || '30', reps: '' },
+          ? { ...s, minReps: s.minReps || '10', maxReps: s.maxReps || '', duration: '' }
+          : { ...s, duration: s.duration || '30', minReps: '', maxReps: '' },
       );
       setRightState((s) =>
         mode === 'reps'
-          ? { ...s, reps: s.reps || '10', duration: '' }
-          : { ...s, duration: s.duration || '30', reps: '' },
+          ? { ...s, minReps: s.minReps || '10', maxReps: s.maxReps || '', duration: '' }
+          : { ...s, duration: s.duration || '30', minReps: '', maxReps: '' },
       );
     }
     setMetricMode(mode);
@@ -137,7 +147,8 @@ export function ExerciseConfigForm({
     if (bilateral) {
       onSave({
         sets: values.sets,
-        reps: metricMode === 'reps' ? values.reps : undefined,
+        minReps: metricMode === 'reps' ? values.minReps : undefined,
+        maxReps: metricMode === 'reps' ? values.maxReps : undefined,
         duration: metricMode === 'duration' ? values.duration : undefined,
         weight: values.weight,
         weightUnit,
@@ -151,7 +162,7 @@ export function ExerciseConfigForm({
 
     const left = parseSide(leftState, metricMode);
     const right = parseSide(rightState, metricMode);
-    const metricKey = metricMode === 'reps' ? 'reps' : 'duration';
+    const metricKey = metricMode === 'reps' ? 'minReps' : 'duration';
     if (left[metricKey] === undefined || right[metricKey] === undefined) {
       setSideError(
         metricMode === 'reps'
@@ -176,40 +187,73 @@ export function ExerciseConfigForm({
   const renderSidePanel = (label: string, state: SideState, setState: (next: SideState) => void) => (
     <div className="rounded-lg border p-3 space-y-2">
       <p className="text-xs font-medium">{label}</p>
-      <div className="grid grid-cols-2 gap-2">
-        <div className="space-y-1">
-          <label className="text-[10px] text-muted-foreground">
-            {metricMode === 'reps' ? 'Reps' : 'Duration (s)'}
-          </label>
-          <Input
-            type="number"
-            inputMode="numeric"
-            min={1}
-            className="min-h-11"
-            value={metricMode === 'reps' ? state.reps : state.duration}
-            onChange={(e) =>
-              setState(
-                metricMode === 'reps'
-                  ? { ...state, reps: e.target.value }
-                  : { ...state, duration: e.target.value },
-              )
-            }
-          />
+      {metricMode === 'reps' ? (
+        <div className="grid grid-cols-2 gap-2">
+          <div className="space-y-1">
+            <label className="text-[10px] text-muted-foreground">Min Reps</label>
+            <Input
+              type="number"
+              inputMode="numeric"
+              min={1}
+              className="min-h-11"
+              value={state.minReps}
+              onChange={(e) => setState({ ...state, minReps: e.target.value })}
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-[10px] text-muted-foreground">Max Reps (optional)</label>
+            <Input
+              type="number"
+              inputMode="numeric"
+              min={1}
+              className="min-h-11"
+              placeholder="—"
+              value={state.maxReps}
+              onChange={(e) => setState({ ...state, maxReps: e.target.value })}
+            />
+          </div>
+          <div className="space-y-1 col-span-2">
+            <label className="text-[10px] text-muted-foreground">Weight ({weightUnit})</label>
+            <Input
+              type="number"
+              inputMode="decimal"
+              min={0}
+              step={0.5}
+              className="min-h-11"
+              placeholder="0"
+              value={state.weight}
+              onChange={(e) => setState({ ...state, weight: e.target.value })}
+            />
+          </div>
         </div>
-        <div className="space-y-1">
-          <label className="text-[10px] text-muted-foreground">Weight ({weightUnit})</label>
-          <Input
-            type="number"
-            inputMode="decimal"
-            min={0}
-            step={0.5}
-            className="min-h-11"
-            placeholder="0"
-            value={state.weight}
-            onChange={(e) => setState({ ...state, weight: e.target.value })}
-          />
+      ) : (
+        <div className="grid grid-cols-2 gap-2">
+          <div className="space-y-1">
+            <label className="text-[10px] text-muted-foreground">Duration (s)</label>
+            <Input
+              type="number"
+              inputMode="numeric"
+              min={1}
+              className="min-h-11"
+              value={state.duration}
+              onChange={(e) => setState({ ...state, duration: e.target.value })}
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-[10px] text-muted-foreground">Weight ({weightUnit})</label>
+            <Input
+              type="number"
+              inputMode="decimal"
+              min={0}
+              step={0.5}
+              className="min-h-11"
+              placeholder="0"
+              value={state.weight}
+              onChange={(e) => setState({ ...state, weight: e.target.value })}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 
@@ -270,78 +314,133 @@ export function ExerciseConfigForm({
       </div>
 
       {bilateral ? (
-        <div className="grid grid-cols-2 gap-3">
-          <div className="space-y-1">
-            <label htmlFor="sets" className="text-xs font-medium">Sets</label>
-            <Input
-              id="sets"
-              type="number"
-              inputMode="numeric"
-              min={1}
-              className="min-h-11"
-              {...register('sets', { valueAsNumber: true })}
-            />
-            {errors.sets && (
-              <p className="text-destructive text-xs">{errors.sets.message}</p>
-            )}
-          </div>
+        <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label htmlFor="sets" className="text-xs font-medium">Sets</label>
+              <Input
+                id="sets"
+                type="number"
+                inputMode="numeric"
+                min={1}
+                className="min-h-11"
+                {...register('sets', { valueAsNumber: true })}
+              />
+              {errors.sets && (
+                <p className="text-destructive text-xs">{errors.sets.message}</p>
+              )}
+            </div>
 
-          <div className="space-y-1">
-            <label htmlFor="metric" className="text-xs font-medium">
-              {metricMode === 'reps' ? 'Reps' : 'Duration (s)'}
-            </label>
             {metricMode === 'reps' ? (
-              <Input
-                id="metric"
-                type="number"
-                inputMode="numeric"
-                min={1}
-                className="min-h-11"
-                {...register('reps', { valueAsNumber: true })}
-              />
+              <div className="space-y-1">
+                <label htmlFor="minReps" className="text-xs font-medium">Min Reps</label>
+                <Input
+                  id="minReps"
+                  type="number"
+                  inputMode="numeric"
+                  min={1}
+                  className="min-h-11"
+                  {...register('minReps', { valueAsNumber: true })}
+                />
+                {errors.minReps && (
+                  <p className="text-destructive text-xs">{errors.minReps.message}</p>
+                )}
+              </div>
             ) : (
-              <Input
-                id="metric"
-                type="number"
-                inputMode="numeric"
-                min={1}
-                className="min-h-11"
-                {...register('duration', { valueAsNumber: true })}
-              />
-            )}
-            {errors.reps && (
-              <p className="text-destructive text-xs">{errors.reps.message}</p>
+              <div className="space-y-1">
+                <label htmlFor="duration" className="text-xs font-medium">Duration (s)</label>
+                <Input
+                  id="duration"
+                  type="number"
+                  inputMode="numeric"
+                  min={1}
+                  className="min-h-11"
+                  {...register('duration', { valueAsNumber: true })}
+                />
+              </div>
             )}
           </div>
 
-          <div className="space-y-1">
-            <label htmlFor="weight" className="text-xs font-medium">Weight</label>
-            <Input
-              id="weight"
-              type="number"
-              inputMode="decimal"
-              min={0}
-              step={0.5}
-              className="min-h-11"
-              {...register('weight', { valueAsNumber: true })}
-              placeholder="0"
-            />
-          </div>
+          {metricMode === 'reps' && (
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label htmlFor="maxReps" className="text-xs font-medium">Max Reps <span className="text-muted-foreground font-normal">(optional)</span></label>
+                <Input
+                  id="maxReps"
+                  type="number"
+                  inputMode="numeric"
+                  min={1}
+                  className="min-h-11"
+                  placeholder="—"
+                  {...register('maxReps', { valueAsNumber: true })}
+                />
+              </div>
+              <div className="space-y-1">
+                <label htmlFor="weight" className="text-xs font-medium">Weight</label>
+                <Input
+                  id="weight"
+                  type="number"
+                  inputMode="decimal"
+                  min={0}
+                  step={0.5}
+                  className="min-h-11"
+                  {...register('weight', { valueAsNumber: true })}
+                  placeholder="0"
+                />
+              </div>
+            </div>
+          )}
 
-          <div className="space-y-1">
-            <label htmlFor="rest" className="text-xs font-medium">Rest (s)</label>
-            <Input
-              id="rest"
-              type="number"
-              inputMode="numeric"
-              min={0}
-              className="min-h-11"
-              {...register('rest', { valueAsNumber: true })}
-            />
-            {errors.rest && (
-              <p className="text-destructive text-xs">{errors.rest.message}</p>
-            )}
-          </div>
+          {metricMode === 'duration' && (
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label htmlFor="weight" className="text-xs font-medium">Weight</label>
+                <Input
+                  id="weight"
+                  type="number"
+                  inputMode="decimal"
+                  min={0}
+                  step={0.5}
+                  className="min-h-11"
+                  {...register('weight', { valueAsNumber: true })}
+                  placeholder="0"
+                />
+              </div>
+              <div className="space-y-1">
+                <label htmlFor="rest" className="text-xs font-medium">Rest (s)</label>
+                <Input
+                  id="rest"
+                  type="number"
+                  inputMode="numeric"
+                  min={0}
+                  className="min-h-11"
+                  {...register('rest', { valueAsNumber: true })}
+                />
+                {errors.rest && (
+                  <p className="text-destructive text-xs">{errors.rest.message}</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {metricMode === 'reps' && (
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label htmlFor="rest" className="text-xs font-medium">Rest (s)</label>
+                <Input
+                  id="rest"
+                  type="number"
+                  inputMode="numeric"
+                  min={0}
+                  className="min-h-11"
+                  {...register('rest', { valueAsNumber: true })}
+                />
+                {errors.rest && (
+                  <p className="text-destructive text-xs">{errors.rest.message}</p>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <>

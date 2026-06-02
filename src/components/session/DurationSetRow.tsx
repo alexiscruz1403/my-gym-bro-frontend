@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Play, RotateCcw, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { playBeep } from '@/lib/audio';
@@ -16,6 +17,7 @@ interface DurationSetRowProps {
   plannedRight?: ExerciseSide | null;
   loggedSet?: SessionSet;
   onComplete: (setIndex: number, payload: SetCompletePayload & { duration?: number }) => void;
+  onChangeDuration?: (seconds: number) => void;
 }
 
 function useCountdown(target: number) {
@@ -83,8 +85,21 @@ export function DurationSetRow({
   plannedRight,
   loggedSet,
   onComplete,
+  onChangeDuration,
 }: DurationSetRowProps) {
   const isCompleted = loggedSet?.completed ?? false;
+
+  const [durationInput, setDurationInput] = useState(String(plannedDuration));
+
+  useEffect(() => {
+    setDurationInput(String(plannedDuration));
+  }, [plannedDuration]);
+
+  const handleDurationBlur = () => {
+    const v = parseInt(durationInput, 10);
+    if (!isNaN(v) && v > 0) onChangeDuration?.(v);
+    else setDurationInput(String(plannedDuration));
+  };
 
   const main = useCountdown(plannedDuration);
   const leftTimer = useCountdown(plannedLeft?.duration ?? plannedDuration);
@@ -127,11 +142,24 @@ export function DurationSetRow({
         <span className="w-6 shrink-0 text-center text-xs font-medium text-muted-foreground">
           {label}
         </span>
-        <p className="font-display flex-1 text-center text-xl font-bold tabular-nums">
-          {elapsed !== null
-            ? `${elapsed}s`
-            : formatClock(timer.secondsLeft)}
-        </p>
+        {elapsed === null && !timer.running && timer.secondsLeft === timer.target ? (
+          <div className="flex flex-1 items-center justify-center gap-1">
+            <Input
+              type="number"
+              inputMode="numeric"
+              min={1}
+              value={durationInput}
+              onChange={(e) => setDurationInput(e.target.value)}
+              onBlur={handleDurationBlur}
+              className="w-16 text-center font-display font-bold text-lg min-h-9"
+            />
+            <span className="text-muted-foreground text-xs">s</span>
+          </div>
+        ) : (
+          <p className="font-display flex-1 text-center text-xl font-bold tabular-nums">
+            {elapsed !== null ? `${elapsed}s` : formatClock(timer.secondsLeft)}
+          </p>
+        )}
         <div className="flex items-center gap-1.5">
           {elapsed === null && !timer.running && timer.secondsLeft === timer.target && (
             <Button
@@ -234,13 +262,28 @@ export function DurationSetRow({
         {setIndex + 1}
       </span>
 
-      <p className="font-display flex-1 text-center text-2xl font-bold tabular-nums">
-        {isCompleted
-          ? loggedSet?.duration
-            ? `${loggedSet.duration}s`
-            : 'Done'
-          : formatClock(main.secondsLeft)}
-      </p>
+      {!isCompleted && !main.running && main.secondsLeft === main.target ? (
+        <div className="flex flex-1 items-center justify-center gap-1">
+          <Input
+            type="number"
+            inputMode="numeric"
+            min={1}
+            value={durationInput}
+            onChange={(e) => setDurationInput(e.target.value)}
+            onBlur={handleDurationBlur}
+            className="w-20 text-center font-display font-bold text-xl min-h-11"
+          />
+          <span className="text-muted-foreground text-sm">s</span>
+        </div>
+      ) : (
+        <p className="font-display flex-1 text-center text-2xl font-bold tabular-nums">
+          {isCompleted
+            ? loggedSet?.duration
+              ? `${loggedSet.duration}s`
+              : 'Done'
+            : formatClock(main.secondsLeft)}
+        </p>
+      )}
 
       {!isCompleted && (
         <div className="flex items-center gap-2">

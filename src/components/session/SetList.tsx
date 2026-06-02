@@ -8,9 +8,10 @@ interface SetListProps {
   exercise: SessionExercise;
   onCompleteSet: (setIndex: number, payload: SetCompletePayload & { duration?: number }) => void;
   onUncompleteSet: (setIndex: number, payload: SetCompletePayload) => void;
+  onChangePlannedDuration?: (seconds: number) => void;
 }
 
-export function SetList({ exercise, onCompleteSet, onUncompleteSet }: SetListProps) {
+export function SetList({ exercise, onCompleteSet, onUncompleteSet, onChangePlannedDuration }: SetListProps) {
   const isDuration = exercise.trackingType === 'duration';
   const weightUnit = exercise.weightUnit ?? 'kg';
   const bilateral = exercise.bilateral !== false;
@@ -31,6 +32,7 @@ export function SetList({ exercise, onCompleteSet, onUncompleteSet }: SetListPro
               plannedRight={exercise.plannedRight}
               loggedSet={logged}
               onComplete={onCompleteSet}
+              onChangeDuration={onChangePlannedDuration}
             />
           );
         }
@@ -38,6 +40,7 @@ export function SetList({ exercise, onCompleteSet, onUncompleteSet }: SetListPro
         return (
           <SetRow
             key={`${exercise.exerciseId}-${i}`}
+            exerciseId={exercise.exerciseId}
             setIndex={i}
             bilateral={bilateral}
             plannedReps={exercise.plannedReps}

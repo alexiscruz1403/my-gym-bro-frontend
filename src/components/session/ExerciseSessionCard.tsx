@@ -98,8 +98,6 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
     }
   };
 
-  const completedCount = exercise.sets.filter((s) => s.completed).length;
-  const allDone = completedCount === exercise.plannedSets;
 
   const handleAddSet = async () => {
     try {
@@ -149,11 +147,6 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
                   <Badge variant="secondary" className="gap-1 text-xs">
                     <Link className="h-3 w-3" />
                     {exercise.supersetGroupId}
-                  </Badge>
-                )}
-                {allDone && (
-                  <Badge className="bg-accent/10 text-accent hover:bg-accent/15 text-[11px] uppercase tracking-[0.06em]">
-                    ✓ {t('session.done')}
                   </Badge>
                 )}
               </div>
@@ -210,7 +203,12 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
       )}
 
       {/* Sets */}
-      <SetList exercise={exercise} onCompleteSet={handleCompleteSet} onUncompleteSet={handleUncompleteSet} />
+      <SetList
+        exercise={exercise}
+        onCompleteSet={handleCompleteSet}
+        onUncompleteSet={handleUncompleteSet}
+        onChangePlannedDuration={(seconds) => onModify(exercise.exerciseId, { plannedDuration: seconds })}
+      />
 
       {/* Add / remove sets */}
       <div className="flex items-center justify-between rounded-lg border px-4 py-2">

@@ -20,8 +20,10 @@ export function ExerciseConfigRow({ config, planId, showSwap, showBorder }: Exer
 
   const metric = unilateral
     ? `${config.sets} sets`
-    : config.reps !== undefined && config.reps !== null
-      ? `${config.sets} × ${config.reps} reps`
+    : config.minReps !== undefined && config.minReps !== null
+      ? config.maxReps !== undefined
+        ? `${config.sets} × ${config.minReps}-${config.maxReps} reps`
+        : `${config.sets} × ${config.minReps} reps`
       : config.duration !== undefined && config.duration !== null
         ? `${config.sets} × ${config.duration}s`
         : `${config.sets} sets`;

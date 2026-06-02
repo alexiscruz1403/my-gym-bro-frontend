@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Check, Undo2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import useSessionStore from '@/store/session.store';
 import type { ExerciseSide, SessionSet } from '@/types/domain.types';
 
 export interface SetCompletePayload {
@@ -15,6 +16,7 @@ export interface SetCompletePayload {
 }
 
 interface SetRowProps {
+  exerciseId: string;
   setIndex: number;
   bilateral: boolean;
   plannedReps?: number;
@@ -52,6 +54,7 @@ function parseSide(state: SideInputs): ExerciseSide {
 }
 
 export function SetRow({
+  exerciseId,
   setIndex,
   bilateral,
   plannedReps,
@@ -63,22 +66,47 @@ export function SetRow({
   onComplete,
   onUncomplete,
 }: SetRowProps) {
-  const [weight, setWeight] = useState<string>(
-    String(loggedSet?.weight ?? plannedWeight ?? 0),
+  const draftKey = `${exerciseId}:${setIndex}`;
+  const draft = useSessionStore((s) => s.pendingSetInputs[draftKey]);
+  const setPendingSetInput = useSessionStore((s) => s.setPendingSetInput);
+  const clearPendingSetInput = useSessionStore((s) => s.clearPendingSetInput);
+
+  const [weight, setWeightRaw] = useState<string>(
+    draft?.weight ?? String(loggedSet?.weight ?? plannedWeight ?? 0),
   );
-  const [reps, setReps] = useState<string>(
-    String(loggedSet?.reps ?? plannedReps ?? 0),
+  const [reps, setRepsRaw] = useState<string>(
+    draft?.reps ?? String(loggedSet?.reps ?? plannedReps ?? 0),
   );
-  const [leftInputs, setLeftInputs] = useState<SideInputs>(() =>
-    initialSide(loggedSet?.left, plannedLeft),
-  );
-  const [rightInputs, setRightInputs] = useState<SideInputs>(() =>
-    initialSide(loggedSet?.right, plannedRight),
-  );
+  const [leftInputs, setLeftInputsRaw] = useState<SideInputs>(() => ({
+    weight: draft?.leftWeight ?? String(loggedSet?.left?.weight ?? plannedLeft?.weight ?? 0),
+    reps: draft?.leftReps ?? String(loggedSet?.left?.reps ?? plannedLeft?.reps ?? 0),
+  }));
+  const [rightInputs, setRightInputsRaw] = useState<SideInputs>(() => ({
+    weight: draft?.rightWeight ?? String(loggedSet?.right?.weight ?? plannedRight?.weight ?? 0),
+    reps: draft?.rightReps ?? String(loggedSet?.right?.reps ?? plannedRight?.reps ?? 0),
+  }));
 
   const isCompleted = loggedSet?.completed ?? false;
 
+  const setWeight = (v: string) => {
+    setWeightRaw(v);
+    setPendingSetInput(draftKey, { ...draft, weight: v });
+  };
+  const setReps = (v: string) => {
+    setRepsRaw(v);
+    setPendingSetInput(draftKey, { ...draft, reps: v });
+  };
+  const setLeftInputs = (next: SideInputs) => {
+    setLeftInputsRaw(next);
+    setPendingSetInput(draftKey, { ...draft, leftWeight: next.weight, leftReps: next.reps });
+  };
+  const setRightInputs = (next: SideInputs) => {
+    setRightInputsRaw(next);
+    setPendingSetInput(draftKey, { ...draft, rightWeight: next.weight, rightReps: next.reps });
+  };
+
   const handleComplete = () => {
+    clearPendingSetInput(draftKey);
     if (bilateral) {
       const w = parseFloat(weight);
       const r = parseInt(reps, 10);
@@ -95,6 +123,7 @@ export function SetRow({
   };
 
   const handleUncomplete = () => {
+    clearPendingSetInput(draftKey);
     if (bilateral) {
       const w = parseFloat(weight);
       const r = parseInt(reps, 10);
