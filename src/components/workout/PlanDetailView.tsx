@@ -22,7 +22,6 @@ import {
   Sparkles,
   LayoutList,
   Loader2,
-  AlertTriangle,
   CalendarDays,
   Dumbbell,
 } from 'lucide-react';
@@ -37,7 +36,6 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
   const router = useRouter();
   const { t } = useTranslation();
   const { user } = useAuth();
-  const [confirmingActivate, setConfirmingActivate] = useState(false);
   const [activating, setActivating] = useState(false);
 
   const isPremium =
@@ -59,7 +57,6 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
       toast.error(t('plans.activateError'));
     } finally {
       setActivating(false);
-      setConfirmingActivate(false);
     }
   };
 
@@ -106,58 +103,31 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
       </div>
 
       {/* Actions */}
-      {!confirmingActivate ? (
-        <div className="flex flex-wrap gap-2">
-          {!plan.isActive && (
-            <Button
-              size="sm"
-              onClick={() => setConfirmingActivate(true)}
-              className="h-9 cursor-pointer gap-1.5 px-3.5 text-[13px] font-semibold"
-            >
-              <Zap className="h-3.5 w-3.5" />
-              {t('plans.activate')}
-            </Button>
-          )}
-          {!plan.isAiGenerated && (
-            <Button
-              size="sm"
-              variant="outline"
-              render={<Link href={`/workout/${plan.id}/edit`} />}
-              className="h-9 cursor-pointer gap-1.5 px-3.5 text-[13px] font-semibold"
-            >
-              <Pencil className="h-3.5 w-3.5" />
-              {t('common.edit')}
-            </Button>
-          )}
-          <DeletePlanDialog planName={plan.name} onConfirm={handleDelete} />
-        </div>
-      ) : (
-        <div className="rounded-2xl border border-primary/25 bg-primary/7 p-3.5">
-          <div className="mb-2.5 flex items-start gap-1.5 text-[12px] leading-[1.5] text-primary">
-            <AlertTriangle className="mt-px h-3.5 w-3.5 shrink-0" />
-            <span>{t('plans.confirmActivate.warning')}</span>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setConfirmingActivate(false)}
-              disabled={activating}
-              className="h-9 flex-1 cursor-pointer text-[13px]"
-            >
-              {t('common.cancel')}
-            </Button>
-            <Button
-              size="sm"
-              onClick={handleActivate}
-              disabled={activating}
-              className="h-9 flex-1 cursor-pointer text-[13px]"
-            >
-              {activating ? <Loader2 className="h-4 w-4 animate-spin" /> : t('plans.activate')}
-            </Button>
-          </div>
-        </div>
-      )}
+      <div className="flex flex-wrap gap-2">
+        {!plan.isActive && (
+          <Button
+            size="sm"
+            onClick={handleActivate}
+            disabled={activating}
+            className="h-9 cursor-pointer gap-1.5 px-3.5 text-[13px] font-semibold"
+          >
+            {activating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Zap className="h-3.5 w-3.5" />}
+            {t('plans.activate')}
+          </Button>
+        )}
+        {!plan.isAiGenerated && (
+          <Button
+            size="sm"
+            variant="outline"
+            render={<Link href={`/workout/${plan.id}/edit`} />}
+            className="h-9 cursor-pointer gap-1.5 px-3.5 text-[13px] font-semibold"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+            {t('common.edit')}
+          </Button>
+        )}
+        <DeletePlanDialog planName={plan.name} onConfirm={handleDelete} />
+      </div>
 
       {/* Tabs (AI plans only) */}
       {showProgressionTab ? (
