@@ -201,9 +201,12 @@ export async function activatePlan(id: string): Promise<WorkoutPlan> {
     return plan;
   }
   const { data } = await apiClient.patch<WorkoutPlan>(API_ROUTES.workoutPlans.activate(id));
-  // Update local cache: deactivate all, activate this one
-  await db.plans.toCollection().modify({ isActive: false });
-  await db.plans.put(data);
+  try {
+    await db.plans.toCollection().modify({ isActive: false });
+    await db.plans.update(id, { isActive: true });
+  } catch {
+    // IndexedDB update failed — React Query refetch will reconcile state
+  }
   return data;
 }
 
