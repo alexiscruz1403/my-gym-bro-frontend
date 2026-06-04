@@ -53,9 +53,9 @@ export function PeriodSelector({
             type="button"
             onClick={() => onPeriodChange(p)}
             className={cn(
-              'flex-1 rounded-md py-1.5 text-sm font-medium transition-colors cursor-pointer',
+              'flex-1 rounded-md py-1.5 text-sm font-medium transition-all cursor-pointer',
               period === p
-                ? 'bg-background text-foreground shadow-sm'
+                ? 'bg-primary text-white shadow-sm'
                 : 'text-muted-foreground hover:text-foreground',
             )}
           >
