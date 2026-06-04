@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import { Trophy, CalendarDays, Zap } from 'lucide-react';
+import { Trophy, CalendarDays, Zap, Flame } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -10,12 +10,12 @@ import {
 } from '@/components/ui/sheet';
 
 const LEVEL_COLORS: Record<number, string> = {
-  0: 'oklch(68% .008 248)',
-  1: 'oklch(74% .18 50)',
-  2: 'oklch(71% .19 42)',
-  3: 'oklch(68% .20 35)',
-  4: 'oklch(64% .21 28)',
-  5: 'oklch(78% .17 80)',
+  0: '#B4B4B4',
+  1: '#4CE66C',
+  2: '#33AEFF',
+  3: '#A866FF',
+  4: '#FFA633',
+  5: '#FF5C5C',
 };
 
 interface StreakDetailSheetProps {
@@ -53,9 +53,7 @@ export function StreakDetailSheet({
       <SheetContent side="bottom" className="max-h-[80dvh] overflow-y-auto rounded-t-2xl pb-8">
         <SheetHeader className="pb-2">
           <SheetTitle className="flex items-center gap-2">
-            <span style={{ color }} className="text-xl leading-none">
-              🔥
-            </span>
+            <Flame className="h-5 w-5 shrink-0" style={{ color }} aria-hidden="true" />
             {t('dashboard.streakDetail.title')}
           </SheetTitle>
         </SheetHeader>

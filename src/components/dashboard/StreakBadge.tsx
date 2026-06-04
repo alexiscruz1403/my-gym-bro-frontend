@@ -2,15 +2,16 @@
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flame } from 'lucide-react';
 import { StreakDetailSheet } from './StreakDetailSheet';
 
 const LEVEL_COLORS: Record<number, string> = {
-  0: 'oklch(68% .008 248)',
-  1: 'oklch(74% .18 50)',
-  2: 'oklch(71% .19 42)',
-  3: 'oklch(68% .20 35)',
-  4: 'oklch(64% .21 28)',
-  5: 'oklch(78% .17 80)',
+  0: '#B4B4B4',
+  1: '#4CE66C',
+  2: '#33AEFF',
+  3: '#A866FF',
+  4: '#FFA633',
+  5: '#FF5C5C',
 };
 
 interface StreakBadgeProps {
@@ -40,16 +41,14 @@ export function StreakBadge({
         className="flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2 shadow-1 cursor-pointer"
         aria-label="Ver detalle de racha"
       >
-        <span
-          className="text-[22px] leading-none"
+        <Flame
+          className="h-5.5 w-5.5 shrink-0"
           style={{
             color,
             animation: streakLevel > 0 ? 'flame-badge 1.6s ease-in-out infinite' : undefined,
           }}
           aria-hidden="true"
-        >
-          🔥
-        </span>
+        />
         <div>
           <div
             className="font-display text-[20px] font-bold leading-none tracking-tight tabular-nums"
