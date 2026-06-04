@@ -43,6 +43,7 @@ export function SetList({ exercise, onCompleteSet, onUncompleteSet, onChangePlan
             exerciseId={exercise.exerciseId}
             setIndex={i}
             bilateral={bilateral}
+            plannedMinReps={exercise.plannedMinReps}
             plannedReps={exercise.plannedReps}
             plannedWeight={exercise.plannedWeight}
             plannedLeft={exercise.plannedLeft}

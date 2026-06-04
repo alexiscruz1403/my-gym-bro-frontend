@@ -176,6 +176,7 @@ export interface SessionExercise {
   supersetGroupId?: string | null;
   weightUnit?: 'kg' | 'lbs';
   plannedSets: number;
+  plannedMinReps?: number;
   plannedReps?: number;
   plannedDuration?: number;
   plannedWeight?: number;
@@ -793,6 +794,9 @@ export interface StreakResponse {
   currentStreak: number;
   longestStreak: number;
   lastActivityDate: string | null;
+  streakStartDate: string | null;
+  streakLevel: 0 | 1 | 2 | 3 | 4 | 5;
+  daysUntilNextLevel: number | null;
 }
 
 export interface TermsSection {

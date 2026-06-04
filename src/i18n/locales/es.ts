@@ -206,6 +206,15 @@ const es = {
     myPlans: 'Mis planes',
     aiPlans: 'Planes IA',
     streakDays: 'días',
+    streakDetail: {
+      title: 'Detalle de racha',
+      startDate: 'Inicio de racha',
+      longestStreak: 'Racha más larga',
+      nextLevel: 'Días para siguiente nivel',
+      maxLevel: '¡Nivel máximo!',
+      days: 'días',
+      currentStreak: 'Racha actual',
+    },
     noActivePlan: {
       title: 'Sin plan activo',
       description: 'Creá tu propio plan de entrenamiento o generá uno personalizado con IA.',

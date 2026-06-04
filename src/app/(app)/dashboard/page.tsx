@@ -25,7 +25,7 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const { data: activePlan, loading } = useActivePlan();
   const { data: plans, loading: plansLoading } = usePlans();
-  const { currentStreak, loading: streakLoading } = useStreak();
+  const { currentStreak, longestStreak, streakStartDate, streakLevel, daysUntilNextLevel, loading: streakLoading } = useStreak();
 
   const isFree = !user?.membershipTier || user.membershipTier === 'free';
 
@@ -43,7 +43,15 @@ export default function DashboardPage() {
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">{todayLabel}</p>
           </div>
-          {!streakLoading && <StreakBadge streak={currentStreak} />}
+          {!streakLoading && (
+            <StreakBadge
+              streak={currentStreak}
+              longestStreak={longestStreak}
+              streakStartDate={streakStartDate}
+              streakLevel={streakLevel}
+              daysUntilNextLevel={daysUntilNextLevel}
+            />
+          )}
         </div>
 
         <InstallPwaBanner />

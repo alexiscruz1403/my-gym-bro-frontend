@@ -204,6 +204,15 @@ const en = {
     myPlans: 'My Plans',
     aiPlans: 'AI Plans',
     streakDays: 'days',
+    streakDetail: {
+      title: 'Streak Details',
+      startDate: 'Streak Start',
+      longestStreak: 'Longest Streak',
+      nextLevel: 'Days to Next Level',
+      maxLevel: 'Max Level!',
+      days: 'days',
+      currentStreak: 'Current Streak',
+    },
     noActivePlan: {
       title: 'No active plan',
       description: 'Create your own workout plan or generate a personalized one with AI.',

@@ -14,6 +14,9 @@ export function useStreak() {
     currentStreak: data?.currentStreak ?? 0,
     longestStreak: data?.longestStreak ?? 0,
     lastActivityDate: data?.lastActivityDate ?? null,
+    streakStartDate: data?.streakStartDate ?? null,
+    streakLevel: data?.streakLevel ?? 0,
+    daysUntilNextLevel: data?.daysUntilNextLevel ?? null,
     loading: isLoading,
   };
 }
