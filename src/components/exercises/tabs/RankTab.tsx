@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Info } from 'lucide-react';
+import { RankGuideSheet } from '@/components/guides/RankGuideSheet';
 import { useTranslation } from 'react-i18next';
 import { useExerciseRank } from '@/hooks/useExerciseRank';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -29,6 +30,7 @@ export function RankTab({ exerciseId }: RankTabProps) {
   const isComplete = hasCompletePhysicalData(user);
   const { data, loading, error } = useExerciseRank(exerciseId, isComplete);
   const [showBestMarkInfo, setShowBestMarkInfo] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false);
 
   if (!isComplete) {
     return (
@@ -152,9 +154,19 @@ export function RankTab({ exerciseId }: RankTabProps) {
 
       {/* Rank scale legend */}
       <div className="rounded-2xl border border-border bg-card px-3.5 py-3 shadow-sm">
-        <p className="mb-2.5 text-[12px] font-semibold uppercase tracking-[0.04em] text-muted-foreground">
-          {t('exercises.detail.rank.rankScale')}
-        </p>
+        <div className="flex items-center justify-between mb-2.5">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.04em] text-muted-foreground">
+            {t('exercises.detail.rank.rankScale')}
+          </p>
+          <button
+            type="button"
+            onClick={() => setGuideOpen(true)}
+            className="flex items-center text-muted-foreground/60 transition-colors hover:text-muted-foreground"
+            aria-label={t('guides.howItWorks')}
+          >
+            <Info className="h-3.5 w-3.5" />
+          </button>
+        </div>
         {(Object.entries(RANK_NAMES) as [string, string][]).map(([r, name]) => {
           const lvl = parseInt(r) as RankLevel;
           const c = getRankColor(lvl);
@@ -183,6 +195,8 @@ export function RankTab({ exerciseId }: RankTabProps) {
           );
         })}
       </div>
+
+      <RankGuideSheet open={guideOpen} onOpenChange={setGuideOpen} />
     </div>
   );
 }

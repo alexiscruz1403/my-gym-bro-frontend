@@ -1,8 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
-import { Sparkles, BrainCircuit, Check } from 'lucide-react';
+import { Sparkles, BrainCircuit, Check, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PremiumCtaCard } from '@/components/dashboard/PremiumCtaCard';
 import {
@@ -10,6 +11,7 @@ import {
   AiPlanProfileCardSkeleton,
   AiPlanCountBadge,
 } from './AiPlanProfileCard';
+import { AiPlanGuideSheet } from '@/components/guides/AiPlanGuideSheet';
 import { useAuth } from '@/hooks/useAuth';
 import { useAiProfiles } from '@/hooks/useAiProfiles';
 
@@ -22,15 +24,26 @@ export function AiLandingPage() {
   const { profiles, loading: profilesLoading } = useAiProfiles();
   const atLimit = profiles.length >= MAX_AI_PLANS;
   const features = t('ai.landing.features', { returnObjects: true }) as string[];
+  const [guideOpen, setGuideOpen] = useState(false);
 
   return (
     <div className="flex flex-col gap-4">
       {/* Hero card — dark gradient, always shown */}
       <div className="flex flex-col gap-2.5 rounded-2xl border border-primary/40 bg-gradient-to-br from-[oklch(20%_0.07_35)] to-[oklch(12%_0.018_248)] px-[18px] py-5">
         <BrainCircuit className="mb-0.5 h-8 w-8 text-primary" />
-        <p className="font-display text-[22px] font-bold leading-[1.1] tracking-[0.02em] text-white">
-          {t('ai.landing.title')}
-        </p>
+        <div className="flex items-start justify-between gap-2">
+          <p className="font-display text-[22px] font-bold leading-[1.1] tracking-[0.02em] text-white">
+            {t('ai.landing.title')}
+          </p>
+          <button
+            type="button"
+            onClick={() => setGuideOpen(true)}
+            className="mt-1 flex shrink-0 items-center text-white/40 transition-colors hover:text-white/70"
+            aria-label={t('guides.howItWorks')}
+          >
+            <Info className="h-4 w-4" />
+          </button>
+        </div>
         <p className="text-[13px] leading-[1.5] text-white/70">
           {t('ai.landing.description')}
         </p>
@@ -93,6 +106,7 @@ export function AiLandingPage() {
           ) : null}
         </>
       )}
+    <AiPlanGuideSheet open={guideOpen} onOpenChange={setGuideOpen} />
     </div>
   );
 }

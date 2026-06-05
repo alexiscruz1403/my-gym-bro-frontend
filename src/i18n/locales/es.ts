@@ -1129,6 +1129,87 @@ const es = {
       noData: 'N/D',
     },
   },
+  guides: {
+    howItWorks: '¿Cómo funciona?',
+    levelCol: 'Nivel',
+    rangeCol: 'Rango',
+    streaks: {
+      howItWorksItems: [
+        'Un incremento por día: completar varias sesiones en el mismo día solo cuenta como uno.',
+        'Límite semanal: tu racha puede crecer como máximo tantos días por semana como días de entrenamiento tenga tu plan activo. Si tu plan tiene 4 días, tu racha puede sumar hasta 4 puntos por semana.',
+        'Evaluación semanal: cada lunes se evalúa si completaste todas las sesiones de la semana. Si no llegaste al mínimo requerido, tu racha se reinicia a 0.',
+      ],
+      levelsTitle: 'Niveles de racha',
+      levels: [
+        { level: '0', range: 'Sin racha' },
+        { level: '1', range: '1 – 180' },
+        { level: '2', range: '181 – 365' },
+        { level: '3', range: '366 – 730' },
+        { level: '4', range: '731 – 1825' },
+        { level: '5', range: '+1825 (nivel máximo)' },
+      ],
+    },
+    ranks: {
+      title: 'Sistema de Rangos',
+      description: 'El sistema de rangos mide tu progresión de fuerza y rendimiento a lo largo del tiempo, tanto por ejercicio individual como por grupo muscular.',
+      howItWorksItems: [
+        'Rango por ejercicio: cada ejercicio tiene su propio rango, calculado a partir de tu mejor marca histórica.',
+        'Rango por grupo muscular: es el promedio de los rangos de todos los ejercicios que hayas realizado en ese grupo.',
+        'Al finalizar cada sesión, los rangos se actualizan automáticamente.',
+      ],
+      calculationTitle: '¿Qué determina tu rango?',
+      calculationItems: [
+        'Ejercicios con peso (press, sentadilla, etc.): se calcula un estimado de tu 1RM combinando el peso y las reps realizadas.',
+        'Ejercicios con peso corporal (dominadas, fondos, etc.): se toma la mayor cantidad de reps logradas.',
+        'Ejercicios de tiempo (plancha, etc.): se toma la mayor duración sostenida.',
+      ],
+      thresholdsNote: 'Los umbrales de cada nivel son personalizados según tu género y peso corporal.',
+      levelsTitle: 'Niveles de rango',
+      levels: ['Novato', 'Principiante', 'Intermedio', 'Avanzado', 'Experto', 'Élite', 'Maestro'],
+      note: 'Los rangos nunca bajan. Una vez que alcanzas un nivel, lo conservas aunque no entrenes por un tiempo.',
+    },
+    aiPlan: {
+      title: 'Generación de Planes con IA',
+      description: 'La IA crea un plan de entrenamiento completo y personalizado basado en tu perfil y objetivos. Es una función Premium.',
+      requirementsTitle: '¿Qué información se necesita?',
+      requirementsItems: [
+        'Perfil físico: edad, sexo, peso actual, peso objetivo (opcional).',
+        'Objetivo: ganancia muscular, pérdida de grasa, fuerza, resistencia, salud general, movilidad o recomposición corporal.',
+        'Nivel de experiencia: principiante, intermedio o avanzado.',
+        'Disponibilidad: días por semana y duración de cada sesión (en minutos).',
+        'Equipamiento disponible: sin equipamiento, mancuernas, bandas elásticas, barra con discos o gimnasio completo.',
+        'Limitaciones físicas: rodilla, lumbar, hombro, cirugía previa, entre otras.',
+        'Preferencias: tipo de ejercicios favoritos o que deseas evitar.',
+      ],
+      outputTitle: '¿Qué genera?',
+      outputItems: [
+        'Nombre del día (ej. "Push", "Piernas A").',
+        'Ejercicios seleccionados según tu equipamiento y limitaciones.',
+        'Sets, reps mín/máx, peso sugerido y tiempo de descanso por ejercicio.',
+      ],
+      replaceTitle: 'Reemplazo de ejercicios',
+      replaceDescription: 'Si algún ejercicio no te conviene, puedes solicitar a la IA que sugiera un reemplazo. La sugerencia respeta tu equipamiento y limitaciones, e incluye una justificación del cambio.',
+      limitNote: 'Puedes generar hasta 10 planes por día.',
+    },
+    progression: {
+      title: 'Análisis de Progresión con IA',
+      description: 'Revisa tu historial de las últimas 4 semanas y propone ajustes de peso para cada ejercicio de tu plan activo. Es una función Premium.',
+      methodTitle: 'Método de doble progresión',
+      methodItems: [
+        'Si en tus últimas 2 sesiones alcanzaste el máximo de repeticiones en todos los sets → se propone aumentar el peso.',
+        'Si en alguna sesión fallaste sets con menos de 6 reps → se propone reducir el peso.',
+        'Si no ocurre ninguno de los dos casos → el ejercicio se mantiene igual.',
+      ],
+      deloadTitle: 'Semana de deload',
+      deloadDescription: 'Si el sistema detecta señales de fatiga acumulada o estancamiento prolongado, puede proponer una semana de descarga: una reducción temporal de peso y/o series para permitir la recuperación.',
+      modesTitle: 'Dos formas de usar el análisis',
+      modesItems: [
+        'Manual: tú solicitas el análisis cuando quieras, revisas los cambios propuestos y decides si aplicarlos.',
+        'Automático: cada lunes a las 3:00 AM, el sistema genera y aplica los cambios directamente.',
+      ],
+      requirementNote: 'Para que el análisis pueda generarse, es necesario haber completado al menos una sesión en la semana actual y una en la semana anterior.',
+    },
+  },
 } as const;
 
 export default es;

@@ -1127,6 +1127,87 @@ const en = {
       noData: 'N/A',
     },
   },
+  guides: {
+    howItWorks: 'How does it work?',
+    levelCol: 'Level',
+    rangeCol: 'Range',
+    streaks: {
+      howItWorksItems: [
+        'One increment per day: completing multiple sessions on the same day only counts as one.',
+        'Weekly limit: your streak can grow by at most as many days per week as your active plan has training days. If your plan has 4 days, your streak can add up to 4 points per week.',
+        'Weekly evaluation: every Monday, the system checks if you completed all sessions for the week. If you didn\'t meet the minimum required, your streak resets to 0.',
+      ],
+      levelsTitle: 'Streak levels',
+      levels: [
+        { level: '0', range: 'No streak' },
+        { level: '1', range: '1 – 180' },
+        { level: '2', range: '181 – 365' },
+        { level: '3', range: '366 – 730' },
+        { level: '4', range: '731 – 1825' },
+        { level: '5', range: '+1825 (max level)' },
+      ],
+    },
+    ranks: {
+      title: 'Rank System',
+      description: 'The rank system measures your strength and performance progression over time, both per individual exercise and per muscle group.',
+      howItWorksItems: [
+        'Rank per exercise: each exercise has its own rank, calculated from your best historical record.',
+        'Rank per muscle group: the average of the ranks of all exercises you\'ve performed in that group.',
+        'After each session ends, ranks are updated automatically.',
+      ],
+      calculationTitle: 'What determines your rank?',
+      calculationItems: [
+        'Weighted exercises (bench press, squat, etc.): an estimated 1RM is calculated combining the weight used and reps performed.',
+        'Bodyweight exercises (pull-ups, dips, etc.): the highest number of reps achieved is used.',
+        'Timed exercises (plank, etc.): the longest sustained duration is used.',
+      ],
+      thresholdsNote: 'The thresholds for each level are personalized based on your gender and body weight.',
+      levelsTitle: 'Rank levels',
+      levels: ['Novice', 'Beginner', 'Intermediate', 'Advanced', 'Expert', 'Elite', 'Master'],
+      note: 'Ranks never go down. Once you reach a level, you keep it even if you stop training for a while.',
+    },
+    aiPlan: {
+      title: 'AI Plan Generation',
+      description: 'The AI creates a complete, personalized workout plan based on your profile and goals. This is a Premium feature.',
+      requirementsTitle: 'What information is needed?',
+      requirementsItems: [
+        'Physical profile: age, sex, current weight, target weight (optional).',
+        'Goal: muscle gain, fat loss, strength, endurance, general health, mobility, or body recomposition.',
+        'Experience level: beginner, intermediate, or advanced.',
+        'Availability: days per week and session duration (in minutes).',
+        'Available equipment: no equipment, dumbbells, resistance bands, barbell with plates, or full gym.',
+        'Physical limitations: knee, lower back, shoulder, previous surgery, etc.',
+        'Preferences: types of exercises you prefer or want to avoid.',
+      ],
+      outputTitle: 'What does it generate?',
+      outputItems: [
+        'Day name (e.g. "Push", "Legs A").',
+        'Exercises selected based on your equipment and limitations.',
+        'Sets, min/max reps, suggested weight, and rest time per exercise.',
+      ],
+      replaceTitle: 'Exercise replacement',
+      replaceDescription: 'If an exercise doesn\'t work for you, you can ask the AI to suggest a replacement. The suggestion respects your equipment and limitations, and includes a justification for the change.',
+      limitNote: 'You can generate up to 10 plans per day.',
+    },
+    progression: {
+      title: 'AI Progression Analysis',
+      description: 'Reviews your training history from the last 4 weeks and proposes weight adjustments for each exercise in your active plan. This is a Premium feature.',
+      methodTitle: 'Double progression method',
+      methodItems: [
+        'If in your last 2 sessions you reached the maximum reps on all sets → a weight increase is proposed.',
+        'If in any session you failed sets with fewer than 6 reps → a weight decrease is proposed.',
+        'If neither case applies → the exercise stays the same.',
+      ],
+      deloadTitle: 'Deload week',
+      deloadDescription: 'If the system detects signs of accumulated fatigue or prolonged stagnation, it may propose a deload week: a temporary reduction in weight and/or sets to allow recovery.',
+      modesTitle: 'Two ways to use the analysis',
+      modesItems: [
+        'Manual: you request the analysis whenever you want, review the proposed changes, and decide whether to apply them.',
+        'Automatic: every Monday at 3:00 AM, the system generates and applies the changes directly.',
+      ],
+      requirementNote: 'For the analysis to be generated, you must have completed at least one session in the current week and one in the previous week.',
+    },
+  },
 } as const;
 
 export default en;

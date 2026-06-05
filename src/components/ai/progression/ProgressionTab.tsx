@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Sparkles,
@@ -8,9 +9,11 @@ import {
   BrainCircuit,
   Check,
   X,
+  Info,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ProgressionGuideSheet } from '@/components/guides/ProgressionGuideSheet';
 import { useProgressionAnalysis } from '@/hooks/useProgressionAnalysis';
 import { useCurrentWeekProgression } from '@/hooks/useCurrentWeekProgression';
 import { useConfirmProgression } from '@/hooks/useConfirmProgression';
@@ -64,6 +67,7 @@ export function ProgressionTab({ planId }: ProgressionTabProps) {
   const { data: weekLog, isLoading: weekLoading } = useCurrentWeekProgression(planId);
   const { mutate: analyze, isPending: isAnalyzing, isError: analyzeError } = useProgressionAnalysis(planId);
   const { mutate: confirm, isPending: isConfirming } = useConfirmProgression(planId);
+  const [guideOpen, setGuideOpen] = useState(false);
 
   const result = weekLog ?? null;
   const isPending = result?.status === 'pending';
@@ -83,6 +87,13 @@ export function ProgressionTab({ planId }: ProgressionTabProps) {
             siguiendo el método de doble progresión.
           </p>
         </div>
+        <button
+          type="button"
+          onClick={() => setGuideOpen(true)}
+          className="flex shrink-0 items-center text-muted-foreground/60 transition-colors hover:text-muted-foreground"
+        >
+          <Info className="h-4 w-4" />
+        </button>
       </div>
 
       {weekLoading ? (
@@ -204,6 +215,8 @@ export function ProgressionTab({ planId }: ProgressionTabProps) {
           </Button>
         </div>
       )}
+
+      <ProgressionGuideSheet open={guideOpen} onOpenChange={setGuideOpen} />
     </div>
   );
 }
