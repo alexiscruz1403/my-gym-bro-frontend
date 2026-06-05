@@ -419,6 +419,16 @@ const en = {
       rankUp: 'Rank up!',
       firstTime: 'First time!',
     },
+    lastPerformance: {
+      label: 'Last time',
+      leftLabel: 'L:',
+      rightLabel: 'R:',
+      incomplete: '(incomplete)',
+    },
+    setRow: {
+      leftAbbr: 'L',
+      rightAbbr: 'R',
+    },
   },
 
   exercises: {
@@ -688,6 +698,15 @@ const en = {
       title: 'Complete your physical data',
       description: 'We need your weight and gender to personalize your ranks.',
       action: 'Go to profile',
+    },
+    names: {
+      1: 'Novice',
+      2: 'Beginner',
+      3: 'Intermediate',
+      4: 'Advanced',
+      5: 'Expert',
+      6: 'Elite',
+      7: 'Master',
     },
   },
 

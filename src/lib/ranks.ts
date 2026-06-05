@@ -28,6 +28,10 @@ export function getRankName(rank: RankLevel): string {
   return RANK_NAMES[rank];
 }
 
+export const RANK_LEVEL_BY_NAME: Partial<Record<string, RankLevel>> = Object.fromEntries(
+  (Object.entries(RANK_NAMES) as [string, string][]).map(([k, v]) => [v, Number(k) as RankLevel]),
+);
+
 export const UNRANKED_COLOR = 'oklch(30% 0 0)';
 
 export const FRONT_VIEW_FIGURE: string[] = [

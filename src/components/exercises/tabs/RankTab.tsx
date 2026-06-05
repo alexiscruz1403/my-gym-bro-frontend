@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useExerciseRank } from '@/hooks/useExerciseRank';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
-import { getRankColor, getRankName, RANK_NAMES, hasCompletePhysicalData } from '@/lib/ranks';
+import { getRankColor, RANK_NAMES, RANK_LEVEL_BY_NAME, hasCompletePhysicalData } from '@/lib/ranks';
 import useAuthStore from '@/store/auth.store';
 import type { RankLevel } from '@/types/domain.types';
 
@@ -77,7 +77,9 @@ export function RankTab({ exerciseId }: RankTabProps) {
 
   const rank = data.rank as RankLevel;
   const color = getRankColor(rank);
-  const rankName = getRankName(rank);
+  const rankName = t(`ranks.names.${rank}`);
+  const nextRankLevel = data.nextRankName ? RANK_LEVEL_BY_NAME[data.nextRankName] : undefined;
+  const translatedNextRankName = nextRankLevel != null ? t(`ranks.names.${nextRankLevel}`) : data.nextRankName;
 
   const progressPct =
     data.bestValue !== null && data.valueToNextRank !== null && data.valueToNextRank > 0
@@ -109,7 +111,7 @@ export function RankTab({ exerciseId }: RankTabProps) {
           <div className="w-full space-y-2 border-t border-border pt-3.5">
             <div className="flex justify-between text-[12px] text-muted-foreground">
               <span>{rankName}</span>
-              <span>{data.nextRankName}</span>
+              <span>{translatedNextRankName}</span>
             </div>
             <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
               <div
@@ -118,7 +120,7 @@ export function RankTab({ exerciseId }: RankTabProps) {
               />
             </div>
             <p className="text-[12px] font-semibold" style={{ color }}>
-              {t('exercises.detail.rank.progressTo', { pct: progressPct, rank: data.nextRankName })}
+              {t('exercises.detail.rank.progressTo', { pct: progressPct, rank: translatedNextRankName })}
             </p>
           </div>
         )}
@@ -167,7 +169,7 @@ export function RankTab({ exerciseId }: RankTabProps) {
             <Info className="h-3.5 w-3.5" />
           </button>
         </div>
-        {(Object.entries(RANK_NAMES) as [string, string][]).map(([r, name]) => {
+        {(Object.entries(RANK_NAMES) as [string, string][]).map(([r]) => {
           const lvl = parseInt(r) as RankLevel;
           const c = getRankColor(lvl);
           const isCurrent = lvl === rank;
@@ -181,7 +183,7 @@ export function RankTab({ exerciseId }: RankTabProps) {
                 className="text-[13px]"
                 style={{ color: isCurrent ? c : undefined, fontWeight: isCurrent ? 700 : 400 }}
               >
-                {name}
+                {t(`ranks.names.${r}`)}
               </span>
               {isCurrent && (
                 <span

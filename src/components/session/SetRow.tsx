@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Check, Undo2 } from 'lucide-react';
@@ -35,16 +36,6 @@ interface SideInputs {
   reps: string;
 }
 
-function initialSide(
-  logged: ExerciseSide | null | undefined,
-  planned: ExerciseSide | null | undefined,
-): SideInputs {
-  return {
-    weight: String(logged?.weight ?? planned?.weight ?? 0),
-    reps: String(logged?.reps ?? planned?.reps ?? 0),
-  };
-}
-
 function parseSide(state: SideInputs): ExerciseSide {
   const w = parseFloat(state.weight);
   const r = parseInt(state.reps, 10);
@@ -68,6 +59,7 @@ export function SetRow({
   onComplete,
   onUncomplete,
 }: SetRowProps) {
+  const { t } = useTranslation();
   const draftKey = `${exerciseId}:${setIndex}`;
   const draft = useSessionStore((s) => s.pendingSetInputs[draftKey]);
   const setPendingSetInput = useSessionStore((s) => s.setPendingSetInput);
@@ -165,7 +157,7 @@ export function SetRow({
 
   if (!bilateral) {
     const renderSideRow = (
-      label: 'L' | 'R',
+      label: string,
       state: SideInputs,
       setState: (next: SideInputs) => void,
       planned: ExerciseSide | null | undefined,
@@ -174,7 +166,7 @@ export function SetRow({
         <span className="w-6 shrink-0 text-center text-xs font-medium text-muted-foreground">
           {label}
         </span>
-        <div className="flex flex-1 items-center gap-2">
+        <div className="flex flex-1 items-start gap-2">
           <div className="flex-1 space-y-0.5">
             <label className="block text-center text-muted-foreground text-[10px] font-semibold uppercase tracking-[0.04em]">{weightUnit}</label>
             <Input
@@ -227,8 +219,8 @@ export function SetRow({
           {setIndex + 1}
         </span>
         <div className="flex flex-1 flex-col gap-2">
-          {renderSideRow('L', leftInputs, setLeftInputs, plannedLeft)}
-          {renderSideRow('R', rightInputs, setRightInputs, plannedRight)}
+          {renderSideRow(t('session.setRow.leftAbbr'), leftInputs, setLeftInputs, plannedLeft)}
+          {renderSideRow(t('session.setRow.rightAbbr'), rightInputs, setRightInputs, plannedRight)}
         </div>
         {completeButton}
       </div>
@@ -251,7 +243,7 @@ export function SetRow({
         {setIndex + 1}
       </span>
 
-      <div className="flex flex-1 items-center gap-2">
+      <div className="flex flex-1 items-start gap-2">
         <div className="flex-1 space-y-0.5">
           <label className="block text-center text-muted-foreground text-[10px] font-semibold uppercase tracking-[0.04em]">{weightUnit}</label>
           <Input

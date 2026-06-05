@@ -58,7 +58,9 @@ export function GlobalRestTimerOverlay() {
     width: 'min(calc(100vw - 2rem), 20rem)',
   };
 
-  const dragBorderClass = isDragging ? 'border-primary border-2' : 'border';
+  const dragBorderClass = isDragging
+    ? 'border-primary border-2'
+    : 'border-2 border-black/20 dark:border-white/25';
 
   if (minimized) {
     return (
@@ -77,7 +79,7 @@ export function GlobalRestTimerOverlay() {
           className="h-9 w-9 cursor-pointer"
           aria-label="Expand rest timer"
         >
-          <ChevronUp className="h-4 w-4" />
+          <ChevronDown className="h-4 w-4" />
         </Button>
       </div>
     );
@@ -103,7 +105,7 @@ export function GlobalRestTimerOverlay() {
           className="h-7 w-7 cursor-pointer"
           aria-label="Minimize rest timer"
         >
-          <ChevronDown className="h-3.5 w-3.5" />
+          <ChevronUp className="h-3.5 w-3.5" />
         </Button>
       </div>
 

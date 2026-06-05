@@ -421,6 +421,16 @@ const es = {
       rankUp: '¡Subiste de rango!',
       firstTime: '¡Primera vez!',
     },
+    lastPerformance: {
+      label: 'Última vez',
+      leftLabel: 'I:',
+      rightLabel: 'D:',
+      incomplete: '(incompleto)',
+    },
+    setRow: {
+      leftAbbr: 'I',
+      rightAbbr: 'D',
+    },
   },
 
   exercises: {
@@ -492,7 +502,7 @@ const es = {
     detail: {
       guideTab: 'Guía',
       historyTab: 'Historial',
-      statsTab: 'Stats',
+      statsTab: 'Estadísticas',
       rankTab: 'Rango',
       guide: {
         guideTab: 'Guía',
@@ -690,6 +700,15 @@ const es = {
       title: 'Completá tus datos físicos',
       description: 'Necesitamos tu peso y género para personalizar tus rangos.',
       action: 'Ir al perfil',
+    },
+    names: {
+      1: 'Novato',
+      2: 'Principiante',
+      3: 'Intermedio',
+      4: 'Avanzado',
+      5: 'Experto',
+      6: 'Élite',
+      7: 'Maestro',
     },
   },
 

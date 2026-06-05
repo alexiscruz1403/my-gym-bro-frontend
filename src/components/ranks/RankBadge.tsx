@@ -1,4 +1,5 @@
-import { getRankColor, getRankName } from '@/lib/ranks';
+import { useTranslation } from 'react-i18next';
+import { getRankColor } from '@/lib/ranks';
 import { cn } from '@/lib/utils';
 import type { RankLevel } from '@/types/domain.types';
 
@@ -9,8 +10,9 @@ interface RankBadgeProps {
 }
 
 export function RankBadge({ rank, size = 'md', className }: RankBadgeProps) {
+  const { t } = useTranslation();
   const color = getRankColor(rank);
-  const name = getRankName(rank);
+  const name = t(`ranks.names.${rank}`);
 
   const sizeClass =
     size === 'sm'
