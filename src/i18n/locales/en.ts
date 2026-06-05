@@ -265,6 +265,11 @@ const en = {
     activated: '"{{name}}" is now your active plan',
     activateError: 'Failed to activate plan',
     deleted: '"{{name}}" deleted',
+    autoUpdate: {
+      label: 'Auto weight update',
+      description: 'Automatically raises the configured weight when you complete all sets with a higher weight.',
+      toggleError: 'Could not update setting',
+    },
     wizard: {
       steps: {
         name: 'Name',

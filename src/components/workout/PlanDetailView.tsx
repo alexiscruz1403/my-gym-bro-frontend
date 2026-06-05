@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PlanDayAccordion } from './PlanDayAccordion';
 import { DeletePlanDialog } from './DeletePlanDialog';
@@ -14,6 +15,7 @@ import { PlanGoalsSection } from './PlanGoalsSection';
 import { ProgressionTab } from '@/components/ai/progression/ProgressionTab';
 import { deletePlan, activatePlan } from '@/services/workout-plans.service';
 import { invalidatePlanCache } from '@/hooks/usePlan';
+import { usePlanAutoUpdate } from '@/hooks/usePlanAutoUpdate';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import {
@@ -37,6 +39,7 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
   const { t } = useTranslation();
   const { user } = useAuth();
   const [activating, setActivating] = useState(false);
+  const { toggle: toggleAutoUpdate, isToggling } = usePlanAutoUpdate(plan.id);
 
   const isPremium =
     user?.membershipTier === 'premium' && user?.membershipStatus === 'active';
@@ -127,6 +130,29 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
           </Button>
         )}
         <DeletePlanDialog planName={plan.name} onConfirm={handleDelete} />
+      </div>
+
+      {/* Settings */}
+      <div className="rounded-xl border border-border/60 bg-card px-4 py-3">
+        <div className="flex items-center justify-between gap-4">
+          <div className="space-y-0.5">
+            <p className="text-[13.5px] font-semibold leading-snug">
+              {t('plans.autoUpdate.label')}
+            </p>
+            <p className="text-[12px] leading-snug text-muted-foreground">
+              {t('plans.autoUpdate.description')}
+            </p>
+          </div>
+          <Switch
+            checked={plan.autoUpdateWeight ?? false}
+            onCheckedChange={(checked) =>
+              toggleAutoUpdate(checked, {
+                onError: () => toast.error(t('plans.autoUpdate.toggleError')),
+              })
+            }
+            disabled={isToggling}
+          />
+        </div>
       </div>
 
       {/* Tabs (AI plans only) */}

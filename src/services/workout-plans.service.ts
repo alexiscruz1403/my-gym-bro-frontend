@@ -81,6 +81,7 @@ export async function createPlan(dto: CreatePlanRequest): Promise<WorkoutPlan> {
       name: dto.name,
       isActive: false,
       isAiGenerated: false,
+      autoUpdateWeight: false,
       days: dto.days.map((d) => ({
         dayOfWeek: d.dayOfWeek,
         dayName: d.dayName ?? null,
@@ -207,6 +208,18 @@ export async function activatePlan(id: string): Promise<WorkoutPlan> {
   } catch {
     // IndexedDB update failed — React Query refetch will reconcile state
   }
+  return data;
+}
+
+export async function updatePlanAutoUpdate(
+  id: string,
+  autoUpdateWeight: boolean,
+): Promise<WorkoutPlan> {
+  const { data } = await apiClient.patch<WorkoutPlan>(
+    API_ROUTES.workoutPlans.autoUpdate(id),
+    { autoUpdateWeight },
+  );
+  await db.plans.put(data);
   return data;
 }
 

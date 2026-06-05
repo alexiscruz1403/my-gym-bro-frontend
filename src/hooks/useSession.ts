@@ -145,6 +145,10 @@ export function useSession() {
       queryClient.invalidateQueries({ queryKey: ['exercise-history'] });
       queryClient.invalidateQueries({ queryKey: ['streaks', 'me'] });
       queryClient.invalidateQueries({ queryKey: ['ranks'] });
+      // Invalidate plan cache so auto-updated weights are reflected on next view
+      queryClient.invalidateQueries({ queryKey: ['plan', result.session.planId] });
+      queryClient.invalidateQueries({ queryKey: ['plans'] });
+      queryClient.invalidateQueries({ queryKey: ['active-plan'] });
       return result;
     },
     [activeSessionId],

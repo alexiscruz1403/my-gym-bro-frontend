@@ -291,9 +291,9 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
                           )}
                         </div>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <span>{isFirstTime ? '—' : item.rankNameBefore}</span>
+                          <span>{isFirstTime ? '—' : t(`ranks.names.${item.rankBefore}`)}</span>
                           <span>→</span>
-                          <span style={{ color }} className="font-semibold">{item.rankNameAfter}</span>
+                          <span style={{ color }} className="font-semibold">{t(`ranks.names.${item.rankAfter}`)}</span>
                         </div>
                         <RankProgressBar widthPct={widthPct} color={color} />
                       </div>
