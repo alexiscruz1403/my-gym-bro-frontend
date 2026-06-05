@@ -184,7 +184,12 @@ export function ExerciseConfigForm({
     });
   };
 
-  const renderSidePanel = (label: string, state: SideState, setState: (next: SideState) => void) => (
+  const renderSidePanel = (
+    label: string,
+    state: SideState,
+    setState: (next: SideState) => void,
+    maxRepsError?: string,
+  ) => (
     <div className="rounded-lg border p-3 space-y-2">
       <p className="text-xs font-medium">{label}</p>
       {metricMode === 'reps' ? (
@@ -201,7 +206,7 @@ export function ExerciseConfigForm({
             />
           </div>
           <div className="space-y-1">
-            <label className="text-[10px] text-muted-foreground">Max Reps (optional)</label>
+            <label className="text-[10px] text-muted-foreground">Max Reps</label>
             <Input
               type="number"
               inputMode="numeric"
@@ -211,6 +216,7 @@ export function ExerciseConfigForm({
               value={state.maxReps}
               onChange={(e) => setState({ ...state, maxReps: e.target.value })}
             />
+            {maxRepsError && <p className="text-destructive text-xs">{maxRepsError}</p>}
           </div>
           <div className="space-y-1 col-span-2">
             <label className="text-[10px] text-muted-foreground">Weight ({weightUnit})</label>
@@ -364,7 +370,7 @@ export function ExerciseConfigForm({
           {metricMode === 'reps' && (
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
-                <label htmlFor="maxReps" className="text-xs font-medium">Max Reps <span className="text-muted-foreground font-normal">(optional)</span></label>
+                <label htmlFor="maxReps" className="text-xs font-medium">Max Reps</label>
                 <Input
                   id="maxReps"
                   type="number"
@@ -374,6 +380,9 @@ export function ExerciseConfigForm({
                   placeholder="—"
                   {...register('maxReps', { valueAsNumber: true })}
                 />
+                {errors.maxReps && (
+                  <p className="text-destructive text-xs">{errors.maxReps.message}</p>
+                )}
               </div>
               <div className="space-y-1">
                 <label htmlFor="weight" className="text-xs font-medium">Weight</label>
@@ -476,8 +485,8 @@ export function ExerciseConfigForm({
           </div>
 
           <div className="space-y-2">
-            {renderSidePanel('Lado izquierdo', leftState, setLeftState)}
-            {renderSidePanel('Lado derecho', rightState, setRightState)}
+            {renderSidePanel('Lado izquierdo', leftState, setLeftState, errors.left?.maxReps?.message as string | undefined)}
+            {renderSidePanel('Lado derecho', rightState, setRightState, errors.right?.maxReps?.message as string | undefined)}
             {sideError && <p className="text-destructive text-xs">{sideError}</p>}
           </div>
         </>

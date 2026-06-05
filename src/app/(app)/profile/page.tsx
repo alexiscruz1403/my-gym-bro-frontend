@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -108,9 +109,9 @@ export default function ProfilePage() {
               type="button"
               onClick={() => setActiveTab(tab.value)}
               className={cn(
-                'flex-1 cursor-pointer rounded-lg text-[13px] font-semibold transition-colors',
+                'flex-1 cursor-pointer rounded-lg text-[13px] font-semibold transition-all',
                 activeTab === tab.value
-                  ? 'bg-card text-foreground shadow-sm'
+                  ? 'bg-primary text-white shadow-sm'
                   : 'text-muted-foreground hover:text-foreground',
               )}
             >
@@ -118,6 +119,15 @@ export default function ProfilePage() {
             </button>
           ))}
         </div>
+
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
+          >
 
         {/* Profile tab */}
         {activeTab === 'profile' && (
@@ -250,6 +260,9 @@ export default function ProfilePage() {
             convertVolume={convertVolume}
           />
         )}
+
+          </motion.div>
+        </AnimatePresence>
       </div>
     </PageContainer>
   );

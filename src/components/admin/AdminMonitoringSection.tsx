@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { MonitoringUsersTab } from '@/components/admin/monitoring/MonitoringUsersTab';
@@ -31,9 +32,9 @@ export function AdminMonitoringSection() {
             type="button"
             onClick={() => setTab(item.value)}
             className={cn(
-              'flex-1 min-w-22.5 h-8.5 border-none rounded-xl text-[12px] font-semibold cursor-pointer transition-colors whitespace-nowrap',
+              'flex-1 min-w-22.5 h-8.5 border-none rounded-xl text-[12px] font-semibold cursor-pointer transition-all whitespace-nowrap',
               tab === item.value
-                ? 'bg-card text-foreground shadow-sm'
+                ? 'bg-primary text-white shadow-sm'
                 : 'bg-transparent text-muted-foreground hover:text-foreground',
             )}
           >
@@ -42,10 +43,20 @@ export function AdminMonitoringSection() {
         ))}
       </div>
 
-      {tab === 'mon-users' && <MonitoringUsersTab />}
-      {tab === 'mon-subscriptions' && <MonitoringSubscriptionsTab />}
-      {tab === 'mon-ai' && <MonitoringAiTab />}
-      {tab === 'mon-logs' && <MonitoringErrorsTab />}
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={tab}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.18, ease: 'easeOut' }}
+        >
+          {tab === 'mon-users' && <MonitoringUsersTab />}
+          {tab === 'mon-subscriptions' && <MonitoringSubscriptionsTab />}
+          {tab === 'mon-ai' && <MonitoringAiTab />}
+          {tab === 'mon-logs' && <MonitoringErrorsTab />}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

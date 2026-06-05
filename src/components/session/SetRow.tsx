@@ -19,6 +19,7 @@ interface SetRowProps {
   exerciseId: string;
   setIndex: number;
   bilateral: boolean;
+  plannedMinReps?: number;
   plannedReps?: number;
   plannedWeight?: number;
   plannedLeft?: ExerciseSide | null;
@@ -57,6 +58,7 @@ export function SetRow({
   exerciseId,
   setIndex,
   bilateral,
+  plannedMinReps,
   plannedReps,
   plannedWeight,
   plannedLeft,
@@ -166,6 +168,7 @@ export function SetRow({
       label: 'L' | 'R',
       state: SideInputs,
       setState: (next: SideInputs) => void,
+      planned: ExerciseSide | null | undefined,
     ) => (
       <div className="flex items-center gap-2">
         <span className="w-6 shrink-0 text-center text-xs font-medium text-muted-foreground">
@@ -196,6 +199,13 @@ export function SetRow({
               className="min-h-11 text-center font-display font-bold"
               min={0}
             />
+            {(planned?.minReps !== undefined || planned?.reps !== undefined) && (
+              <p className="text-center text-[10px] text-muted-foreground tabular-nums">
+                {planned.minReps !== undefined && planned.reps !== undefined && planned.reps !== planned.minReps
+                  ? `${planned.minReps} – ${planned.reps}`
+                  : (planned.minReps ?? planned.reps)}
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -217,8 +227,8 @@ export function SetRow({
           {setIndex + 1}
         </span>
         <div className="flex flex-1 flex-col gap-2">
-          {renderSideRow('L', leftInputs, setLeftInputs)}
-          {renderSideRow('R', rightInputs, setRightInputs)}
+          {renderSideRow('L', leftInputs, setLeftInputs, plannedLeft)}
+          {renderSideRow('R', rightInputs, setRightInputs, plannedRight)}
         </div>
         {completeButton}
       </div>
@@ -266,6 +276,13 @@ export function SetRow({
             className="min-h-11 text-center font-display font-bold"
             min={0}
           />
+          {(plannedMinReps !== undefined || plannedReps !== undefined) && (
+            <p className="text-center text-[10px] text-muted-foreground tabular-nums">
+              {plannedMinReps !== undefined && plannedReps !== undefined && plannedReps !== plannedMinReps
+                ? `${plannedMinReps} – ${plannedReps}`
+                : (plannedMinReps ?? plannedReps)}
+            </p>
+          )}
         </div>
       </div>
 

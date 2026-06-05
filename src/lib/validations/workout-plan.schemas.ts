@@ -8,12 +8,21 @@ export const planNameSchema = z.object({
     .trim(),
 });
 
-export const exerciseSideSchema = z.object({
-  minReps: z.number().int().min(1, 'Reps must be at least 1').optional(),
-  maxReps: z.number().int().min(1, 'Reps must be at least 1').optional(),
-  duration: z.number().int().min(1, 'Duration must be at least 1 second').optional(),
-  weight: z.number().min(0, 'Weight cannot be negative').optional(),
-});
+export const exerciseSideSchema = z
+  .object({
+    minReps: z.number().int().min(1, 'Reps must be at least 1').optional(),
+    maxReps: z.number().int().min(1, 'Reps must be at least 1').optional(),
+    duration: z.number().int().min(1, 'Duration must be at least 1 second').optional(),
+    weight: z.number().min(0, 'Weight cannot be negative').optional(),
+  })
+  .refine(
+    (d) => !(d.minReps !== undefined && d.maxReps === undefined),
+    { message: 'Max reps is required', path: ['maxReps'] },
+  )
+  .refine(
+    (d) => !(d.minReps !== undefined && d.maxReps !== undefined && d.maxReps < d.minReps),
+    { message: 'Max reps must be ≥ min reps', path: ['maxReps'] },
+  );
 
 export const exerciseConfigSchema = z
   .object({
@@ -44,6 +53,14 @@ export const exerciseConfigSchema = z
       message: 'Specify either reps or duration, not both',
       path: ['minReps'],
     },
+  )
+  .refine(
+    (data) => !(data.minReps !== undefined && data.maxReps === undefined),
+    { message: 'Max reps is required', path: ['maxReps'] },
+  )
+  .refine(
+    (data) => !(data.minReps !== undefined && data.maxReps !== undefined && data.maxReps < data.minReps),
+    { message: 'Max reps must be ≥ min reps', path: ['maxReps'] },
   );
 
 export type PlanNameFormValues = z.infer<typeof planNameSchema>;
