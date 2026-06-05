@@ -138,6 +138,7 @@ export interface WorkoutPlan {
   name: string;
   isActive: boolean;
   isAiGenerated?: boolean;
+  autoUpdateWeight?: boolean;
   days: PlanDay[];
   goals?: { mainGoal?: AiFitnessGoal | null; focusMuscles?: MuscleGroup[] } | null;
   createdAt: string;
@@ -149,6 +150,7 @@ export interface PlanListItem {
   name: string;
   isActive: boolean;
   isAiGenerated?: boolean;
+  autoUpdateWeight?: boolean;
   daysCount: number;
   configuredDays: string[];
   totalExercises: number;

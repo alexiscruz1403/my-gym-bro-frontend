@@ -267,6 +267,11 @@ const es = {
     activated: '"{{name}}" es tu plan activo',
     activateError: 'No se pudo activar el plan',
     deleted: '"{{name}}" eliminado',
+    autoUpdate: {
+      label: 'Actualización automática de pesos',
+      description: 'Sube el peso configurado automáticamente cuando completás todas las series con un peso mayor.',
+      toggleError: 'No se pudo actualizar la configuración',
+    },
     wizard: {
       steps: {
         name: 'Nombre',

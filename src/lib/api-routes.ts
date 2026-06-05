@@ -39,6 +39,7 @@ export const API_ROUTES = {
     detail: (id: string) => `/workout-plans/${id}`,
     activate: (id: string) => `/workout-plans/${id}/activate`,
     goals: (id: string) => `/workout-plans/${id}/goals`,
+    autoUpdate: (id: string) => `/workout-plans/${id}/auto-update`,
   },
   sessions: {
     start: '/sessions',
