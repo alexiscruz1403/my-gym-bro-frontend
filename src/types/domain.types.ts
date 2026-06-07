@@ -320,6 +320,7 @@ export interface NotificationPreferences {
   allowPostLike: boolean;
   allowPostComment: boolean;
   allowNewPost: boolean;
+  allowPlanShared: boolean;
 }
 
 // Session summary snapshot — embedded in FeedPost at creation time
@@ -349,20 +350,65 @@ export interface SessionSummarySnapshot {
   exercises: SessionSummaryExerciseSnapshot[];
 }
 
+export interface PlanSummaryExerciseDto {
+  exerciseId: string;
+  exerciseName: string;
+  gifUrl?: string | null;
+  bilateral: boolean;
+  sets: number;
+  minReps?: number | null;
+  maxReps?: number | null;
+  duration?: number | null;
+  weight?: number | null;
+  weightUnit: 'kg' | 'lbs';
+  left?: {
+    minReps?: number | null;
+    maxReps?: number | null;
+    duration?: number | null;
+    weight?: number | null;
+  } | null;
+  right?: {
+    minReps?: number | null;
+    maxReps?: number | null;
+    duration?: number | null;
+    weight?: number | null;
+  } | null;
+  rest: number;
+  notes?: string | null;
+  supersetGroupId?: string | null;
+}
+
+export interface PlanSummaryDayDto {
+  dayOfWeek: string;
+  dayName?: string | null;
+  exercises: PlanSummaryExerciseDto[];
+}
+
+export interface PlanSummaryDto {
+  planId?: string | null;
+  planName?: string | null;
+  shareType: 'complete' | 'partial';
+  days: PlanSummaryDayDto[];
+}
+
 export interface FeedPost {
   _id: string;
+  type: 'session' | 'plan';
   author: {
     _id: string;
     username: string;
     avatar: string | null;
   };
-  sessionId: string;
+  sessionId: string | null;
   photoUrl: string | null;
   caption: string | null;
   reactionsCount: number;
   commentsCount: number;
   userReacted: boolean;
   sessionSummary: SessionSummarySnapshot | null;
+  planSummary: PlanSummaryDto | null;
+  audience: 'followers' | 'individual';
+  recipientId: string | null;
   createdAt: string;
 }
 
@@ -589,6 +635,7 @@ export type NotificationType =
   | 'post_like'
   | 'post_comment'
   | 'new_post'
+  | 'plan_shared'
   | 'system';
 
 export interface NotificationDataFollow {
@@ -630,6 +677,13 @@ export interface NotificationDataFollowAccepted {
   actorAvatar: string | null;
 }
 
+export interface NotificationDataPlanShared {
+  actorUsername: string;
+  actorAvatar: string | null;
+  postId: string;
+  shareScope: 'followers' | 'individual';
+}
+
 export type NotificationData =
   | NotificationDataFollow
   | NotificationDataFollowRequest
@@ -637,6 +691,7 @@ export type NotificationData =
   | NotificationDataPostLike
   | NotificationDataPostComment
   | NotificationDataNewPost
+  | NotificationDataPlanShared
   | NotificationDataSystem;
 
 export interface AppNotification {

@@ -26,7 +26,9 @@ import {
   Loader2,
   CalendarDays,
   Dumbbell,
+  Share2,
 } from 'lucide-react';
+import { SharePlanSheet } from './SharePlanSheet';
 import type { WorkoutPlan } from '@/types/domain.types';
 
 interface PlanDetailViewProps {
@@ -46,6 +48,7 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
   const showProgressionTab = isPremium && plan.isActive;
 
   const [activeTab, setActiveTab] = useState<'overview' | 'progression'>('overview');
+  const [sharePlanOpen, setSharePlanOpen] = useState(false);
 
   const totalExercises = plan.days.reduce((sum, d) => sum + d.exercises.length, 0);
 
@@ -130,7 +133,18 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
           </Button>
         )}
         <DeletePlanDialog planName={plan.name} onConfirm={handleDelete} />
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => setSharePlanOpen(true)}
+          className="h-9 cursor-pointer gap-1.5 px-3.5 text-[13px] font-semibold"
+        >
+          <Share2 className="h-3.5 w-3.5" />
+          {t('plans.share.button')}
+        </Button>
       </div>
+
+      <SharePlanSheet plan={plan} open={sharePlanOpen} onOpenChange={setSharePlanOpen} />
 
       {/* Settings */}
       <div className="rounded-xl border border-border/60 bg-card px-4 py-3">

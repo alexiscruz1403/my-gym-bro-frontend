@@ -121,6 +121,11 @@ export default function SettingsPage() {
       label: t('settings.notifications.newPost.label'),
       description: t('settings.notifications.newPost.description'),
     },
+    {
+      key: 'allowPlanShared' as const,
+      label: t('settings.notifications.planShared.label'),
+      description: t('settings.notifications.planShared.description'),
+    },
   ] as const;
 
   async function handlePrivacyToggle(checked: boolean) {

@@ -8,7 +8,7 @@ import type {
   ReactionCountResponse,
   CreatePostPayload,
 } from '@/types/api.types';
-import type { FeedPost, FeedComment, FeedCommentReply } from '@/types/domain.types';
+import type { FeedPost, FeedComment, FeedCommentReply, WorkoutPlan } from '@/types/domain.types';
 
 export async function getFeed(params?: FeedQueryParams): Promise<PaginatedFeedResponse> {
   const { data } = await apiClient.get<PaginatedFeedResponse>(API_ROUTES.feed.list, { params });
@@ -53,6 +53,36 @@ export async function addReply(postId: string, commentId: string, text: string):
   const { data } = await apiClient.post<FeedCommentReply>(
     API_ROUTES.feed.addReply(postId, commentId),
     { text },
+  );
+  return data;
+}
+
+export interface SharePlanPayload {
+  planId: string;
+  shareType: 'complete' | 'partial';
+  dayOfWeek?: string;
+  audience: 'followers' | 'individual';
+  recipientId?: string;
+  caption?: string;
+}
+
+export async function sharePlan(payload: SharePlanPayload): Promise<FeedPost> {
+  const { data } = await apiClient.post<FeedPost>(API_ROUTES.feed.sharePlan, payload);
+  return data;
+}
+
+export interface CopySharedPlanPayload {
+  targetPlanId?: string;
+  newPlanName?: string;
+}
+
+export async function copySharedPlan(
+  postId: string,
+  payload: CopySharedPlanPayload,
+): Promise<WorkoutPlan> {
+  const { data } = await apiClient.post<WorkoutPlan>(
+    API_ROUTES.feed.copySharedPlan(postId),
+    payload,
   );
   return data;
 }

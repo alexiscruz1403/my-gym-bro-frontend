@@ -74,6 +74,8 @@ export const API_ROUTES = {
   feed: {
     list: '/feed',
     create: '/feed/posts',
+    sharePlan: '/feed/plans',
+    copySharedPlan: (postId: string) => `/feed/posts/${postId}/copy`,
     post: (postId: string) => `/feed/posts/${postId}`,
     reactions: (postId: string) => `/feed/posts/${postId}/reactions`,
     removeReaction: (postId: string) => `/feed/posts/${postId}/reactions`,

@@ -180,6 +180,7 @@ export interface LeaderboardParams extends PaginationParams {
 export interface PaginationParams {
   page?: number;
   limit?: number;
+  username?: string;
 }
 
 export type FeedFilter = 'all' | 'mine';
