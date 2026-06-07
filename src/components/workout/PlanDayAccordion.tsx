@@ -8,7 +8,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { ExerciseConfigRow } from './ExerciseConfigRow';
-import { ChevronDown, Link } from 'lucide-react';
+import { ChevronDown, Link, Copy } from 'lucide-react';
 import type { PlanDay, ExerciseConfig } from '@/types/domain.types';
 
 // Group consecutive exercises that share the same supersetGroupId.
@@ -40,9 +40,10 @@ interface PlanDayAccordionProps {
   days: PlanDay[];
   planId?: string;
   showSwap?: boolean;
+  onCopyDay?: (dayOfWeek: string) => void;
 }
 
-export function PlanDayAccordion({ days, planId, showSwap }: PlanDayAccordionProps) {
+export function PlanDayAccordion({ days, planId, showSwap, onCopyDay }: PlanDayAccordionProps) {
   const { t } = useTranslation();
 
   return (
@@ -100,6 +101,18 @@ export function PlanDayAccordion({ days, planId, showSwap }: PlanDayAccordionPro
                   ),
                 )}
               </div>
+              {onCopyDay && (
+                <div className="mt-1.5 flex justify-end border-t border-border/60 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => onCopyDay(day.dayOfWeek)}
+                    className="flex cursor-pointer items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[12px] font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  >
+                    <Copy className="h-3.5 w-3.5" />
+                    {t('plans.copyDay')}
+                  </button>
+                </div>
+              )}
             </AccordionContent>
           </AccordionItem>
         );

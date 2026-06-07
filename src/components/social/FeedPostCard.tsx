@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Heart, MessageCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Heart, MessageCircle, ChevronLeft, ChevronRight, ClipboardCopy } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { es, enUS } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,9 @@ import { cn } from '@/lib/utils';
 import { ExerciseGifThumbnail } from '@/components/shared/ExerciseGifThumbnail';
 import { useState, useRef } from 'react';
 import { usePostInteraction } from '@/hooks/usePostInteraction';
+import { useAuth } from '@/hooks/useAuth';
+import { PlanSummaryCard } from './PlanSummaryCard';
+import { CopySharedPlanSheet } from './CopySharedPlanSheet';
 import type { FeedPost, SessionSummaryExerciseSnapshot } from '@/types/domain.types';
 
 interface FeedPostCardProps {
@@ -117,6 +120,7 @@ function SummarySlide({ exercises, durationSeconds, totalSets, showHeader }: Sum
 
 export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: FeedPostCardProps) {
   const { t, i18n } = useTranslation();
+  const { user } = useAuth();
   const { userReacted, reactionsCount, toggle } = usePostInteraction(
     post._id,
     post.userReacted,
@@ -125,18 +129,24 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: Feed
 
   const [commentsCount, setCommentsCount] = useState(post.commentsCount);
   const [activeSlide, setActiveSlide] = useState(0);
+  const [copySheetOpen, setCopySheetOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const initials = post.author.username.slice(0, 2).toUpperCase();
   const dateLocale = i18n.language === 'en' ? enUS : es;
   const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true, locale: dateLocale });
 
+  const isPlanPost = post.type === 'plan';
+  const isSharedOnlyWithMe =
+    isPlanPost && post.audience === 'individual' && post.recipientId === user?.id;
+
   const hasPhoto = !!post.photoUrl;
   const hasSummary = !!post.sessionSummary;
 
-  const exerciseChunks = hasSummary
-    ? chunk(post.sessionSummary!.exercises.filter((ex) => ex.sets.some((s) => s.completed)), EXERCISES_PER_SLIDE)
-    : [];
+  const exerciseChunks =
+    !isPlanPost && hasSummary
+      ? chunk(post.sessionSummary!.exercises.filter((ex) => ex.sets.some((s) => s.completed)), EXERCISES_PER_SLIDE)
+      : [];
 
   const slideCount = (hasPhoto ? 1 : 0) + exerciseChunks.length;
   const isCarousel = slideCount > 1;
@@ -172,7 +182,7 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: Feed
         </Link>
 
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Link
               href={`/users/${post.author._id}`}
               className="text-sm font-semibold hover:underline truncate"
@@ -182,13 +192,25 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: Feed
             {isOwnPost && (
               <Badge variant="secondary" className="shrink-0">{t('feed.yourPost')}</Badge>
             )}
+            {isSharedOnlyWithMe && (
+              <Badge variant="outline" className="shrink-0 text-[10px]">
+                {t('plans.share.sharedOnlyWithYou')}
+              </Badge>
+            )}
           </div>
           <p className="text-xs text-muted-foreground">{timeAgo}</p>
         </div>
       </div>
 
-      {/* Media / summary area */}
-      {isCarousel ? (
+      {/* Plan summary */}
+      {isPlanPost && post.planSummary && (
+        <div className="px-3.5 pb-2 pt-1">
+          <PlanSummaryCard planSummary={post.planSummary} />
+        </div>
+      )}
+
+      {/* Session media / summary area */}
+      {!isPlanPost && isCarousel ? (
         <div className="relative">
           <div
             ref={scrollRef}
@@ -297,7 +319,22 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: Feed
           <MessageCircle className="h-[18px] w-[18px]" />
           <span className="text-[13px] font-medium">{commentsCount}</span>
         </button>
+
+        {isPlanPost && !isOwnPost && (
+          <button
+            type="button"
+            onClick={() => setCopySheetOpen(true)}
+            className="ml-auto flex cursor-pointer items-center gap-1.5 rounded-xl px-2 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            aria-label={t('plans.copyShared.button')}
+          >
+            <ClipboardCopy className="h-4.5 w-4.5" />
+          </button>
+        )}
       </div>
+
+      {isPlanPost && !isOwnPost && post.planSummary && (
+        <CopySharedPlanSheet post={post} open={copySheetOpen} onOpenChange={setCopySheetOpen} />
+      )}
     </article>
   );
 }

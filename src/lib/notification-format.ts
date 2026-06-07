@@ -6,6 +6,7 @@ import type {
   NotificationDataPostLike,
   NotificationDataPostComment,
   NotificationDataNewPost,
+  NotificationDataPlanShared,
   NotificationDataSystem,
 } from '@/types/domain.types';
 
@@ -67,6 +68,14 @@ export function formatNotification(n: AppNotification): FormattedNotification {
         actorUsername: d.actorUsername,
       };
     }
+    case 'plan_shared': {
+      const d = n.data as NotificationDataPlanShared;
+      const text =
+        d.shareScope === 'individual'
+          ? `${d.actorUsername} compartió un plan contigo`
+          : `${d.actorUsername} compartió un plan con todos sus seguidores`;
+      return { text, avatar: d.actorAvatar, actorUsername: d.actorUsername };
+    }
     case 'system': {
       const d = n.data as NotificationDataSystem;
       return {
@@ -95,6 +104,8 @@ export function hrefFor(n: AppNotification): string {
       return '/notifications';
     case 'follow_accepted':
       return '/profile';
+    case 'plan_shared':
+      return `/feed?post=${encodeURIComponent((n.data as NotificationDataPlanShared).postId)}`;
     case 'system':
       return '/notifications';
   }

@@ -231,3 +231,25 @@ export async function updatePlanGoals(
   await db.plans.put(data);
   return data;
 }
+
+export async function duplicatePlan(id: string): Promise<WorkoutPlan> {
+  const { data } = await apiClient.post<WorkoutPlan>(API_ROUTES.workoutPlans.duplicate(id));
+  return data;
+}
+
+export interface CopyPlanDayPayload {
+  targetPlanId?: string;
+  newPlanName?: string;
+}
+
+export async function copyPlanDay(
+  id: string,
+  dayOfWeek: string,
+  payload: CopyPlanDayPayload,
+): Promise<WorkoutPlan> {
+  const { data } = await apiClient.post<WorkoutPlan>(
+    API_ROUTES.workoutPlans.copyDay(id, dayOfWeek),
+    payload,
+  );
+  return data;
+}

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getFollowers, getFollowing } from '@/services/social.service';
 import type { PublicUserSummary } from '@/types/domain.types';
+import type { PaginationParams } from '@/types/api.types';
 
 interface FollowListMeta {
   total: number;
@@ -11,7 +12,14 @@ interface FollowListMeta {
   totalPages: number;
 }
 
-export function useFollowList(userId: string, type: 'followers' | 'following') {
+export function useFollowList(
+  userId: string,
+  type: 'followers' | 'following',
+  options?: { limit?: number; search?: string },
+) {
+  const limit = options?.limit ?? 20;
+  const search = options?.search?.trim() ?? '';
+
   const [users, setUsers] = useState<PublicUserSummary[]>([]);
   const [meta, setMeta] = useState<FollowListMeta | null>(null);
   const [page, setPage] = useState(1);
@@ -26,8 +34,10 @@ export function useFollowList(userId: string, type: 'followers' | 'following') {
       setError(null);
 
       const fetcher = type === 'followers' ? getFollowers : getFollowing;
+      const params: PaginationParams = { page: targetPage, limit };
+      if (search) params.username = search;
 
-      fetcher(userId, { page: targetPage, limit: 20 })
+      fetcher(userId, params)
         .then(({ data, meta: responseMeta }) => {
           setUsers(data);
           setMeta(responseMeta);
@@ -36,7 +46,7 @@ export function useFollowList(userId: string, type: 'followers' | 'following') {
         .catch(() => setError('Failed to load list.'))
         .finally(() => setIsLoading(false));
     },
-    [userId, type],
+    [userId, type, limit, search],
   );
 
   useEffect(() => {

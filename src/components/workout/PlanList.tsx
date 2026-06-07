@@ -70,6 +70,8 @@ export function PlanList({ plans }: PlanListProps) {
     );
   }
 
+  const atLimit = plans.filter((p) => !p.isAiGenerated).length >= 3;
+
   return (
     <>
       <div className="flex flex-col gap-3">
@@ -79,6 +81,7 @@ export function PlanList({ plans }: PlanListProps) {
             plan={plan}
             onStart={handleOpenSheet}
             startLoading={loadingPlanId === plan.id}
+            atLimit={atLimit}
           />
         ))}
       </div>
