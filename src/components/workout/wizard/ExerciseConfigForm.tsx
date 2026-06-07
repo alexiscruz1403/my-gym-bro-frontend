@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
@@ -62,6 +63,7 @@ export function ExerciseConfigForm({
   onSave,
   onCancel,
 }: ExerciseConfigFormProps) {
+  const { t } = useTranslation();
   const initialMetric: MetricMode =
     (defaultValues?.duration !== undefined && defaultValues?.duration !== null) ||
     (defaultValues?.left?.duration !== undefined && defaultValues?.left?.duration !== null) ||
@@ -166,8 +168,8 @@ export function ExerciseConfigForm({
     if (left[metricKey] === undefined || right[metricKey] === undefined) {
       setSideError(
         metricMode === 'reps'
-          ? 'Both sides require a reps value'
-          : 'Both sides require a duration value',
+          ? t('plans.wizard.exerciseConfig.sideErrorReps')
+          : t('plans.wizard.exerciseConfig.sideErrorDuration'),
       );
       return;
     }
@@ -195,7 +197,7 @@ export function ExerciseConfigForm({
       {metricMode === 'reps' ? (
         <div className="grid grid-cols-2 gap-2">
           <div className="space-y-1">
-            <label className="text-[10px] text-muted-foreground">Min Reps</label>
+            <label className="text-[10px] text-muted-foreground">{t('plans.wizard.exerciseConfig.minReps')}</label>
             <Input
               type="number"
               inputMode="numeric"
@@ -206,7 +208,7 @@ export function ExerciseConfigForm({
             />
           </div>
           <div className="space-y-1">
-            <label className="text-[10px] text-muted-foreground">Max Reps</label>
+            <label className="text-[10px] text-muted-foreground">{t('plans.wizard.exerciseConfig.maxReps')}</label>
             <Input
               type="number"
               inputMode="numeric"
@@ -219,7 +221,7 @@ export function ExerciseConfigForm({
             {maxRepsError && <p className="text-destructive text-xs">{maxRepsError}</p>}
           </div>
           <div className="space-y-1 col-span-2">
-            <label className="text-[10px] text-muted-foreground">Weight ({weightUnit})</label>
+            <label className="text-[10px] text-muted-foreground">{t('plans.wizard.exerciseConfig.weightWithUnit', { unit: weightUnit })}</label>
             <Input
               type="number"
               inputMode="decimal"
@@ -235,7 +237,7 @@ export function ExerciseConfigForm({
       ) : (
         <div className="grid grid-cols-2 gap-2">
           <div className="space-y-1">
-            <label className="text-[10px] text-muted-foreground">Duration (s)</label>
+            <label className="text-[10px] text-muted-foreground">{t('plans.wizard.exerciseConfig.metricDuration')}</label>
             <Input
               type="number"
               inputMode="numeric"
@@ -246,7 +248,7 @@ export function ExerciseConfigForm({
             />
           </div>
           <div className="space-y-1">
-            <label className="text-[10px] text-muted-foreground">Weight ({weightUnit})</label>
+            <label className="text-[10px] text-muted-foreground">{t('plans.wizard.exerciseConfig.weightWithUnit', { unit: weightUnit })}</label>
             <Input
               type="number"
               inputMode="decimal"
@@ -269,7 +271,7 @@ export function ExerciseConfigForm({
         {exerciseName}
         {!bilateral && (
           <span className="ml-2 rounded-full bg-primary/15 px-1.5 py-0.5 text-[10px] font-medium text-primary">
-            Unilateral
+            {t('plans.wizard.exerciseConfig.unilateral')}
           </span>
         )}
       </p>
@@ -284,7 +286,7 @@ export function ExerciseConfigForm({
               : 'border-border text-muted-foreground hover:bg-muted'
           }`}
         >
-          Reps
+          {t('plans.wizard.exerciseConfig.metricReps')}
         </button>
         <button
           type="button"
@@ -295,12 +297,12 @@ export function ExerciseConfigForm({
               : 'border-border text-muted-foreground hover:bg-muted'
           }`}
         >
-          Duration (s)
+          {t('plans.wizard.exerciseConfig.metricDuration')}
         </button>
       </div>
 
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium">Unit</span>
+        <span className="text-xs font-medium">{t('plans.wizard.exerciseConfig.unit')}</span>
         <div className="flex overflow-hidden rounded-md border text-xs">
           {(['kg', 'lbs'] as const).map((unit, i) => (
             <button
@@ -323,7 +325,7 @@ export function ExerciseConfigForm({
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <label htmlFor="sets" className="text-xs font-medium">Sets</label>
+              <label htmlFor="sets" className="text-xs font-medium">{t('plans.wizard.exerciseConfig.sets')}</label>
               <Input
                 id="sets"
                 type="number"
@@ -339,7 +341,7 @@ export function ExerciseConfigForm({
 
             {metricMode === 'reps' ? (
               <div className="space-y-1">
-                <label htmlFor="minReps" className="text-xs font-medium">Min Reps</label>
+                <label htmlFor="minReps" className="text-xs font-medium">{t('plans.wizard.exerciseConfig.minReps')}</label>
                 <Input
                   id="minReps"
                   type="number"
@@ -354,7 +356,7 @@ export function ExerciseConfigForm({
               </div>
             ) : (
               <div className="space-y-1">
-                <label htmlFor="duration" className="text-xs font-medium">Duration (s)</label>
+                <label htmlFor="duration" className="text-xs font-medium">{t('plans.wizard.exerciseConfig.metricDuration')}</label>
                 <Input
                   id="duration"
                   type="number"
@@ -370,7 +372,7 @@ export function ExerciseConfigForm({
           {metricMode === 'reps' && (
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
-                <label htmlFor="maxReps" className="text-xs font-medium">Max Reps</label>
+                <label htmlFor="maxReps" className="text-xs font-medium">{t('plans.wizard.exerciseConfig.maxReps')}</label>
                 <Input
                   id="maxReps"
                   type="number"
@@ -385,7 +387,7 @@ export function ExerciseConfigForm({
                 )}
               </div>
               <div className="space-y-1">
-                <label htmlFor="weight" className="text-xs font-medium">Weight</label>
+                <label htmlFor="weight" className="text-xs font-medium">{t('plans.wizard.exerciseConfig.weight')}</label>
                 <Input
                   id="weight"
                   type="number"
@@ -403,7 +405,7 @@ export function ExerciseConfigForm({
           {metricMode === 'duration' && (
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
-                <label htmlFor="weight" className="text-xs font-medium">Weight</label>
+                <label htmlFor="weight" className="text-xs font-medium">{t('plans.wizard.exerciseConfig.weight')}</label>
                 <Input
                   id="weight"
                   type="number"
@@ -416,7 +418,7 @@ export function ExerciseConfigForm({
                 />
               </div>
               <div className="space-y-1">
-                <label htmlFor="rest" className="text-xs font-medium">Rest (s)</label>
+                <label htmlFor="rest" className="text-xs font-medium">{t('plans.wizard.exerciseConfig.rest')}</label>
                 <Input
                   id="rest"
                   type="number"
@@ -435,7 +437,7 @@ export function ExerciseConfigForm({
           {metricMode === 'reps' && (
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
-                <label htmlFor="rest" className="text-xs font-medium">Rest (s)</label>
+                <label htmlFor="rest" className="text-xs font-medium">{t('plans.wizard.exerciseConfig.rest')}</label>
                 <Input
                   id="rest"
                   type="number"
@@ -455,7 +457,7 @@ export function ExerciseConfigForm({
         <>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <label htmlFor="sets" className="text-xs font-medium">Sets</label>
+              <label htmlFor="sets" className="text-xs font-medium">{t('plans.wizard.exerciseConfig.sets')}</label>
               <Input
                 id="sets"
                 type="number"
@@ -469,7 +471,7 @@ export function ExerciseConfigForm({
               )}
             </div>
             <div className="space-y-1">
-              <label htmlFor="rest" className="text-xs font-medium">Rest (s)</label>
+              <label htmlFor="rest" className="text-xs font-medium">{t('plans.wizard.exerciseConfig.rest')}</label>
               <Input
                 id="rest"
                 type="number"
@@ -485,16 +487,16 @@ export function ExerciseConfigForm({
           </div>
 
           <div className="space-y-2">
-            {renderSidePanel('Lado izquierdo', leftState, setLeftState, errors.left?.maxReps?.message as string | undefined)}
-            {renderSidePanel('Lado derecho', rightState, setRightState, errors.right?.maxReps?.message as string | undefined)}
+            {renderSidePanel(t('plans.wizard.exerciseConfig.leftSide'), leftState, setLeftState, errors.left?.maxReps?.message as string | undefined)}
+            {renderSidePanel(t('plans.wizard.exerciseConfig.rightSide'), rightState, setRightState, errors.right?.maxReps?.message as string | undefined)}
             {sideError && <p className="text-destructive text-xs">{sideError}</p>}
           </div>
         </>
       )}
 
       <div className="space-y-1">
-        <label htmlFor="notes" className="text-xs font-medium">Notes (optional)</label>
-        <Input id="notes" {...register('notes')} placeholder="e.g. Focus on form" className="min-h-11" />
+        <label htmlFor="notes" className="text-xs font-medium">{t('plans.wizard.exerciseConfig.notes')}</label>
+        <Input id="notes" {...register('notes')} placeholder={t('plans.wizard.exerciseConfig.notesPlaceholder')} className="min-h-11" />
       </div>
 
       <SupersetGroupSelector value={supersetGroupId} onChange={setSupersetGroupId} />
@@ -506,10 +508,10 @@ export function ExerciseConfigForm({
           onClick={onCancel}
           className="flex-1 cursor-pointer h-11"
         >
-          Cancel
+          {t('common.cancel')}
         </Button>
         <Button type="submit" className="flex-1 cursor-pointer h-11">
-          Save
+          {t('common.save')}
         </Button>
       </div>
     </form>
