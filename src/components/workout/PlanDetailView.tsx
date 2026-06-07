@@ -29,6 +29,7 @@ import {
   Share2,
 } from 'lucide-react';
 import { SharePlanSheet } from './SharePlanSheet';
+import { CopyDaySheet } from './CopyDaySheet';
 import type { WorkoutPlan } from '@/types/domain.types';
 
 interface PlanDetailViewProps {
@@ -49,6 +50,7 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
 
   const [activeTab, setActiveTab] = useState<'overview' | 'progression'>('overview');
   const [sharePlanOpen, setSharePlanOpen] = useState(false);
+  const [copyDaySheet, setCopyDaySheet] = useState<{ open: boolean; dayOfWeek: string }>({ open: false, dayOfWeek: '' });
 
   const totalExercises = plan.days.reduce((sum, d) => sum + d.exercises.length, 0);
 
@@ -207,6 +209,7 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
                       days={plan.days}
                       planId={plan.id}
                       showSwap={isPremium && !!plan.isAiGenerated}
+                      onCopyDay={(dow) => setCopyDaySheet({ open: true, dayOfWeek: dow })}
                     />
                   ) : (
                     <p className="py-4 text-center text-sm text-muted-foreground">
@@ -230,6 +233,7 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
               days={plan.days}
               planId={plan.id}
               showSwap={isPremium && !!plan.isAiGenerated}
+              onCopyDay={(dow) => setCopyDaySheet({ open: true, dayOfWeek: dow })}
             />
           ) : (
             <p className="py-4 text-center text-sm text-muted-foreground">
@@ -238,6 +242,12 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
           )}
         </>
       )}
+      <CopyDaySheet
+        planId={plan.id}
+        dayOfWeek={copyDaySheet.dayOfWeek}
+        open={copyDaySheet.open}
+        onOpenChange={(open) => setCopyDaySheet((s) => ({ ...s, open }))}
+      />
     </div>
   );
 }

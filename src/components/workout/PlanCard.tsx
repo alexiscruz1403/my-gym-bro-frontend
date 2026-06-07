@@ -1,11 +1,15 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { CalendarDays, Dumbbell, Play, ChevronRight } from 'lucide-react';
+import { CalendarDays, Dumbbell, Play, ChevronRight, Copy, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { duplicatePlan } from '@/services/workout-plans.service';
+import { invalidatePlansCache } from '@/hooks/usePlans';
 import type { PlanListItem } from '@/types/domain.types';
 
 const DOW_ORDER = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as const;
@@ -18,12 +22,33 @@ interface PlanCardProps {
   plan: PlanListItem;
   onStart: (planId: string) => void;
   startLoading?: boolean;
+  atLimit?: boolean;
 }
 
-export function PlanCard({ plan, onStart, startLoading }: PlanCardProps) {
+export function PlanCard({ plan, onStart, startLoading, atLimit = false }: PlanCardProps) {
   const router = useRouter();
   const { t } = useTranslation();
   const todayDow = getTodayDow();
+  const [duplicating, setDuplicating] = useState(false);
+
+  async function handleDuplicate() {
+    if (atLimit || duplicating) return;
+    setDuplicating(true);
+    try {
+      const result = await duplicatePlan(plan.id);
+      invalidatePlansCache();
+      toast.success(t('plans.duplicateSuccess', { name: result.name }));
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response?.status;
+      if (status === 422) {
+        toast.error(t('plans.error.maxPlans'));
+      } else {
+        toast.error(t('plans.duplicateError'));
+      }
+    } finally {
+      setDuplicating(false);
+    }
+  }
 
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-1 transition-[box-shadow,border-color] hover:shadow-2 hover:border-border/70">
@@ -98,6 +123,18 @@ export function PlanCard({ plan, onStart, startLoading }: PlanCardProps) {
         >
           {t('plans.viewFull')}
           <ChevronRight className="h-3.5 w-3.5" />
+        </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-10 w-10 shrink-0 cursor-pointer bg-muted/40"
+          disabled={atLimit || duplicating}
+          onClick={handleDuplicate}
+          aria-label={t('plans.duplicate')}
+        >
+          {duplicating
+            ? <Loader2 className="h-4 w-4 animate-spin" />
+            : <Copy className="h-4 w-4" />}
         </Button>
       </div>
     </div>

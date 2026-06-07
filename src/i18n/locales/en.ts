@@ -365,6 +365,15 @@ const en = {
       error: 'Could not copy the plan',
       limitWarning: "You've reached the 3-plan limit",
     },
+    duplicate: 'Duplicate',
+    duplicating: 'Duplicating...',
+    duplicateSuccess: '"{{name}}" created',
+    duplicateError: 'Could not duplicate the plan',
+    copyDay: 'Copy day',
+    copyDaySheet: {
+      title: 'Copy day',
+      button: 'Copy',
+    },
   },
 
   session: {

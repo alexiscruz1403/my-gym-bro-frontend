@@ -367,6 +367,15 @@ const es = {
       error: 'No se pudo copiar el plan',
       limitWarning: 'Alcanzaste el límite de 3 planes',
     },
+    duplicate: 'Duplicar',
+    duplicating: 'Duplicando...',
+    duplicateSuccess: '"{{name}}" creado',
+    duplicateError: 'No se pudo duplicar el plan',
+    copyDay: 'Copiar día',
+    copyDaySheet: {
+      title: 'Copiar día',
+      button: 'Copiar',
+    },
   },
 
   session: {

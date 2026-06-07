@@ -38,6 +38,8 @@ export const API_ROUTES = {
     active: '/workout-plans/active',
     detail: (id: string) => `/workout-plans/${id}`,
     activate: (id: string) => `/workout-plans/${id}/activate`,
+    duplicate: (id: string) => `/workout-plans/${id}/duplicate`,
+    copyDay: (id: string, dayOfWeek: string) => `/workout-plans/${id}/days/${dayOfWeek}/copy`,
     goals: (id: string) => `/workout-plans/${id}/goals`,
     autoUpdate: (id: string) => `/workout-plans/${id}/auto-update`,
   },
