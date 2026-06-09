@@ -20,9 +20,23 @@ function isNetworkError(error: unknown): boolean {
 export async function getPlans(): Promise<PlanListItem[]> {
   try {
     const { data } = await apiClient.get<PlanListItem[]>(API_ROUTES.workoutPlans.list);
-    // Merge into IndexedDB — only cache non-AI plans to reflect what's managed offline
     const asList: PlanListItem[] = data;
-    // Also cache as full plans if already stored (avoids overwriting full plan data)
+
+    // Remove from IndexedDB any plans that no longer exist on the server.
+    // Preserve offline-pending plans — they were created locally and haven't synced yet.
+    const serverIds = new Set(asList.map((p) => p.id));
+    const dbPlans = await db.plans.toArray();
+    const toDelete = dbPlans
+      .filter(
+        (p) =>
+          !(p as WorkoutPlan & { _isOfflinePending?: boolean })._isOfflinePending &&
+          !serverIds.has(p.id),
+      )
+      .map((p) => p.id);
+    if (toDelete.length > 0) {
+      await db.plans.bulkDelete(toDelete);
+    }
+
     return asList;
   } catch (error) {
     if (isNetworkError(error)) {

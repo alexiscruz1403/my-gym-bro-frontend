@@ -27,10 +27,8 @@ async function prefetchAll(): Promise<void> {
   const today = new Date().toISOString().split('T')[0];
 
   await Promise.allSettled([
-    // Plans
-    getPlans().then((list) => {
-      // getActivePlan also populates the plans table
-    }),
+    // Plans — getPlans() syncs deletions in IndexedDB; getActivePlan() stores the full active plan
+    getPlans(),
     getActivePlan(),
 
     // Exercise catalog — all pages

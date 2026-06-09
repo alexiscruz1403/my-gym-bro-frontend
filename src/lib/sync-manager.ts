@@ -34,6 +34,10 @@ async function applyServerResponse(type: string, tempId: string | undefined, res
       await db.plans.put(responseData as WorkoutPlan);
       break;
     }
+    case 'DELETE_PLAN': {
+      if (tempId) await db.plans.delete(tempId);
+      break;
+    }
     case 'UPDATE_PROFILE':
     case 'UPDATE_PHYSICAL_DATA': {
       await db.userProfile.put(responseData as UserResponse);
