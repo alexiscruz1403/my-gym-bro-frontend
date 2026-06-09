@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -89,26 +89,32 @@ export function ExerciseConfigForm({
     register,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<ExerciseConfigFormValues>({
     resolver: zodResolver(exerciseConfigSchema),
     defaultValues: {
       sets: defaultValues?.sets ?? 3,
       minReps:
-        bilateral && defaultValues?.duration === undefined
+        bilateral && defaultValues?.duration == null
           ? (defaultValues?.minReps ?? 10)
           : undefined,
       maxReps:
-        bilateral && defaultValues?.duration === undefined
-          ? (defaultValues?.maxReps ?? undefined)
+        bilateral && defaultValues?.duration == null
+          ? defaultValues?.maxReps ?? undefined
           : undefined,
-      duration: bilateral ? defaultValues?.duration : undefined,
+      duration: bilateral ? defaultValues?.duration ?? undefined : undefined,
       weight: bilateral ? (defaultValues?.weight ?? 0) : undefined,
       rest: defaultValues?.rest ?? 60,
       notes: defaultValues?.notes,
       left: !bilateral ? defaultValues?.left ?? undefined : undefined,
       right: !bilateral ? defaultValues?.right ?? undefined : undefined,
     },
+  });
+
+  const repsCacheRef = useRef<{ minReps: number | undefined; maxReps: number | undefined }>({
+    minReps: undefined,
+    maxReps: undefined,
   });
 
   useEffect(() => {
@@ -121,12 +127,19 @@ export function ExerciseConfigForm({
     if (bilateral) {
       if (mode === 'reps') {
         setValue('duration', undefined);
-        setValue('minReps', 10);
-        setValue('maxReps', undefined);
+        setValue('minReps', repsCacheRef.current.minReps ?? defaultValues?.minReps ?? 10);
+        setValue('maxReps', repsCacheRef.current.maxReps ?? defaultValues?.maxReps ?? undefined);
       } else {
+        repsCacheRef.current = {
+          minReps: getValues('minReps'),
+          maxReps: getValues('maxReps'),
+        };
         setValue('minReps', undefined);
         setValue('maxReps', undefined);
-        setValue('duration', 30);
+        const currentDuration = getValues('duration');
+        if (!currentDuration || isNaN(currentDuration)) {
+          setValue('duration', defaultValues?.duration ?? 30);
+        }
       }
     } else {
       setLeftState((s) =>

@@ -71,7 +71,7 @@ export function WizardStep4Review({
                             size="sm"
                           />
                           <span className="text-muted-foreground text-xs">
-                            {ex.exerciseName} — {ex.sets}×{metric}
+                            {ex.exerciseName} — {ex.sets}×{metric} · {ex.rest}s {t('session.rest.label').toLowerCase()}
                           </span>
                         </li>
                       );

@@ -1,6 +1,7 @@
 'use client';
 
 import NextLink from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import type { ExerciseConfig } from '@/types/domain.types';
 import { formatSide, isUnilateral } from '@/lib/set-format';
@@ -15,6 +16,7 @@ interface ExerciseConfigRowProps {
 }
 
 export function ExerciseConfigRow({ config, planId, showSwap, showBorder }: ExerciseConfigRowProps) {
+  const { t } = useTranslation();
   const unilateral = isUnilateral(config);
   const weightUnit = config.weightUnit ?? 'kg';
 
@@ -74,7 +76,7 @@ export function ExerciseConfigRow({ config, planId, showSwap, showBorder }: Exer
             ) : (
               <p className="font-display text-[13px] font-semibold text-muted-foreground mb-0!">PC</p>
             )}
-            <p className="text-[11px] text-muted-foreground">{config.rest}s rest</p>
+            <p className="text-[11px] text-muted-foreground">{config.rest}s {t('session.rest.label').toLowerCase()}</p>
           </div>
         )}
       </div>

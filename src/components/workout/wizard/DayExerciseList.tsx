@@ -85,6 +85,8 @@ function SortableExerciseItem({
     nextEx?.supersetGroupId &&
     ex.supersetGroupId === nextEx.supersetGroupId;
 
+  const { t } = useTranslation();
+
   return (
     <div ref={setNodeRef} style={style}>
       {isEditing ? (
@@ -132,7 +134,7 @@ function SortableExerciseItem({
                     ? `${ex.left.duration}s`
                     : 'L/R'}{' '}
                 L/R
-                {` · ${ex.rest}s rest`}
+                {` · ${ex.rest}s ${t('session.rest.label').toLowerCase()}`}
               </p>
             ) : (
               <p className="text-muted-foreground text-xs">
@@ -145,7 +147,7 @@ function SortableExerciseItem({
                     ? `${ex.duration}s`
                     : '—'}
                 {ex.weight ? ` · ${ex.weight}${ex.weightUnit ?? 'kg'}` : ''}
-                {` · ${ex.rest}s rest`}
+                {` · ${ex.rest}s ${t('session.rest.label').toLowerCase()}`}
               </p>
             )}
           </div>
