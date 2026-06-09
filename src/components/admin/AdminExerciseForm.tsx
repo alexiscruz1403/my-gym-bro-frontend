@@ -6,8 +6,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { getExercise } from '@/services/exercises.service';
-import type { Exercise, MuscleGroup, TrackingType, LoadType } from '@/types/domain.types';
+import type { AdminExercise, MuscleGroup, TrackingType, LoadType } from '@/types/domain.types';
 
 const MUSCLE_GROUPS: MuscleGroup[] = [
   'chest', 'front_delts', 'side_delts', 'triceps',
@@ -18,7 +17,7 @@ const MUSCLE_GROUPS: MuscleGroup[] = [
 
 interface AdminExerciseFormProps {
   open: boolean;
-  exercise: Exercise | null;
+  exercise: AdminExercise | null;
   onSubmit: (formData: FormData) => Promise<void>;
   onClose: () => void;
 }
@@ -41,8 +40,8 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
 
   useEffect(() => {
     if (exercise) {
-      getExercise(exercise.id, 'es').then((r) => setNameEs(r.name));
-      getExercise(exercise.id, 'en').then((r) => setNameEn(r.name));
+      setNameEs(exercise.name.es);
+      setNameEn(exercise.name.en);
       setTrackingType(exercise.trackingType);
       setLoadType(exercise.loadType);
       setMusclesPrimary(exercise.musclesPrimary);

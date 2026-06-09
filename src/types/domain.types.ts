@@ -101,6 +101,11 @@ export interface Exercise {
   weightGuide?: { instruction: WeightInstruction; note: string | null };
 }
 
+export interface AdminExercise extends Omit<Exercise, 'name'> {
+  name: { es: string; en: string };
+  createdAt: string;
+}
+
 export interface ExerciseSide {
   reps?: number;
   minReps?: number;

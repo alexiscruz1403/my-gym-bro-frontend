@@ -2,11 +2,11 @@
 
 import { useState, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
-import { getExercises, createExercise, updateExercise, deleteExercise } from '@/services/exercises.service';
-import type { Exercise, MuscleGroup } from '@/types/domain.types';
+import { getAdminExercises, createExercise, updateExercise, deleteExercise } from '@/services/exercises.service';
+import type { AdminExercise, MuscleGroup } from '@/types/domain.types';
 
 export function useAdminExercises() {
-  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [exercises, setExercises] = useState<AdminExercise[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +22,7 @@ export function useAdminExercises() {
       const name = overrides?.nameSearch ?? nameSearchRef.current;
       const muscle = overrides?.primaryMuscle ?? primaryMuscleRef.current;
       setIsLoading(true);
-      getExercises({
+      getAdminExercises({
         page: targetPage,
         limit: 20,
         search: name || undefined,
@@ -55,14 +55,13 @@ export function useAdminExercises() {
   };
 
   const create = async (formData: FormData) => {
-    const created = await createExercise(formData);
-    setExercises((prev) => [created, ...prev]);
-    setTotal((t) => t + 1);
+    await createExercise(formData);
+    fetchPage(page);
   };
 
   const update = async (id: string, formData: FormData) => {
-    const updated = await updateExercise(id, formData);
-    setExercises((prev) => prev.map((e) => (e.id === id ? updated : e)));
+    await updateExercise(id, formData);
+    fetchPage(page);
   };
 
   const remove = async (id: string) => {

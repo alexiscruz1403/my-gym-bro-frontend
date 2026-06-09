@@ -2,8 +2,8 @@ import axios from 'axios';
 import { apiClient } from '@/lib/axios';
 import { API_ROUTES } from '@/lib/api-routes';
 import { db } from '@/lib/db';
-import type { ExerciseListParams, ExerciseListResponse } from '@/types/api.types';
-import type { Exercise } from '@/types/domain.types';
+import type { AdminExerciseListResponse, ExerciseListParams, ExerciseListResponse } from '@/types/api.types';
+import type { AdminExercise, Exercise } from '@/types/domain.types';
 
 function isNetworkError(error: unknown): boolean {
   return !navigator.onLine || (axios.isAxiosError(error) && !error.response);
@@ -57,4 +57,21 @@ export async function updateExercise(id: string, formData: FormData): Promise<Ex
 
 export async function deleteExercise(id: string): Promise<void> {
   await apiClient.delete(API_ROUTES.exercises.detail(id));
+}
+
+export async function getAdminExercises(
+  params: ExerciseListParams = {},
+): Promise<AdminExerciseListResponse> {
+  const { data } = await apiClient.get<AdminExerciseListResponse>(
+    API_ROUTES.admin.exercises,
+    { params },
+  );
+  return data;
+}
+
+export async function getAdminExercise(id: string): Promise<AdminExercise> {
+  const { data } = await apiClient.get<AdminExercise>(
+    API_ROUTES.admin.exerciseDetail(id),
+  );
+  return data;
 }

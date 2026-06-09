@@ -3,11 +3,11 @@
 import { useState } from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
 import { ExerciseGifThumbnail } from '@/components/shared/ExerciseGifThumbnail';
-import type { Exercise } from '@/types/domain.types';
+import type { AdminExercise } from '@/types/domain.types';
 
 interface AdminExerciseRowProps {
-  exercise: Exercise;
-  onEdit: (exercise: Exercise) => void;
+  exercise: AdminExercise;
+  onEdit: (exercise: AdminExercise) => void;
   onDelete: (id: string) => Promise<void>;
 }
 
@@ -23,12 +23,13 @@ export function AdminExerciseRow({ exercise, onEdit, onDelete }: AdminExerciseRo
     <div className="flex items-center gap-3 bg-card border border-border rounded-2xl px-3.5 py-3 shadow-sm">
       <ExerciseGifThumbnail
         gifUrl={exercise.gifUrl}
-        exerciseName={exercise.name}
+        exerciseName={exercise.name.en}
         exerciseId={exercise.id}
         size="sm"
       />
       <div className="min-w-0 flex-1">
-        <p className="text-[14px] font-semibold text-foreground truncate">{exercise.name}</p>
+        <p className="text-[14px] font-semibold text-foreground truncate">{exercise.name.en}</p>
+        <p className="text-[11px] text-muted-foreground truncate">{exercise.name.es}</p>
         <div className="flex gap-1 flex-wrap mt-1.25">
           <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-muted/60 text-muted-foreground border border-border">
             {exercise.trackingType}

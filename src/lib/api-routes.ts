@@ -91,6 +91,8 @@ export const API_ROUTES = {
     setUserRole: (id: string) => `/admin/users/${id}/role`,
     giftMembership: (id: string) => `/admin/users/${id}/membership/gift`,
     revokeMembership: (id: string) => `/admin/users/${id}/membership/revoke`,
+    exercises: '/admin/exercises',
+    exerciseDetail: (id: string) => `/admin/exercises/${id}`,
     monitoring: {
       users: '/admin/monitoring/users',
       subscriptions: '/admin/monitoring/subscriptions',

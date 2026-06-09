@@ -1,4 +1,5 @@
 import type {
+  AdminExercise,
   DayOfWeek,
   Exercise,
   ExerciseSide,
@@ -60,6 +61,13 @@ export interface ExerciseListParams {
 
 export interface ExerciseListResponse {
   data: Exercise[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface AdminExerciseListResponse {
+  data: AdminExercise[];
   total: number;
   page: number;
   limit: number;
