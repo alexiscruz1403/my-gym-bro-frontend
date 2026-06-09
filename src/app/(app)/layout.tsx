@@ -2,6 +2,7 @@ import { AppHeader } from '@/components/layout/AppHeader';
 import { BottomNav } from '@/components/layout/BottomNav';
 import { SideNav } from '@/components/layout/SideNav';
 import { PageTransition } from '@/components/layout/PageTransition';
+import { NavigationProgress } from '@/components/layout/NavigationProgress';
 import { SessionGuard } from '@/components/layout/SessionGuard';
 import { UserLoader } from '@/components/layout/UserLoader';
 import { OfflineBanner } from '@/components/shared/OfflineBanner';
@@ -11,6 +12,7 @@ import { NotificationsProvider } from '@/components/notifications/NotificationsP
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen bg-background">
+      <NavigationProgress />
       <SessionGuard />
       <UserLoader />
       <NotificationsProvider />
