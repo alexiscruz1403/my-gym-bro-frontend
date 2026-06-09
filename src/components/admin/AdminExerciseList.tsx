@@ -13,7 +13,7 @@ const AdminExerciseForm = dynamic(
   { ssr: false },
 );
 import { useAdminExercises } from '@/hooks/useAdminExercises';
-import type { Exercise, MuscleGroup } from '@/types/domain.types';
+import type { AdminExercise, MuscleGroup } from '@/types/domain.types';
 
 const MUSCLE_GROUPS: MuscleGroup[] = [
   'chest', 'front_delts', 'side_delts', 'triceps',
@@ -41,7 +41,7 @@ export function AdminExerciseList() {
     remove,
   } = useAdminExercises();
   const [formOpen, setFormOpen] = useState(false);
-  const [editing, setEditing] = useState<Exercise | null>(null);
+  const [editing, setEditing] = useState<AdminExercise | null>(null);
 
   const muscleLabels = t('exercises.muscle', { returnObjects: true }) as Record<MuscleGroup, string>;
 
@@ -49,7 +49,7 @@ export function AdminExerciseList() {
     fetchPage(1);
   }, [fetchPage]);
 
-  const handleEdit = (exercise: Exercise) => {
+  const handleEdit = (exercise: AdminExercise) => {
     setEditing(exercise);
     setFormOpen(true);
   };
