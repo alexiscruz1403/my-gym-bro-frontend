@@ -1,56 +1,83 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, ImageOff, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ExerciseSessionCard } from './ExerciseSessionCard';
+import { AddExerciseSheet } from './AddExerciseSheet';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import type { SessionExercise } from '@/types/domain.types';
+import type { SessionExercise, Exercise } from '@/types/domain.types';
 import type { LogSetRequest, ModifyExerciseRequest, ReplaceExerciseRequest } from '@/types/api.types';
 
 interface ExerciseNavigatorProps {
   exercises: SessionExercise[];
+  activeIndex: number;
+  onIndexChange: (i: number) => void;
   onLogSet: (dto: LogSetRequest) => Promise<void>;
   onModify: (exerciseId: string, dto: ModifyExerciseRequest) => Promise<void>;
   onReplace: (exerciseId: string, dto: ReplaceExerciseRequest) => Promise<void>;
+  onAdd: (exerciseIds: string[]) => Promise<void>;
 }
 
-export function ExerciseNavigator({ exercises, onLogSet, onModify, onReplace }: ExerciseNavigatorProps) {
+export function ExerciseNavigator({ exercises, activeIndex, onIndexChange, onLogSet, onModify, onReplace, onAdd }: ExerciseNavigatorProps) {
   const { t } = useTranslation();
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [addOpen, setAddOpen] = useState(false);
   const current = exercises[activeIndex];
 
   if (!current) return null;
 
+  const handleAddConfirm = async (selected: Exercise[]) => {
+    const firstNewIndex = exercises.length;
+    await onAdd(selected.map((e) => e.id));
+    onIndexChange(firstNewIndex);
+    setAddOpen(false);
+  };
+
   return (
     <div className="flex flex-1 flex-col">
-      {/* Progress dots */}
+      {/* Exercise thumbnails */}
       <div className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="flex min-w-full items-center justify-center gap-1 px-4 py-3">
+        <div className="flex min-w-full items-center gap-2 px-4 py-3">
           {exercises.map((ex, i) => {
-            const done = ex.sets.filter((s) => s.completed).length === ex.plannedSets;
+            const isCompleted = ex.sets.length > 0 && ex.sets.filter((s) => s.completed).length === ex.plannedSets;
+            const isActive = i === activeIndex;
             return (
               <button
                 key={ex.exerciseId}
                 type="button"
-                onClick={() => setActiveIndex(i)}
-                className="flex cursor-pointer items-center justify-center px-1 py-3"
+                onClick={() => onIndexChange(i)}
                 aria-label={`Go to ${ex.exerciseName}`}
+                className={cn(
+                  'h-12 w-12 shrink-0 cursor-pointer overflow-hidden rounded-md border-2 transition-all',
+                  isActive
+                    ? 'border-primary ring-2 ring-primary/30'
+                    : isCompleted
+                      ? 'border-green-500'
+                      : 'border-border opacity-60',
+                )}
               >
-                <span
-                  className={cn(
-                    'block h-2 rounded-full transition-all',
-                    i === activeIndex
-                      ? 'bg-primary w-6'
-                      : done
-                        ? 'bg-accent w-2'
-                        : 'bg-muted w-2',
-                  )}
-                />
+                {ex.gifUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={ex.gifUrl} alt={ex.exerciseName} className="h-full w-full object-cover" />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center bg-muted">
+                    <ImageOff className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                )}
               </button>
             );
           })}
+
+          {/* Add exercise button */}
+          <button
+            type="button"
+            onClick={() => setAddOpen(true)}
+            aria-label={t('session.addExercise.title')}
+            className="flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-border transition-colors hover:border-primary hover:text-primary"
+          >
+            <Plus className="h-5 w-5 text-muted-foreground" />
+          </button>
         </div>
       </div>
 
@@ -63,7 +90,7 @@ export function ExerciseNavigator({ exercises, onLogSet, onModify, onReplace }: 
           onReplace={onReplace}
           onExerciseCompleted={
             activeIndex < exercises.length - 1
-              ? () => setActiveIndex((i) => i + 1)
+              ? () => onIndexChange(Math.min(activeIndex + 1, exercises.length - 1))
               : undefined
           }
         />
@@ -77,7 +104,7 @@ export function ExerciseNavigator({ exercises, onLogSet, onModify, onReplace }: 
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => setActiveIndex((i) => Math.max(0, i - 1))}
+          onClick={() => onIndexChange(Math.max(0, activeIndex - 1))}
           disabled={activeIndex === 0}
           className="cursor-pointer gap-1"
         >
@@ -93,7 +120,7 @@ export function ExerciseNavigator({ exercises, onLogSet, onModify, onReplace }: 
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setActiveIndex((i) => i + 1)}
+            onClick={() => onIndexChange(activeIndex + 1)}
             className="cursor-pointer gap-1"
           >
             {t('session.next')}
@@ -106,6 +133,8 @@ export function ExerciseNavigator({ exercises, onLogSet, onModify, onReplace }: 
           </div>
         )}
       </div>
+
+      <AddExerciseSheet open={addOpen} onOpenChange={setAddOpen} onConfirm={handleAddConfirm} />
     </div>
   );
 }

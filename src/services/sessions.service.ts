@@ -244,6 +244,57 @@ export async function replaceExercise(
   return data;
 }
 
+export async function addExercises(
+  sessionId: string,
+  exerciseIds: string[],
+): Promise<SessionExercise[]> {
+  if (!navigator.onLine) {
+    const session = await db.activeSession.get(sessionId);
+    if (!session) throw new Error('Active session not found in offline cache');
+
+    const newExercises: SessionExercise[] = [];
+    for (const exerciseId of exerciseIds) {
+      if (session.exercises.some((ex) => ex.exerciseId === exerciseId)) continue;
+      const exercise = await db.exercises.get(exerciseId);
+      newExercises.push({
+        exerciseId,
+        exerciseName: exercise?.name ?? exerciseId,
+        orderIndex: session.exercises.length + newExercises.length,
+        plannedSets: 1,
+        plannedWeight: 0,
+        plannedRest: 0,
+        trackingType: exercise?.trackingType ?? 'reps',
+        sets: [],
+        modifiedDuringSession: false,
+        lastPerformance: null,
+        bilateral: exercise?.bilateral ?? false,
+        plannedLeft: null,
+        plannedRight: null,
+        gifUrl: exercise?.gifUrl ?? null,
+        weightUnit: 'kg',
+      });
+    }
+
+    const updated = { ...session, exercises: [...session.exercises, ...newExercises] };
+    await db.activeSession.put(updated);
+
+    await enqueue({
+      type: 'ADD_EXERCISES' as MutationType,
+      method: 'POST',
+      url: API_ROUTES.sessions.addExercises(sessionId),
+      payload: { exerciseIds },
+    });
+
+    return newExercises;
+  }
+
+  const { data } = await apiClient.post<SessionExercise[]>(
+    API_ROUTES.sessions.addExercises(sessionId),
+    { exerciseIds },
+  );
+  return data;
+}
+
 export async function cancelSession(): Promise<void> {
   const session = await db.activeSession.toCollection().first();
 

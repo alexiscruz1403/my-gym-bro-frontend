@@ -463,6 +463,21 @@ const en = {
       title: 'Replace exercise',
       description: 'Choose an exercise from the catalog to swap in for this slot.',
     },
+    addExercise: {
+      title: 'Add exercise',
+    },
+    warmup: {
+      title: 'Warmup',
+      targetWeight: 'Target weight',
+      setLabel: 'Set {{n}}',
+      multiplierLabel: 'Increment',
+      noWeight: 'This exercise has no planned weight.',
+    },
+    tools: {
+      ariaLabel: 'Session tools',
+      timer: 'Timer',
+      warmup: 'Warmup',
+    },
     success: {
       completed: 'Workout completed!',
       partialSaved: 'Session saved',

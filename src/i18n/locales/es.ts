@@ -465,6 +465,21 @@ const es = {
       title: 'Reemplazar ejercicio',
       description: 'Elegí un ejercicio del catálogo para reemplazar este.',
     },
+    addExercise: {
+      title: 'Agregar ejercicio',
+    },
+    warmup: {
+      title: 'Calentamiento',
+      targetWeight: 'Peso objetivo',
+      setLabel: 'Serie {{n}}',
+      multiplierLabel: 'Incremento',
+      noWeight: 'Este ejercicio no tiene peso planificado.',
+    },
+    tools: {
+      ariaLabel: 'Herramientas de sesión',
+      timer: 'Temporizador',
+      warmup: 'Calentamiento',
+    },
     success: {
       completed: '¡Entrenamiento completado!',
       partialSaved: 'Sesión guardada',

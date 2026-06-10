@@ -8,6 +8,7 @@ import {
   logSet as logSetService,
   modifyExercise as modifyExerciseService,
   replaceExercise as replaceExerciseService,
+  addExercises as addExercisesService,
   cancelSession as cancelSessionService,
   finishSession as finishSessionService,
 } from '@/services/sessions.service';
@@ -129,6 +130,15 @@ export function useSession() {
     [activeSessionId, setActiveSession],
   );
 
+  const addExercises = useCallback(
+    async (exerciseIds: string[]) => {
+      if (!activeSessionId || !activeSession) return;
+      const newExercises = await addExercisesService(activeSessionId, exerciseIds);
+      setActiveSession({ ...activeSession, exercises: [...activeSession.exercises, ...newExercises] });
+    },
+    [activeSessionId, activeSession, setActiveSession],
+  );
+
   const cancelSession = useCallback(async () => {
     await cancelSessionService();
     clearSession();
@@ -174,6 +184,7 @@ export function useSession() {
     logSet,
     modifyExercise,
     replaceExercise,
+    addExercises,
     cancelSession,
     finishSession,
     resumeOrRedirect,
