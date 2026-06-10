@@ -21,6 +21,7 @@ export type MutationType =
   | 'LOG_SET'
   | 'MODIFY_EXERCISE'
   | 'REPLACE_EXERCISE'
+  | 'ADD_EXERCISES'
   | 'FINISH_SESSION'
   | 'CANCEL_SESSION'
   | 'SYNC_SESSION'

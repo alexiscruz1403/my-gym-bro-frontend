@@ -51,6 +51,7 @@ export const API_ROUTES = {
     logSet: (id: string) => `/sessions/${id}/sets`,
     modifyExercise: (id: string, exerciseId: string) => `/sessions/${id}/exercises/${exerciseId}`,
     replaceExercise: (id: string, exerciseId: string) => `/sessions/${id}/exercises/${exerciseId}`,
+    addExercises: (id: string) => `/sessions/${id}/exercises`,
     finish: (id: string) => `/sessions/${id}/finish`,
     sync: '/sessions/sync',
     history: '/sessions',

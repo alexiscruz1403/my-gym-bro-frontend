@@ -18,12 +18,13 @@ import type { WorkoutSession, ExerciseRankSummaryItem } from '@/types/domain.typ
 export function SessionScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const { session, loading, logSet, modifyExercise, replaceExercise, cancelSession, finishSession } = useSession();
+  const { session, loading, logSet, modifyExercise, replaceExercise, addExercises, cancelSession, finishSession } = useSession();
   const [finishOpen, setFinishOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [finishedSession, setFinishedSession] = useState<WorkoutSession | null>(null);
   const [rankSummary, setRankSummary] = useState<ExerciseRankSummaryItem[]>([]);
   const [showCountdown, setShowCountdown] = useState(false);
+  const [activeExerciseIndex, setActiveExerciseIndex] = useState(0);
 
   if (finishedSession) {
     return <SessionSummary session={finishedSession} rankSummary={rankSummary} />;
@@ -81,15 +82,19 @@ export function SessionScreen() {
         onCancel={() => setCancelOpen(true)}
         onToggleCountdown={() => setShowCountdown((v) => !v)}
         countdownActive={showCountdown}
+        activeExercise={session.exercises[activeExerciseIndex] ?? null}
       />
       <GlobalRestTimerOverlay />
       {showCountdown && <GlobalCountdownTimerOverlay onClose={() => setShowCountdown(false)} />}
 
       <ExerciseNavigator
         exercises={session.exercises}
+        activeIndex={activeExerciseIndex}
+        onIndexChange={setActiveExerciseIndex}
         onLogSet={logSet}
         onModify={modifyExercise}
         onReplace={replaceExercise}
+        onAdd={addExercises}
       />
 
       <ConfirmFinishDialog

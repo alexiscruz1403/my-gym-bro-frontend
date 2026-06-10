@@ -10,7 +10,6 @@ import { LastPerformanceRow } from './LastPerformanceRow';
 import { ReplaceExerciseSheet } from './ReplaceExerciseSheet';
 import { useRestTimer } from '@/hooks/useRestTimer';
 import { useExerciseCatalog } from '@/hooks/useExerciseCatalog';
-import { ExerciseGifThumbnail } from '@/components/shared/ExerciseGifThumbnail';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import type { SessionExercise, Exercise } from '@/types/domain.types';
@@ -129,12 +128,6 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
       <div className="min-w-0">
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-start gap-2 min-w-0 flex-1">
-            <ExerciseGifThumbnail
-              gifUrl={exercise.gifUrl ?? undefined}
-              exerciseName={exercise.exerciseName}
-              exerciseId={exercise.exerciseId}
-              size="md"
-            />
             <div className="min-w-0 flex-1">
               <div className="flex min-w-0 flex-wrap items-center gap-2">
                 <NextLink
