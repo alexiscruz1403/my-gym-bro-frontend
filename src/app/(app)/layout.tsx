@@ -8,6 +8,7 @@ import { UserLoader } from '@/components/layout/UserLoader';
 import { OfflineBanner } from '@/components/shared/OfflineBanner';
 import { ActiveSessionWidget } from '@/components/session/ActiveSessionWidget';
 import { NotificationsProvider } from '@/components/notifications/NotificationsProvider';
+import { AchievementUnlockAnimation } from '@/components/achievements/AchievementUnlockAnimation';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -16,6 +17,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <SessionGuard />
       <UserLoader />
       <NotificationsProvider />
+      <AchievementUnlockAnimation />
       {/* Desktop: fixed left sidebar */}
       <SideNav />
 

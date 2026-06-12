@@ -265,4 +265,11 @@
     50%       { transform: scale(1.05) rotate(-2deg); opacity: 0.95; }
     75%       { transform: scale(1.18) rotate(2deg); opacity: 1; }
   }
+
+  @keyframes achievement-sparkle {
+    0%   { transform: scale(0) rotate(0deg);    opacity: 0; }
+    20%  { opacity: 1; }
+    70%  { transform: scale(1.1) rotate(200deg); opacity: 1; }
+    100% { transform: scale(0) rotate(360deg);  opacity: 0; }
+  }
 }
