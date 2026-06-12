@@ -8,6 +8,7 @@ import type {
   NotificationDataNewPost,
   NotificationDataPlanShared,
   NotificationDataSystem,
+  NotificationDataAchievementUnlocked,
 } from '@/types/domain.types';
 
 export interface FormattedNotification {
@@ -84,6 +85,14 @@ export function formatNotification(n: AppNotification): FormattedNotification {
         actorUsername: null,
       };
     }
+    case 'achievement_unlocked': {
+      const d = n.data as NotificationDataAchievementUnlocked;
+      return {
+        text: `¡Lograste "${d.nameEs}" (${d.tierLabelEs})!`,
+        avatar: d.badgeUrl,
+        actorUsername: null,
+      };
+    }
   }
 }
 
@@ -107,6 +116,7 @@ export function hrefFor(n: AppNotification): string {
     case 'plan_shared':
       return `/feed?post=${encodeURIComponent((n.data as NotificationDataPlanShared).postId)}`;
     case 'system':
+    case 'achievement_unlocked':
       return '/notifications';
   }
 }

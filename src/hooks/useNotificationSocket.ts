@@ -5,10 +5,12 @@ import { io, type Socket } from 'socket.io-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { getWsToken } from '@/services/notifications.service';
+import { usersService } from '@/services/users.service';
 import { formatNotification, hrefFor } from '@/lib/notification-format';
 import { playNotification } from '@/lib/audio';
 import useAuthStore from '@/store/auth.store';
-import type { AppNotification, UserResponse } from '@/types/domain.types';
+import { useAchievementAnimationStore } from '@/store/achievement-animation.store';
+import type { AppNotification, AchievementUnlockedPayload, UserResponse } from '@/types/domain.types';
 import type { ListNotificationsResponse } from '@/types/api.types';
 import { NOTIFICATIONS_KEY } from '@/hooks/useNotifications';
 import { UNREAD_COUNT_KEY } from '@/hooks/useUnreadNotifications';
@@ -17,6 +19,8 @@ export function useNotificationSocket() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const queryClient = useQueryClient();
   const socketRef = useRef<Socket | null>(null);
+  const profileRefreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const enqueueAchievement = useAchievementAnimationStore((s) => s.enqueue);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -84,6 +88,18 @@ export function useNotificationSocket() {
           if (Object.keys(patch).length > 0) setUser({ ...user, ...patch });
         });
 
+        socket.on('achievement_unlocked', (payload: AchievementUnlockedPayload) => {
+          enqueueAchievement(payload);
+          // Debounce: N simultaneous unlocks → single profile refresh
+          if (profileRefreshTimerRef.current) clearTimeout(profileRefreshTimerRef.current);
+          profileRefreshTimerRef.current = setTimeout(() => {
+            usersService.getMe().then((userData) => {
+              useAuthStore.getState().setUser(userData);
+              queryClient.setQueryData(['profile'], userData);
+            }).catch(() => { /* ignore — user can refresh manually */ });
+          }, 300);
+        });
+
         socket.on('connect_error', async (err) => {
           if (err.message?.toLowerCase().includes('unauthorized')) {
             try {
@@ -106,11 +122,12 @@ export function useNotificationSocket() {
 
     return () => {
       cancelled = true;
+      if (profileRefreshTimerRef.current) clearTimeout(profileRefreshTimerRef.current);
       if (socketRef.current) {
         socketRef.current.removeAllListeners();
         socketRef.current.disconnect();
         socketRef.current = null;
       }
     };
-  }, [isAuthenticated, queryClient]);
+  }, [isAuthenticated, queryClient, enqueueAchievement]);
 }

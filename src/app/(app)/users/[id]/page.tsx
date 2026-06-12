@@ -5,9 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { PublicSessionHistory } from '@/components/profile/PublicSessionHistory';
+import { AchievementsSection } from '@/components/achievements/AchievementsSection';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { usePublicProfile } from '@/hooks/usePublicProfile';
+import { useAuth } from '@/hooks/useAuth';
 
 interface PublicProfilePageProps {
   params: Promise<{ id: string }>;
@@ -17,6 +19,7 @@ export default function PublicProfilePage({ params }: PublicProfilePageProps) {
   const { id } = use(params);
   const { t } = useTranslation();
   const { profile, isLoading, error } = usePublicProfile(id);
+  const { user: viewer } = useAuth();
 
   if (isLoading) {
     return (
@@ -55,7 +58,15 @@ export default function PublicProfilePage({ params }: PublicProfilePageProps) {
   return (
     <PageContainer>
       <ProfileHeader user={profile} userId={id} />
-      {!isPrivateAndBlocked && <PublicSessionHistory userId={id} />}
+      {!isPrivateAndBlocked && (
+        <div className="space-y-4">
+          <PublicSessionHistory userId={id} />
+          <AchievementsSection
+            achievements={profile.achievements}
+            language={viewer?.language ?? 'es'}
+          />
+        </div>
+      )}
     </PageContainer>
   );
 }

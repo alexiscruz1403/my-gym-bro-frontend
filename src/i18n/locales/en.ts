@@ -649,6 +649,17 @@ const en = {
     },
   },
 
+  achievements: {
+    sectionTitle: 'Achievements',
+    noAchievements: 'No achievements yet',
+    earnedCount: '{{count}} people have this badge',
+    earnedOn: 'Earned on',
+    task: 'How to earn it',
+    showMore: 'Show more ({{count}} more)',
+    unlockedTitle: 'Achievement Unlocked!',
+    earnedBy: '{{count}} users have this',
+  },
+
   profile: {
     tabs: {
       profile: 'Profile',

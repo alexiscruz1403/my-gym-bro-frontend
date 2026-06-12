@@ -21,6 +21,7 @@ import { useSessionHistory } from '@/hooks/useSessionHistory';
 import { useStats } from '@/hooks/useStats';
 import { DeleteAccountDialog } from '@/components/profile/DeleteAccountDialog';
 import { BodyMetricsSection } from '@/components/profile/BodyMetricsSection';
+import { AchievementsSection } from '@/components/achievements/AchievementsSection';
 import { cn } from '@/lib/utils';
 
 type EditProfileValues = { username: string };
@@ -170,6 +171,8 @@ export default function ProfilePage() {
             </div>
 
             <BodyMetricsSection user={user} onSave={updatePhysicalData} />
+
+            <AchievementsSection achievements={user.achievements} language={user.language} />
 
             <button
               type="button"

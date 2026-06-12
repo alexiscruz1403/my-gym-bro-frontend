@@ -651,6 +651,17 @@ const es = {
     },
   },
 
+  achievements: {
+    sectionTitle: 'Logros',
+    noAchievements: 'Aún no hay logros obtenidos',
+    earnedCount: '{{count}} personas tienen esta insignia',
+    earnedOn: 'Obtenido el',
+    task: 'Cómo obtenerlo',
+    showMore: 'Mostrar más ({{count}} más)',
+    unlockedTitle: '¡Logro desbloqueado!',
+    earnedBy: '{{count}} personas lo tienen',
+  },
+
   profile: {
     tabs: {
       profile: 'Perfil',

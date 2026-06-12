@@ -30,6 +30,7 @@ export interface UserResponse {
   autoRenew: boolean;
   language: Language;
   physicalData?: PhysicalData | null;
+  achievements?: Achievement[];
 }
 
 export interface BilingualString {
@@ -300,6 +301,7 @@ export interface PublicUserProfile {
   isFollowing: boolean;
   isPrivate: boolean;
   isRequestPending: boolean;
+  achievements?: Achievement[];
 }
 
 export interface PublicUserSummary {
@@ -641,7 +643,8 @@ export type NotificationType =
   | 'post_comment'
   | 'new_post'
   | 'plan_shared'
-  | 'system';
+  | 'system'
+  | 'achievement_unlocked';
 
 export interface NotificationDataFollow {
   actorUsername: string;
@@ -689,6 +692,18 @@ export interface NotificationDataPlanShared {
   shareScope: 'followers' | 'individual';
 }
 
+export interface NotificationDataAchievementUnlocked {
+  nameEs: string;
+  nameEn: string;
+  tierLabelEs: string;
+  tierLabelEn: string;
+  tier: AchievementTier;
+  descriptionEs: string;
+  descriptionEn: string;
+  badgeUrl: string | null;
+  earnedCount: number;
+}
+
 export type NotificationData =
   | NotificationDataFollow
   | NotificationDataFollowRequest
@@ -697,7 +712,8 @@ export type NotificationData =
   | NotificationDataPostComment
   | NotificationDataNewPost
   | NotificationDataPlanShared
-  | NotificationDataSystem;
+  | NotificationDataSystem
+  | NotificationDataAchievementUnlocked;
 
 export interface AppNotification {
   _id: string;
@@ -952,4 +968,47 @@ export interface ErrorLog {
 export interface MonitoringErrorsResponse {
   data: ErrorLog[];
   meta: PaginatedMeta;
+}
+
+// Achievements
+
+export type AchievementTier = 'bronze' | 'silver' | 'gold';
+export type AchievementCategory = 'common' | 'secret';
+
+export interface AchievementLevel {
+  tier: AchievementTier;
+  labelEs: string;
+  labelEn: string;
+  descriptionEs: string;
+  descriptionEn: string;
+  taskEs: string;
+  taskEn: string;
+  badgeUrl: string | null;
+  threshold: number;
+  earnedCount: number;
+}
+
+export interface UnlockedTier {
+  tier: AchievementTier;
+  unlockedAt: string;
+}
+
+export interface Achievement {
+  key: string;
+  nameEs: string;
+  nameEn: string;
+  category: AchievementCategory;
+  levels: AchievementLevel[];
+  unlockedTiers: UnlockedTier[];
+  progress?: Record<string, unknown>;
+}
+
+export interface AchievementUnlockedPayload {
+  nameEs: string;
+  nameEn: string;
+  tier: AchievementTier;
+  descriptionEs: string;
+  descriptionEn: string;
+  badgeUrl: string | null;
+  earnedCount: number;
 }
