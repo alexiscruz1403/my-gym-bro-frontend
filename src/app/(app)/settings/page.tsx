@@ -99,6 +99,13 @@ export default function SettingsPage() {
   const { subscription, isLoading: subLoading, updateAutoRenew, isToggling } = useSubscription();
 
   const isPremium = user?.membershipTier === 'premium' && user?.membershipStatus === 'active';
+  const isRewardPremium = !!(
+    user?.rewardPremiumExpiresAt &&
+    new Date(user.rewardPremiumExpiresAt) > new Date()
+  );
+  const rewardPremiumExpiry = user?.rewardPremiumExpiresAt
+    ? new Date(user.rewardPremiumExpiresAt).toLocaleDateString()
+    : '';
 
   const NOTIFICATION_ITEMS = [
     {
@@ -262,6 +269,11 @@ export default function SettingsPage() {
                     <div className="mx-4 h-px bg-amber-500/15" />
                   </>
                 )}
+                {isRewardPremium && (
+                  <p className="px-4 pb-2 text-[12px] text-muted-foreground">
+                    {t('settings.subscription.rewardPremiumActive', { date: rewardPremiumExpiry })}
+                  </p>
+                )}
                 <SettingToggleRow
                   label={t('settings.subscription.autoRenew.label')}
                   description={t('settings.subscription.autoRenew.description')}
@@ -274,12 +286,12 @@ export default function SettingsPage() {
                   }
                   checked={subscription?.autoRenew ?? false}
                   onCheckedChange={updateAutoRenew}
-                  disabled={isToggling}
+                  disabled={isToggling || isRewardPremium}
                 />
               </>
             )}
           </div>
-        ) : (
+        ) : !isRewardPremium ? (
           <SettingsGroup title={t('settings.subscription.title')}>
             <SettingLinkRow
               href="/subscription"
@@ -288,7 +300,7 @@ export default function SettingsPage() {
               description={t('settings.subscription.goPremiumDesc')}
             />
           </SettingsGroup>
-        )}
+        ) : null}
 
         {/* Legal */}
         <SettingsGroup title={t('settings.legal.title')}>

@@ -22,6 +22,8 @@ import { useStats } from '@/hooks/useStats';
 import { DeleteAccountDialog } from '@/components/profile/DeleteAccountDialog';
 import { BodyMetricsSection } from '@/components/profile/BodyMetricsSection';
 import { AchievementsSection } from '@/components/achievements/AchievementsSection';
+import { TitlesSection } from '@/components/profile/TitlesSection';
+import { useTitles, useSetActiveTitle } from '@/hooks/useTitles';
 import { cn } from '@/lib/utils';
 
 type EditProfileValues = { username: string };
@@ -43,6 +45,9 @@ export default function ProfilePage() {
   const { user, isLoading, updateProfile, updatePhysicalData } = useProfile();
   const [activeTab, setActiveTab] = useState<ProfileTab>('profile');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const { titles } = useTitles();
+  const { setActiveTitle, isSetting } = useSetActiveTitle();
 
   const { data, meta, loading: histLoading, error: histError, page, setPage, refetch } = useSessionHistory();
   const {
@@ -173,6 +178,13 @@ export default function ProfilePage() {
             <BodyMetricsSection user={user} onSave={updatePhysicalData} />
 
             <AchievementsSection achievements={user.achievements} language={user.language} />
+
+            <TitlesSection
+              titles={titles}
+              language={user.language}
+              onSetActive={setActiveTitle}
+              isSetting={isSetting}
+            />
 
             <button
               type="button"

@@ -8,6 +8,9 @@ import { AvatarUpload } from '@/components/profile/AvatarUpload';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { FollowButton } from '@/components/social/FollowButton';
 import { FollowListSheet } from '@/components/social/FollowListSheet';
+import { StreakBadgePill } from '@/components/profile/StreakBadgePill';
+import { ActiveTitleDisplay } from '@/components/profile/ActiveTitleDisplay';
+import { useStreak } from '@/hooks/useStreak';
 import { cn } from '@/lib/utils';
 import useAuthStore from '@/store/auth.store';
 import type { UserResponse, PublicUserProfile } from '@/types/domain.types';
@@ -37,6 +40,7 @@ function OwnProfileHeader({ user }: OwnProfileHeaderProps) {
   }, [searchParams, router, pathname]);
 
   const isPremium = user.membershipTier === 'premium';
+  const { currentStreak, longestStreak } = useStreak();
 
   return (
     <>
@@ -56,7 +60,13 @@ function OwnProfileHeader({ user }: OwnProfileHeaderProps) {
             )}>
               {isPremium ? `✦ ${t('profile.membership.premium')}` : t('profile.membership.free')}
             </span>
+            {longestStreak > 0 && (
+              <StreakBadgePill currentStreak={currentStreak} />
+            )}
           </div>
+          {user.activeTitle && (
+            <ActiveTitleDisplay title={user.activeTitle} language={user.language} />
+          )}
           <p className="mt-0.5 truncate text-[12px] text-muted-foreground">{user.email}</p>
 
           <div className="mt-2.5 flex gap-4">
@@ -106,9 +116,10 @@ interface PublicProfileHeaderProps {
 }
 
 function PublicProfileHeader({ user }: PublicProfileHeaderProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [sheet, setSheet] = useState<'followers' | 'following' | null>(null);
   const initials = user.username.slice(0, 2).toUpperCase();
+  const language = (i18n.language === 'en' ? 'en' : 'es') as 'es' | 'en';
 
   const isPrivateAndBlocked = user.isPrivate && !user.isFollowing;
 
@@ -121,9 +132,17 @@ function PublicProfileHeader({ user }: PublicProfileHeaderProps) {
         </Avatar>
 
         <div className="min-w-0 flex-1">
-          <h2 className="truncate font-display text-[22px] font-bold tracking-[0.01em] text-foreground">
-            {user.username}
-          </h2>
+          <div className="flex flex-wrap items-center gap-[7px]">
+            <h2 className="truncate font-display text-[22px] font-bold tracking-[0.01em] text-foreground">
+              {user.username}
+            </h2>
+            {user.streakBadge?.earned && (
+              <StreakBadgePill currentStreak={user.streakBadge.currentStreak} />
+            )}
+          </div>
+          {user.activeTitle && (
+            <ActiveTitleDisplay title={user.activeTitle} language={language} />
+          )}
 
           {isPrivateAndBlocked ? (
             <div className="mt-1 flex items-center gap-1.5 text-[12px] text-muted-foreground">

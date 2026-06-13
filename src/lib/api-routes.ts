@@ -114,6 +114,10 @@ export const API_ROUTES = {
   streaks: {
     me: '/streaks',
   },
+  titles: {
+    my: '/titles/my',
+    setActive: '/users/me/active-title',
+  },
   terms: {
     adminList: '/terms/admin',
     create: '/terms',

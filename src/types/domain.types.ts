@@ -14,6 +14,12 @@ export interface PhysicalData {
   gender?: Gender | null;
 }
 
+export interface TitleInfo {
+  key: string;
+  nameEs: string;
+  nameEn: string;
+}
+
 export interface UserResponse {
   id: string;
   email: string;
@@ -31,6 +37,10 @@ export interface UserResponse {
   language: Language;
   physicalData?: PhysicalData | null;
   achievements?: Achievement[];
+  pendingRewardDays: number;
+  rewardPremiumExpiresAt?: string;
+  activeTitle?: TitleInfo | null;
+  bonusPlanSlots: number;
 }
 
 export interface BilingualString {
@@ -302,6 +312,8 @@ export interface PublicUserProfile {
   isPrivate: boolean;
   isRequestPending: boolean;
   achievements?: Achievement[];
+  streakBadge?: { earned: boolean; currentStreak: number };
+  activeTitle?: TitleInfo | null;
 }
 
 export interface PublicUserSummary {
@@ -405,7 +417,9 @@ export interface FeedPost {
     _id: string;
     username: string;
     avatar: string | null;
+    activeTitle?: TitleInfo | null;
   };
+  streakAtCreation: number;
   sessionId: string | null;
   photoUrl: string | null;
   caption: string | null;
@@ -1011,4 +1025,14 @@ export interface AchievementUnlockedPayload {
   descriptionEn: string;
   badgeUrl: string | null;
   earnedCount: number;
+}
+
+export interface MyTitle {
+  titleKey: string;
+  nameEs: string;
+  nameEn: string;
+  taskEs: string;
+  taskEn: string;
+  earnedAt: string;
+  isActive: boolean;
 }

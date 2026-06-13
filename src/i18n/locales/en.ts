@@ -184,6 +184,8 @@ const en = {
       },
       nextBillingDate: 'Next payment: {{date}}',
       nextBillingLabel: 'Next billing',
+      blockedByReward: 'You have Premium active from a streak reward.',
+      rewardPremiumActive: 'Reward Premium active until {{date}}',
     },
     legal: {
       title: 'Legal',
@@ -647,6 +649,21 @@ const en = {
       error: 'Failed to share workout.',
       showMore: 'Show more ({{count}} more)',
     },
+    streakAtCreation: 'streak days at post time',
+  },
+
+  streakBadge: {
+    days: 'streak days',
+  },
+
+  titles: {
+    sectionTitle: 'Titles',
+    noTitles: 'No titles unlocked yet',
+    earnedOn: 'Earned on',
+    active: 'Active',
+    activate: 'Activate',
+    deactivate: 'Deactivate',
+    setActiveError: 'Failed to update active title',
   },
 
   achievements: {
@@ -695,6 +712,15 @@ const en = {
         description: "You haven't completed any sessions yet.",
       },
       goToDashboard: 'Go to home',
+    },
+    publicHistory: {
+      title: 'Session History',
+      exercises_one: '{{count}} exercise',
+      exercises_other: '{{count}} exercises',
+      empty: {
+        title: 'No sessions yet',
+        description: "This user hasn't logged any sessions.",
+      },
     },
     delete: {
       title: 'Delete account',
