@@ -9,6 +9,7 @@ import { OfflineBanner } from '@/components/shared/OfflineBanner';
 import { ActiveSessionWidget } from '@/components/session/ActiveSessionWidget';
 import { NotificationsProvider } from '@/components/notifications/NotificationsProvider';
 import { AchievementUnlockAnimation } from '@/components/achievements/AchievementUnlockAnimation';
+import { StreakRewardUnlockAnimation } from '@/components/rewards/StreakRewardUnlockAnimation';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -18,6 +19,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <UserLoader />
       <NotificationsProvider />
       <AchievementUnlockAnimation />
+      <StreakRewardUnlockAnimation />
       {/* Desktop: fixed left sidebar */}
       <SideNav />
 

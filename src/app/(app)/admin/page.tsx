@@ -10,9 +10,10 @@ import { AdminExerciseList } from '@/components/admin/AdminExerciseList';
 import { AdminPaymentLogList } from '@/components/admin/AdminPaymentLogList';
 import { AdminTermsList } from '@/components/admin/AdminTermsList';
 import { AdminMonitoringSection } from '@/components/admin/AdminMonitoringSection';
+import { AdminSimulationSection } from '@/components/admin/AdminSimulationSection';
 import useAuthStore from '@/store/auth.store';
 
-type AdminTab = 'users' | 'exercises' | 'payments' | 'terms' | 'monitoring';
+type AdminTab = 'users' | 'exercises' | 'payments' | 'terms' | 'monitoring' | 'simulation';
 
 export default function AdminPage() {
   const { t } = useTranslation();
@@ -34,6 +35,7 @@ export default function AdminPage() {
     { value: 'payments', label: t('admin.tabs.payments') },
     { value: 'terms', label: t('admin.tabs.terms') },
     { value: 'monitoring', label: t('admin.tabs.monitoring') },
+    { value: 'simulation', label: t('admin.tabs.simulation') },
   ];
 
   return (
@@ -62,6 +64,7 @@ export default function AdminPage() {
         {tab === 'payments' && <AdminPaymentLogList />}
         {tab === 'terms' && <AdminTermsList />}
         {tab === 'monitoring' && <AdminMonitoringSection />}
+        {tab === 'simulation' && <AdminSimulationSection />}
       </div>
     </PageContainer>
   );

@@ -2,6 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { getMySubscription, toggleAutoRenew } from '@/services/subscription.service';
 import useAuthStore from '@/store/auth.store';
 import type { SubscriptionResponse } from '@/types/domain.types';
@@ -9,6 +10,7 @@ import type { SubscriptionResponse } from '@/types/domain.types';
 export const SUBSCRIPTION_KEY = ['subscription', 'me'] as const;
 
 export function useSubscription() {
+  const { t } = useTranslation();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const { user, setUser } = useAuthStore();
   const queryClient = useQueryClient();
@@ -59,5 +61,14 @@ export function useSubscription() {
     },
   });
 
-  return { subscription, isLoading, updateAutoRenew, isToggling };
+  const safeUpdateAutoRenew = (autoRenew: boolean) => {
+    const exp = user?.rewardPremiumExpiresAt;
+    if (autoRenew && exp && new Date(exp) > new Date()) {
+      toast.error(t('settings.subscription.blockedByReward'));
+      return;
+    }
+    updateAutoRenew(autoRenew);
+  };
+
+  return { subscription, isLoading, updateAutoRenew: safeUpdateAutoRenew, isToggling };
 }

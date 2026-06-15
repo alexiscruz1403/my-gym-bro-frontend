@@ -15,6 +15,7 @@ import { usePostInteraction } from '@/hooks/usePostInteraction';
 import { useAuth } from '@/hooks/useAuth';
 import { PlanSummaryCard } from './PlanSummaryCard';
 import { CopySharedPlanSheet } from './CopySharedPlanSheet';
+import { StreakBadgePill } from '@/components/profile/StreakBadgePill';
 import type { FeedPost, SessionSummaryExerciseSnapshot } from '@/types/domain.types';
 
 interface FeedPostCardProps {
@@ -197,7 +198,13 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: Feed
                 {t('plans.share.sharedOnlyWithYou')}
               </Badge>
             )}
+            <StreakBadgePill currentStreak={post.streakAtCreation} />
           </div>
+          {post.author.activeTitle && (
+            <p className="text-[11px] font-medium text-orange-500">
+              ✦ {i18n.language === 'en' ? post.author.activeTitle.nameEn : post.author.activeTitle.nameEs}
+            </p>
+          )}
           <p className="text-xs text-muted-foreground">{timeAgo}</p>
         </div>
       </div>

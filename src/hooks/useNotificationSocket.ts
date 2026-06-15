@@ -10,7 +10,8 @@ import { formatNotification, hrefFor } from '@/lib/notification-format';
 import { playNotification } from '@/lib/audio';
 import useAuthStore from '@/store/auth.store';
 import { useAchievementAnimationStore } from '@/store/achievement-animation.store';
-import type { AppNotification, AchievementUnlockedPayload, UserResponse } from '@/types/domain.types';
+import { useStreakRewardAnimationStore } from '@/store/streak-reward-animation.store';
+import type { AppNotification, AchievementUnlockedPayload, StreakRewardUnlockedPayload, UserResponse } from '@/types/domain.types';
 import type { ListNotificationsResponse } from '@/types/api.types';
 import { NOTIFICATIONS_KEY } from '@/hooks/useNotifications';
 import { UNREAD_COUNT_KEY } from '@/hooks/useUnreadNotifications';
@@ -21,6 +22,7 @@ export function useNotificationSocket() {
   const socketRef = useRef<Socket | null>(null);
   const profileRefreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const enqueueAchievement = useAchievementAnimationStore((s) => s.enqueue);
+  const enqueueReward = useStreakRewardAnimationStore((s) => s.enqueue);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -100,6 +102,10 @@ export function useNotificationSocket() {
           }, 300);
         });
 
+        socket.on('streak_reward_unlocked', (payload: StreakRewardUnlockedPayload) => {
+          enqueueReward(payload);
+        });
+
         socket.on('connect_error', async (err) => {
           if (err.message?.toLowerCase().includes('unauthorized')) {
             try {
@@ -129,5 +135,5 @@ export function useNotificationSocket() {
         socketRef.current = null;
       }
     };
-  }, [isAuthenticated, queryClient, enqueueAchievement]);
+  }, [isAuthenticated, queryClient, enqueueAchievement, enqueueReward]);
 }

@@ -186,6 +186,8 @@ const es = {
       },
       nextBillingDate: 'Próximo pago: {{date}}',
       nextBillingLabel: 'Próximo cobro',
+      blockedByReward: 'Tenés Premium activo por una recompensa de racha.',
+      rewardPremiumActive: 'Premium por recompensa activo hasta {{date}}',
     },
     legal: {
       title: 'Legal',
@@ -649,6 +651,33 @@ const es = {
       error: 'No se pudo compartir el entrenamiento.',
       showMore: 'Ver más ({{count}} más)',
     },
+    streakAtCreation: 'días de racha al publicar',
+  },
+
+  streakBadge: {
+    days: 'días de racha',
+  },
+
+  titles: {
+    sectionTitle: 'Títulos',
+    noTitles: 'Aún no desbloqueaste ningún título',
+    earnedOn: 'Obtenido el',
+    active: 'Activo',
+    activate: 'Activar',
+    deactivate: 'Desactivar',
+    setActiveError: 'No se pudo actualizar el título activo',
+  },
+
+  rewards: {
+    unlockTitle: '¡Recompensa de racha!',
+    streakMilestone: 'Racha de {{milestone}} días',
+    premiumDays: {
+      label: '{{days}} días de Premium',
+      deferred: 'Se activarán al vencer tu suscripción actual',
+      activated: '¡Tu acceso Premium está activo!',
+    },
+    planSlot: '+1 slot de planes',
+    exclusiveTitle: 'Título exclusivo desbloqueado',
   },
 
   achievements: {
@@ -697,6 +726,15 @@ const es = {
         description: 'Aún no completaste ninguna sesión.',
       },
       goToDashboard: 'Ir al inicio',
+    },
+    publicHistory: {
+      title: 'Historial de sesiones',
+      exercises_one: '{{count}} ejercicio',
+      exercises_other: '{{count}} ejercicios',
+      empty: {
+        title: 'Sin sesiones registradas',
+        description: 'Este usuario aún no registró sesiones.',
+      },
     },
     delete: {
       title: 'Eliminar cuenta',
@@ -873,6 +911,11 @@ const es = {
       payments: 'Pagos',
       terms: 'Términos',
       monitoring: 'Monitoreo',
+      simulation: 'Simulación',
+    },
+    simulation: {
+      achievementsTitle: 'Logros',
+      rewardsTitle: 'Recompensas por Racha',
     },
     users: {
       searchPlaceholder: 'Buscar por nombre de usuario…',
