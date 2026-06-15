@@ -668,6 +668,18 @@ const es = {
     setActiveError: 'No se pudo actualizar el título activo',
   },
 
+  rewards: {
+    unlockTitle: '¡Recompensa de racha!',
+    streakMilestone: 'Racha de {{milestone}} días',
+    premiumDays: {
+      label: '{{days}} días de Premium',
+      deferred: 'Se activarán al vencer tu suscripción actual',
+      activated: '¡Tu acceso Premium está activo!',
+    },
+    planSlot: '+1 slot de planes',
+    exclusiveTitle: 'Título exclusivo desbloqueado',
+  },
+
   achievements: {
     sectionTitle: 'Logros',
     noAchievements: 'Aún no hay logros obtenidos',
@@ -899,6 +911,11 @@ const es = {
       payments: 'Pagos',
       terms: 'Términos',
       monitoring: 'Monitoreo',
+      simulation: 'Simulación',
+    },
+    simulation: {
+      achievementsTitle: 'Logros',
+      rewardsTitle: 'Recompensas por Racha',
     },
     users: {
       searchPlaceholder: 'Buscar por nombre de usuario…',

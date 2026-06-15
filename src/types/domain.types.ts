@@ -1036,3 +1036,13 @@ export interface MyTitle {
   earnedAt: string;
   isActive: boolean;
 }
+
+export interface StreakRewardUnlockedPayload {
+  type: 'PREMIUM_DAYS' | 'PLAN_SLOT' | 'EXCLUSIVE_TITLE';
+  milestone?: number;
+  days?: number;
+  deferred?: boolean;
+  titleKey?: string;
+  titleNameEs?: string;
+  titleNameEn?: string;
+}

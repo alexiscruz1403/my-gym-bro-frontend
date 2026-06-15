@@ -666,6 +666,18 @@ const en = {
     setActiveError: 'Failed to update active title',
   },
 
+  rewards: {
+    unlockTitle: 'Streak Reward!',
+    streakMilestone: '{{milestone}}-day streak',
+    premiumDays: {
+      label: '{{days}} Premium days',
+      deferred: 'Will activate when your current subscription ends',
+      activated: 'Your Premium access is now active!',
+    },
+    planSlot: '+1 plan slot',
+    exclusiveTitle: 'Exclusive title unlocked',
+  },
+
   achievements: {
     sectionTitle: 'Achievements',
     noAchievements: 'No achievements yet',
@@ -897,6 +909,11 @@ const en = {
       payments: 'Payments',
       terms: 'Terms',
       monitoring: 'Monitoring',
+      simulation: 'Simulation',
+    },
+    simulation: {
+      achievementsTitle: 'Achievements',
+      rewardsTitle: 'Streak Rewards',
     },
     users: {
       searchPlaceholder: 'Search by username…',
