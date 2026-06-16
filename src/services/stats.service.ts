@@ -4,6 +4,7 @@ import { API_ROUTES } from '@/lib/api-routes';
 import { db } from '@/lib/db';
 import type {
   ExerciseHistoryResponse,
+  ExercisePrsResponse,
   ExerciseVolumeResponse,
   SessionHistoryResponse,
   VolumeByMuscleResponse,
@@ -66,6 +67,13 @@ export async function getExerciseHistory(
   const { data } = await apiClient.get<ExerciseHistoryResponse>(
     API_ROUTES.stats.exerciseHistory(exerciseId),
     { params },
+  );
+  return data;
+}
+
+export async function getExercisePrs(exerciseId: string): Promise<ExercisePrsResponse> {
+  const { data } = await apiClient.get<ExercisePrsResponse>(
+    API_ROUTES.stats.exercisePrs(exerciseId),
   );
   return data;
 }

@@ -1046,3 +1046,20 @@ export interface StreakRewardUnlockedPayload {
   titleNameEs?: string;
   titleNameEn?: string;
 }
+
+export interface ExercisePrEntry {
+  value: number;
+  achievedAt: string;
+  delta: number | null;
+}
+
+export interface ExercisePrsResponse {
+  exerciseId: string;
+  exerciseName: string;
+  trackingType: 'reps' | 'duration';
+  currentPr: { value: number; achievedAt: string } | null;
+  history: ExercisePrEntry[];
+  predictedNextPrDate: string | null;
+  avgDaysBetweenPrs: number | null;
+}
+

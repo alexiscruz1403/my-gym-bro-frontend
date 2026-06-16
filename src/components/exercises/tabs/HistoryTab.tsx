@@ -1,11 +1,16 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { cn } from '@/lib/utils';
 import { useExerciseHistory } from '@/hooks/useExerciseHistory';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { Pagination } from '@/components/shared/Pagination';
+import { PrsTab } from '@/components/exercises/tabs/PrsTab';
 import type { ExerciseHistorySession, ExerciseHistorySet } from '@/types/domain.types';
+
+type HistorySubTab = 'sessions' | 'prs';
 
 function formatDate(dateStr: string, locale: string): string {
   return new Date(dateStr).toLocaleDateString(locale, {
@@ -105,7 +110,7 @@ interface HistoryTabProps {
   exerciseId: string;
 }
 
-export function HistoryTab({ exerciseId }: HistoryTabProps) {
+function SessionsContent({ exerciseId }: { exerciseId: string }) {
   const { t } = useTranslation();
   const { data, meta, bilateral, loading, error, page, setPage } = useExerciseHistory(exerciseId);
 
@@ -142,7 +147,6 @@ export function HistoryTab({ exerciseId }: HistoryTabProps) {
       {data.map((session) => (
         <SessionCard key={session.sessionId} session={session} bilateral={bilateral} />
       ))}
-
       {meta && (
         <Pagination
           page={page}
@@ -151,6 +155,41 @@ export function HistoryTab({ exerciseId }: HistoryTabProps) {
           onPageChange={setPage}
         />
       )}
+    </div>
+  );
+}
+
+export function HistoryTab({ exerciseId }: HistoryTabProps) {
+  const { t } = useTranslation();
+  const [subTab, setSubTab] = useState<HistorySubTab>('sessions');
+
+  const SUB_TABS: { value: HistorySubTab; label: string }[] = [
+    { value: 'sessions', label: t('history.sessionsTab') },
+    { value: 'prs', label: t('history.prsTab') },
+  ];
+
+  return (
+    <div className="space-y-3">
+      <div className="flex gap-0.5 rounded-2xl bg-muted/60 p-1">
+        {SUB_TABS.map((tab) => (
+          <button
+            key={tab.value}
+            type="button"
+            onClick={() => setSubTab(tab.value)}
+            className={cn(
+              'flex-1 h-9 cursor-pointer rounded-xl text-[12.5px] font-semibold transition-all',
+              subTab === tab.value
+                ? 'bg-primary/10 text-primary shadow-sm'
+                : 'text-muted-foreground hover:text-foreground',
+            )}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {subTab === 'sessions' && <SessionsContent exerciseId={exerciseId} />}
+      {subTab === 'prs' && <PrsTab exerciseId={exerciseId} />}
     </div>
   );
 }
