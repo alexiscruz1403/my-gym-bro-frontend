@@ -880,6 +880,20 @@ const en = {
     rightAbbr: 'R',
     setsCount_one: '{{count}} set',
     setsCount_other: '{{count}} sets',
+    sessionsTab: 'Sessions',
+    prsTab: 'PRs',
+    prs: {
+      sectionTitle: 'Personal Records',
+      emptyTitle: 'No personal records yet',
+      emptyDescription: 'Complete sessions with this exercise to start tracking your records.',
+      avgDays: 'Avg. days between PRs',
+      nextPr: 'Next PR prediction',
+      noPrediction: 'Log at least 2 PRs to see a prediction',
+      firstRecord: 'First record',
+      delta: '+{{value}}',
+      value_reps: '{{value}} kg (e1RM)',
+      value_duration: '{{value}} s',
+    },
   },
 
   stats: {
@@ -1324,6 +1338,23 @@ const en = {
       levelsTitle: 'Rank levels',
       levels: ['Novice', 'Beginner', 'Intermediate', 'Advanced', 'Expert', 'Elite', 'Master'],
       note: 'Ranks never go down. Once you reach a level, you keep it even if you stop training for a while.',
+    },
+    prs: {
+      title: 'Personal Records (e1RM)',
+      description: 'A personal record (PR) is set whenever you achieve your best estimated 1-rep max for an exercise. Your progress is tracked automatically after each session.',
+      whatIsTitle: 'What is e1RM?',
+      whatIsItems: [
+        'e1RM (Estimated 1 Rep Max) is an estimate of the maximum weight you could lift for a single rep, based on the weight and reps you performed.',
+        'For bodyweight exercises, the highest rep count is used. For timed exercises, the longest duration is used.',
+      ],
+      formula: 'e1RM = weight × (1 + reps ÷ 30)',
+      predictionTitle: 'How predictions work',
+      predictionItems: [
+        'The predicted next-PR date is calculated from the average number of days between your past records.',
+        'At least 2 PRs are needed to generate a prediction.',
+        'This is a statistical estimate based on your own history — it doesn\'t account for changes in training frequency.',
+      ],
+      note: 'PRs never go down. Once a record is set, it stays in your history.',
     },
     aiPlan: {
       title: 'AI Plan Generation',

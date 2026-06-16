@@ -882,6 +882,20 @@ const es = {
     rightAbbr: 'Der',
     setsCount_one: '{{count}} serie',
     setsCount_other: '{{count}} series',
+    sessionsTab: 'Sesiones',
+    prsTab: 'PRs',
+    prs: {
+      sectionTitle: 'Récords Personales',
+      emptyTitle: 'Aún no tienes récords personales',
+      emptyDescription: 'Completa sesiones con este ejercicio para empezar a rastrear tus récords.',
+      avgDays: 'Días promedio entre PRs',
+      nextPr: 'Próximo PR estimado',
+      noPrediction: 'Registra al menos 2 PRs para ver una predicción',
+      firstRecord: 'Primer récord',
+      delta: '+{{value}}',
+      value_reps: '{{value}} kg (e1RM)',
+      value_duration: '{{value}} s',
+    },
   },
 
   stats: {
@@ -1326,6 +1340,23 @@ const es = {
       levelsTitle: 'Niveles de rango',
       levels: ['Novato', 'Principiante', 'Intermedio', 'Avanzado', 'Experto', 'Élite', 'Maestro'],
       note: 'Los rangos nunca bajan. Una vez que alcanzas un nivel, lo conservas aunque no entrenes por un tiempo.',
+    },
+    prs: {
+      title: 'Récords Personales (e1RM)',
+      description: 'Un récord personal (PR) se registra cuando alcanzas tu mejor máximo estimado de 1 repetición en un ejercicio. Tu progreso se actualiza automáticamente al finalizar cada sesión.',
+      whatIsTitle: '¿Qué es el e1RM?',
+      whatIsItems: [
+        'El e1RM (Máximo Estimado de 1 Repetición) estima el peso máximo que podrías levantar en una sola repetición, basándose en el peso y las repeticiones realizadas.',
+        'En ejercicios de peso corporal se usa el mayor número de repeticiones. En ejercicios de tiempo, la mayor duración sostenida.',
+      ],
+      formula: 'e1RM = peso × (1 + reps ÷ 30)',
+      predictionTitle: 'Cómo funciona la predicción',
+      predictionItems: [
+        'La fecha estimada del próximo PR se calcula a partir del promedio de días entre tus récords anteriores.',
+        'Se necesitan al menos 2 PRs para generar una predicción.',
+        'Es una estimación estadística basada en tu propio historial — no tiene en cuenta cambios en la frecuencia de entrenamiento.',
+      ],
+      note: 'Los PRs nunca bajan. Una vez que se establece un récord, permanece en tu historial.',
     },
     aiPlan: {
       title: 'Generación de Planes con IA',

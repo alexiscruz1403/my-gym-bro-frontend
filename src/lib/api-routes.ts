@@ -58,6 +58,7 @@ export const API_ROUTES = {
   },
   stats: {
     exerciseHistory: (exerciseId: string) => `/stats/exercises/${exerciseId}/history`,
+    exercisePrs: (exerciseId: string) => `/stats/exercises/${exerciseId}/prs`,
     exerciseVolume: (exerciseId: string) => `/stats/exercises/${exerciseId}/volume`,
     volume: '/stats/volume',
     muscles: '/stats/muscles',
