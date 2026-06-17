@@ -8,6 +8,7 @@ import { PremiumCtaCard } from '@/components/dashboard/PremiumCtaCard';
 import { PlanListSection } from '@/components/dashboard/PlanListSection';
 import { StreakBadge } from '@/components/dashboard/StreakBadge';
 import { InstallPwaBanner } from '@/components/dashboard/InstallPwaBanner';
+import { MuscleRecoveryWidget } from '@/components/recovery/MuscleRecoveryWidget';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/useAuth';
 import { useActivePlan } from '@/hooks/useActivePlan';
@@ -85,6 +86,13 @@ export default function DashboardPage() {
             <PlanListSection title={t('dashboard.aiPlans')} plans={aiPlans} />
           </div>
         )}
+
+        <div>
+          <span className="text-[11px] font-medium uppercase tracking-[0.06em] text-muted-foreground">
+            {t('dashboard.muscleRecovery')}
+          </span>
+          <MuscleRecoveryWidget />
+        </div>
       </div>
     </PageContainer>
   );

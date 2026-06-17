@@ -211,6 +211,7 @@ const es = {
     activePlan: 'Plan activo',
     myPlans: 'Mis planes',
     aiPlans: 'Planes IA',
+    muscleRecovery: 'Recuperación muscular',
     streakDays: 'días',
     streakDetail: {
       title: 'Detalle de racha',
@@ -1399,6 +1400,21 @@ const es = {
       ],
       requirementNote: 'Para que el análisis pueda generarse, es necesario haber completado al menos una sesión en la semana actual y una en la semana anterior.',
     },
+  },
+  muscleRecovery: {
+    title: 'Recuperación muscular',
+    status: {
+      FRESH: 'Fresco',
+      RECOVERED: 'Recuperándose',
+      FATIGUED: 'Fatigado',
+    },
+    recoveryPercent: '{{value}}% recuperado',
+    hoursUntilFresh: '{{hours}}h {{minutes}}m hasta fresco',
+    readyToTrain: '¡Listo para entrenar!',
+    lastTrained: 'Último entrenamiento',
+    neverTrained: 'Sin entrenar aún',
+    errorTitle: 'Error al cargar recuperación',
+    errorDescription: 'No se pudieron obtener los datos de recuperación muscular. Intentá de nuevo.',
   },
 } as const;
 
