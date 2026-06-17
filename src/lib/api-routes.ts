@@ -107,6 +107,9 @@ export const API_ROUTES = {
     leaderboard: '/ranks/leaderboard',
     exercise: (exerciseId: string) => `/ranks/exercises/${exerciseId}`,
   },
+  recovery: {
+    muscles: '/recovery/muscles',
+  },
   subscriptions: {
     checkout: '/subscriptions/checkout',
     me: '/subscriptions/me',

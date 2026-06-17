@@ -8,15 +8,20 @@ interface BodyFigureProps {
   rankMap: Map<MuscleGroup, MuscleRankItem>;
   selectedMuscle: MuscleGroup | null;
   onMuscleClick: (muscle: MuscleGroup) => void;
+  getMuscleFill?: (muscle: MuscleGroup) => string;
+  hideLegend?: boolean;
 }
 
 function getMuscleStyle(
   muscle: MuscleGroup,
   rankMap: Map<MuscleGroup, MuscleRankItem>,
   selectedMuscle: MuscleGroup | null,
+  getMuscleFill?: (muscle: MuscleGroup) => string,
 ) {
   const item = rankMap.get(muscle);
-  const fill = item ? getRankColor(item.rank) : UNRANKED_COLOR;
+  const fill = getMuscleFill
+    ? getMuscleFill(muscle)
+    : item ? getRankColor(item.rank) : UNRANKED_COLOR;
   const isSelected = selectedMuscle === muscle;
   return {
     fill,
@@ -28,10 +33,10 @@ function getMuscleStyle(
   };
 }
 
-export function BodyFigure({ rankMap, selectedMuscle, onMuscleClick }: BodyFigureProps) {
+export function BodyFigure({ rankMap, selectedMuscle, onMuscleClick, getMuscleFill, hideLegend }: BodyFigureProps) {
   const { t } = useTranslation();
   const pp = (muscle: MuscleGroup) => ({
-    ...getMuscleStyle(muscle, rankMap, selectedMuscle),
+    ...getMuscleStyle(muscle, rankMap, selectedMuscle, getMuscleFill),
     className: 'cursor-pointer transition-all duration-150 hover:brightness-110',
     onClick: () => onMuscleClick(muscle),
     role: 'button' as const,
@@ -150,17 +155,19 @@ export function BodyFigure({ rankMap, selectedMuscle, onMuscleClick }: BodyFigur
       </div>
 
       {/* ─── RANK LEGEND ─────────────────────────────────────── */}
-      <div className="flex flex-wrap items-center justify-center gap-2.5 py-1">
-        {(Object.entries(RANK_NAMES) as [string, string][]).map(([rank]) => (
-          <div key={rank} className="flex items-center gap-1 text-[11px] text-muted-foreground">
-            <span
-              className="h-2 w-2 shrink-0 rounded-full"
-              style={{ background: RANK_COLORS[Number(rank) as RankLevel] }}
-            />
-            <span>{t(`ranks.names.${rank}`)}</span>
-          </div>
-        ))}
-      </div>
+      {!hideLegend && (
+        <div className="flex flex-wrap items-center justify-center gap-2.5 py-1">
+          {(Object.entries(RANK_NAMES) as [string, string][]).map(([rank]) => (
+            <div key={rank} className="flex items-center gap-1 text-[11px] text-muted-foreground">
+              <span
+                className="h-2 w-2 shrink-0 rounded-full"
+                style={{ background: RANK_COLORS[Number(rank) as RankLevel] }}
+              />
+              <span>{t(`ranks.names.${rank}`)}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

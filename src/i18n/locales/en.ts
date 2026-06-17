@@ -209,6 +209,7 @@ const en = {
     activePlan: 'Active Plan',
     myPlans: 'My Plans',
     aiPlans: 'AI Plans',
+    muscleRecovery: 'Muscle Recovery',
     streakDays: 'days',
     streakDetail: {
       title: 'Streak Details',
@@ -1397,6 +1398,21 @@ const en = {
       ],
       requirementNote: 'For the analysis to be generated, you must have completed at least one session in the current week and one in the previous week.',
     },
+  },
+  muscleRecovery: {
+    title: 'Muscle Recovery',
+    status: {
+      FRESH: 'Fresh',
+      RECOVERED: 'Recovering',
+      FATIGUED: 'Fatigued',
+    },
+    recoveryPercent: '{{value}}% recovered',
+    hoursUntilFresh: '{{hours}}h {{minutes}}m until fresh',
+    readyToTrain: 'Ready to train!',
+    lastTrained: 'Last trained',
+    neverTrained: 'Not trained yet',
+    errorTitle: 'Error loading recovery',
+    errorDescription: 'Could not fetch muscle recovery data. Please try again.',
   },
 } as const;
 
