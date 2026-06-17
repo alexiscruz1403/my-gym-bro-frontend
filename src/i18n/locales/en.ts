@@ -894,6 +894,11 @@ const en = {
       delta: '+{{value}}',
       value_reps: '{{value}} kg (e1RM)',
       value_duration: '{{value}} s',
+      rawSet_weighted: '{{weight}} kg × {{reps}} reps',
+      rawSet_bodyweight: '{{reps}} reps',
+      rawSet_duration: '{{duration}} s',
+      nextPrValue: 'Predicted value',
+      nextPrTarget: 'Target set',
     },
   },
 
