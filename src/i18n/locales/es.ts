@@ -505,6 +505,7 @@ const es = {
       setLabel: 'Serie {{n}}',
       reps: 'reps',
       shareWorkout: 'Compartir entrenamiento',
+      volume: 'Volumen',
       backToDashboard: 'Volver al inicio',
       rankProgress: 'Progreso de rangos',
       rankUp: '¡Subiste de rango!',

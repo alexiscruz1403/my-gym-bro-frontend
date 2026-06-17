@@ -503,6 +503,7 @@ const en = {
       setLabel: 'Set {{n}}',
       reps: 'reps',
       shareWorkout: 'Share workout',
+      volume: 'Volume',
       backToDashboard: 'Back to dashboard',
       rankProgress: 'Rank progress',
       rankUp: 'Rank up!',
