@@ -21,6 +21,7 @@ export function useNotificationSocket() {
   const queryClient = useQueryClient();
   const socketRef = useRef<Socket | null>(null);
   const profileRefreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const enqueueAchievement = useAchievementAnimationStore((s) => s.enqueue);
   const enqueueReward = useStreakRewardAnimationStore((s) => s.enqueue);
 
@@ -106,16 +107,41 @@ export function useNotificationSocket() {
           enqueueReward(payload);
         });
 
+        // Fetch a fresh token on disconnect so Socket.IO's automatic reconnection
+        // attempts use valid credentials instead of the potentially-expired cached token.
+        socket.on('disconnect', async () => {
+          try {
+            const fresh = await getWsToken();
+            socket.auth = { token: fresh.token };
+          } catch {
+            // Keep old auth — reconnection will still attempt with the cached token
+          }
+        });
+
+        // Only update socket.auth here; do NOT call socket.connect() manually as it
+        // would race with Socket.IO's own reconnection loop.
         socket.on('connect_error', async (err) => {
           if (err.message?.toLowerCase().includes('unauthorized')) {
             try {
               const fresh = await getWsToken();
               socket.auth = { token: fresh.token };
-              socket.connect();
             } catch {
               // fall through — polling from useUnreadNotifications still updates count
             }
           }
+        });
+
+        // After 5 failed reconnection attempts Socket.IO gives up permanently.
+        // Tear down the dead socket and schedule a full reconnect every 60 s until
+        // the backend is reachable again.
+        socket.on('reconnect_failed', () => {
+          socketRef.current?.removeAllListeners();
+          socketRef.current?.disconnect();
+          socketRef.current = null;
+
+          retryTimerRef.current = setTimeout(() => {
+            if (!cancelled) connect();
+          }, 60_000);
         });
 
         socketRef.current = socket;
@@ -128,6 +154,7 @@ export function useNotificationSocket() {
 
     return () => {
       cancelled = true;
+      if (retryTimerRef.current) clearTimeout(retryTimerRef.current);
       if (profileRefreshTimerRef.current) clearTimeout(profileRefreshTimerRef.current);
       if (socketRef.current) {
         socketRef.current.removeAllListeners();
