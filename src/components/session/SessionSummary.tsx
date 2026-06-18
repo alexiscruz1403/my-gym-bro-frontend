@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Clock, Dumbbell, BarChart2 } from 'lucide-react';
+import { CheckCircle, Clock, Dumbbell, BarChart2, TrendingUp } from 'lucide-react';
 import { ExerciseGifThumbnail } from '@/components/shared/ExerciseGifThumbnail';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -21,6 +21,26 @@ import { getRankColor } from '@/lib/ranks';
 interface SessionSummaryProps {
   session: WorkoutSession;
   rankSummary?: ExerciseRankSummaryItem[];
+}
+
+const LBS_TO_KG = 0.453592;
+
+function calculateVolumeKg(session: WorkoutSession): number {
+  return session.exercises.reduce((total, ex) => {
+    const completed = ex.sets.filter((s) => s.completed);
+    const multiplier = ex.weightUnit === 'lbs' ? LBS_TO_KG : 1;
+    return total + completed.reduce((exTotal, s) => {
+      if (ex.bilateral === false && (s.left || s.right)) {
+        const lw = s.left?.weight ?? 0;
+        const rw = s.right?.weight ?? 0;
+        const lr = s.left?.reps ?? 0;
+        const rr = s.right?.reps ?? 0;
+        return exTotal + (lw * lr + rw * rr) * multiplier;
+      }
+      const kg = s.weightKg ?? (s.weight ? s.weight * multiplier : 0);
+      return exTotal + kg * (s.reps ?? 0);
+    }, 0);
+  }, 0);
 }
 
 function formatDuration(seconds: number): string {
@@ -85,6 +105,7 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
     (acc, ex) => acc + ex.sets.filter((s) => s.completed).length,
     0,
   );
+  const volumeKg = Math.round(calculateVolumeKg(session) * 10) / 10;
 
   const handleBackToDashboard = () => {
     router.push('/dashboard');
@@ -105,7 +126,7 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
   };
 
   const actions = (
-    <div className="flex flex-col gap-2 pt-2 pb-8">
+    <div className="flex flex-col gap-2 pt-2 pb-22 lg:pb-8">
       {(session.status === 'completed' || session.status === 'partial') && (
         <Button
           variant="outline"
@@ -135,7 +156,7 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
           </div>
 
           {/* Stats row */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             <div className="rounded-xl border bg-card p-3 text-center shadow-1">
               <Clock className="text-primary mx-auto mb-1 h-5 w-5" />
               <p className="font-display text-lg font-bold">
@@ -152,6 +173,11 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
               <BarChart2 className="text-primary mx-auto mb-1 h-5 w-5" />
               <p className="font-display text-lg font-bold">{totalSets}</p>
               <p className="text-muted-foreground text-xs">{t('session.summary.sets')}</p>
+            </div>
+            <div className="rounded-xl border bg-card p-3 text-center shadow-1">
+              <TrendingUp className="text-primary mx-auto mb-1 h-5 w-5" />
+              <p className="font-display text-lg font-bold">{volumeKg}kg</p>
+              <p className="text-muted-foreground text-xs">{t('session.summary.volume')}</p>
             </div>
           </div>
 

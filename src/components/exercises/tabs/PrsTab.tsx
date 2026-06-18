@@ -7,7 +7,8 @@ import { useExercisePrs } from '@/hooks/useExercisePrs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { PrsGuideSheet } from '@/components/guides/PrsGuideSheet';
-import type { ExercisePrEntry } from '@/types/domain.types';
+import type { ExercisePrEntry, PredictedNextTarget } from '@/types/domain.types';
+import type { TFunction } from 'i18next';
 
 function formatDate(dateStr: string, locale: string): string {
   return new Date(dateStr).toLocaleDateString(locale, {
@@ -15,6 +16,18 @@ function formatDate(dateStr: string, locale: string): string {
     month: 'long',
     year: 'numeric',
   });
+}
+
+function formatRawSet(
+  weight: number | null,
+  reps: number | null,
+  duration: number | null,
+  t: TFunction,
+): string | null {
+  if (duration != null) return t('history.prs.rawSet_duration', { duration });
+  if (weight != null && reps != null) return t('history.prs.rawSet_weighted', { weight, reps });
+  if (reps != null) return t('history.prs.rawSet_bodyweight', { reps });
+  return null;
 }
 
 function PrCard({
@@ -33,10 +46,15 @@ function PrCard({
       ? t('history.prs.value_duration', { value: entry.value })
       : t('history.prs.value_reps', { value: entry.value });
 
+  const rawSet = formatRawSet(entry.weight, entry.reps, entry.duration, t);
+
   return (
     <div className="flex items-center justify-between rounded-2xl border border-border bg-card px-3.5 py-3 shadow-sm">
       <div className="flex flex-col gap-0.5">
         <span className="text-[15px] font-bold text-foreground">{valueLabel}</span>
+        {rawSet && (
+          <span className="text-[12px] font-medium text-muted-foreground">{rawSet}</span>
+        )}
         <span className="text-[12px] text-muted-foreground">
           {formatDate(entry.achievedAt, i18n.language)}
         </span>
@@ -52,6 +70,49 @@ function PrCard({
           </span>
         )}
       </div>
+    </div>
+  );
+}
+
+function PredictionCard({
+  predictedNextPrValue,
+  predictedNextTarget,
+  trackingType,
+}: {
+  predictedNextPrValue: number;
+  predictedNextTarget: PredictedNextTarget | null;
+  trackingType: 'reps' | 'duration';
+}) {
+  const { t } = useTranslation();
+
+  const valueLabel =
+    trackingType === 'duration'
+      ? t('history.prs.value_duration', { value: predictedNextPrValue })
+      : t('history.prs.value_reps', { value: predictedNextPrValue });
+
+  const targetLabel = predictedNextTarget
+    ? formatRawSet(predictedNextTarget.weight, predictedNextTarget.reps, predictedNextTarget.duration, t)
+    : null;
+
+  return (
+    <div className="flex gap-3 rounded-2xl border border-border bg-card px-3.5 py-3 shadow-sm">
+      <div className="flex flex-1 flex-col gap-0.5">
+        <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+          {t('history.prs.nextPrValue')}
+        </span>
+        <span className="text-[15px] font-bold text-foreground">{valueLabel}</span>
+      </div>
+      {targetLabel && (
+        <>
+          <div className="w-px self-stretch bg-border" />
+          <div className="flex flex-1 flex-col gap-0.5">
+            <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+              {t('history.prs.nextPrTarget')}
+            </span>
+            <span className="text-[15px] font-bold text-foreground">{targetLabel}</span>
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -130,6 +191,14 @@ export function PrsTab({ exerciseId }: PrsTabProps) {
                 </span>
               </div>
             </div>
+          )}
+
+          {data.predictedNextPrValue != null && (
+            <PredictionCard
+              predictedNextPrValue={data.predictedNextPrValue}
+              predictedNextTarget={data.predictedNextTarget}
+              trackingType={data.trackingType}
+            />
           )}
 
           {reversed.map((entry, i) => (

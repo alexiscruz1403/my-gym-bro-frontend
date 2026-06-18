@@ -1051,15 +1051,32 @@ export interface ExercisePrEntry {
   value: number;
   achievedAt: string;
   delta: number | null;
+  weight: number | null;
+  reps: number | null;
+  duration: number | null;
+}
+
+export interface PredictedNextTarget {
+  weight: number | null;
+  reps: number | null;
+  duration: number | null;
 }
 
 export interface ExercisePrsResponse {
   exerciseId: string;
   exerciseName: string;
   trackingType: 'reps' | 'duration';
-  currentPr: { value: number; achievedAt: string } | null;
+  currentPr: {
+    value: number;
+    achievedAt: string;
+    weight: number | null;
+    reps: number | null;
+    duration: number | null;
+  } | null;
   history: ExercisePrEntry[];
   predictedNextPrDate: string | null;
+  predictedNextPrValue: number | null;
+  predictedNextTarget: PredictedNextTarget | null;
   avgDaysBetweenPrs: number | null;
 }
 
