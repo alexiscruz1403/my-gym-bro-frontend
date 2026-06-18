@@ -903,6 +903,17 @@ const es = {
       nextPrValue: 'Valor estimado',
       nextPrTarget: 'Set objetivo',
     },
+    export: {
+      sessionTitle: 'Exportar sesión',
+      historyTitle: 'Exportar historial',
+      pdf: 'PDF',
+      csv: 'CSV',
+      error: 'Error al exportar. Intentá de nuevo.',
+      selectPeriod: 'Seleccioná un período',
+      period3m: 'Últimos 3 meses',
+      period6m: 'Últimos 6 meses',
+      period1y: 'Último año',
+    },
   },
 
   stats: {
