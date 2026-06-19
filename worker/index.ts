@@ -1,3 +1,7 @@
+// export {} makes this a module, preventing `self` from conflicting with
+// the global `Window & typeof globalThis` declaration in lib.dom.d.ts
+export {};
+
 declare const self: ServiceWorkerGlobalScope;
 
 self.addEventListener('push', (event: PushEvent) => {
