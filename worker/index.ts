@@ -1,44 +1,47 @@
-// export {} makes this a module, preventing `self` from conflicting with
-// the global `Window & typeof globalThis` declaration in lib.dom.d.ts
+/// <reference lib="webworker" />
 export {};
 
-declare const self: ServiceWorkerGlobalScope;
+// Next.js includes lib.dom.d.ts which types `self` as `Window & typeof globalThis`.
+// Cast explicitly so TypeScript resolves the correct ServiceWorker API types.
+const sw = self as unknown as ServiceWorkerGlobalScope;
 
-self.addEventListener('push', (event: PushEvent) => {
+sw.addEventListener('push', (event) => {
   if (!event.data) return;
 
-  const { title, body, data } = event.data.json() as {
+  const payload = event.data.json() as {
     title: string;
     body: string;
     data?: { type?: string; notificationId?: string };
   };
 
   event.waitUntil(
-    self.registration.showNotification(title, {
-      body,
+    sw.registration.showNotification(payload.title, {
+      body: payload.body,
       icon: '/icons/MyGymBro-192.png',
       badge: '/icons/MyGymBro-192.png',
-      data: { url: '/notifications', ...data },
+      data: { url: '/notifications', ...payload.data },
     }),
   );
 });
 
-self.addEventListener('notificationclick', (event: NotificationEvent) => {
+sw.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
-  const url: string =
-    (event.notification.data as { url?: string } | null)?.url ?? '/notifications';
+  const notifData = event.notification.data as { url?: string } | null;
+  const url = notifData?.url ?? '/notifications';
 
   event.waitUntil(
-    self.clients
+    sw.clients
       .matchAll({ type: 'window', includeUncontrolled: true })
       .then((clientList) => {
         for (const client of clientList) {
-          if (client.url.includes(self.location.origin) && 'focus' in client) {
-            return client.focus();
+          // matchAll with type:'window' always returns WindowClient instances
+          const windowClient = client as WindowClient;
+          if (windowClient.url.includes(sw.location.origin)) {
+            return windowClient.focus();
           }
         }
-        return self.clients.openWindow(url);
+        return sw.clients.openWindow(url);
       }),
   );
 });
