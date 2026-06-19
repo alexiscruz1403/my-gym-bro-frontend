@@ -93,6 +93,18 @@ export function formatNotification(n: AppNotification): FormattedNotification {
         actorUsername: null,
       };
     }
+    case 'progression_analysis':
+    case 'streak_reset':
+    case 'streak_at_risk':
+    case 'membership_renewed':
+    case 'membership_renewal_failed': {
+      const d = n.data as NotificationDataSystem;
+      return {
+        text: `${d.title} — ${d.body}`,
+        avatar: null,
+        actorUsername: null,
+      };
+    }
   }
 }
 
@@ -117,6 +129,11 @@ export function hrefFor(n: AppNotification): string {
       return `/feed?post=${encodeURIComponent((n.data as NotificationDataPlanShared).postId)}`;
     case 'system':
     case 'achievement_unlocked':
+    case 'progression_analysis':
+    case 'streak_reset':
+    case 'streak_at_risk':
+    case 'membership_renewed':
+    case 'membership_renewal_failed':
       return '/notifications';
   }
 }

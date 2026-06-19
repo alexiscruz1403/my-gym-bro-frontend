@@ -5,6 +5,7 @@ import type { AxiosError } from 'axios';
 import useAuthStore from '@/store/auth.store';
 import { authService } from '@/services/auth.service';
 import { usersService } from '@/services/users.service';
+import { unsubscribePush } from '@/services/notifications.service';
 import type { LoginRequest, RegisterRequest, ApiError } from '@/types/api.types';
 
 export function useAuth() {
@@ -52,6 +53,19 @@ export function useAuth() {
   );
 
   const logout = useCallback(async (): Promise<void> => {
+    // Fire-and-forget push unsubscribe — does not block logout
+    if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.ready
+        .then((reg) => reg.pushManager.getSubscription())
+        .then((sub) => {
+          if (!sub) return;
+          return unsubscribePush(sub.endpoint)
+            .then(() => sub.unsubscribe())
+            .catch(() => {});
+        })
+        .catch(() => {});
+    }
+
     try {
       await authService.logout();
     } catch {

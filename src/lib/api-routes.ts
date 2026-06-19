@@ -15,6 +15,10 @@ export const API_ROUTES = {
     markRead: (id: string) => `/notifications/${id}/read`,
     markAllRead: '/notifications/read-all',
     preferences: '/notifications/preferences',
+    push: {
+      vapidKey: '/notifications/push/vapid-public-key',
+      subscribe: '/notifications/push/subscribe',
+    },
   },
   users: {
     me: '/users/me',

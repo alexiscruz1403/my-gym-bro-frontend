@@ -340,6 +340,9 @@ export interface NotificationPreferences {
   allowPostComment: boolean;
   allowNewPost: boolean;
   allowPlanShared: boolean;
+  allowProgressionAnalysis: boolean;
+  allowStreakReset: boolean;
+  allowStreakAtRisk: boolean;
 }
 
 // Session summary snapshot — embedded in FeedPost at creation time
@@ -658,7 +661,12 @@ export type NotificationType =
   | 'new_post'
   | 'plan_shared'
   | 'system'
-  | 'achievement_unlocked';
+  | 'achievement_unlocked'
+  | 'progression_analysis'
+  | 'streak_reset'
+  | 'streak_at_risk'
+  | 'membership_renewed'
+  | 'membership_renewal_failed';
 
 export interface NotificationDataFollow {
   actorUsername: string;
@@ -718,6 +726,31 @@ export interface NotificationDataAchievementUnlocked {
   earnedCount: number;
 }
 
+export interface NotificationDataProgressionAnalysis {
+  title: string;
+  body: string;
+}
+
+export interface NotificationDataStreakReset {
+  title: string;
+  body: string;
+}
+
+export interface NotificationDataStreakAtRisk {
+  title: string;
+  body: string;
+}
+
+export interface NotificationDataMembershipRenewed {
+  title: string;
+  body: string;
+}
+
+export interface NotificationDataMembershipRenewalFailed {
+  title: string;
+  body: string;
+}
+
 export type NotificationData =
   | NotificationDataFollow
   | NotificationDataFollowRequest
@@ -727,7 +760,12 @@ export type NotificationData =
   | NotificationDataNewPost
   | NotificationDataPlanShared
   | NotificationDataSystem
-  | NotificationDataAchievementUnlocked;
+  | NotificationDataAchievementUnlocked
+  | NotificationDataProgressionAnalysis
+  | NotificationDataStreakReset
+  | NotificationDataStreakAtRisk
+  | NotificationDataMembershipRenewed
+  | NotificationDataMembershipRenewalFailed;
 
 export interface AppNotification {
   _id: string;
