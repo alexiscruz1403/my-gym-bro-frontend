@@ -24,6 +24,7 @@ import { BodyMetricsSection } from '@/components/profile/BodyMetricsSection';
 import { AchievementsSection } from '@/components/achievements/AchievementsSection';
 import { TitlesSection } from '@/components/profile/TitlesSection';
 import { useTitles, useSetActiveTitle } from '@/hooks/useTitles';
+import { ExportHistorySheet } from '@/components/history/ExportHistorySheet';
 import { cn } from '@/lib/utils';
 
 type EditProfileValues = { username: string };
@@ -248,12 +249,15 @@ export default function ProfilePage() {
             )}
 
             {!histLoading && !histError && data.length > 0 && meta && (
-              <SessionHistoryList
-                data={data}
-                meta={meta}
-                page={page}
-                onPageChange={setPage}
-              />
+              <div className="space-y-3">
+                <ExportHistorySheet />
+                <SessionHistoryList
+                  data={data}
+                  meta={meta}
+                  page={page}
+                  onPageChange={setPage}
+                />
+              </div>
             )}
           </>
         )}

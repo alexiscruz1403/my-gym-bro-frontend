@@ -901,6 +901,17 @@ const en = {
       nextPrValue: 'Predicted value',
       nextPrTarget: 'Target set',
     },
+    export: {
+      sessionTitle: 'Export session',
+      historyTitle: 'Export history',
+      pdf: 'PDF',
+      csv: 'CSV',
+      error: 'Failed to export. Please try again.',
+      selectPeriod: 'Select a period',
+      period3m: 'Last 3 months',
+      period6m: 'Last 6 months',
+      period1y: 'Last year',
+    },
   },
 
   stats: {

@@ -139,4 +139,10 @@ export const API_ROUTES = {
     confirmReplacement: (planId: string, exerciseId: string) =>
       `/ai/plans/${planId}/exercises/${exerciseId}/confirm-replacement`,
   },
+  export: {
+    sessionPdf: (id: string) => `/export/sessions/${id}/pdf`,
+    sessionCsv: (id: string) => `/export/sessions/${id}/csv`,
+    historyPdf: '/export/history/pdf',
+    historyCsv: '/export/history/csv',
+  },
 } as const;

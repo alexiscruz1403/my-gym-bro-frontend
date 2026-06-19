@@ -10,6 +10,7 @@ import { SessionDetailExerciseList } from '@/components/history/SessionDetailExe
 import { EmptyState } from '@/components/shared/EmptyState';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSessionDetail } from '@/hooks/useSessionDetail';
+import { ExportSessionButton } from '@/components/history/ExportSessionButton';
 
 function SessionDetailSkeletons() {
   return (
@@ -58,6 +59,7 @@ export default function SessionDetailPage({ params }: SessionDetailPageProps) {
           {!loading && !error && session && (
             <>
               <SessionDetailHeader session={session} />
+              <ExportSessionButton sessionId={session._id} sessionStatus={session.status} />
               <SessionDetailExerciseList exercises={session.exercises} />
             </>
           )}
