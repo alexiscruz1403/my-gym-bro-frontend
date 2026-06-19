@@ -165,6 +165,22 @@ const en = {
         label: 'Plan shared',
         description: 'When someone shares a plan with you',
       },
+      pushNotifications: {
+        label: 'Push notifications',
+        description: 'Receive notifications even when the app is closed',
+      },
+      progressionAnalysis: {
+        label: 'Progression analysis',
+        description: 'Weekly AI training progression report',
+      },
+      streakReset: {
+        label: 'Streak reset',
+        description: 'When your training streak resets on Monday',
+      },
+      streakAtRisk: {
+        label: 'Streak at risk',
+        description: 'Daily reminder if your streak is in danger',
+      },
     },
     privacy: {
       title: 'Privacy',

@@ -167,6 +167,22 @@ const es = {
         label: 'Plan compartido',
         description: 'Cuando alguien comparte un plan contigo',
       },
+      pushNotifications: {
+        label: 'Notificaciones push',
+        description: 'Recibí notificaciones aunque la app esté cerrada',
+      },
+      progressionAnalysis: {
+        label: 'Análisis de progresión',
+        description: 'Reporte semanal de progresión de entrenamiento por IA',
+      },
+      streakReset: {
+        label: 'Reinicio de racha',
+        description: 'Cuando tu racha de entrenamiento se reinicia el lunes',
+      },
+      streakAtRisk: {
+        label: 'Racha en riesgo',
+        description: 'Recordatorio diario si tu racha está en peligro',
+      },
     },
     privacy: {
       title: 'Privacidad',

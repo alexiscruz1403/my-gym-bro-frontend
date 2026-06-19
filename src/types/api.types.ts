@@ -294,6 +294,21 @@ export interface UpdateNotificationPreferencesDto {
   allowPostLike?: boolean;
   allowPostComment?: boolean;
   allowNewPost?: boolean;
+  allowPlanShared?: boolean;
+  allowProgressionAnalysis?: boolean;
+  allowStreakReset?: boolean;
+  allowStreakAtRisk?: boolean;
+}
+
+export interface PushSubscribeDto {
+  endpoint: string;
+  p256dh: string;
+  auth: string;
+  userAgent?: string;
+}
+
+export interface VapidPublicKeyResponse {
+  publicKey: string;
 }
 
 export type { NotificationPreferences };

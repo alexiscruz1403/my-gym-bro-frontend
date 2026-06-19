@@ -8,6 +8,7 @@ import { PageContainer } from '@/components/layout/PageContainer';
 import { Switch } from '@/components/ui/switch';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useNotificationPreferences } from '@/hooks/useNotificationPreferences';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useSubscription } from '@/hooks/useSubscription';
 import useAuthStore from '@/store/auth.store';
 import { usersService } from '@/services/users.service';
@@ -95,6 +96,13 @@ function SettingLinkRow({
 export default function SettingsPage() {
   const { t } = useTranslation();
   const { preferences, isLoading, updatePreferences } = useNotificationPreferences();
+  const {
+    isSupported: pushSupported,
+    isSubscribed,
+    isLoading: pushLoading,
+    subscribe: subscribePush,
+    unsubscribe: unsubscribePush,
+  } = usePushNotifications();
   const { user, setUser } = useAuthStore();
   const { subscription, isLoading: subLoading, updateAutoRenew, isToggling } = useSubscription();
 
@@ -133,6 +141,21 @@ export default function SettingsPage() {
       label: t('settings.notifications.planShared.label'),
       description: t('settings.notifications.planShared.description'),
     },
+    {
+      key: 'allowProgressionAnalysis' as const,
+      label: t('settings.notifications.progressionAnalysis.label'),
+      description: t('settings.notifications.progressionAnalysis.description'),
+    },
+    {
+      key: 'allowStreakReset' as const,
+      label: t('settings.notifications.streakReset.label'),
+      description: t('settings.notifications.streakReset.description'),
+    },
+    {
+      key: 'allowStreakAtRisk' as const,
+      label: t('settings.notifications.streakAtRisk.label'),
+      description: t('settings.notifications.streakAtRisk.description'),
+    },
   ] as const;
 
   async function handlePrivacyToggle(checked: boolean) {
@@ -164,8 +187,17 @@ export default function SettingsPage() {
       <div className="space-y-3">
         {/* Notifications */}
         <SettingsGroup title={t('settings.notifications.title')}>
+          {pushSupported && (
+            <SettingToggleRow
+              label={t('settings.notifications.pushNotifications.label')}
+              description={t('settings.notifications.pushNotifications.description')}
+              checked={isSubscribed}
+              onCheckedChange={(checked) => (checked ? subscribePush() : unsubscribePush())}
+              disabled={pushLoading}
+            />
+          )}
           {isLoading
-            ? Array.from({ length: 4 }).map((_, i) => (
+            ? Array.from({ length: 8 }).map((_, i) => (
                 <div
                   key={i}
                   className="flex items-center gap-3 border-b border-border px-4 py-3 last:border-0"
