@@ -1,9 +1,9 @@
 /// <reference lib="webworker" />
-export {};
 
-// Next.js includes lib.dom.d.ts which types `self` as `Window & typeof globalThis`.
-// Cast explicitly so TypeScript resolves the correct ServiceWorker API types.
-const sw = self as unknown as ServiceWorkerGlobalScope;
+// `self` in a SW context is ServiceWorkerGlobalScope, but the DOM lib types it as
+// `Window & typeof globalThis`. Cast once here so all subsequent calls are typed correctly.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const sw = (self as any) as ServiceWorkerGlobalScope;
 
 sw.addEventListener('push', (event) => {
   if (!event.data) return;
@@ -35,7 +35,6 @@ sw.addEventListener('notificationclick', (event) => {
       .matchAll({ type: 'window', includeUncontrolled: true })
       .then((clientList) => {
         for (const client of clientList) {
-          // matchAll with type:'window' always returns WindowClient instances
           const windowClient = client as WindowClient;
           if (windowClient.url.includes(sw.location.origin)) {
             return windowClient.focus();
