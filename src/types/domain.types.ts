@@ -731,14 +731,12 @@ export interface NotificationDataProgressionAnalysis {
   body: string;
 }
 
-export interface NotificationDataStreakReset {
-  title: string;
-  body: string;
-}
+/** El backend no persiste payload para este tipo: el texto se arma en el cliente. */
+export type NotificationDataStreakReset = Record<string, never>;
 
 export interface NotificationDataStreakAtRisk {
-  title: string;
-  body: string;
+  sessionsNeeded: number;
+  daysLeft: number;
 }
 
 export interface NotificationDataMembershipRenewed {
@@ -769,13 +767,14 @@ export type NotificationData =
 
 export interface AppNotification {
   _id: string;
-  recipientId: string;
+  recipientId?: string;
   actorId: string | null;
   type: NotificationType;
-  data: NotificationData;
+  /** Opcional: el backend omite `data` en las notificaciones sin payload. */
+  data?: NotificationData;
   isRead: boolean;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export interface ExerciseSwapProposal {

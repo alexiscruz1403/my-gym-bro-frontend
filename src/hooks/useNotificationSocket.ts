@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { io, type Socket } from 'socket.io-client';
+import i18n from 'i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { getWsToken } from '@/services/notifications.service';
@@ -66,7 +67,7 @@ export function useNotificationSocket() {
           const formatted = formatNotification(n);
           toast(formatted.text, {
             action: {
-              label: 'Ver',
+              label: i18n.t('notifications.view'),
               onClick: () => {
                 if (typeof window !== 'undefined') {
                   window.location.href = hrefFor(n);
