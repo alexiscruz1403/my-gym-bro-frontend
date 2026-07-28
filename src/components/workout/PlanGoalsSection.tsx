@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { MEMBERSHIP_PAYMENTS_ENABLED } from '@/lib/feature-flags';
 import { usePlanGoals } from '@/hooks/usePlanGoals';
 import type { AiFitnessGoal, MuscleGroup, WorkoutPlan } from '@/types/domain.types';
 
@@ -76,16 +77,18 @@ export function PlanGoalsSection({ plan, isPremium }: PlanGoalsSectionProps) {
           </div>
           <p className="text-muted-foreground text-sm">{t('plans.goals.premiumDescription')}</p>
         </CardHeader>
-        <CardContent>
-          <Button
-            variant="outline"
-            size="sm"
-            className="cursor-pointer border-amber-500/50 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/30"
-            render={<Link href="/settings" />}
-          >
-            {t('plans.goals.premiumCta')}
-          </Button>
-        </CardContent>
+        {MEMBERSHIP_PAYMENTS_ENABLED && (
+          <CardContent>
+            <Button
+              variant="outline"
+              size="sm"
+              className="cursor-pointer border-amber-500/50 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/30"
+              render={<Link href="/settings" />}
+            >
+              {t('plans.goals.premiumCta')}
+            </Button>
+          </CardContent>
+        )}
       </Card>
     );
   }

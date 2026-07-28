@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { getMySubscription, toggleAutoRenew } from '@/services/subscription.service';
+import { MEMBERSHIP_PAYMENTS_ENABLED } from '@/lib/feature-flags';
 import useAuthStore from '@/store/auth.store';
 import type { SubscriptionResponse } from '@/types/domain.types';
 
@@ -18,7 +19,7 @@ export function useSubscription() {
   const { data: subscription, isLoading } = useQuery({
     queryKey: SUBSCRIPTION_KEY,
     queryFn: getMySubscription,
-    enabled: isAuthenticated,
+    enabled: isAuthenticated && MEMBERSHIP_PAYMENTS_ENABLED,
     staleTime: 1000 * 60 * 2,
   });
 

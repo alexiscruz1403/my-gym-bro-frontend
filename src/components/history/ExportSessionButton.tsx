@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { FileDown, Loader2, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
+import { MEMBERSHIP_PAYMENTS_ENABLED } from '@/lib/feature-flags';
 import { exportSessionPdf, exportSessionCsv } from '@/services/export.service';
 import type { SessionStatus } from '@/types/domain.types';
 
@@ -23,10 +24,16 @@ export function ExportSessionButton({ sessionId, sessionStatus }: ExportSessionB
   const [pdfLoading, setPdfLoading] = useState(false);
   const [csvLoading, setCsvLoading] = useState(false);
 
+  // Sin checkout disponible, el usuario free no tiene a dónde ir: el botón se deshabilita.
+  const lockedWithoutCheckout = !isPremium && !MEMBERSHIP_PAYMENTS_ENABLED;
+
   if (sessionStatus !== 'completed' && sessionStatus !== 'partial') return null;
 
   const handlePdf = async () => {
-    if (!isPremium) { router.push('/subscription'); return; }
+    if (!isPremium) {
+      if (MEMBERSHIP_PAYMENTS_ENABLED) router.push('/subscription');
+      return;
+    }
     setPdfLoading(true);
     try {
       await exportSessionPdf(sessionId);
@@ -38,7 +45,10 @@ export function ExportSessionButton({ sessionId, sessionStatus }: ExportSessionB
   };
 
   const handleCsv = async () => {
-    if (!isPremium) { router.push('/subscription'); return; }
+    if (!isPremium) {
+      if (MEMBERSHIP_PAYMENTS_ENABLED) router.push('/subscription');
+      return;
+    }
     setCsvLoading(true);
     try {
       await exportSessionCsv(sessionId);
@@ -54,7 +64,12 @@ export function ExportSessionButton({ sessionId, sessionStatus }: ExportSessionB
 
   return (
     <div className="flex gap-2">
-      <button type="button" onClick={handlePdf} disabled={pdfLoading} className={buttonClass}>
+      <button
+        type="button"
+        onClick={handlePdf}
+        disabled={pdfLoading || lockedWithoutCheckout}
+        className={buttonClass}
+      >
         {pdfLoading ? (
           <Loader2 className="h-3.5 w-3.5 animate-spin" />
         ) : isPremium ? (
@@ -65,7 +80,12 @@ export function ExportSessionButton({ sessionId, sessionStatus }: ExportSessionB
         {t('history.export.pdf')}
       </button>
 
-      <button type="button" onClick={handleCsv} disabled={csvLoading} className={buttonClass}>
+      <button
+        type="button"
+        onClick={handleCsv}
+        disabled={csvLoading || lockedWithoutCheckout}
+        className={buttonClass}
+      >
         {csvLoading ? (
           <Loader2 className="h-3.5 w-3.5 animate-spin" />
         ) : isPremium ? (

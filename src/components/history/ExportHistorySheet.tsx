@@ -7,6 +7,7 @@ import { Download, FileDown, Loader2, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
+import { MEMBERSHIP_PAYMENTS_ENABLED } from '@/lib/feature-flags';
 import { exportHistoryPdf, exportHistoryCsv, type ExportPeriod } from '@/services/export.service';
 import {
   Sheet,
@@ -30,8 +31,14 @@ export function ExportHistorySheet() {
   const [pdfLoading, setPdfLoading] = useState(false);
   const [csvLoading, setCsvLoading] = useState(false);
 
+  // Sin checkout disponible, el usuario free no tiene a dónde ir: el botón se deshabilita.
+  const lockedWithoutCheckout = !isPremium && !MEMBERSHIP_PAYMENTS_ENABLED;
+
   const handleTrigger = () => {
-    if (!isPremium) { router.push('/subscription'); return; }
+    if (!isPremium) {
+      if (MEMBERSHIP_PAYMENTS_ENABLED) router.push('/subscription');
+      return;
+    }
     setOpen(true);
   };
 
@@ -64,7 +71,8 @@ export function ExportHistorySheet() {
       <button
         type="button"
         onClick={handleTrigger}
-        className="flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-border bg-card text-[13px] font-medium text-foreground transition-colors hover:bg-muted"
+        disabled={lockedWithoutCheckout}
+        className="flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-border bg-card text-[13px] font-medium text-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isPremium ? (
           <Download className="h-3.5 w-3.5" />

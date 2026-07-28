@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { CheckCircle2, Clock, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { getMySubscription } from '@/services/subscription.service';
+import { MEMBERSHIP_PAYMENTS_ENABLED } from '@/lib/feature-flags';
 import { SUBSCRIPTION_KEY } from '@/hooks/useSubscription';
 
 const MAX_ATTEMPTS = 5;
@@ -45,6 +46,10 @@ export default function SubscriptionSuccessPage() {
       setTimedOut(true);
     }
   }, [isAuthorized]);
+
+  // Sin checkout activo esta pantalla es inalcanzable: un link viejo quedaría
+  // esperando una suscripción que nunca se va a activar.
+  if (!MEMBERSHIP_PAYMENTS_ENABLED) redirect('/dashboard');
 
   const showLoading = isLoading || (!isAuthorized && !timedOut);
 

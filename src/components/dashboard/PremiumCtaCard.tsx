@@ -5,12 +5,14 @@ import { Loader2, Sparkles, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { checkout } from '@/services/subscription.service';
+import { MEMBERSHIP_PAYMENTS_ENABLED } from '@/lib/feature-flags';
 
 export function PremiumCtaCard() {
   const { t } = useTranslation();
   const [dismissed, setDismissed] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  if (!MEMBERSHIP_PAYMENTS_ENABLED) return null;
   if (dismissed) return null;
 
   async function handleCta() {

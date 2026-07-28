@@ -13,6 +13,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import useAuthStore from '@/store/auth.store';
 import { usersService } from '@/services/users.service';
 import { queryClient } from '@/lib/query-client';
+import { MEMBERSHIP_PAYMENTS_ENABLED } from '@/lib/feature-flags';
 import type { Language } from '@/types/domain.types';
 
 function SettingsGroup({ title, children }: { title: string; children: React.ReactNode }) {
@@ -254,8 +255,8 @@ export default function SettingsPage() {
           </div>
         </SettingsGroup>
 
-        {/* Subscription */}
-        {isPremium ? (
+        {/* Subscription — oculto mientras los pagos estén suspendidos */}
+        {MEMBERSHIP_PAYMENTS_ENABLED && isPremium ? (
           <div className="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-card shadow-sm">
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-amber-500/7 to-transparent" />
             <div className="border-b border-amber-500/20 px-4 py-3">
@@ -323,7 +324,7 @@ export default function SettingsPage() {
               </>
             )}
           </div>
-        ) : !isRewardPremium ? (
+        ) : MEMBERSHIP_PAYMENTS_ENABLED && !isRewardPremium ? (
           <SettingsGroup title={t('settings.subscription.title')}>
             <SettingLinkRow
               href="/subscription"

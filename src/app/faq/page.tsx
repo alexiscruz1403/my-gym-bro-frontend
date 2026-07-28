@@ -9,6 +9,7 @@ import {
   AccordionContent,
 } from '@/components/ui/accordion';
 import { TermsBackButton } from '@/components/terms/TermsBackButton';
+import { MEMBERSHIP_PAYMENTS_ENABLED } from '@/lib/feature-flags';
 
 export const metadata: Metadata = {
   title: 'MyGymBro — FAQ y contacto',
@@ -30,8 +31,11 @@ const FAQ_ITEMS = [
   {
     value: 'q3',
     question: '¿Qué incluye el plan gratuito y qué el premium?',
-    answer:
-      'El plan gratuito te permite crear rutinas personalizadas, registrar sesiones, ver tu historial y participar en el feed social. El plan premium agrega acceso a la generación de planes con inteligencia artificial, análisis de progresión automático y sugerencias de carga semana a semana. El premium está disponible en dos modalidades: mensual (ARS $100/mes) o anual (ARS $1.000/año).',
+    // Los pagos están suspendidos: se muestra `answerPromo`. La redacción con precios
+    // (`answerPaid`) vuelve cuando MEMBERSHIP_PAYMENTS_ENABLED sea `true`.
+    answer: MEMBERSHIP_PAYMENTS_ENABLED
+      ? 'El plan gratuito te permite crear rutinas personalizadas, registrar sesiones, ver tu historial y participar en el feed social. El plan premium agrega acceso a la generación de planes con inteligencia artificial, análisis de progresión automático y sugerencias de carga semana a semana. El premium está disponible en dos modalidades: mensual (ARS $100/mes) o anual (ARS $1.000/año).'
+      : 'El plan gratuito te permite crear rutinas personalizadas, registrar sesiones, ver tu historial y participar en el feed social. El plan premium agrega acceso a la generación de planes con inteligencia artificial, análisis de progresión automático y sugerencias de carga semana a semana. Actualmente todas las funciones premium están disponibles sin costo para los usuarios registrados, como promoción especial.',
   },
   {
     value: 'q4',
@@ -77,6 +81,11 @@ const FAQ_ITEMS = [
   },
 ] as const;
 
+// q6 explica cómo cancelar la renovación automática, que hoy no existe en la UI.
+const VISIBLE_FAQ_ITEMS = FAQ_ITEMS.filter(
+  (item) => MEMBERSHIP_PAYMENTS_ENABLED || item.value !== 'q6',
+);
+
 export default function FaqPage() {
   return (
     <div className="min-h-screen bg-background px-4 py-8">
@@ -90,7 +99,7 @@ export default function FaqPage() {
         <Card>
           <CardContent className="pt-4 pb-2">
             <Accordion>
-              {FAQ_ITEMS.map((item) => (
+              {VISIBLE_FAQ_ITEMS.map((item) => (
                 <AccordionItem key={item.value} value={item.value}>
                   <AccordionTrigger>{item.question}</AccordionTrigger>
                   <AccordionContent>
