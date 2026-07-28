@@ -11,6 +11,11 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { step1ProfileSchema, type Step1ProfileValues } from '@/lib/validations/ai.schemas';
 
+// Valores que los sliders muestran de entrada: deben vivir en el form desde el
+// principio, si no el usuario ve un valor que nunca se envía.
+const DEFAULT_HEIGHT_CM = 170;
+const DEFAULT_BODY_FAT_PCT = 20;
+
 interface AiStep1ProfileProps {
   defaultValues?: Partial<Step1ProfileValues>;
   onNext: (values: Step1ProfileValues) => void;
@@ -34,7 +39,7 @@ export function AiStep1Profile({ defaultValues, onNext }: AiStep1ProfileProps) {
     defaultValues: {
       age: defaultValues?.age,
       sex: defaultValues?.sex,
-      heightCm: defaultValues?.heightCm,
+      heightCm: defaultValues?.heightCm ?? DEFAULT_HEIGHT_CM,
       currentWeightKg: defaultValues?.currentWeightKg,
       targetWeightKg: defaultValues?.targetWeightKg,
       estimatedBodyFatPercent: defaultValues?.estimatedBodyFatPercent,
@@ -42,8 +47,8 @@ export function AiStep1Profile({ defaultValues, onNext }: AiStep1ProfileProps) {
   });
 
   const selectedSex = watch('sex');
-  const heightCm = watch('heightCm') ?? 170;
-  const bodyFatPct = watch('estimatedBodyFatPercent') ?? 20;
+  const heightCm = watch('heightCm') ?? DEFAULT_HEIGHT_CM;
+  const bodyFatPct = watch('estimatedBodyFatPercent') ?? DEFAULT_BODY_FAT_PCT;
 
   return (
     <form onSubmit={handleSubmit(onNext)} className="space-y-6">
@@ -191,7 +196,8 @@ export function AiStep1Profile({ defaultValues, onNext }: AiStep1ProfileProps) {
           type="button"
           onClick={() => {
             setShowBodyFat((v) => !v);
-            if (showBodyFat) setValue('estimatedBodyFatPercent', undefined);
+            // Al abrir, el slider ya muestra un valor: hay que registrarlo en el form.
+            setValue('estimatedBodyFatPercent', showBodyFat ? undefined : bodyFatPct);
           }}
           className="flex items-center gap-2 text-sm text-primary font-medium"
         >
