@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { connection } from 'next/server';
 import DOMPurify from 'isomorphic-dompurify';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -16,8 +17,13 @@ export const metadata: Metadata = {
 };
 
 async function fetchTermsSections(): Promise<TermsSection[]> {
+  // This runs on the server, where NEXT_PUBLIC_API_URL (the browser-facing host
+  // URL) is unreachable from inside the container. API_INTERNAL_URL points at the
+  // API over the compose network; outside Docker it is unset and we fall back.
+  const baseUrl = process.env.API_INTERNAL_URL ?? process.env.NEXT_PUBLIC_API_URL;
+
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/terms`, {
+    const res = await fetch(`${baseUrl}/terms`, {
       next: { revalidate: 3600 },
     });
     if (!res.ok) return [];
@@ -28,6 +34,11 @@ async function fetchTermsSections(): Promise<TermsSection[]> {
 }
 
 export default async function TermsPage() {
+  // Opt out of build-time prerendering: the API is not up during `docker build`,
+  // so a prerender would bake in the empty fallback. The fetch above still caches
+  // for an hour, so this costs one upstream request per hour, not per request.
+  await connection();
+
   const sections = await fetchTermsSections();
 
   return (
