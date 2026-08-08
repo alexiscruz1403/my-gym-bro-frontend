@@ -10,18 +10,9 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Las NEXT_PUBLIC_* se inlinean en el bundle durante el build, no en runtime.
-# Tienen que llegar como build args (ver docker-compose.yml -> web.build.args).
-ARG NEXT_PUBLIC_API_URL
-ARG NEXT_PUBLIC_WS_URL
-ARG NEXT_PUBLIC_GOOGLE_AUTH_URL
-ARG NEXT_PUBLIC_ACCESS_TOKEN_COOKIE=access_token
-
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL \
-    NEXT_PUBLIC_WS_URL=$NEXT_PUBLIC_WS_URL \
-    NEXT_PUBLIC_GOOGLE_AUTH_URL=$NEXT_PUBLIC_GOOGLE_AUTH_URL \
-    NEXT_PUBLIC_ACCESS_TOKEN_COOKIE=$NEXT_PUBLIC_ACCESS_TOKEN_COOKIE \
-    NEXT_TELEMETRY_DISABLED=1 \
+# Sin build args de configuracion: las URLs se leen en runtime (ver
+# src/lib/runtime-config.ts), asi que esta imagen sirve para cualquier entorno.
+ENV NEXT_TELEMETRY_DISABLED=1 \
     NODE_ENV=production
 
 RUN npm run build

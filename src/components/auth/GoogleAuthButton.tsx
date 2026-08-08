@@ -2,6 +2,7 @@
 
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
+import { getConfig } from '@/lib/runtime-config';
 import { cn } from '@/lib/utils';
 
 function GoogleIcon() {
@@ -35,7 +36,7 @@ export function GoogleAuthButton({ className }: GoogleAuthButtonProps) {
   const { t } = useTranslation();
 
   const handleGoogleAuth = (): void => {
-    window.location.href = process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL as string;
+    window.location.href = getConfig().googleAuthUrl;
   };
 
   return (

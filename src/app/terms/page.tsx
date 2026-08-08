@@ -17,10 +17,10 @@ export const metadata: Metadata = {
 };
 
 async function fetchTermsSections(): Promise<TermsSection[]> {
-  // This runs on the server, where NEXT_PUBLIC_API_URL (the browser-facing host
-  // URL) is unreachable from inside the container. API_INTERNAL_URL points at the
-  // API over the compose network; outside Docker it is unset and we fall back.
-  const baseUrl = process.env.API_INTERNAL_URL ?? process.env.NEXT_PUBLIC_API_URL;
+  // This runs on the server, where API_URL (the browser-facing host URL) is
+  // unreachable from inside the container. API_INTERNAL_URL points at the API
+  // over the compose network; outside Docker it is unset and we fall back.
+  const baseUrl = process.env.API_INTERNAL_URL ?? process.env.API_URL;
 
   try {
     const res = await fetch(`${baseUrl}/terms`, {

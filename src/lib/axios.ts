@@ -1,6 +1,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import type { ApiError } from '@/types/api.types';
 import { API_ROUTES } from '@/lib/api-routes';
+import { getConfig } from '@/lib/runtime-config';
 import { logout, setAuthenticated } from '@/store/auth.store';
 
 export function isNetworkError(error: unknown): boolean {
@@ -10,12 +11,18 @@ export function isNetworkError(error: unknown): boolean {
 // ─── Axios instance ───────────────────────────────────────────────
 // withCredentials: true ensures httpOnly cookies are sent on every request.
 export const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 10000,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
+});
+
+// baseURL is resolved per request instead of at creation time: this module is
+// imported before the document exists, so the runtime config is not readable yet.
+apiClient.interceptors.request.use((config) => {
+  config.baseURL ??= getConfig().apiUrl;
+  return config;
 });
 
 // ─── Refresh queue ────────────────────────────────────────────────
@@ -88,7 +95,7 @@ apiClient.interceptors.response.use(
         // Use fetch (not apiClient) to avoid re-triggering this interceptor.
         // The backend must clear the httpOnly access_token cookie; otherwise
         // the middleware sees it and redirects the user away from /login in production.
-        fetch(`${apiClient.defaults.baseURL}${API_ROUTES.auth.logout}`, {
+        fetch(`${getConfig().apiUrl}${API_ROUTES.auth.logout}`, {
           method: 'POST',
           credentials: 'include',
         }).finally(() => {

@@ -6,6 +6,7 @@ import i18n from 'i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { getWsToken } from '@/services/notifications.service';
+import { getConfig } from '@/lib/runtime-config';
 import { usersService } from '@/services/users.service';
 import { formatNotification, hrefFor } from '@/lib/notification-format';
 import { playNotification } from '@/lib/audio';
@@ -36,7 +37,7 @@ export function useNotificationSocket() {
         const { token } = await getWsToken();
         if (cancelled) return;
 
-        const wsUrl = process.env.NEXT_PUBLIC_WS_URL ?? '';
+        const wsUrl = getConfig().wsUrl;
         const socket = io(`${wsUrl}/notifications`, {
           auth: { token },
           transports: ['websocket'],

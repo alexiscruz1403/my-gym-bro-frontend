@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+const ACCESS_TOKEN_COOKIE = 'access_token';
 const PUBLIC_ROUTES = ['/login', '/register', '/auth'];
 const PROTECTED_PREFIX = ['/dashboard', '/workout', '/history', '/feed', '/profile'];
 
@@ -8,9 +9,10 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Read the httpOnly access token cookie set by the backend.
-  // The cookie name must match the backend configuration.
-  const cookieName = process.env.NEXT_PUBLIC_ACCESS_TOKEN_COOKIE ?? 'access_token';
-  const accessToken = request.cookies.get(cookieName)?.value;
+  // Hardcoded on purpose: middleware compiles to an Edge bundle where env vars
+  // are inlined at build time, so this could never be runtime-configurable. The
+  // backend hardcodes it too (COOKIE_NAMES.ACCESS), so it can never differ.
+  const accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
 
   const isPublicRoute = PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
 
