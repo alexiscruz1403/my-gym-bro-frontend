@@ -1,11 +1,16 @@
 # Dependencias
-FROM node:22-slim AS deps
+# alpine y no slim: 232 MB contra 329 MB, casi 100 MB menos, y aca no aplica el
+# motivo por el que la API si usa slim (bcrypt compilado contra glibc). Este repo
+# no tiene modulos nativos propios, y los dos que entran por transitividad
+# publican variante musl, que npm resuelve solo porque el ci corre dentro de la
+# imagen: sharp -> @img/sharp-linuxmusl-x64, SWC -> @next/swc-linux-x64-musl.
+FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
 # Build
-FROM node:22-slim AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -18,7 +23,7 @@ ENV NEXT_TELEMETRY_DISABLED=1 \
 RUN npm run build
 
 # Runtime
-FROM node:22-slim AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 # production, no local: el server standalone se fuerza a production igual
 # (server.js linea 1), asi que 'local' solo confundiria. Ojo: la API si corre

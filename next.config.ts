@@ -11,6 +11,21 @@ const nextConfig: NextConfig = {
     ],
   },
   output: 'standalone',
+
+  // El server.js del modo standalone NO lee este archivo: lleva la config
+  // serializada como literal JSON (__NEXT_PRIVATE_STANDALONE_CONFIG), y
+  // next.config.ts ni siquiera existe dentro de la imagen. Pero el tracer de Next
+  // si lo sigue en build, y arrastra typescript (por ser .ts) y webpack + workbox
+  // (por next-pwa) al runtime, donde no se ejecutan nunca. Son ~20 MB.
+  outputFileTracingExcludes: {
+    '*': [
+      'node_modules/typescript/**',
+      'node_modules/webpack/**',
+      'node_modules/terser/**',
+      'node_modules/@ducanh2912/**',
+      'node_modules/workbox-*/**',
+    ],
+  },
 };
 
 export default withPWA({
