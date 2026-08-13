@@ -35,14 +35,12 @@ export function AdminPaymentLogList() {
 
   return (
     <div className="flex flex-col gap-3">
-      {/* Section head */}
       <div className="flex items-center justify-between gap-2.5">
         <span className="font-display text-[15px] font-semibold text-foreground tracking-[0.01em]">
           {t('admin.payments.title', { defaultValue: 'Historial de transacciones' })}
         </span>
       </div>
 
-      {/* Filter bar */}
       <div className="flex flex-wrap gap-2">
         <input
           value={userId}

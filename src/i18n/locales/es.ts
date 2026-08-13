@@ -810,7 +810,6 @@ const es = {
     unknownActor: 'Alguien',
     unread: 'Sin leer',
     view: 'Ver',
-    // Texto de cada fila de la lista de notificaciones.
     text: {
       follow: '{{actor}} comenzó a seguirte',
       postLike: 'A {{actor}} le gustó tu post',

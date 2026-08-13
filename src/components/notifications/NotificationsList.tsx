@@ -71,7 +71,6 @@ export function NotificationsList() {
 
   return (
     <div className="space-y-3">
-      {/* Header: large title + mark-all */}
       <div className="flex items-center justify-between">
         <h2 className="font-display text-[22px] font-bold tracking-[0.01em] text-foreground">
           {t('notifications.title')}

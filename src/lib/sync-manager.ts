@@ -6,14 +6,12 @@ import { setMapping, resolveIds, resolvePayload } from './id-reconciler';
 import useOfflineStore from '@/store/offline.store';
 import type { WorkoutPlan, WorkoutSession, UserResponse, FinishSessionResponse } from '@/types/domain.types';
 
-// Normalize server response to a resource with a primary key
 function extractId(data: unknown): string | null {
   if (typeof data !== 'object' || data === null) return null;
   const obj = data as Record<string, unknown>;
   return (obj.id as string) ?? (obj._id as string) ?? null;
 }
 
-// Update IndexedDB after a successful sync, replacing temp data with server data
 async function applyServerResponse(type: string, tempId: string | undefined, responseData: unknown): Promise<void> {
   if (!tempId) return;
 
@@ -60,7 +58,6 @@ async function applyServerResponse(type: string, tempId: string | undefined, res
 let isSyncRunning = false;
 
 export async function syncAll(): Promise<void> {
-  // Prevent concurrent sync runs
   if (isSyncRunning) return;
   isSyncRunning = true;
 
@@ -78,7 +75,6 @@ export async function syncAll(): Promise<void> {
 
   try {
     for (const mutation of pending) {
-      // Resolve any offline_ IDs embedded in the URL and payload
       const resolvedUrl = await resolveIds(mutation.url);
       const resolvedPayload = mutation.payload
         ? await resolvePayload(mutation.payload)
@@ -100,7 +96,6 @@ export async function syncAll(): Promise<void> {
         return;
       }
 
-      // If this mutation created a resource, store the temp → real ID mapping
       if (mutation.tempId) {
         const realId = extractId(response.data);
         if (realId) {
@@ -121,7 +116,6 @@ export async function syncAll(): Promise<void> {
       setPendingCount(remaining);
     }
 
-    // Invalidate all React Query caches so UI shows fresh server data
     await queryClient.invalidateQueries();
     markSynced();
   } catch {

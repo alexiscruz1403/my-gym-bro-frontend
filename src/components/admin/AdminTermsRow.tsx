@@ -98,7 +98,6 @@ export function AdminTermsRow({ section, isSaving, onUpdate, onDelete }: AdminTe
   return (
     <>
       <div className="rounded-2xl border border-border bg-card px-4 py-3.25 shadow-sm">
-        {/* Row header */}
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
@@ -142,7 +141,6 @@ export function AdminTermsRow({ section, isSaving, onUpdate, onDelete }: AdminTe
           </div>
         </div>
 
-        {/* Inline edit form */}
         {isEditing && (
           <div className="border-t border-border mt-3 pt-3 flex flex-col gap-3">
             <div className="flex flex-col gap-1.5">
@@ -233,7 +231,6 @@ export function AdminTermsRow({ section, isSaving, onUpdate, onDelete }: AdminTe
         )}
       </div>
 
-      {/* Save + notify confirmation */}
       <Dialog open={dialogMode === 'save-notify'} onOpenChange={(o) => !o && setDialogMode(null)}>
         <DialogContent showCloseButton={!isSaving}>
           <DialogHeader>
@@ -257,7 +254,6 @@ export function AdminTermsRow({ section, isSaving, onUpdate, onDelete }: AdminTe
         </DialogContent>
       </Dialog>
 
-      {/* Delete confirmation */}
       <Dialog open={dialogMode === 'delete'} onOpenChange={(o) => !o && setDialogMode(null)}>
         <DialogContent showCloseButton={!isSaving}>
           <DialogHeader>

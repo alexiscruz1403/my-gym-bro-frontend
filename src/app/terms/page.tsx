@@ -6,13 +6,6 @@ import { Separator } from '@/components/ui/separator';
 import { TermsBackButton } from '@/components/terms/TermsBackButton';
 import type { TermsSection } from '@/types/domain.types';
 
-// sanitize-html y no isomorphic-dompurify: esta pagina es un server component, y
-// DOMPurify necesita un DOM, asi que arrastraba jsdom entero (9 MB) a la imagen de
-// produccion. sanitize-html es JS puro y sanitiza en el servidor igual, con lo que
-// la pagina sigue renderizando sin JS y sin desajuste de hidratacion.
-//
-// El allowlist va explicito y no heredado: los defaults de sanitize-html no
-// incluyen <span>, y el className de abajo tiene reglas [&_span]:*.
 function renderContent(raw: string): string {
   const hasHtmlTags = /<[a-z][\s\S]*>/i.test(raw);
   const withBreaks = hasHtmlTags ? raw : raw.replace(/\n/g, '<br>');
@@ -27,9 +20,6 @@ export const metadata: Metadata = {
 };
 
 async function fetchTermsSections(): Promise<TermsSection[]> {
-  // This runs on the server, where API_URL (the browser-facing host URL) is
-  // unreachable from inside the container. API_INTERNAL_URL points at the API
-  // over the compose network; outside Docker it is unset and we fall back.
   const baseUrl = process.env.API_INTERNAL_URL ?? process.env.API_URL;
 
   try {
@@ -44,9 +34,6 @@ async function fetchTermsSections(): Promise<TermsSection[]> {
 }
 
 export default async function TermsPage() {
-  // Opt out of build-time prerendering: the API is not up during `docker build`,
-  // so a prerender would bake in the empty fallback. The fetch above still caches
-  // for an hour, so this costs one upstream request per hour, not per request.
   await connection();
 
   const sections = await fetchTermsSections();
@@ -77,7 +64,6 @@ export default async function TermsPage() {
                   </h2>
                   <div
                     className="text-sm text-muted-foreground leading-relaxed [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2 [&_ul]:list-disc [&_ul]:pl-4 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:pl-4 [&_ol]:space-y-1 [&_strong]:text-foreground [&_strong]:font-medium [&_span]:text-foreground [&_span]:font-medium [&_p]:mb-2 last:[&_p]:mb-0"
-                    // Content comes from our own database, sanitized before render
                     dangerouslySetInnerHTML={{
                       __html: renderContent(section.content),
                     }}

@@ -136,7 +136,6 @@ export function StreakDetailSheet({
             </p>
           </div>
 
-          {/* Collapsible guide */}
           <div className="rounded-xl border border-border overflow-hidden">
             <button
               type="button"

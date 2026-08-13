@@ -73,7 +73,6 @@ export function AdminUserRow({ user, onSetStatus, onSetRole, onGiftMembership, o
 
   return (
     <div className="rounded-2xl border border-border bg-card px-4 py-3.5 shadow-sm">
-      {/* Top: user info + badges */}
       <div className="flex items-start justify-between gap-2.5">
         <div className="min-w-0 flex-1">
           <p className="text-[14px] font-semibold text-foreground">{user.username}</p>
@@ -94,7 +93,6 @@ export function AdminUserRow({ user, onSetStatus, onSetRole, onGiftMembership, o
         </div>
       </div>
 
-      {/* Actions row */}
       <div className="flex items-center gap-1.5 flex-wrap mt-3 pt-3 border-t border-border">
         <ActBtn disabled={busy} onClick={handleRoleToggle}>
           {user.role === 'admin' ? t('admin.users.demote') : t('admin.users.promote')}
@@ -126,7 +124,6 @@ export function AdminUserRow({ user, onSetStatus, onSetRole, onGiftMembership, o
         )}
       </div>
 
-      {/* Gift inline form */}
       {action === 'gift' && (
         <div className="flex items-center gap-2 mt-2.5 pt-2.5 border-t border-border flex-wrap">
           <span className="text-[12px] text-muted-foreground">{t('admin.users.plan')}:</span>
@@ -156,7 +153,6 @@ export function AdminUserRow({ user, onSetStatus, onSetRole, onGiftMembership, o
         </div>
       )}
 
-      {/* Revoke inline form */}
       {action === 'revoke' && (
         <div className="flex items-center gap-2 mt-2.5 pt-2.5 border-t border-border flex-wrap">
           <input

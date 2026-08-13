@@ -5,7 +5,6 @@ import useOfflineStore from '@/store/offline.store';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 
 export function OfflineBanner() {
-  // useNetworkStatus keeps the store in sync; we read the value from the store
   useNetworkStatus();
   const isOnline = useOfflineStore((s) => s.isOnline);
 

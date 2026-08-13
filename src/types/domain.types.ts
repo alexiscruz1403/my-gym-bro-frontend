@@ -222,7 +222,6 @@ export interface WorkoutSession {
   exercises: SessionExercise[];
 }
 
-// Session history
 
 export interface SessionHistoryExercise {
   exerciseName: string;
@@ -255,7 +254,6 @@ export interface SessionHistoryResponse {
   meta: PaginatedMeta;
 }
 
-// Stats — volume by period
 
 export type StatsPeriod = 'week' | 'month' | 'year';
 
@@ -280,7 +278,6 @@ export interface VolumeByPeriodResponse {
   changePercent: number | null;
 }
 
-// Stats — volume by muscle
 
 export interface MuscleVolumeItem {
   rank: number;
@@ -300,7 +297,6 @@ export interface VolumeByMuscleResponse {
   hasLbsExercises: boolean;
 }
 
-// Social
 
 export interface PublicUserProfile {
   _id: string;
@@ -345,7 +341,6 @@ export interface NotificationPreferences {
   allowStreakAtRisk: boolean;
 }
 
-// Session summary snapshot — embedded in FeedPost at creation time
 
 export interface SessionSummarySetSnapshot {
   reps?: number;
@@ -453,7 +448,6 @@ export interface FeedComment {
   replies: FeedCommentReply[];
 }
 
-// Exercise history
 
 export interface ExerciseHistorySet {
   setIndex: number;
@@ -483,7 +477,6 @@ export interface ExerciseHistoryResponse {
   meta: PaginatedMeta;
 }
 
-// Public session history (C-08)
 
 export interface PublicSessionHistoryExercise {
   exerciseName: string;
@@ -509,7 +502,6 @@ export interface PublicSessionHistoryResponse {
   meta: PaginatedMeta;
 }
 
-// Ranks
 
 export type RankLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
@@ -560,7 +552,6 @@ export interface LeaderboardResponse {
   meta: PaginatedMeta;
 }
 
-// Feature 8 — Exercise detail tabs
 
 export interface ExerciseVolumeResponse extends VolumeByPeriodResponse {
   exerciseId: string;
@@ -577,7 +568,6 @@ export interface ExerciseRankResponse {
   updatedAt: string | null;
 }
 
-// Membership / Subscription (Feature 9)
 
 export type MembershipTier = 'free' | 'premium';
 
@@ -604,7 +594,6 @@ export interface SubscriptionResponse {
   updatedAt: string;
 }
 
-// Admin (C-11 / Feature 12)
 
 export interface AdminUserItem {
   _id: string;
@@ -731,7 +720,6 @@ export interface NotificationDataProgressionAnalysis {
   body: string;
 }
 
-/** El backend no persiste payload para este tipo: el texto se arma en el cliente. */
 export type NotificationDataStreakReset = Record<string, never>;
 
 export interface NotificationDataStreakAtRisk {
@@ -770,7 +758,6 @@ export interface AppNotification {
   recipientId?: string;
   actorId: string | null;
   type: NotificationType;
-  /** Opcional: el backend omite `data` en las notificaciones sin payload. */
   data?: NotificationData;
   isRead: boolean;
   createdAt: string;
@@ -789,7 +776,6 @@ export interface ExerciseSwapProposal {
   justification: string;
 }
 
-// AI Features (10 & 11)
 
 export type AiFitnessGoal =
   | 'muscle_gain'
@@ -965,7 +951,6 @@ export interface UpdateTermsSectionDto {
 export type CreateAdminTermsSectionDto = CreateTermsSectionDto;
 export type UpdateAdminTermsSectionDto = UpdateTermsSectionDto;
 
-// Monitoring
 export interface MonitoringUsersResponse {
   activeUsers: number;
   inactiveUsers: number;
@@ -1021,7 +1006,6 @@ export interface MonitoringErrorsResponse {
   meta: PaginatedMeta;
 }
 
-// Achievements
 
 export type AchievementTier = 'bronze' | 'silver' | 'gold';
 export type AchievementCategory = 'common' | 'secret';

@@ -31,8 +31,6 @@ const FAQ_ITEMS = [
   {
     value: 'q3',
     question: '¿Qué incluye el plan gratuito y qué el premium?',
-    // Los pagos están suspendidos: se muestra `answerPromo`. La redacción con precios
-    // (`answerPaid`) vuelve cuando MEMBERSHIP_PAYMENTS_ENABLED sea `true`.
     answer: MEMBERSHIP_PAYMENTS_ENABLED
       ? 'El plan gratuito te permite crear rutinas personalizadas, registrar sesiones, ver tu historial y participar en el feed social. El plan premium agrega acceso a la generación de planes con inteligencia artificial, análisis de progresión automático y sugerencias de carga semana a semana. El premium está disponible en dos modalidades: mensual (ARS $100/mes) o anual (ARS $1.000/año).'
       : 'El plan gratuito te permite crear rutinas personalizadas, registrar sesiones, ver tu historial y participar en el feed social. El plan premium agrega acceso a la generación de planes con inteligencia artificial, análisis de progresión automático y sugerencias de carga semana a semana. Actualmente todas las funciones premium están disponibles sin costo para los usuarios registrados, como promoción especial.',
@@ -81,7 +79,6 @@ const FAQ_ITEMS = [
   },
 ] as const;
 
-// q6 explica cómo cancelar la renovación automática, que hoy no existe en la UI.
 const VISIBLE_FAQ_ITEMS = FAQ_ITEMS.filter(
   (item) => MEMBERSHIP_PAYMENTS_ENABLED || item.value !== 'q6',
 );

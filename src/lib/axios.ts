@@ -8,8 +8,6 @@ export function isNetworkError(error: unknown): boolean {
   return !navigator.onLine || (axios.isAxiosError(error) && !(error as AxiosError).response);
 }
 
-// ─── Axios instance ───────────────────────────────────────────────
-// withCredentials: true ensures httpOnly cookies are sent on every request.
 export const apiClient = axios.create({
   timeout: 10000,
   withCredentials: true,
@@ -18,16 +16,10 @@ export const apiClient = axios.create({
   },
 });
 
-// baseURL is resolved per request instead of at creation time: this module is
-// imported before the document exists, so the runtime config is not readable yet.
 apiClient.interceptors.request.use((config) => {
   config.baseURL ??= getConfig().apiUrl;
   return config;
 });
-
-// ─── Refresh queue ────────────────────────────────────────────────
-// Holds pending requests while a token refresh is in progress.
-// All queued requests are resolved/rejected together once refresh completes.
 
 type QueueItem = {
   resolve: () => void;
@@ -48,9 +40,6 @@ function processQueue(error: unknown): void {
   failedQueue = [];
 }
 
-// ─── Response interceptor — handle 401 + refresh ─────────────────
-// The access token is stored in an httpOnly cookie — the browser sends it
-// automatically. On 401, we attempt a silent refresh (also cookie-based).
 apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError<ApiError>) => {
@@ -63,13 +52,11 @@ apiClient.interceptors.response.use(
     const isLoginEndpoint = originalRequest.url?.includes(API_ROUTES.auth.login) ?? false;
     const alreadyRetried = originalRequest._retry;
 
-    // Do not retry refresh requests, login requests, or already-retried requests
     if (!isUnauthorized || isRefreshEndpoint || isLoginEndpoint || alreadyRetried) {
       return Promise.reject(error);
     }
 
     if (isRefreshing) {
-      // Queue the request — it will be retried once refresh completes
       return new Promise<void>((resolve, reject) => {
         failedQueue.push({ resolve, reject });
       })
@@ -81,7 +68,6 @@ apiClient.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      // Refresh token is sent automatically via httpOnly cookie
       await apiClient.post(API_ROUTES.auth.refresh);
 
       setAuthenticated(true);
@@ -92,9 +78,6 @@ apiClient.interceptors.response.use(
       logout();
       processQueue(refreshError);
       if (typeof window !== 'undefined') {
-        // Use fetch (not apiClient) to avoid re-triggering this interceptor.
-        // The backend must clear the httpOnly access_token cookie; otherwise
-        // the middleware sees it and redirects the user away from /login in production.
         fetch(`${getConfig().apiUrl}${API_ROUTES.auth.logout}`, {
           method: 'POST',
           credentials: 'include',

@@ -45,8 +45,6 @@ interface DayExerciseListProps {
   onReorder: (fromIndex: number, toIndex: number) => void;
 }
 
-// ─── Sortable item ────────────────────────────────────────────────────────────
-
 interface SortableExerciseItemProps {
   id: string;
   index: number;
@@ -99,7 +97,6 @@ function SortableExerciseItem({
         />
       ) : (
         <div className="flex items-center gap-2">
-          {/* Drag handle */}
           <button
             type="button"
             className="text-muted-foreground cursor-grab touch-none p-1 active:cursor-grabbing"
@@ -183,8 +180,6 @@ function SortableExerciseItem({
     </div>
   );
 }
-
-// ─── Main list ────────────────────────────────────────────────────────────────
 
 export function DayExerciseList({
   exercises,

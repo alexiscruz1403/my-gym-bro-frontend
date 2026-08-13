@@ -13,8 +13,6 @@ export function useExercises(params: ExerciseListParams = {}) {
     queryKey: ['exercises', { search, muscle, loadType, page, limit }],
     queryFn: () => getExercises({ search, muscle, loadType, page, limit }),
     placeholderData: (prev) => prev,
-    // Debounce search queries by delaying staleTime only; actual debounce is
-    // handled by keeping the same staleTime and relying on React re-renders.
     staleTime: search ? DEBOUNCE_MS : undefined,
   });
 

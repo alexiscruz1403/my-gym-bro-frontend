@@ -30,7 +30,6 @@ export function useSetActiveTitle() {
   const { mutate, isPending } = useMutation({
     mutationFn: (titleKey: string | null) => setActiveTitle(titleKey),
     onSuccess: (_data, titleKey) => {
-      // Read fresh user from store — avoids stale closure, same pattern as useSubscription
       const currentUser = useAuthStore.getState().user;
       if (currentUser) {
         let newActiveTitle: TitleInfo | null;

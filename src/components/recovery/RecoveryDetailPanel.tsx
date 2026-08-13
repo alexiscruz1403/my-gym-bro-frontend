@@ -67,7 +67,6 @@ export function RecoveryDetailPanel({ item, open, onClose }: RecoveryDetailPanel
             </div>
 
             <div className="flex flex-col gap-4 overflow-y-auto px-4 py-4 pb-6 [scrollbar-width:none]">
-              {/* Recovery progress */}
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between text-[13px]">
                   <span className="text-muted-foreground">{t('muscleRecovery.recoveryPercent', { value: item.recoveryPercent.toFixed(1) })}</span>
@@ -92,7 +91,6 @@ export function RecoveryDetailPanel({ item, open, onClose }: RecoveryDetailPanel
                 </div>
               </div>
 
-              {/* Time until fresh */}
               <div className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3">
                 <span className="text-[13px] text-muted-foreground">
                   {item.status === 'FRESH'
@@ -104,7 +102,6 @@ export function RecoveryDetailPanel({ item, open, onClose }: RecoveryDetailPanel
                 </span>
               </div>
 
-              {/* Last trained */}
               <div className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3">
                 <span className="text-[13px] text-muted-foreground">{t('muscleRecovery.lastTrained')}</span>
                 <span className="text-[13px] font-medium">{lastTrainedLabel}</span>

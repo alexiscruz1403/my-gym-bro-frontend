@@ -47,7 +47,6 @@ export function LoginForm() {
             '0 2px 4px oklch(0% 0 0 / 0.08), 0 8px 20px oklch(0% 0 0 / 0.18), 0 28px 64px oklch(0% 0 0 / 0.30)',
         }}
       >
-        {/* Header */}
         <div className="flex flex-col gap-[5px]">
           <h1 className="font-display text-[27px] font-bold tracking-[0.02em] leading-[1.05] text-foreground">
             {t('auth.login.heading')}
@@ -57,9 +56,7 @@ export function LoginForm() {
           </p>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-3.5">
-          {/* Email */}
           <div className="flex flex-col gap-[5px]">
             <label htmlFor="l-email" className="text-[13px] font-medium text-foreground">
               {t('auth.emailLabel')}
@@ -86,7 +83,6 @@ export function LoginForm() {
             )}
           </div>
 
-          {/* Password */}
           <div className="flex flex-col gap-[5px]">
             <div className="flex items-center justify-between">
               <label htmlFor="l-pass" className="text-[13px] font-medium text-foreground">
@@ -132,7 +128,6 @@ export function LoginForm() {
             )}
           </div>
 
-          {/* Submit */}
           <div className="mt-0.5">
             <button
               type="submit"
@@ -148,7 +143,6 @@ export function LoginForm() {
           </div>
         </form>
 
-        {/* Divider */}
         <div className="flex items-center gap-3">
           <div className="flex-1 h-px bg-border" />
           <span className="text-[12px] text-[oklch(67%_0.010_248)]">
@@ -157,11 +151,9 @@ export function LoginForm() {
           <div className="flex-1 h-px bg-border" />
         </div>
 
-        {/* Google */}
         <GoogleAuthButton className={GOOGLE_BTN_CLASS} />
       </div>
 
-      {/* Footer */}
       <p className="text-[13px] text-center text-[oklch(58%_0.012_248)]">
         {t('auth.noAccount')}{' '}
         <Link

@@ -100,7 +100,6 @@ export function PlanGoalsSection({ plan, isPremium }: PlanGoalsSectionProps) {
         <p className="text-muted-foreground text-xs">{t('plans.goals.description')}</p>
       </CardHeader>
       <CardContent className="space-y-5">
-        {/* Main goal */}
         <div className="space-y-2">
           <p className="text-sm font-medium">{t('plans.goals.goalLabel')}</p>
           <div className="flex flex-wrap gap-2">
@@ -122,7 +121,6 @@ export function PlanGoalsSection({ plan, isPremium }: PlanGoalsSectionProps) {
           </div>
         </div>
 
-        {/* Muscle focus */}
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <p className="text-sm font-medium">{t('plans.goals.muscleFocusLabel')}</p>

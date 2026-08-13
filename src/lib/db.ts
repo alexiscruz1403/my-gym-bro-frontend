@@ -10,8 +10,6 @@ import type {
   VolumeByMuscleResponse,
 } from '@/types/domain.types';
 
-// ─── Supplemental types stored in IndexedDB ───────────────────────
-
 export type MutationType =
   | 'CREATE_PLAN'
   | 'UPDATE_PLAN'
@@ -48,13 +46,11 @@ export interface IdMapping {
 export type CachedStatType = 'volume' | 'muscle';
 
 export interface CachedStat {
-  key: string; // `${type}_${period}_${date}`
+  key: string;
   type: CachedStatType;
   data: VolumeByPeriodResponse | VolumeByMuscleResponse;
   cachedAt: number;
 }
-
-// ─── Database class ───────────────────────────────────────────────
 
 class AppDatabase extends Dexie {
   plans!: EntityTable<WorkoutPlan, 'id'>;
@@ -69,7 +65,7 @@ class AppDatabase extends Dexie {
   idMap!: EntityTable<IdMapping, 'tempId'>;
 
   constructor() {
-    super('gym-planner-offline');
+    super('my-gym-bro-offline');
     this.version(1).stores({
       plans: 'id, isActive, isAiGenerated',
       exercises: 'id, loadType, trackingType',

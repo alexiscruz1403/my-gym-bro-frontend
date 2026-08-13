@@ -64,7 +64,6 @@ export function SessionHeader({ onFinish, onCancel, onToggleCountdown, countdown
             {formatElapsed(sessionStartTime)}
           </span>
 
-          {/* Tools dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
@@ -94,7 +93,6 @@ export function SessionHeader({ onFinish, onCancel, onToggleCountdown, countdown
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Desktop: explicit buttons */}
           <div className="hidden items-center gap-2 lg:flex">
             <Button
               size="sm"
@@ -116,7 +114,6 @@ export function SessionHeader({ onFinish, onCancel, onToggleCountdown, countdown
             </Button>
           </div>
 
-          {/* Mobile: dropdown menu */}
           <div className="lg:hidden">
             <DropdownMenu>
               <DropdownMenuTrigger

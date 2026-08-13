@@ -40,7 +40,6 @@ export function AchievementsSection({ achievements, language }: AchievementsSect
       }
     }
 
-    // earned tiers first (most recent first), then locked (preserve original order)
     items.sort((a, b) => {
       if (a.unlockedAt && b.unlockedAt) {
         return new Date(b.unlockedAt).getTime() - new Date(a.unlockedAt).getTime();

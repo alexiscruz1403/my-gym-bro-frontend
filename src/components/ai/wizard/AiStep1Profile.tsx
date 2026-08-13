@@ -11,8 +11,6 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { step1ProfileSchema, type Step1ProfileValues } from '@/lib/validations/ai.schemas';
 
-// Valores que los sliders muestran de entrada: deben vivir en el form desde el
-// principio, si no el usuario ve un valor que nunca se envía.
 const DEFAULT_HEIGHT_CM = 170;
 const DEFAULT_BODY_FAT_PCT = 20;
 
@@ -196,7 +194,6 @@ export function AiStep1Profile({ defaultValues, onNext }: AiStep1ProfileProps) {
           type="button"
           onClick={() => {
             setShowBodyFat((v) => !v);
-            // Al abrir, el slider ya muestra un valor: hay que registrarlo en el form.
             setValue('estimatedBodyFatPercent', showBodyFat ? undefined : bodyFatPct);
           }}
           className="flex items-center gap-2 text-sm text-primary font-medium"

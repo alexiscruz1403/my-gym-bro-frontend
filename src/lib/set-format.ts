@@ -35,7 +35,6 @@ export function formatSide(
   weightUnit: 'kg' | 'lbs',
 ): string {
   if (!side) return '—';
-  // Plan config sides use minReps/maxReps; session/logged sides use reps
   if (side.minReps !== undefined) {
     const repsStr =
       side.maxReps !== undefined

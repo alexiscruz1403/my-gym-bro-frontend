@@ -186,7 +186,6 @@ export default function SettingsPage() {
   return (
     <PageContainer>
       <div className="space-y-3">
-        {/* Notifications */}
         <SettingsGroup title={t('settings.notifications.title')}>
           {pushSupported && (
             <SettingToggleRow
@@ -221,7 +220,6 @@ export default function SettingsPage() {
               ))}
         </SettingsGroup>
 
-        {/* Privacy */}
         <SettingsGroup title={t('settings.privacy.title')}>
           <SettingToggleRow
             label={t('settings.privacy.privateProfile.label')}
@@ -231,7 +229,6 @@ export default function SettingsPage() {
           />
         </SettingsGroup>
 
-        {/* Language */}
         <SettingsGroup title={t('settings.language.title')}>
           <div className="flex gap-2 px-4 py-3">
             {(['es', 'en'] as Language[]).map((lang) => {
@@ -255,7 +252,6 @@ export default function SettingsPage() {
           </div>
         </SettingsGroup>
 
-        {/* Subscription — oculto mientras los pagos estén suspendidos */}
         {MEMBERSHIP_PAYMENTS_ENABLED && isPremium ? (
           <div className="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-card shadow-sm">
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-amber-500/7 to-transparent" />
@@ -335,7 +331,6 @@ export default function SettingsPage() {
           </SettingsGroup>
         ) : null}
 
-        {/* Legal */}
         <SettingsGroup title={t('settings.legal.title')}>
           <SettingLinkRow
             href="/terms"
@@ -345,7 +340,6 @@ export default function SettingsPage() {
           />
         </SettingsGroup>
 
-        {/* Support */}
         <SettingsGroup title={t('settings.support.title')}>
           <SettingLinkRow
             href="/faq"

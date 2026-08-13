@@ -55,8 +55,6 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
     setIndex: number,
     payload: SetCompletePayload & { duration?: number },
   ) => {
-    // Start timer and advance exercise immediately for a fluid UX,
-    // then fire the API call in the background.
     startTimer(exercise.plannedRest, exercise.exerciseId);
 
     const newCompletedCount = exercise.sets.filter((s) => s.completed).length + 1;
@@ -108,7 +106,6 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
 
   const handleRemoveSet = async () => {
     if (exercise.plannedSets <= 1) return;
-    // Don't remove a set that has already been logged
     const lastSetIndex = exercise.plannedSets - 1;
     const lastSetLogged = exercise.sets.some((s) => s.setIndex === lastSetIndex);
     if (lastSetLogged) {
@@ -124,7 +121,6 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
 
   return (
     <div className="space-y-4 px-4 py-4">
-      {/* Header */}
       <div className="min-w-0">
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-start gap-2 min-w-0 flex-1">
@@ -172,7 +168,6 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
         </div>
       </div>
 
-      {/* Weight unit toggle */}
       <div className="flex items-center gap-2">
         {(['kg', 'lbs'] as const).map((unit) => (
           <button
@@ -190,12 +185,10 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
         ))}
       </div>
 
-      {/* Last performance */}
       {exercise.lastPerformance && exercise.lastPerformance.length > 0 && (
         <LastPerformanceRow sets={exercise.lastPerformance} plannedSets={exercise.plannedSets} />
       )}
 
-      {/* Sets */}
       <SetList
         exercise={exercise}
         onCompleteSet={handleCompleteSet}
@@ -203,7 +196,6 @@ export function ExerciseSessionCard({ exercise, onLogSet, onModify, onReplace, o
         onChangePlannedDuration={(seconds) => onModify(exercise.exerciseId, { plannedDuration: seconds })}
       />
 
-      {/* Add / remove sets */}
       <div className="flex items-center justify-between rounded-lg border px-4 py-2">
         <span className="text-muted-foreground text-sm">Sets</span>
         <div className="flex items-center gap-3">

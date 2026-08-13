@@ -19,7 +19,6 @@ export function useDraggable({ defaultPosition, longPressDelay = 500 }: UseDragg
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastPointer = useRef<Position>({ x: 0, y: 0 });
   const draggingRef = useRef(false);
-  // Cache pointer id so we can release capture even if currentTarget changes
   const pointerIdRef = useRef<number | null>(null);
 
   const cancelLongPress = useCallback(() => {
@@ -31,7 +30,6 @@ export function useDraggable({ defaultPosition, longPressDelay = 500 }: UseDragg
 
   const handlePointerDown = useCallback(
     (e: React.PointerEvent<HTMLElement>) => {
-      // Don't start drag if touching a button or interactive element
       if ((e.target as HTMLElement).closest('button, input')) return;
 
       lastPointer.current = { x: e.clientX, y: e.clientY };
@@ -44,7 +42,6 @@ export function useDraggable({ defaultPosition, longPressDelay = 500 }: UseDragg
         try {
           el.setPointerCapture(e.pointerId);
         } catch {
-          // element may have been removed — ignore
         }
       }, longPressDelay);
     },
@@ -65,7 +62,6 @@ export function useDraggable({ defaultPosition, longPressDelay = 500 }: UseDragg
       if (draggingRef.current) {
         draggingRef.current = false;
         setIsDragging(false);
-        // Clamp using the overlay's actual bounding rect
         const rect = e.currentTarget.getBoundingClientRect();
         setPosition((prev) => ({
           x: Math.max(0, Math.min(window.innerWidth - rect.width, prev.x)),

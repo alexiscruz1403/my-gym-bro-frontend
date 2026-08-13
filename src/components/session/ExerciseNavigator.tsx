@@ -36,7 +36,6 @@ export function ExerciseNavigator({ exercises, activeIndex, onIndexChange, onLog
 
   return (
     <div className="flex flex-1 flex-col">
-      {/* Exercise thumbnails */}
       <div className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="flex min-w-full items-center gap-2 px-4 py-3">
           {exercises.map((ex, i) => {
@@ -69,7 +68,6 @@ export function ExerciseNavigator({ exercises, activeIndex, onIndexChange, onLog
             );
           })}
 
-          {/* Add exercise button */}
           <button
             type="button"
             onClick={() => setAddOpen(true)}
@@ -81,7 +79,6 @@ export function ExerciseNavigator({ exercises, activeIndex, onIndexChange, onLog
         </div>
       </div>
 
-      {/* Card — padding-bottom reserves space for the fixed nav bar */}
       <div className="flex-1 overflow-y-auto pb-29 lg:pb-13">
         <ExerciseSessionCard
           exercise={current}
@@ -96,7 +93,6 @@ export function ExerciseNavigator({ exercises, activeIndex, onIndexChange, onLog
         />
       </div>
 
-      {/* Prev / Next navigation — fixed at bottom of viewport */}
       <div
         className="fixed bottom-16 left-0 right-0 z-20 flex h-13 items-center justify-between border-t px-4 lg:bottom-0 lg:left-60"
         style={{ background: 'var(--sheet-bg)' }}

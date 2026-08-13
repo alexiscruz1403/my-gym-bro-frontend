@@ -11,7 +11,6 @@ import { ExerciseConfigRow } from './ExerciseConfigRow';
 import { ChevronDown, Link, Copy } from 'lucide-react';
 import type { PlanDay, ExerciseConfig } from '@/types/domain.types';
 
-// Group consecutive exercises that share the same supersetGroupId.
 type StandaloneItem = { type: 'standalone'; exercise: ExerciseConfig };
 type SupersetItem = { type: 'superset'; groupId: string; exercises: ExerciseConfig[] };
 type ExerciseGroupItem = StandaloneItem | SupersetItem;

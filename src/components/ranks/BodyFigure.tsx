@@ -47,7 +47,6 @@ export function BodyFigure({ rankMap, selectedMuscle, onMuscleClick, getMuscleFi
     <div className="flex select-none flex-col gap-2">
       <div className="flex justify-center gap-4">
 
-      {/* ─── FRONT VIEW ─────────────────────────────────────── */}
       <div className="flex flex-col items-center gap-1">
         <span className="text-[10px] text-muted-foreground uppercase tracking-widest">{t('ranks.body.front')}</span>
         <svg
@@ -100,7 +99,6 @@ export function BodyFigure({ rankMap, selectedMuscle, onMuscleClick, getMuscleFi
         </svg>
       </div>
 
-      {/* ─── BACK VIEW ─────────────────────────────────────── */}
       <div className="flex flex-col items-center gap-1">
         <span className="text-[10px] text-muted-foreground uppercase tracking-widest">{t('ranks.body.back')}</span>
         <svg
@@ -154,7 +152,6 @@ export function BodyFigure({ rankMap, selectedMuscle, onMuscleClick, getMuscleFi
       </div>
       </div>
 
-      {/* ─── RANK LEGEND ─────────────────────────────────────── */}
       {!hideLegend && (
         <div className="flex flex-wrap items-center justify-center gap-2.5 py-1">
           {(Object.entries(RANK_NAMES) as [string, string][]).map(([rank]) => (

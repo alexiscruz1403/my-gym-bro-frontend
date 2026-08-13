@@ -88,7 +88,6 @@ export function RankTab({ exerciseId }: RankTabProps) {
 
   return (
     <div className="space-y-3">
-      {/* Rank hero card */}
       <div className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-card px-4 py-6 text-center shadow-sm">
         <div
           className="flex h-20 w-20 items-center justify-center rounded-full font-display text-[22px] font-bold"
@@ -106,7 +105,6 @@ export function RankTab({ exerciseId }: RankTabProps) {
           )}
         </div>
 
-        {/* Progress to next rank */}
         {progressPct !== null && data.nextRankName && (
           <div className="w-full space-y-2 border-t border-border pt-3.5">
             <div className="flex justify-between text-[12px] text-muted-foreground">
@@ -125,7 +123,6 @@ export function RankTab({ exerciseId }: RankTabProps) {
           </div>
         )}
 
-        {/* Details */}
         <div className="w-full border-t border-border pt-1">
           <div className="flex items-center justify-between py-2 text-[13px]">
             <span className="text-muted-foreground">{t('exercises.detail.rank.bestMark')}</span>
@@ -154,7 +151,6 @@ export function RankTab({ exerciseId }: RankTabProps) {
         </div>
       </div>
 
-      {/* Rank scale legend */}
       <div className="rounded-2xl border border-border bg-card px-3.5 py-3 shadow-sm">
         <div className="flex items-center justify-between mb-2.5">
           <p className="text-[12px] font-semibold uppercase tracking-[0.04em] text-muted-foreground">

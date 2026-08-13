@@ -13,17 +13,13 @@ export function OAuthCallback() {
   const hasProcessed = useRef(false);
 
   useEffect(() => {
-    // Guard against double-invocation in React strict mode
     if (hasProcessed.current) return;
     hasProcessed.current = true;
 
-    // Clean any tokens from the URL immediately for security
     window.history.replaceState({}, '', '/callback');
 
     const processCallback = async (): Promise<void> => {
       try {
-        // The backend set httpOnly cookies on redirect — just fetch the user
-        // to confirm authentication and hydrate the store.
         const user = await usersService.getMe();
         setAuthenticated(true);
         setUser(user);

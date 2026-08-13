@@ -16,7 +16,6 @@ const CIRCUMFERENCE = 2 * Math.PI * R;
 
 function getDefaultPosition() {
   if (typeof window === 'undefined') return { x: 16, y: 120 };
-  // Position near top so it's not covered by mobile nav or desktop taskbar
   return { x: 16, y: 80 };
 }
 
@@ -29,9 +28,6 @@ export function GlobalRestTimerOverlay() {
     defaultPosition: getDefaultPosition(),
   });
 
-  // Track whether the timer ended naturally (reached 0) vs was skipped.
-  // We only beep when secondsLeft crosses from >0 to 0 AND restTimer is still
-  // set (i.e. the interval brought it to 0, not the user pressing ×).
   const prevSecondsRef = useRef(secondsLeft);
   useEffect(() => {
     if (secondsLeft === 0 && prevSecondsRef.current > 0 && restTimer !== null) {
@@ -93,7 +89,6 @@ export function GlobalRestTimerOverlay() {
       className={`rounded-xl ${dragBorderClass} bg-card p-3 shadow-2`}
       {...pointerHandlers}
     >
-      {/* Header */}
       <div className="flex items-center justify-between" style={{ cursor: 'grab' }}>
         <p className="text-[11px] font-medium uppercase tracking-[0.06em] text-muted-foreground select-none">
           {t('session.rest.label')}
@@ -109,7 +104,6 @@ export function GlobalRestTimerOverlay() {
         </Button>
       </div>
 
-      {/* SVG circle timer */}
       <div className="flex flex-col items-center gap-2 py-2">
         <div className="relative flex items-center justify-center" style={{ width: CIRCLE_SIZE, height: CIRCLE_SIZE }}>
           <svg width={CIRCLE_SIZE} height={CIRCLE_SIZE} style={{ transform: 'rotate(-90deg)' }}>
@@ -139,7 +133,6 @@ export function GlobalRestTimerOverlay() {
           </span>
         </div>
 
-        {/* Adjust + Skip buttons */}
         <div className="flex w-full items-center gap-2">
           <Button
             type="button"

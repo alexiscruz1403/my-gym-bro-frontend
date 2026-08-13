@@ -29,10 +29,8 @@ export function ReplaceExerciseSheet({ open, onOpenChange, onSelect }: ReplaceEx
         className="flex max-h-[88vh] flex-col gap-0 rounded-t-[20px] border-0 pt-0"
         style={{ background: 'var(--sheet-bg)' }}
       >
-        {/* Drag handle */}
         <div className="mx-auto mt-3 mb-0 h-1 w-10 shrink-0 rounded-full bg-border" />
 
-        {/* Header */}
         <div className="shrink-0 border-b border-border px-[18px] pb-3.5 pt-2">
           <SheetTitle className="font-display mt-1.5 text-[19px] font-bold tracking-[0.02em] text-foreground">
             {t('session.replaceExercise.title')}

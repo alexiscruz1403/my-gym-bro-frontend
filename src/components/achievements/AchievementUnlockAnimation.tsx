@@ -10,8 +10,6 @@ import { useAchievementAnimationStore } from '@/store/achievement-animation.stor
 import useAuthStore from '@/store/auth.store';
 import type { AchievementTier, AchievementUnlockedPayload } from '@/types/domain.types';
 
-// ─── Tier config ────────────────────────────────────────────────────────────
-
 const TIER_CONFIG: Record<
   AchievementTier,
   { bg: string; icon: string; glowColor: string; label: { es: string; en: string }; ring: string }
@@ -39,7 +37,6 @@ const TIER_CONFIG: Record<
   },
 };
 
-// Sparkle positions around the badge circle (offsets in px from center)
 const SPARKLE_POSITIONS = [
   { x: -52, y: -52 },
   { x:   0, y: -68 },
@@ -50,8 +47,6 @@ const SPARKLE_POSITIONS = [
   { x:   0, y:  68 },
   { x:  52, y:  52 },
 ];
-
-// ─── Inner card (remounts on each new achievement via key prop) ──────────────
 
 interface AchievementCardProps {
   item: AchievementUnlockedPayload;
@@ -66,7 +61,6 @@ function AchievementCard({ item, language, onDismiss }: AchievementCardProps) {
   const description = language === 'es' ? item.descriptionEs : item.descriptionEn;
   const tierLabel = config.label[language];
 
-  // Auto-dismiss after 5s; useEffect runs once on mount (resets per remount via key)
   useEffect(() => {
     const id = setTimeout(onDismiss, 8000);
     return () => clearTimeout(id);
@@ -75,7 +69,6 @@ function AchievementCard({ item, language, onDismiss }: AchievementCardProps) {
 
   return (
     <>
-      {/* Backdrop */}
       <motion.div
         className="fixed inset-0 z-[200] bg-black/50 backdrop-blur-sm"
         initial={{ opacity: 0 }}
@@ -84,7 +77,6 @@ function AchievementCard({ item, language, onDismiss }: AchievementCardProps) {
         onClick={onDismiss}
       />
 
-      {/* Card */}
       <motion.div
         className="fixed left-1/2 top-1/2 z-[201] w-full max-w-[320px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-3xl bg-card shadow-[0_20px_60px_-10px_rgba(0,0,0,0.4)] ring-1 ring-foreground/10"
         initial={{ scale: 0.75, opacity: 0, y: 30 }}
@@ -97,7 +89,6 @@ function AchievementCard({ item, language, onDismiss }: AchievementCardProps) {
         exit={{ scale: 0.92, opacity: 0, y: -16, transition: { duration: 0.2, ease: 'easeIn' } }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Tier-colored top accent strip */}
         <div className={cn('h-1.5 w-full', {
           'bg-gradient-to-r from-amber-400 to-amber-600': item.tier === 'bronze',
           'bg-gradient-to-r from-slate-300 to-slate-500': item.tier === 'silver',
@@ -105,9 +96,7 @@ function AchievementCard({ item, language, onDismiss }: AchievementCardProps) {
         })} />
 
         <div className="px-6 pb-5 pt-6">
-          {/* Badge area with sparkles */}
           <div className="relative mx-auto mb-5 flex h-30 w-30 items-center justify-center">
-            {/* Sparkle particles */}
             {SPARKLE_POSITIONS.map((pos, i) => (
               <span
                 key={i}
@@ -124,7 +113,6 @@ function AchievementCard({ item, language, onDismiss }: AchievementCardProps) {
               </span>
             ))}
 
-            {/* Diffuse glow behind badge — works for any badge shape */}
             <motion.div
               className="absolute inset-0 rounded-full blur-2xl"
               style={{ backgroundColor: config.glowColor }}
@@ -132,7 +120,6 @@ function AchievementCard({ item, language, onDismiss }: AchievementCardProps) {
               transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
             />
 
-            {/* Badge */}
             {item.badgeUrl ? (
               <Image
                 src={item.badgeUrl}
@@ -148,7 +135,6 @@ function AchievementCard({ item, language, onDismiss }: AchievementCardProps) {
             )}
           </div>
 
-          {/* Text content */}
           <div className="mb-5 space-y-1 text-center">
             <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
               {t('achievements.unlockedTitle')}
@@ -168,7 +154,6 @@ function AchievementCard({ item, language, onDismiss }: AchievementCardProps) {
             </div>
           </div>
 
-          {/* Progress bar + close */}
           <div className="flex items-center gap-3">
             <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
               <motion.div
@@ -197,8 +182,6 @@ function AchievementCard({ item, language, onDismiss }: AchievementCardProps) {
     </>
   );
 }
-
-// ─── Public component ────────────────────────────────────────────────────────
 
 export function AchievementUnlockAnimation() {
   const [mounted, setMounted] = useState(false);

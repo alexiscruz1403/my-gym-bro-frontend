@@ -15,8 +15,6 @@ import { cn } from '@/lib/utils';
 import useAuthStore from '@/store/auth.store';
 import type { UserResponse, PublicUserProfile } from '@/types/domain.types';
 
-// ─── Own profile mode ─────────────────────────────────────────────
-
 interface OwnProfileHeaderProps {
   mode: 'own';
   user: UserResponse;
@@ -108,8 +106,6 @@ function OwnProfileHeader({ user }: OwnProfileHeaderProps) {
   );
 }
 
-// ─── Public profile mode ──────────────────────────────────────────
-
 interface PublicProfileHeaderProps {
   mode: 'public';
   user: PublicUserProfile;
@@ -191,8 +187,6 @@ function PublicProfileHeader({ user }: PublicProfileHeaderProps) {
     </>
   );
 }
-
-// ─── Unified export ───────────────────────────────────────────────
 
 type ProfileHeaderProps =
   | { user: UserResponse }

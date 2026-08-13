@@ -3,8 +3,6 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import type { WorkoutSession, SessionExercise, SessionSet } from '@/types/domain.types';
 import type { RestTimerState, CountdownTimerState } from '@/types/ui.types';
 
-// Persisted: activeSessionId + sessionStartTime + pendingSetInputs (survive app close)
-// In-memory: activeSession + restTimer (re-fetched from server on resume)
 
 export interface PendingSetInput {
   weight?: string;
@@ -138,9 +136,8 @@ const useSessionStore = create<SessionState & SessionActions>()(
       setHasHydrated: (value) => set({ _hasHydrated: value }),
     }),
     {
-      name: 'gym-planner-session',
+      name: 'my-gym-bro-session',
       storage: createJSONStorage(() => localStorage),
-      // Only persist session identity + draft inputs — not the full session object or timer
       partialize: (state) => ({
         activeSessionId: state.activeSessionId,
         sessionStartTime: state.sessionStartTime,

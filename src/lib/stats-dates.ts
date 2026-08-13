@@ -1,11 +1,5 @@
 import type { StatsPeriod } from '@/types/domain.types';
 
-/**
- * Returns the current ISO date reference string for the given period:
- *   week  → 'YYYY-Www'  (ISO week)
- *   month → 'YYYY-MM'
- *   year  → 'YYYY'
- */
 export function getCurrentPeriodDate(period: StatsPeriod): string {
   const now = new Date();
   now.setHours(12, 0, 0, 0);
@@ -19,13 +13,9 @@ export function getCurrentPeriodDate(period: StatsPeriod): string {
     return `${now.getFullYear()}-${month}`;
   }
 
-  // week: ISO 8601 week number
   return toISOWeekString(now);
 }
 
-/**
- * Returns the previous (-1) or next (+1) period date string relative to `date`.
- */
 export function shiftPeriod(period: StatsPeriod, date: string, direction: -1 | 1): string {
   if (period === 'year') {
     const year = parseInt(date, 10);
@@ -39,18 +29,11 @@ export function shiftPeriod(period: StatsPeriod, date: string, direction: -1 | 1
     return `${d.getFullYear()}-${newMonth}`;
   }
 
-  // week: parse 'YYYY-Www', shift by 7 days
   const mondayOfWeek = isoWeekStringToMonday(date);
   mondayOfWeek.setDate(mondayOfWeek.getDate() + direction * 7);
   return toISOWeekString(mondayOfWeek);
 }
 
-/**
- * Converts a backend breakdown label to a human-readable display string:
- *   week  → 'YYYY-MM-DD' → short day name ('Lun', 'Mar', ...)
- *   month → 'YYYY-Www'   → 'Sem 1', 'Sem 2', ...
- *   year  → 'YYYY-MM'    → short month name ('Ene', 'Feb', ...)
- */
 export function formatBreakdownLabel(period: StatsPeriod, label: string): string {
   if (period === 'week') {
     const date = new Date(label + 'T00:00:00');
@@ -63,15 +46,10 @@ export function formatBreakdownLabel(period: StatsPeriod, label: string): string
     return `Sem ${weekOfMonth}`;
   }
 
-  // year: 'YYYY-MM'
   const [year, month] = label.split('-').map(Number);
   const date = new Date(year, month - 1, 1);
   return date.toLocaleDateString('es', { month: 'short' }).replace('.', '');
 }
-
-// ---------------------------------------------------------------------------
-// Internal helpers
-// ---------------------------------------------------------------------------
 
 function toISOWeekString(date: Date): string {
   const thursday = new Date(date);
@@ -87,7 +65,6 @@ function isoWeekStringToMonday(isoWeek: string): Date {
   const [yearStr, weekStr] = isoWeek.split('-W');
   const year = parseInt(yearStr, 10);
   const week = parseInt(weekStr, 10);
-  // Jan 4 is always in week 1
   const jan4 = new Date(year, 0, 4);
   const mondayOfWeek1 = new Date(jan4);
   mondayOfWeek1.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7));

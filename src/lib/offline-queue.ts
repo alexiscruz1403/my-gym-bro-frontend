@@ -37,9 +37,6 @@ export async function getPendingCount(): Promise<number> {
   return db.mutationQueue.where('status').anyOf(['pending', 'failed']).count();
 }
 
-// Remove all queue entries belonging to a given offline session:
-// - the START_SESSION entry (tempId === sessionTempId)
-// - LOG_SET / MODIFY_EXERCISE / REPLACE_EXERCISE entries (url contains sessionTempId)
 export async function dequeueBySessionTempId(sessionTempId: string): Promise<void> {
   const all = await db.mutationQueue.toArray();
   const toDelete = all

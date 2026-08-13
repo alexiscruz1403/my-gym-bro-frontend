@@ -49,7 +49,6 @@ export function ForgotPasswordForm() {
       >
         {!sent ? (
           <>
-            {/* Back link */}
             <Link
               href="/login"
               className="inline-flex items-center gap-[5px] text-[13px] font-medium transition-colors duration-120 self-start hover:text-[oklch(18%_0.015_248)]"
@@ -59,7 +58,6 @@ export function ForgotPasswordForm() {
               {t('auth.forgotPasswordFlow.backLink')}
             </Link>
 
-            {/* Header */}
             <div className="flex flex-col gap-[5px]">
               <h1
                 className="font-display text-[27px] font-bold tracking-[0.02em] leading-[1.05]"
@@ -72,7 +70,6 @@ export function ForgotPasswordForm() {
               </p>
             </div>
 
-            {/* Form */}
             <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-3.5">
               <div className="flex flex-col gap-[5px]">
                 <label
@@ -122,7 +119,6 @@ export function ForgotPasswordForm() {
             </form>
           </>
         ) : (
-          /* Success state */
           <div className="flex flex-col items-center gap-3.5 text-center py-2">
             <div
               className="w-[60px] h-[60px] rounded-full flex items-center justify-center"

@@ -16,11 +16,6 @@ export interface FormattedNotification {
   actorUsername: string | null;
 }
 
-/**
- * El backend puede omitir `data` por completo (ej. `streak_reset`) o enviarla con
- * una forma distinta a la esperada, así que cada acceso pasa por un guard en vez
- * de un cast directo: una notificación mal formada no debe tumbar toda la lista.
- */
 function asRecord(data: NotificationData | undefined): Record<string, unknown> {
   return (data ?? {}) as Record<string, unknown>;
 }
@@ -30,7 +25,6 @@ function hasTitleBody(data: NotificationData | undefined): data is NotificationD
   return typeof d.title === 'string' && typeof d.body === 'string';
 }
 
-/** Datos del actor con fallback, para los tipos que muestran usuario + avatar. */
 function actorOf(data: NotificationData | undefined): NotificationDataFollow {
   const d = asRecord(data);
   return {
@@ -42,7 +36,6 @@ function actorOf(data: NotificationData | undefined): NotificationDataFollow {
   };
 }
 
-/** Elige la variante del idioma activo, con el otro idioma como respaldo. */
 function localized(es: unknown, en: unknown): string | null {
   const preferred = i18n.language === 'en' ? en : es;
   const fallback = i18n.language === 'en' ? es : en;
@@ -54,7 +47,6 @@ function actorResult(d: NotificationDataFollow, text: string): FormattedNotifica
   return { text, avatar: d.actorAvatar, actorUsername: d.actorUsername };
 }
 
-/** Usa el `title`/`body` del backend si vino; si no, el texto local del tipo. */
 function systemText(n: AppNotification, fallbackKey: string): string {
   if (hasTitleBody(n.data)) return `${n.data.title} — ${n.data.body}`;
   return i18n.t(fallbackKey);
@@ -129,7 +121,6 @@ export function formatNotification(n: AppNotification): FormattedNotification {
     }
     case 'achievement_unlocked': {
       const d = asRecord(n.data) as Partial<NotificationDataAchievementUnlocked>;
-      // El backend manda el logro en ambos idiomas; se elige según el idioma activo.
       const name = localized(d.nameEs, d.nameEn);
       const tier = localized(d.tierLabelEs, d.tierLabelEn);
       const text =
@@ -177,7 +168,6 @@ export function formatNotification(n: AppNotification): FormattedNotification {
   }
 }
 
-/** El post asociado puede faltar si la notificación llegó sin payload. */
 function postHref(data: NotificationData | undefined, suffix = ''): string {
   const { postId } = asRecord(data) as Partial<NotificationDataPostLike>;
   if (!postId) return '/feed';

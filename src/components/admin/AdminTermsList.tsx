@@ -84,7 +84,6 @@ export function AdminTermsList() {
 
   return (
     <div className="flex flex-col gap-3">
-      {/* Section head */}
       <div className="flex items-center justify-between gap-2.5">
         <span className="font-display text-[15px] font-semibold text-foreground tracking-[0.01em]">
           {t('admin.terms.sectionTitle', { defaultValue: 'Secciones de términos' })}
@@ -101,7 +100,6 @@ export function AdminTermsList() {
         )}
       </div>
 
-      {/* Inline create form */}
       {showCreate && (
         <div className="rounded-2xl border border-border bg-card px-4 py-4 flex flex-col gap-3">
           <div className="flex items-center justify-between">
@@ -198,7 +196,6 @@ export function AdminTermsList() {
         </div>
       )}
 
-      {/* List */}
       {isLoading && (
         <div className="flex flex-col gap-2">
           {Array.from({ length: 4 }).map((_, i) => (
@@ -225,7 +222,6 @@ export function AdminTermsList() {
         </div>
       )}
 
-      {/* Confirmation dialog for create with isActive: true */}
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <DialogContent showCloseButton={!isSaving}>
           <DialogHeader>

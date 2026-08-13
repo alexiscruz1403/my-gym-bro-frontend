@@ -23,20 +23,17 @@ export function AvatarUpload() {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Show local preview immediately
     const objectUrl = URL.createObjectURL(file);
     setPreview(objectUrl);
 
     const success = await uploadAvatar(file);
 
     if (!success) {
-      // Revert preview on failure
       setPreview(null);
     }
 
     URL.revokeObjectURL(objectUrl);
 
-    // Reset input so the same file can be selected again
     if (inputRef.current) {
       inputRef.current.value = '';
     }

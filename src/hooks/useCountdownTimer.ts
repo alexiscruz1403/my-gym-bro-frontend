@@ -7,7 +7,6 @@ import { playBeep } from '@/lib/audio';
 export function useCountdownTimer() {
   const { countdownTimer, setCountdownTimer, pauseCountdown, resumeCountdown } = useSessionStore();
 
-  // Keep an interval running while timer is active so components re-render
   useEffect(() => {
     if (!countdownTimer || countdownTimer.pausedSecondsLeft !== null) return;
 
@@ -32,13 +31,10 @@ export function useCountdownTimer() {
   const isRunning = countdownTimer !== null && countdownTimer.pausedSecondsLeft === null && secondsLeft > 0;
   const isPaused = countdownTimer !== null && countdownTimer.pausedSecondsLeft !== null;
 
-  // Beep when timer crosses zero, then reset to the original duration (paused)
-  // so the user can quickly reuse the same timer.
   const prevSecondsRef = useRef(secondsLeft);
   useEffect(() => {
     if (secondsLeft === 0 && prevSecondsRef.current > 0 && countdownTimer !== null) {
       playBeep();
-      // Reset to original duration in paused state
       setCountdownTimer({
         durationSeconds: countdownTimer.durationSeconds,
         startedAt: Date.now(),

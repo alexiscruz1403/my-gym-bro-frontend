@@ -19,7 +19,6 @@ function isNetworkError(error: unknown): boolean {
   return !navigator.onLine || (axios.isAxiosError(error) && !error.response);
 }
 
-// Build a local WorkoutSession from plan data when offline
 async function buildLocalSession(
   dto: StartSessionRequest,
   tempId: string,
@@ -300,7 +299,6 @@ export async function cancelSession(): Promise<void> {
 
   if (!navigator.onLine) {
     await db.activeSession.clear();
-    // Only queue cancel if the session was already created on the server
     if (session && !isTempId(session._id)) {
       await enqueue({
         type: 'CANCEL_SESSION' as MutationType,
@@ -326,8 +324,6 @@ export async function finishSession(
     const finished = { ...session, status: dto.status, finishedAt } as WorkoutSession;
 
     if (isTempId(sessionId)) {
-      // Session was started offline — consolidate into a single bulk sync request.
-      // Remove the preceding START_SESSION + LOG_SET×N + MODIFY/REPLACE mutations.
       await dequeueBySessionTempId(sessionId);
 
       const syncPayload = {
@@ -358,7 +354,6 @@ export async function finishSession(
         payload: syncPayload,
       });
     } else {
-      // Session was started online — keep the simple FINISH_SESSION mutation.
       await enqueue({
         type: 'FINISH_SESSION' as MutationType,
         method: 'PATCH',

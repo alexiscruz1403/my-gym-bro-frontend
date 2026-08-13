@@ -108,7 +108,6 @@ export default function ProfilePage() {
       <div className="space-y-4">
         <ProfileHeader user={user} />
 
-        {/* Tab switcher */}
         <div className="flex h-11 rounded-xl bg-muted/60 p-1">
           {TABS.map((tab) => (
             <button
@@ -136,7 +135,6 @@ export default function ProfilePage() {
             transition={{ duration: 0.18, ease: 'easeOut' }}
           >
 
-        {/* Profile tab */}
         {activeTab === 'profile' && (
           <div className="space-y-4">
             <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
@@ -212,7 +210,6 @@ export default function ProfilePage() {
           </div>
         )}
 
-        {/* History tab */}
         {activeTab === 'history' && (
           <>
             {histLoading && <SessionHistorySkeletons />}
@@ -262,7 +259,6 @@ export default function ProfilePage() {
           </>
         )}
 
-        {/* Stats tab */}
         {activeTab === 'stats' && (
           <StatsPanel
             period={period}

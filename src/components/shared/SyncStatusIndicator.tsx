@@ -65,6 +65,5 @@ export function SyncStatusIndicator() {
     );
   }
 
-  // All synced — show nothing (no icon when online and synced)
   return null;
 }

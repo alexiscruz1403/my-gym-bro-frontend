@@ -13,7 +13,7 @@ interface UIActions {
 const useUIStore = create<UIState & UIActions>()(
   persist(
     (set) => ({
-      isDarkMode: true, // dark-first per architecture
+      isDarkMode: true,
 
       toggleDarkMode: () =>
         set((state) => ({ isDarkMode: !state.isDarkMode })),
@@ -21,7 +21,7 @@ const useUIStore = create<UIState & UIActions>()(
       setDarkMode: (value) => set({ isDarkMode: value }),
     }),
     {
-      name: 'gym-planner-ui',
+      name: 'my-gym-bro-ui',
       storage: createJSONStorage(() => localStorage),
     },
   ),

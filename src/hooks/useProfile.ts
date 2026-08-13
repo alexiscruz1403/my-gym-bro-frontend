@@ -13,7 +13,6 @@ export function useProfile() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Cache the profile fetch — syncs result into auth store as a side effect
   const { refetch: refetchQuery } = useQuery({
     queryKey: ['profile'],
     queryFn: async () => {

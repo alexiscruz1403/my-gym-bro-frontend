@@ -72,7 +72,6 @@ export function AdminExerciseList() {
 
   return (
     <div className="flex flex-col gap-3">
-      {/* Filter bar */}
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-40">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
@@ -95,7 +94,6 @@ export function AdminExerciseList() {
         </select>
       </div>
 
-      {/* Section head */}
       <div className="flex items-center justify-between gap-2.5">
         <span className="font-display text-[15px] font-semibold text-foreground tracking-[0.01em]">
           {t('admin.exercises.exerciseCount', { count: total })}

@@ -31,7 +31,6 @@ export function ExportHistorySheet() {
   const [pdfLoading, setPdfLoading] = useState(false);
   const [csvLoading, setCsvLoading] = useState(false);
 
-  // Sin checkout disponible, el usuario free no tiene a dónde ir: el botón se deshabilita.
   const lockedWithoutCheckout = !isPremium && !MEMBERSHIP_PAYMENTS_ENABLED;
 
   const handleTrigger = () => {

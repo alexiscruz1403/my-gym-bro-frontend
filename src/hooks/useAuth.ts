@@ -53,7 +53,6 @@ export function useAuth() {
   );
 
   const logout = useCallback(async (): Promise<void> => {
-    // Fire-and-forget push unsubscribe — does not block logout
     if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
       navigator.serviceWorker.ready
         .then((reg) => reg.pushManager.getSubscription())
@@ -69,7 +68,6 @@ export function useAuth() {
     try {
       await authService.logout();
     } catch {
-      // Logout locally even if the API call fails
     } finally {
       storeLogout();
       router.push('/login');
@@ -81,7 +79,6 @@ export function useAuth() {
       const userData = await usersService.getMe();
       setUser(userData);
     } catch {
-      // If fetching user fails, the interceptor handles 401s
     }
   }, [setUser]);
 

@@ -61,7 +61,6 @@ function RewardCard({ item, language, onDismiss }: RewardCardProps) {
 
   return (
     <>
-      {/* Backdrop */}
       <motion.div
         className="fixed inset-0 z-[200] bg-black/50 backdrop-blur-sm"
         initial={{ opacity: 0 }}
@@ -70,7 +69,6 @@ function RewardCard({ item, language, onDismiss }: RewardCardProps) {
         onClick={onDismiss}
       />
 
-      {/* Card */}
       <motion.div
         className="fixed left-1/2 top-1/2 z-[201] w-full max-w-[320px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-3xl bg-card shadow-[0_20px_60px_-10px_rgba(0,0,0,0.4)] ring-1 ring-foreground/10"
         initial={{ scale: 0.75, opacity: 0, y: 30 }}
@@ -83,11 +81,9 @@ function RewardCard({ item, language, onDismiss }: RewardCardProps) {
         exit={{ scale: 0.92, opacity: 0, y: -16, transition: { duration: 0.2, ease: 'easeIn' } }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Orange top accent strip */}
         <div className="h-1.5 w-full bg-gradient-to-r from-orange-400 to-rose-500" />
 
         <div className="px-6 pb-5 pt-6">
-          {/* Badge area with sparkles */}
           <div className="relative mx-auto mb-5 flex h-30 w-30 items-center justify-center">
             {SPARKLE_POSITIONS.map((pos, i) => (
               <span
@@ -117,7 +113,6 @@ function RewardCard({ item, language, onDismiss }: RewardCardProps) {
             </div>
           </div>
 
-          {/* Text content */}
           <div className="mb-5 space-y-1 text-center">
             <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
               {t('rewards.unlockTitle')}
@@ -140,7 +135,6 @@ function RewardCard({ item, language, onDismiss }: RewardCardProps) {
             )}
           </div>
 
-          {/* Progress bar + close */}
           <div className="flex items-center gap-3">
             <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
               <motion.div

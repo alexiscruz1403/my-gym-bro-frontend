@@ -82,7 +82,6 @@ export function CommentsSheet({ postId, onClose, onCommentAdded }: CommentsSheet
             <div>
               {comments.map((comment, i) => (
                 <div key={comment._id ?? i} className="flex flex-col gap-1 border-b border-border px-4 py-3 last:border-0">
-                  {/* Base comment */}
                   <div className="flex items-baseline gap-1.5">
                     <span className="text-[13px] font-semibold">{comment.username}</span>
                     <span className="text-[11px] text-muted-foreground">
@@ -103,7 +102,6 @@ export function CommentsSheet({ postId, onClose, onCommentAdded }: CommentsSheet
                     </button>
                   )}
 
-                  {/* Replies */}
                   {comment.replies.length > 0 && (
                     <div className="ml-3.5 mt-1 flex flex-col gap-1.5 border-l-2 border-border pl-2.5">
                       {comment.replies
@@ -136,7 +134,6 @@ export function CommentsSheet({ postId, onClose, onCommentAdded }: CommentsSheet
                     </div>
                   )}
 
-                  {/* Inline reply input */}
                   {replyingTo === comment._id && (
                     <div className="ml-3.5 mt-1 flex items-center gap-1.5 border-l-2 border-border pl-2.5">
                       <input

@@ -67,7 +67,6 @@ export function MuscleRecoveryWidget() {
           hideLegend
         />
 
-        {/* Recovery color legend */}
         <div className="flex flex-wrap items-center justify-center gap-3">
           {LEGEND_ITEMS.map(({ key, color }) => (
             <div key={key} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">

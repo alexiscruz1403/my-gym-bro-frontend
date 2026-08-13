@@ -18,9 +18,9 @@ export function PasswordStrength({ value }: PasswordStrengthProps) {
   const lvl = score <= 2 ? 0 : score <= 4 ? 1 : 2;
 
   const barColor = [
-    'oklch(57% 0.22 20)',   // weak — red
-    'oklch(62% 0.20 35)',   // medium — orange
-    'oklch(60% 0.175 145)', // strong — green
+    'oklch(57% 0.22 20)',
+    'oklch(62% 0.20 35)',
+    'oklch(60% 0.175 145)',
   ][lvl];
 
   const label = ['Débil', 'Media', 'Fuerte'][lvl];

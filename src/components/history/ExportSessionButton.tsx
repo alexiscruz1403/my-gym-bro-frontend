@@ -24,7 +24,6 @@ export function ExportSessionButton({ sessionId, sessionStatus }: ExportSessionB
   const [pdfLoading, setPdfLoading] = useState(false);
   const [csvLoading, setCsvLoading] = useState(false);
 
-  // Sin checkout disponible, el usuario free no tiene a dónde ir: el botón se deshabilita.
   const lockedWithoutCheckout = !isPremium && !MEMBERSHIP_PAYMENTS_ENABLED;
 
   if (sessionStatus !== 'completed' && sessionStatus !== 'partial') return null;

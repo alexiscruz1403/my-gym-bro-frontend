@@ -38,10 +38,8 @@ export function ConfirmFinishDialog({
         className="gap-0 rounded-t-[20px] border-0 px-5 pt-0 pb-8"
         style={{ background: 'var(--sheet-bg)' }}
       >
-        {/* Drag handle */}
         <div className="mx-auto mt-3 mb-5 h-1 w-10 rounded-full bg-border" />
 
-        {/* Icon */}
         <div
           className={`mx-auto mb-3.5 flex h-12 w-12 items-center justify-center rounded-full ${
             isFullyCompleted ? 'bg-accent/10' : 'bg-primary/10'
@@ -54,21 +52,18 @@ export function ConfirmFinishDialog({
           )}
         </div>
 
-        {/* Title */}
         <SheetTitle className="font-display text-[21px] font-bold tracking-[0.02em] text-center text-foreground">
           {isFullyCompleted
             ? t('session.confirmFinish.titleCompleted')
             : t('session.confirmFinish.titlePartial')}
         </SheetTitle>
 
-        {/* Description */}
         <SheetDescription className="mx-auto mt-1.5 max-w-75 text-center text-[13px] leading-[1.55] text-muted-foreground">
           {isFullyCompleted
             ? t('session.confirmFinish.descriptionCompleted')
             : t('session.confirmFinish.descriptionPartial')}
         </SheetDescription>
 
-        {/* Actions */}
         <div className="mt-5 flex flex-col gap-2">
           <button
             type="button"

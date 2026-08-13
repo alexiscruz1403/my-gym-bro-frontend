@@ -31,9 +31,6 @@ export function useSession() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Wait for Zustand to rehydrate from localStorage before deciding loading state.
-  // Without this, activeSessionId is null on the first render (before persist kicks in),
-  // causing loading to be set to false immediately — triggering the redirect to /dashboard.
   useEffect(() => {
     if (!_hasHydrated) return;
 
@@ -41,7 +38,6 @@ export function useSession() {
       setLoading(false);
       return;
     }
-    // Already hydrated in this session — no need to refetch
     if (activeSession) {
       setLoading(false);
       return;
@@ -55,7 +51,6 @@ export function useSession() {
         if (session) {
           setActiveSession(session);
         } else {
-          // Session no longer active on server — clean up local state
           clearSession();
         }
       } catch {
@@ -73,7 +68,6 @@ export function useSession() {
     async (dto: LogSetRequest) => {
       if (!activeSessionId || !activeSession) return;
 
-      // Optimistic update
       const exercise = activeSession.exercises.find((ex) => ex.exerciseId === dto.exerciseId);
       if (exercise) {
         const existing = exercise.sets.filter((s) => s.setIndex !== dto.setIndex);
@@ -94,7 +88,6 @@ export function useSession() {
         const response = await logSetService(activeSessionId, dto);
         updateExerciseSets(dto.exerciseId, response.sets);
       } catch {
-        // Revert optimistic update on failure
         if (exercise) {
           updateExerciseSets(dto.exerciseId, exercise.sets);
         }
@@ -108,12 +101,10 @@ export function useSession() {
     async (exerciseId: string, dto: ModifyExerciseRequest) => {
       if (!activeSessionId || !activeSession) return;
       const exercise = activeSession.exercises.find((ex) => ex.exerciseId === exerciseId);
-      // Optimistic update
       updateExerciseConfig(exerciseId, { ...dto, modifiedDuringSession: true });
       try {
         await modifyExerciseService(activeSessionId, exerciseId, dto);
       } catch {
-        // Revert on failure
         if (exercise) updateExerciseConfig(exerciseId, exercise);
         throw new Error('Failed to modify exercise');
       }
@@ -149,13 +140,11 @@ export function useSession() {
     async (dto: FinishSessionRequest): Promise<FinishSessionResponse> => {
       if (!activeSessionId) throw new Error('No active session');
       const result = await finishSessionService(activeSessionId, dto);
-      // Invalidate history and stats so they reflect the new session
       queryClient.invalidateQueries({ queryKey: ['session-history'] });
       queryClient.invalidateQueries({ queryKey: ['stats'] });
       queryClient.invalidateQueries({ queryKey: ['exercise-history'] });
       queryClient.invalidateQueries({ queryKey: ['streaks', 'me'] });
       queryClient.invalidateQueries({ queryKey: ['ranks'] });
-      // Invalidate plan cache so auto-updated weights are reflected on next view
       queryClient.invalidateQueries({ queryKey: ['plan', result.session.planId] });
       queryClient.invalidateQueries({ queryKey: ['plans'] });
       queryClient.invalidateQueries({ queryKey: ['active-plan'] });

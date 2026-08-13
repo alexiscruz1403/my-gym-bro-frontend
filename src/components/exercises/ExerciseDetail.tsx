@@ -29,7 +29,6 @@ export function ExerciseDetail({ exercise }: ExerciseDetailProps) {
 
   return (
     <div className="space-y-3.5">
-      {/* Hero card */}
       <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
         {exercise.gifUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -70,7 +69,6 @@ export function ExerciseDetail({ exercise }: ExerciseDetailProps) {
         </div>
       </div>
 
-      {/* Tab switcher */}
       <div className="flex gap-0.5 rounded-2xl bg-muted/60 p-1">
         {TABS.map((tab) => (
           <button
@@ -89,7 +87,6 @@ export function ExerciseDetail({ exercise }: ExerciseDetailProps) {
         ))}
       </div>
 
-      {/* Tab content */}
       {activeTab === 'guide' && <GuideTab exercise={exercise} />}
       {activeTab === 'history' && <HistoryTab exerciseId={exercise.id} />}
       {activeTab === 'stats' && <StatsTab exerciseId={exercise.id} />}

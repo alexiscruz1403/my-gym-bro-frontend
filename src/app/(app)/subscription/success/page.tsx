@@ -47,8 +47,6 @@ export default function SubscriptionSuccessPage() {
     }
   }, [isAuthorized]);
 
-  // Sin checkout activo esta pantalla es inalcanzable: un link viejo quedaría
-  // esperando una suscripción que nunca se va a activar.
   if (!MEMBERSHIP_PAYMENTS_ENABLED) redirect('/dashboard');
 
   const showLoading = isLoading || (!isAuthorized && !timedOut);

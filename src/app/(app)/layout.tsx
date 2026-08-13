@@ -20,10 +20,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <NotificationsProvider />
       <AchievementUnlockAnimation />
       <StreakRewardUnlockAnimation />
-      {/* Desktop: fixed left sidebar */}
       <SideNav />
 
-      {/* Main column — offset by sidebar width on desktop */}
       <div className="flex flex-col flex-1 min-w-0 lg:pl-60">
         <AppHeader />
         <OfflineBanner />

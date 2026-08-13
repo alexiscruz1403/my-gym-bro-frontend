@@ -22,8 +22,6 @@ export async function getPlans(): Promise<PlanListItem[]> {
     const { data } = await apiClient.get<PlanListItem[]>(API_ROUTES.workoutPlans.list);
     const asList: PlanListItem[] = data;
 
-    // Remove from IndexedDB any plans that no longer exist on the server.
-    // Preserve offline-pending plans — they were created locally and haven't synced yet.
     const serverIds = new Set(asList.map((p) => p.id));
     const dbPlans = await db.plans.toArray();
     const toDelete = dbPlans
@@ -175,7 +173,6 @@ export async function updatePlan(id: string, dto: UpdatePlanRequest): Promise<Wo
       method: 'PATCH',
       url: API_ROUTES.workoutPlans.detail(id),
       payload: dto,
-      // Only set tempId if id is itself a temp (we need to remap URL, not create a new resource)
     });
     return updated;
   }
@@ -187,7 +184,6 @@ export async function updatePlan(id: string, dto: UpdatePlanRequest): Promise<Wo
 export async function deletePlan(id: string): Promise<void> {
   if (!navigator.onLine) {
     await db.plans.delete(id);
-    // If it was created offline (temp ID), no need to sync the delete
     if (!isTempId(id)) {
       await enqueue({
         type: 'DELETE_PLAN',
@@ -203,7 +199,6 @@ export async function deletePlan(id: string): Promise<void> {
 
 export async function activatePlan(id: string): Promise<WorkoutPlan> {
   if (!navigator.onLine) {
-    // Deactivate all, activate the selected one
     await db.plans.toCollection().modify({ isActive: false });
     await db.plans.update(id, { isActive: true });
     const plan = await db.plans.get(id);
@@ -220,7 +215,6 @@ export async function activatePlan(id: string): Promise<WorkoutPlan> {
     await db.plans.toCollection().modify({ isActive: false });
     await db.plans.update(id, { isActive: true });
   } catch {
-    // IndexedDB update failed — React Query refetch will reconcile state
   }
   return data;
 }

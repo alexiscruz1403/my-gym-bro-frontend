@@ -97,7 +97,6 @@ export function CopyDaySheet({ planId, dayOfWeek, open, onOpenChange }: CopyDayS
         </SheetHeader>
 
         <div className="flex-1 overflow-y-auto px-5 pb-6 space-y-4">
-          {/* Mode toggle */}
           <div className="grid grid-cols-2 gap-2">
             {(['existing', 'new'] as const).map((m) => (
               <button

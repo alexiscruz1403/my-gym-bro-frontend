@@ -100,7 +100,6 @@ export function BodyMetricsSection({ user, onSave }: BodyMetricsSectionProps) {
 
       <div className="px-4 py-3.5">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Weight */}
           <div className="space-y-[5px]">
             <label className="block text-[13px] font-medium text-foreground">
               {t('profile.physicalData.weightLabel')}
@@ -136,7 +135,6 @@ export function BodyMetricsSection({ user, onSave }: BodyMetricsSectionProps) {
             )}
           </div>
 
-          {/* Height */}
           <div className="space-y-[5px]">
             <label className="block text-[13px] font-medium text-foreground">
               {t('profile.physicalData.heightLabel')}
@@ -175,7 +173,6 @@ export function BodyMetricsSection({ user, onSave }: BodyMetricsSectionProps) {
             )}
           </div>
 
-          {/* Gender */}
           <div className="space-y-[5px]">
             <label className="block text-[13px] font-medium text-foreground">
               {t('profile.physicalData.genderLabel')}
@@ -198,7 +195,6 @@ export function BodyMetricsSection({ user, onSave }: BodyMetricsSectionProps) {
             </div>
           </div>
 
-          {/* Body fat percentage */}
           <div className="space-y-[5px]">
             <label className="block text-[13px] font-medium text-foreground">
               {t('profile.physicalData.bodyFatLabel')}

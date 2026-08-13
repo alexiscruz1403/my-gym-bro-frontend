@@ -50,7 +50,6 @@ export interface UpdateProfileRequest {
   isPrivate?: boolean;
 }
 
-// Exercises
 export interface ExerciseListParams {
   search?: string;
   muscle?: MuscleGroup;
@@ -73,7 +72,6 @@ export interface AdminExerciseListResponse {
   limit: number;
 }
 
-// Workout Plans
 export interface CreatePlanExercise {
   exerciseId: string;
   sets: number;
@@ -102,7 +100,6 @@ export interface CreatePlanRequest {
 
 export type UpdatePlanRequest = CreatePlanRequest;
 
-// Sessions
 export interface StartSessionRequest {
   dayOfWeek: DayOfWeek;
   planId?: string;
@@ -151,7 +148,6 @@ export interface FinishSessionRequest {
   status: 'completed' | 'partial';
 }
 
-// History & Stats params
 
 export interface SessionHistoryParams {
   page?: number;
@@ -173,7 +169,6 @@ export interface StatsMuscleParams {
   date: string;
 }
 
-// Ranks params
 
 export interface MuscleRanksParams {
   muscle?: string;
@@ -183,7 +178,6 @@ export interface LeaderboardParams extends PaginationParams {
   muscle?: MuscleGroup;
 }
 
-// Social & Feed
 
 export interface PaginationParams {
   page?: number;
@@ -194,7 +188,6 @@ export interface PaginationParams {
 export type FeedFilter = 'all' | 'mine';
 
 export interface FeedQueryParams extends PaginationParams {
-  // TODO: backend to implement — send as ?filter=mine to return only the requesting user's posts
   filter?: FeedFilter;
 }
 
@@ -248,7 +241,6 @@ export interface CreatePostPayload {
   file?: File;
 }
 
-// ─── Notifications ────────────────────────────────────────────────
 import type { AppNotification } from '@/types/domain.types';
 
 export interface ListNotificationsQuery {

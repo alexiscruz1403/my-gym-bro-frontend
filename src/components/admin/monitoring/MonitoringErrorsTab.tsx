@@ -105,13 +105,11 @@ export function MonitoringErrorsTab() {
 
   return (
     <div className="flex flex-col gap-3">
-      {/* Info banner */}
       <div className="flex items-start gap-2 rounded-2xl border border-blue-500/25 bg-blue-500/10 px-3.5 py-2.75 text-[12.5px] text-blue-600 dark:text-blue-400 leading-[1.45]">
         <Info size={15} className="shrink-0 mt-0.5" />
         <span>{t('monitoring.errors.cleanup')}</span>
       </div>
 
-      {/* Table */}
       <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
         <div className="px-4 py-3 border-b border-border">
           <h3 className="font-display text-[15px] font-semibold tracking-[0.01em] text-foreground">

@@ -171,7 +171,7 @@ User comes back online
 ## Directory Structure
 
 ```
-gym-planner-frontend/
+my-gym-bro-web/
 ├── public/
 │   ├── manifest.json          # PWA manifest
 │   └── icons/                 # App icons
@@ -310,8 +310,8 @@ Design tokens are defined in `globals.css` using Tailwind v4's `@theme` directiv
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/alexiscruz1403/gym-planner-frontend.git
-cd gym-planner-frontend
+git clone https://github.com/alexiscruz1403/my-gym-bro-web.git
+cd my-gym-bro-web
 
 # 2. Install dependencies
 npm install

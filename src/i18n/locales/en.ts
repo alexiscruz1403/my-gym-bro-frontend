@@ -808,7 +808,6 @@ const en = {
     unknownActor: 'Someone',
     unread: 'Unread',
     view: 'View',
-    // Copy for each row in the notifications list.
     text: {
       follow: '{{actor}} started following you',
       postLike: '{{actor}} liked your post',

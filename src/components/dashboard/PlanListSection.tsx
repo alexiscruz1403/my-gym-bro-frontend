@@ -66,7 +66,6 @@ export function PlanListSection({ title, plans }: PlanListSectionProps) {
 
   return (
     <>
-      {/* Section header */}
       <div className="mb-2.5 flex items-center justify-between">
         <span className="text-[11px] font-medium uppercase tracking-[0.06em] text-muted-foreground">
           {title}
@@ -76,19 +75,16 @@ export function PlanListSection({ title, plans }: PlanListSectionProps) {
         </span>
       </div>
 
-      {/* Plan rows */}
       <div className="flex flex-col gap-1.5">
         {plans.map((plan) => (
           <div
             key={plan.id}
             className="flex items-center gap-2.5 rounded-xl border border-border bg-card px-3.5 py-3 shadow-1 transition-colors hover:bg-muted/50"
           >
-            {/* Dumbbell icon */}
             <div className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-[10px] bg-primary/10 text-primary">
               <Dumbbell className="h-4 w-4" />
             </div>
 
-            {/* Content */}
             <div className="min-w-0 flex-1">
               <p className="truncate text-[14px] font-semibold">{plan.name}</p>
               <div className="mt-0.5 flex items-center gap-1 text-[12px] text-muted-foreground">
@@ -97,14 +93,12 @@ export function PlanListSection({ title, plans }: PlanListSectionProps) {
               </div>
             </div>
 
-            {/* Active pill */}
             {plan.isActive && (
               <span className="inline-flex items-center rounded-full bg-accent/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-accent">
                 {t('plans.status.active')}
               </span>
             )}
 
-            {/* Play button */}
             <button
               type="button"
               className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-[10px] bg-primary text-white transition-colors hover:bg-primary/90 disabled:opacity-50"

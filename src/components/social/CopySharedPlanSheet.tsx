@@ -190,7 +190,6 @@ function PartialCopyBody({
 }) {
   return (
     <div className="space-y-4">
-      {/* Mode toggle */}
       <div className="grid grid-cols-2 gap-2">
         {(['existing', 'new'] as const).map((m) => (
           <button

@@ -95,13 +95,12 @@ export function useNotificationSocket() {
 
         socket.on('achievement_unlocked', (payload: AchievementUnlockedPayload) => {
           enqueueAchievement(payload);
-          // Debounce: N simultaneous unlocks → single profile refresh
           if (profileRefreshTimerRef.current) clearTimeout(profileRefreshTimerRef.current);
           profileRefreshTimerRef.current = setTimeout(() => {
             usersService.getMe().then((userData) => {
               useAuthStore.getState().setUser(userData);
               queryClient.setQueryData(['profile'], userData);
-            }).catch(() => { /* ignore — user can refresh manually */ });
+            }).catch(() => { });
           }, 300);
         });
 
@@ -109,33 +108,24 @@ export function useNotificationSocket() {
           enqueueReward(payload);
         });
 
-        // Fetch a fresh token on disconnect so Socket.IO's automatic reconnection
-        // attempts use valid credentials instead of the potentially-expired cached token.
         socket.on('disconnect', async () => {
           try {
             const fresh = await getWsToken();
             socket.auth = { token: fresh.token };
           } catch {
-            // Keep old auth — reconnection will still attempt with the cached token
           }
         });
 
-        // Only update socket.auth here; do NOT call socket.connect() manually as it
-        // would race with Socket.IO's own reconnection loop.
         socket.on('connect_error', async (err) => {
           if (err.message?.toLowerCase().includes('unauthorized')) {
             try {
               const fresh = await getWsToken();
               socket.auth = { token: fresh.token };
             } catch {
-              // fall through — polling from useUnreadNotifications still updates count
             }
           }
         });
 
-        // After 5 failed reconnection attempts Socket.IO gives up permanently.
-        // Tear down the dead socket and schedule a full reconnect every 60 s until
-        // the backend is reachable again.
         socket.on('reconnect_failed', () => {
           socketRef.current?.removeAllListeners();
           socketRef.current?.disconnect();
@@ -148,7 +138,6 @@ export function useNotificationSocket() {
 
         socketRef.current = socket;
       } catch {
-        // ws-token fetch failed — unread-count polling covers the fallback
       }
     }
 

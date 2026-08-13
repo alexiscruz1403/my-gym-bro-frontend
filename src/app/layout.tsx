@@ -18,10 +18,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // The config below comes from the container environment, so this layout must
-  // not be prerendered: a build-time render would bake the values back into the
-  // HTML and the image would stop being portable. This makes every route under
-  // it render on demand.
   await connection();
 
   return (
@@ -31,7 +27,6 @@ export default async function RootLayout({
         <script
           id={RUNTIME_CONFIG_ELEMENT_ID}
           type="application/json"
-          // Inert data, not executable: the browser never runs application/json.
           dangerouslySetInnerHTML={{ __html: serializeConfig() }}
         />
       </head>

@@ -54,7 +54,6 @@ export function ActivePlanCard({ plan }: ActivePlanCardProps) {
   return (
     <>
       <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-1">
-        {/* Plan name + status pills */}
         <div className="px-[18px] pb-[14px] pt-4">
           <div className="font-display text-[19px] font-bold leading-tight tracking-[0.01em]">
             {plan.name}
@@ -71,7 +70,6 @@ export function ActivePlanCard({ plan }: ActivePlanCardProps) {
           </div>
         </div>
 
-        {/* Day pills */}
         <div className="flex flex-wrap gap-1.5 px-[18px] pb-3.5">
           {plan.days.map((day) => (
             <span
@@ -93,7 +91,6 @@ export function ActivePlanCard({ plan }: ActivePlanCardProps) {
           ))}
         </div>
 
-        {/* Meta row */}
         <div className="flex gap-4 px-[18px] pb-4">
           <span className="flex items-center gap-1.5 text-[13px] text-muted-foreground">
             <CalendarDays className="h-3 w-3" />
@@ -105,10 +102,8 @@ export function ActivePlanCard({ plan }: ActivePlanCardProps) {
           </span>
         </div>
 
-        {/* Divider */}
         <div className="h-px bg-border" />
 
-        {/* Actions */}
         <div className="flex flex-col gap-2 px-[18px] pb-4 pt-[14px]">
           <button
             type="button"

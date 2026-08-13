@@ -77,7 +77,6 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
 
   return (
     <div className="space-y-5">
-      {/* Hero */}
       <div className="space-y-2">
         <h1 className="font-display text-[26px] font-bold leading-[1.05] tracking-[0.01em]">
           {plan.name}
@@ -110,7 +109,6 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
         </div>
       </div>
 
-      {/* Actions */}
       <div className="flex flex-wrap gap-2">
         {!plan.isActive && (
           <Button
@@ -148,7 +146,6 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
 
       <SharePlanSheet plan={plan} open={sharePlanOpen} onOpenChange={setSharePlanOpen} />
 
-      {/* Settings */}
       <div className="rounded-xl border border-border/60 bg-card px-4 py-3">
         <div className="flex items-center justify-between gap-4">
           <div className="space-y-0.5">
@@ -171,7 +168,6 @@ export function PlanDetailView({ plan, onUpdate }: PlanDetailViewProps) {
         </div>
       </div>
 
-      {/* Tabs (AI plans only) */}
       {showProgressionTab ? (
         <Tabs
           value={activeTab}

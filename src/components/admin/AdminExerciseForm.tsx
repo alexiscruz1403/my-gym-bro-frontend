@@ -101,7 +101,6 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
           <SheetTitle>{exercise ? t('admin.exercises.editTitle') : t('admin.exercises.newTitle')}</SheetTitle>
         </SheetHeader>
         <form onSubmit={handleSubmit} className="px-4 pb-6 space-y-4">
-          {/* Name ES */}
           <div className="space-y-1.5">
             <Label htmlFor="ex-name-es">{t('admin.exercises.nameEs')}</Label>
             <Input
@@ -113,7 +112,6 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
             />
           </div>
 
-          {/* Name EN */}
           <div className="space-y-1.5">
             <Label htmlFor="ex-name-en">{t('admin.exercises.nameEn')}</Label>
             <Input
@@ -156,7 +154,6 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
             </select>
           </div>
 
-          {/* Bilateral toggle */}
           <div className="space-y-1.5">
             <Label>{t('admin.exercises.movement')}</Label>
             <div className="flex gap-2">
@@ -185,7 +182,6 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
             </div>
           </div>
 
-          {/* GIF upload */}
           <div className="space-y-1.5">
             <Label htmlFor="ex-gif">
               {t('admin.exercises.gif')}{' '}
@@ -212,7 +208,6 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
             )}
           </div>
 
-          {/* Video upload */}
           <div className="space-y-1.5">
             <Label htmlFor="ex-video">
               {t('admin.exercises.video')}{' '}
@@ -239,7 +234,6 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
             )}
           </div>
 
-          {/* Primary muscles */}
           <div className="space-y-1.5">
             <Label>
               {t('admin.exercises.primaryMuscles')} <span className="text-destructive">*</span>
@@ -268,7 +262,6 @@ export function AdminExerciseForm({ open, exercise, onSubmit, onClose }: AdminEx
             </div>
           </div>
 
-          {/* Secondary muscles */}
           <div className="space-y-1.5">
             <Label>
               {t('admin.exercises.secondaryMuscles')}{' '}

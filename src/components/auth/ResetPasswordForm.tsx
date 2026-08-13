@@ -64,7 +64,6 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     >
       {!done ? (
         <>
-          {/* Header */}
           <div className="flex flex-col gap-[5px]">
             <h1
               className="font-display text-[27px] font-bold tracking-[0.02em] leading-[1.05]"
@@ -77,9 +76,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
             </p>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-3.5">
-            {/* New password */}
             <div className="flex flex-col gap-[5px]">
               <label
                 htmlFor="rp-pwd"
@@ -125,7 +122,6 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
               <PasswordStrength value={passwordValue} />
             </div>
 
-            {/* Confirm password */}
             <div className="flex flex-col gap-[5px]">
               <label
                 htmlFor="rp-conf"
@@ -168,7 +164,6 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
               )}
             </div>
 
-            {/* Submit */}
             <div className="mt-0.5">
               <button
                 type="submit"
@@ -185,7 +180,6 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
             </div>
           </form>
 
-          {/* Back link */}
           <p className="text-center -mt-1">
             <Link
               href="/login"
@@ -197,7 +191,6 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           </p>
         </>
       ) : (
-        /* Success state */
         <div className="flex flex-col items-center gap-3.5 text-center py-2">
           <div
             className="w-[60px] h-[60px] rounded-full flex items-center justify-center"

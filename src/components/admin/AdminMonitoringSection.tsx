@@ -24,7 +24,6 @@ export function AdminMonitoringSection() {
 
   return (
     <div className="flex flex-col gap-3.5">
-      {/* Segment control */}
       <div className="bg-muted/60 rounded-2xl p-1 flex gap-0.5 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none]">
         {TABS.map((item) => (
           <button

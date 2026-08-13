@@ -1,10 +1,8 @@
 let audioCtx: AudioContext | null = null;
 
-// Timer sound (/audio/timer.mp3)
 let audioBuffer: AudioBuffer | null = null;
 let bufferLoading: Promise<AudioBuffer | null> | null = null;
 
-// Notification sound (/audio/notification.mp3)
 let notifBuffer: AudioBuffer | null = null;
 let notifBufferLoading: Promise<AudioBuffer | null> | null = null;
 
@@ -27,12 +25,6 @@ async function loadBuffer(ctx: AudioContext, path: string): Promise<AudioBuffer 
   return ctx.decodeAudioData(arrayBuffer);
 }
 
-/**
- * Plays the timer notification sound (/audio/timer.mp3) using the Web Audio API.
- * Uses AudioBufferSourceNode for reliable playback in timer callbacks,
- * including mobile browsers with strict autoplay policies.
- * Silently no-ops in environments where AudioContext is unavailable.
- */
 export function playBeep(
   _frequency?: number,
   _durationMs?: number,
@@ -76,7 +68,6 @@ export function playBeep(
       source.start(0);
     });
   } catch {
-    // Audio not available — fail silently
   }
 }
 
@@ -119,6 +110,5 @@ export function playNotification(): void {
       source.start(0);
     });
   } catch {
-    // Audio not available — fail silently
   }
 }

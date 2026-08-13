@@ -34,5 +34,5 @@ export interface RestTimerState {
 export interface CountdownTimerState {
   durationSeconds: number;
   startedAt: number;
-  pausedSecondsLeft: number | null; // null = running, number = paused
+  pausedSecondsLeft: number | null;
 }

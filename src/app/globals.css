@@ -2,21 +2,16 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* ─── Dark mode via .dark class ─────────────────────────────────── */
 @custom-variant dark (&:is(.dark *));
 
-/* ─── Design tokens ─────────────────────────────────────────────── */
 @theme inline {
-  /* Fonts */
   --font-sans: var(--font-inter), system-ui, sans-serif;
   --font-display: var(--font-oswald), system-ui, sans-serif;
 
-  /* Radius */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
 
-  /* Color scale — mapped from CSS vars below */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
@@ -42,18 +37,15 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  /* Warning (amber) — premium banners, alerts */
   --color-warning:            var(--warning);
   --color-warning-foreground: var(--warning-fg);
   --color-warning-soft:       var(--warning-soft);
 
-  /* Elevation shadows — 4 levels, adapt to dark mode */
   --shadow-1: var(--shadow-elevation-1);
   --shadow-2: var(--shadow-elevation-2);
   --shadow-3: var(--shadow-elevation-3);
   --shadow-4: var(--shadow-elevation-4);
 
-  /* Stats typography */
   --text-stat-xl: 3rem;
   --text-stat-xl--line-height: 1;
   --text-stat-xl--font-weight: 700;
@@ -61,112 +53,90 @@
   --text-stat-lg--line-height: 1.1;
   --text-stat-lg--font-weight: 600;
 
-  /* Streak flame animations */
   --animate-flame-gentle: flame-gentle 2s ease-in-out infinite;
   --animate-flame-moderate: flame-moderate 1.4s ease-in-out infinite;
   --animate-flame-strong: flame-strong 0.9s ease-in-out infinite;
 }
 
-/* ─── Color variables — Light mode ──────────────────────────────── */
 @layer base {
   :root {
-    /* Backgrounds — diferenciación visible entre capas */
-    --background: oklch(98.5% 0.004 245);   /* bg de página */
-    --card:       oklch(96.5% 0.006 245);   /* surface (cards) — 2% L por debajo de bg */
+    --background: oklch(98.5% 0.004 245);
+    --card:       oklch(96.5% 0.006 245);
     --card-foreground: oklch(18% 0.015 245);
 
     --foreground: oklch(18% 0.015 245);
 
-    /* Primary — naranja moderado, energético sin ser agresivo */
     --primary:            oklch(62% 0.20 35);
     --primary-foreground: oklch(99% 0 0);
 
-    /* Secondary — surface-2 para botones secundarios */
     --secondary:            oklch(94% 0.008 245);
     --secondary-foreground: oklch(18% 0.015 245);
 
-    /* Muted — surface-2, fondo de inputs, hover states */
     --muted:            oklch(94% 0.008 245);
-    --muted-foreground: oklch(48% 0.015 245); /* ≥ 4.6:1 contraste sobre --card */
+    --muted-foreground: oklch(48% 0.015 245);
 
-    /* Accent — verde de éxito (sets completados, estado activo) */
     --accent:            oklch(60% 0.175 145);
     --accent-foreground: oklch(99% 0 0);
 
     --destructive:            oklch(57% 0.22 20);
     --destructive-foreground: oklch(99% 0 0);
 
-    /* Border e input — visible contra surfaces */
     --border: oklch(88% 0.010 245);
     --input:  oklch(88% 0.010 245);
     --ring:   oklch(62% 0.20 35);
 
     --radius: 0.75rem;
 
-    /* Warning */
     --warning:      oklch(78% 0.17 85);
     --warning-soft: oklch(97% 0.04 85);
     --warning-fg:   oklch(25% 0.05 85);
 
-    /* Sheet surface — blanco puro en light */
     --sheet-bg: oklch(100% 0 0);
 
-    /* Elevations — light mode */
     --shadow-elevation-1: 0 1px 2px oklch(18% 0.015 245 / 0.05);
     --shadow-elevation-2: 0 2px 8px oklch(18% 0.015 245 / 0.08), 0 1px 2px oklch(18% 0.015 245 / 0.04);
     --shadow-elevation-3: 0 8px 24px oklch(18% 0.015 245 / 0.10), 0 2px 6px oklch(18% 0.015 245 / 0.06);
     --shadow-elevation-4: 0 20px 48px oklch(18% 0.015 245 / 0.14), 0 4px 12px oklch(18% 0.015 245 / 0.08);
   }
 
-  /* ─── Color variables — Dark mode ─────────────────────────────── */
   .dark {
-    /* Backgrounds — 3 capas claramente distintas */
-    --background: oklch(12%   0.018 245);   /* bg de página */
-    --card:       oklch(17%   0.018 245);   /* surface (cards) — 5% L por encima */
+    --background: oklch(12%   0.018 245);
+    --card:       oklch(17%   0.018 245);
     --card-foreground: oklch(94% 0.006 245);
 
     --foreground: oklch(94% 0.006 245);
 
-    /* Primary — ligeramente más brillante en dark */
     --primary:            oklch(64% 0.20 35);
     --primary-foreground: oklch(99% 0 0);
 
-    /* Secondary — surface-2 */
     --secondary:            oklch(21% 0.018 245);
     --secondary-foreground: oklch(94% 0.006 245);
 
-    /* Muted — surface-2 · DIFERENTE de border (crítico en dark mode) */
     --muted:            oklch(21% 0.018 245);
     --muted-foreground: oklch(65% 0.012 245);
 
-    /* Accent — verde ligeramente más brillante en dark */
     --accent:            oklch(62% 0.175 145);
     --accent-foreground: oklch(99% 0 0);
 
     --destructive:            oklch(60% 0.22 20);
     --destructive-foreground: oklch(99% 0 0);
 
-    /* Border e input — MÁS CLARO que muted para ser visible como separador */
     --border: oklch(25% 0.018 245);
     --input:  oklch(25% 0.018 245);
     --ring:   oklch(64% 0.20 35);
 
-    /* Sheet surface — azul oscuro profundo en dark */
     --sheet-bg: oklch(16% 0.016 248);
 
-    /* Warning */
     --warning:      oklch(75% 0.17 85);
     --warning-soft: oklch(20% 0.05 85);
     --warning-fg:   oklch(92% 0.04 85);
 
-    /* Elevations — dark mode (sombras más pronunciadas) */
     --shadow-elevation-1: 0 1px 2px oklch(0% 0 0 / 0.30);
     --shadow-elevation-2: 0 2px 8px oklch(0% 0 0 / 0.40), 0 1px 2px oklch(0% 0 0 / 0.20);
     --shadow-elevation-3: 0 8px 24px oklch(0% 0 0 / 0.50), 0 2px 6px oklch(0% 0 0 / 0.25);
     --shadow-elevation-4: 0 20px 48px oklch(0% 0 0 / 0.60), 0 4px 12px oklch(0% 0 0 / 0.30);
   }
 
-  /* ─── Utilities ───────────────────────────────────────────────── */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
@@ -175,7 +145,6 @@
     scrollbar-width: none;
   }
 
-  /* ─── Base styles ──────────────────────────────────────────────── */
   * {
     @apply border-border outline-ring/50;
   }
@@ -189,7 +158,6 @@
     font-family: var(--font-oswald), system-ui, sans-serif;
   }
 
-  /* Autofill override */
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,
@@ -197,7 +165,6 @@
   input:-webkit-autofill:active,
   textarea:-webkit-autofill,
   select:-webkit-autofill {
-    /* Usar variables de color para fondo y texto según el modo */
     -webkit-text-fill-color: var(--foreground) !important;
     transition: background-color 9999s ease-in-out 0s;
     caret-color: var(--foreground);
@@ -217,7 +184,6 @@
     box-shadow: 0 0 0px 1000px var(--background) inset !important;
   }
 
-  /* ─── Auth page animation ──────────────────────────────────── */
   @keyframes auth-fade-up {
     from { opacity: 0; transform: translateY(10px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -226,7 +192,6 @@
     animation: auth-fade-up 0.28s cubic-bezier(0, 0, 0.2, 1) both;
   }
 
-  /* ─── Auth card: always light, regardless of dark mode ────── */
   [data-auth-card],
   .dark [data-auth-card] {
     --background:         oklch(99.5% 0.001 248);

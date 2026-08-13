@@ -94,7 +94,6 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
         </SheetHeader>
 
         <div className="px-4 pb-6 space-y-4">
-          {/* Session preview */}
           <div className="rounded-xl border bg-muted/30 p-4 space-y-3">
             <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span>{session.planName}</span>
@@ -133,7 +132,6 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
             )}
           </div>
 
-          {/* Photo picker */}
           {preview ? (
             <div className="relative w-full aspect-square rounded-xl overflow-hidden">
               <Image src={preview} alt="Post photo preview" fill className="object-cover" />
@@ -166,7 +164,6 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
             onChange={handleFileChange}
           />
 
-          {/* Caption */}
           <div className="space-y-1">
             <textarea
               value={caption}
@@ -181,7 +178,6 @@ export function CreateFeedPostSheet({ session, open, onClose }: CreateFeedPostSh
             </p>
           </div>
 
-          {/* Actions */}
           <div className="flex flex-col gap-2">
             <Button onClick={handleShare} disabled={isSubmitting} className="w-full">
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

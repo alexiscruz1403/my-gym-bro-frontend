@@ -13,7 +13,6 @@ export function GuideTab({ exercise }: GuideTabProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Media */}
       {exercise.videoUrl ? (
         <div className="overflow-hidden rounded-2xl">
           <video
@@ -32,7 +31,6 @@ export function GuideTab({ exercise }: GuideTabProps) {
         </div>
       )}
 
-      {/* Primary muscles */}
       <div className="flex flex-col gap-2">
         <p className="text-[12px] font-semibold uppercase tracking-[0.04em] text-muted-foreground">
           {t('exercises.detail.guide.primaryMuscles')}
@@ -49,7 +47,6 @@ export function GuideTab({ exercise }: GuideTabProps) {
         </div>
       </div>
 
-      {/* Secondary muscles */}
       {exercise.musclesSecondary.length > 0 && (
         <div className="flex flex-col gap-2">
           <p className="text-[12px] font-semibold uppercase tracking-[0.04em] text-muted-foreground">
@@ -68,7 +65,6 @@ export function GuideTab({ exercise }: GuideTabProps) {
         </div>
       )}
 
-      {/* Weight guide */}
       {exercise.weightGuide && (
         <>
           <div className="h-px bg-border" />

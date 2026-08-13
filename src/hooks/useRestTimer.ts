@@ -14,7 +14,6 @@ export function useRestTimer() {
     }
   }, []);
 
-  // Keep an interval running while timer is active so components re-render
   useEffect(() => {
     if (!restTimer) {
       clear();
@@ -22,8 +21,6 @@ export function useRestTimer() {
     }
     clear();
     intervalRef.current = setInterval(() => {
-      // Force a re-render by writing the same restTimer object back —
-      // secondsLeft is computed from Date.now() so consumers always get fresh value
       useSessionStore.setState((s) => ({ restTimer: s.restTimer ? { ...s.restTimer } : null }));
     }, 500);
 

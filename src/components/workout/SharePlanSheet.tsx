@@ -113,7 +113,6 @@ export function SharePlanSheet({ plan, open, onOpenChange }: SharePlanSheetProps
         </SheetHeader>
 
         <div className="flex-1 overflow-y-auto px-5 pb-6 space-y-5">
-          {/* Share type */}
           <div className="space-y-2">
             <p className="text-[13px] font-semibold text-muted-foreground uppercase tracking-wide">
               {t('plans.share.selectDay')}
@@ -167,7 +166,6 @@ export function SharePlanSheet({ plan, open, onOpenChange }: SharePlanSheetProps
             )}
           </div>
 
-          {/* Audience */}
           <div className="space-y-2">
             <p className="text-[13px] font-semibold text-muted-foreground uppercase tracking-wide">
               {t('plans.share.selectFollower')}
@@ -273,7 +271,6 @@ export function SharePlanSheet({ plan, open, onOpenChange }: SharePlanSheetProps
             )}
           </div>
 
-          {/* Caption */}
           <div className="space-y-1.5">
             <textarea
               value={caption}
@@ -287,7 +284,6 @@ export function SharePlanSheet({ plan, open, onOpenChange }: SharePlanSheetProps
             </p>
           </div>
 
-          {/* Submit */}
           <Button
             className="w-full"
             disabled={!canSubmit}

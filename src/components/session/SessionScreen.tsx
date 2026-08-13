@@ -54,8 +54,6 @@ export function SessionScreen() {
     (ex) => ex.sets.some((s) => s.completed),
   );
 
-  // Determine status automatically: completed only if every planned set in
-  // every exercise has been logged as completed.
   const isFullyCompleted = session.exercises.every(
     (ex) => ex.sets.filter((s) => s.completed).length >= ex.plannedSets,
   );

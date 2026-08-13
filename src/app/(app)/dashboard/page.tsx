@@ -36,7 +36,6 @@ export default function DashboardPage() {
   return (
     <PageContainer>
       <div className="space-y-5">
-        {/* Greeting row */}
         <div className="flex items-start justify-between gap-3">
           <div>
             <h1 className="font-display text-2xl font-bold leading-tight">
@@ -59,7 +58,6 @@ export default function DashboardPage() {
 
         {isFree && <PremiumCtaCard />}
 
-        {/* Active plan section */}
         <div>
           <div className="mb-2.5 flex items-center justify-between">
             <span className="text-[11px] font-medium uppercase tracking-[0.06em] text-muted-foreground">

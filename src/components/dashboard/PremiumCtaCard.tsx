@@ -29,7 +29,6 @@ export function PremiumCtaCard() {
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-1">
-      {/* Gradient overlay */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -37,20 +36,17 @@ export function PremiumCtaCard() {
         }}
       />
       <div className="relative flex items-center gap-3 px-4 py-3.5">
-        {/* Icon */}
         <div
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] text-[15px] bg-warning-soft text-warning"
         >
           <Sparkles className="h-4 w-4" />
         </div>
 
-        {/* Text */}
         <div className="flex-1 min-w-0">
           <p className="text-[13.5px] font-semibold">{t('dashboard.premiumCta.title')}</p>
           <p className="mt-0.5 text-[12px] text-muted-foreground">{t('dashboard.premiumCta.subtitle')}</p>
         </div>
 
-        {/* CTA button */}
         <button
           type="button"
           onClick={handleCta}
@@ -60,7 +56,6 @@ export function PremiumCtaCard() {
           {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : t('dashboard.premiumCta.cta')}
         </button>
 
-        {/* Dismiss */}
         <button
           type="button"
           onClick={() => setDismissed(true)}

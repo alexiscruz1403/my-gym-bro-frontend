@@ -15,7 +15,6 @@ export async function getRealId(tempId: string): Promise<string | null> {
   return mapping?.realId ?? null;
 }
 
-// Replace all offline_* tokens inside a string (URL or serialized payload).
 export async function resolveIds(input: string): Promise<string> {
   const matches = input.match(/offline_[a-zA-Z0-9_-]+/g);
   if (!matches) return input;
@@ -30,7 +29,6 @@ export async function resolveIds(input: string): Promise<string> {
   return resolved;
 }
 
-// Resolve temp IDs inside an arbitrary payload object.
 export async function resolvePayload(payload: unknown): Promise<unknown> {
   if (payload == null) return payload;
   const serialized = JSON.stringify(payload);

@@ -74,13 +74,11 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
   const [shareOpen, setShareOpen] = useState(false);
   const [slide, setSlide] = useState(0);
   const { clearSessionData } = useSession();
-  // Clear session store on unmount regardless of how the user leaves this screen
   useEffect(() => {
     return () => { clearSessionData(); };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Measure the viewport width of the clipping container so slides are exact
   const viewportRef = useRef<HTMLDivElement>(null);
   const [slideWidth, setSlideWidth] = useState(0);
 
@@ -145,7 +143,6 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
   return (
     <>
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Fixed header: icon + title + stats + dots */}
         <div className="flex-shrink-0 px-4 pt-8 pb-4 space-y-4">
           <div className="flex flex-col items-center gap-2 text-center">
             <CheckCircle className="h-16 w-16 text-accent" />
@@ -155,7 +152,6 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
             <p className="text-muted-foreground text-sm">{t('session.summary.subtitle')}</p>
           </div>
 
-          {/* Stats row */}
           <div className="grid grid-cols-2 gap-3">
             <div className="rounded-xl border bg-card p-3 text-center shadow-1">
               <Clock className="text-primary mx-auto mb-1 h-5 w-5" />
@@ -181,7 +177,6 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
             </div>
           </div>
 
-          {/* Dots — only when ranks exist */}
           {hasRanks && (
             <div className="flex justify-center gap-2">
               {Array.from({ length: totalSlides }).map((_, i) => (
@@ -200,14 +195,12 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
           )}
         </div>
 
-        {/* Carousel viewport — clips overflow */}
         <div
           ref={viewportRef}
           className="relative flex-1 overflow-hidden"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {/* Track — moves horizontally; each slide is exactly slideWidth px wide */}
           <div
             className="flex h-full transition-transform duration-300 ease-out"
             style={{
@@ -215,7 +208,6 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
               transform: slideWidth ? `translateX(-${slide * slideWidth}px)` : 'none',
             }}
           >
-            {/* Slide 0 — Exercises */}
             <div
               className="h-full overflow-y-auto px-4"
               style={{ width: slideWidth ? `${slideWidth}px` : '100%' }}
@@ -281,7 +273,6 @@ export function SessionSummary({ session, rankSummary }: SessionSummaryProps) {
               {actions}
             </div>
 
-            {/* Slide 1 — Rank progress */}
             {hasRanks && (
               <div
                 className="h-full overflow-y-auto px-4"

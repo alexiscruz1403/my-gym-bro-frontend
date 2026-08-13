@@ -18,7 +18,6 @@ export function SideNav() {
 
   return (
     <aside className="hidden lg:flex lg:fixed lg:inset-y-0 lg:w-60 flex-col bg-card border-r border-border z-40">
-      {/* Logo */}
       <div className="flex h-14 items-center px-6 border-b border-border shrink-0">
         <div className="flex items-center gap-2">
           <Image src="/MyGymBro.svg" alt="MyGymBro" width={36} height={16} priority />
@@ -30,7 +29,6 @@ export function SideNav() {
         </div>
       </div>
 
-      {/* Nav items */}
       <nav className="flex-1 overflow-y-auto p-3 space-y-1">
         {NAV_ITEMS.map(({ href, icon: Icon, labelKey }) => {
           const isActive = pathname.startsWith(href);

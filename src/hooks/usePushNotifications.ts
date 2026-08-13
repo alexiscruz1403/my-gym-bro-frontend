@@ -48,8 +48,6 @@ export function usePushNotifications() {
 
     setPermission(Notification.permission);
 
-    // getRegistration() resolves immediately (unlike .ready which waits for an active SW).
-    // In dev mode the PWA plugin is disabled so no SW is registered — .ready would hang forever.
     navigator.serviceWorker.getRegistration()
       .then((reg) => (reg ? reg.pushManager.getSubscription() : null))
       .then((sub) => setSubscription(sub))
@@ -91,7 +89,6 @@ export function usePushNotifications() {
 
       setSubscription(pushSub);
     } catch {
-      // Silent failure — user can retry via the toggle
     } finally {
       setIsLoading(false);
     }
@@ -105,7 +102,6 @@ export function usePushNotifications() {
       await subscription.unsubscribe();
       setSubscription(null);
     } catch {
-      // Silent failure
     } finally {
       setIsLoading(false);
     }

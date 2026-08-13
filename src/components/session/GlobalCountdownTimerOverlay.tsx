@@ -20,7 +20,6 @@ const PRESETS = [
 
 function getDefaultPosition() {
   if (typeof window === 'undefined') return { x: 16, y: 260 };
-  // Stack below rest timer (rest timer starts at y=80, ~160px tall)
   return { x: 16, y: 260 };
 }
 
@@ -84,7 +83,6 @@ export function GlobalCountdownTimerOverlay({ onClose }: GlobalCountdownTimerOve
       className={`rounded-xl ${dragBorderClass} bg-card p-3 shadow-2`}
       {...pointerHandlers}
     >
-      {/* Header */}
       <div className="flex items-center justify-between" style={{ cursor: 'grab' }}>
         <p className="text-muted-foreground text-sm font-medium select-none">Temporizador</p>
         <Button
@@ -99,7 +97,6 @@ export function GlobalCountdownTimerOverlay({ onClose }: GlobalCountdownTimerOve
       </div>
 
       {isActive ? (
-        /* Active mode — SVG circle */
         <div className="flex flex-col items-center gap-3 py-2">
           <div className="relative flex items-center justify-center" style={{ width: CIRCLE_SIZE, height: CIRCLE_SIZE }}>
             <svg width={CIRCLE_SIZE} height={CIRCLE_SIZE} style={{ transform: 'rotate(-90deg)' }}>
@@ -128,7 +125,6 @@ export function GlobalCountdownTimerOverlay({ onClose }: GlobalCountdownTimerOve
           </div>
         </div>
       ) : (
-        /* Setup mode */
         <>
           <div className="mt-3 flex gap-1.5">
             {PRESETS.map((p) => (

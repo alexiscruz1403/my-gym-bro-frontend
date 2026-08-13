@@ -158,7 +158,7 @@ const usePlanBuilderStore = create<PlanBuilderState & PlanBuilderActions>()(
       reset: () => set(initialState),
     }),
     {
-      name: 'gym-planner-plan-builder',
+      name: 'my-gym-bro-plan-builder',
       storage: createJSONStorage(() => localStorage),
     },
   ),

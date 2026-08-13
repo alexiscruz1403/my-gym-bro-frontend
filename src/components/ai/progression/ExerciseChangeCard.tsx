@@ -71,7 +71,6 @@ export function ExerciseChangeCard({ change }: ExerciseChangeCardProps) {
   return (
     <div className="rounded-xl border bg-card overflow-hidden">
       <div className="p-4 space-y-3">
-        {/* Header */}
         <div className="flex items-start gap-3">
           <div className={cn('mt-0.5 flex-shrink-0', config.color)}>
             <Icon className="h-4.5 w-4.5" />
@@ -87,7 +86,6 @@ export function ExerciseChangeCard({ change }: ExerciseChangeCardProps) {
           </div>
         </div>
 
-        {/* Before → After */}
         <div className="grid grid-cols-3 gap-2">
           {showWeightDiff && (
             <StatDiff
@@ -115,7 +113,6 @@ export function ExerciseChangeCard({ change }: ExerciseChangeCardProps) {
           )}
         </div>
 
-        {/* Reasoning (collapsible) */}
         {change.reasoning && (
           <div>
             <button

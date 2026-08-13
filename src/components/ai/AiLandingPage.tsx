@@ -28,7 +28,6 @@ export function AiLandingPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Hero card — dark gradient, always shown */}
       <div className="flex flex-col gap-2.5 rounded-2xl border border-primary/40 bg-gradient-to-br from-[oklch(20%_0.07_35)] to-[oklch(12%_0.018_248)] px-[18px] py-5">
         <BrainCircuit className="mb-0.5 h-8 w-8 text-primary" />
         <div className="flex items-start justify-between gap-2">
@@ -81,10 +80,8 @@ export function AiLandingPage() {
         )}
       </div>
 
-      {/* Non-premium: upgrade CTA */}
       {!isPremium && <PremiumCtaCard />}
 
-      {/* Premium: count badge + previous generations */}
       {isPremium && (
         <>
           <AiPlanCountBadge count={profiles.length} max={MAX_AI_PLANS} />

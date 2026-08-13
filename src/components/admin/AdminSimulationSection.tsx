@@ -52,7 +52,6 @@ export function AdminSimulationSection() {
 
   return (
     <div className="space-y-4">
-      {/* Achievements */}
       <div className="rounded-2xl border border-border bg-card p-4 shadow-sm space-y-3">
         <p className="text-sm font-semibold">{t('admin.simulation.achievementsTitle')}</p>
         <div className="flex flex-wrap gap-2">
@@ -69,7 +68,6 @@ export function AdminSimulationSection() {
         </div>
       </div>
 
-      {/* Streak Rewards */}
       <div className="rounded-2xl border border-border bg-card p-4 shadow-sm space-y-3">
         <p className="text-sm font-semibold">{t('admin.simulation.rewardsTitle')}</p>
         <div className="flex flex-wrap gap-2">

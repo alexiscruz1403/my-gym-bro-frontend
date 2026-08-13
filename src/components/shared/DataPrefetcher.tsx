@@ -9,7 +9,6 @@ import { getVolumeByPeriod, getVolumeByMuscle } from '@/services/stats.service';
 import { getMuscleRanks } from '@/services/ranks.service';
 import { usersService } from '@/services/users.service';
 
-// Fetch all pages of a paginated resource and store items in IndexedDB.
 async function fetchAllPages<T>(
   fetcher: (page: number) => Promise<{ data: T[]; totalPages: number }>,
   storeItems: (items: T[]) => Promise<unknown>,
@@ -27,11 +26,9 @@ async function prefetchAll(): Promise<void> {
   const today = new Date().toISOString().split('T')[0];
 
   await Promise.allSettled([
-    // Plans — getPlans() syncs deletions in IndexedDB; getActivePlan() stores the full active plan
     getPlans(),
     getActivePlan(),
 
-    // Exercise catalog — all pages
     fetchAllPages(
       (page) =>
         getExercises({ page, limit: 50 }).then((r) => ({
@@ -41,7 +38,6 @@ async function prefetchAll(): Promise<void> {
       (items) => db.exercises.bulkPut(items),
     ),
 
-    // Session history — all pages
     fetchAllPages(
       (page) =>
         getSessionHistory({ page, limit: 20 }).then((r) => ({
@@ -51,14 +47,11 @@ async function prefetchAll(): Promise<void> {
       (items) => db.sessionHistory.bulkPut(items),
     ),
 
-    // Stats — current week
     getVolumeByPeriod({ period: 'week', date: today }),
     getVolumeByMuscle({ period: 'week', date: today }),
 
-    // Rankings
     getMuscleRanks(),
 
-    // Profile
     usersService.getMe(),
   ]);
 }
@@ -70,7 +63,6 @@ export function DataPrefetcher() {
     if (hasPrefetched.current || !navigator.onLine) return;
     hasPrefetched.current = true;
     prefetchAll().catch(() => {
-      // Silent failure — offline data remains whatever was cached before
     });
   }, []);
 

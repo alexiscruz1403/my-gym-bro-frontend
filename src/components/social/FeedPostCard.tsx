@@ -169,7 +169,6 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: Feed
       'lg:rounded-2xl lg:border lg:shadow-sm lg:mb-4 lg:overflow-hidden',
       highlight && 'ring-2 ring-primary ring-inset',
     )}>
-      {/* Header */}
       <div className="flex items-center gap-3 px-3.5 pt-3 pb-2.5">
         <Link href={`/users/${post.author._id}`}>
           <Avatar size="default">
@@ -209,14 +208,12 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: Feed
         </div>
       </div>
 
-      {/* Plan summary */}
       {isPlanPost && post.planSummary && (
         <div className="px-3.5 pb-2 pt-1">
           <PlanSummaryCard planSummary={post.planSummary} />
         </div>
       )}
 
-      {/* Session media / summary area */}
       {!isPlanPost && isCarousel ? (
         <div className="relative">
           <div
@@ -246,7 +243,6 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: Feed
             ))}
           </div>
 
-          {/* Desktop nav buttons */}
           {activeSlide > 0 && (
             <button
               type="button"
@@ -268,7 +264,6 @@ export function FeedPostCard({ post, isOwnPost, onCommentOpen, highlight }: Feed
             </button>
           )}
 
-          {/* Dot indicators */}
           <div className="absolute bottom-2.5 left-0 right-0 flex justify-center gap-[5px]">
             {Array.from({ length: slideCount }, (_, i) => (
               <span

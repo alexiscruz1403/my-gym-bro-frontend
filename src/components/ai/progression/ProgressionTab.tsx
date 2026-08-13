@@ -75,7 +75,6 @@ export function ProgressionTab({ planId }: ProgressionTabProps) {
 
   return (
     <div className="space-y-5">
-      {/* Header card */}
       <div className="flex items-start gap-3 rounded-xl border bg-gradient-to-br from-primary/5 to-transparent p-4">
         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10">
           <BrainCircuit className="h-5 w-5 text-primary" />
@@ -106,7 +105,6 @@ export function ProgressionTab({ planId }: ProgressionTabProps) {
           animate={{ opacity: 1, y: 0 }}
           className="space-y-4"
         >
-          {/* Summary row */}
           {result.status !== 'failed' && (
             <div className="flex items-center justify-between gap-3 rounded-xl border bg-card p-4">
               <div className="space-y-0.5">
@@ -149,7 +147,6 @@ export function ProgressionTab({ planId }: ProgressionTabProps) {
 
           <ProgressionResult result={result} />
 
-          {/* Apply / Reject actions — only when pending */}
           {isPending && result.changesApplied.length > 0 && (
             <div className="flex gap-2 pt-1">
               <Button
@@ -177,7 +174,6 @@ export function ProgressionTab({ planId }: ProgressionTabProps) {
           )}
         </motion.div>
       ) : (
-        /* Empty state — no log this week */
         <div className="space-y-4">
           <div className="rounded-xl border border-dashed p-8 text-center space-y-3">
             <Sparkles className="mx-auto h-8 w-8 text-muted-foreground/40" />

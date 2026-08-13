@@ -10,12 +10,10 @@ export function useOfflineSync() {
   const isOnline = useNetworkStatus();
   const { setPendingCount, isSyncing, pendingCount, lastSyncAt, syncError } = useOfflineStore();
 
-  // Refresh pending count on mount
   useEffect(() => {
     getPendingCount().then(setPendingCount);
   }, [setPendingCount]);
 
-  // Trigger sync whenever we go back online
   useEffect(() => {
     if (!isOnline) return;
     getPendingCount().then((count) => {

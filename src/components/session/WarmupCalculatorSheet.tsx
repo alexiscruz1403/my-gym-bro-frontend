@@ -49,10 +49,8 @@ export function WarmupCalculatorSheet({ open, onOpenChange, exercise }: WarmupCa
         className="flex max-h-[88vh] flex-col gap-0 rounded-t-[20px] border-0 pt-0"
         style={{ background: 'var(--sheet-bg)' }}
       >
-        {/* Drag handle */}
         <div className="mx-auto mt-3 mb-0 h-1 w-10 shrink-0 rounded-full bg-border" />
 
-        {/* Header */}
         <div className="shrink-0 border-b border-border px-[18px] pb-3.5 pt-2">
           <SheetTitle className="font-display mt-1.5 text-[19px] font-bold tracking-[0.02em] text-foreground">
             {t('session.warmup.title')}
@@ -69,7 +67,6 @@ export function WarmupCalculatorSheet({ open, onOpenChange, exercise }: WarmupCa
           )}
         </div>
 
-        {/* Content */}
         <div className="flex-1 overflow-y-auto px-4 pb-6 pt-4 space-y-4">
           {!hasWeight ? (
             <p className="text-sm text-muted-foreground text-center py-6">
@@ -77,7 +74,6 @@ export function WarmupCalculatorSheet({ open, onOpenChange, exercise }: WarmupCa
             </p>
           ) : (
             <>
-              {/* Multiplier toggle */}
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground shrink-0">
                   {t('session.warmup.multiplierLabel')}
@@ -100,7 +96,6 @@ export function WarmupCalculatorSheet({ open, onOpenChange, exercise }: WarmupCa
                 </div>
               </div>
 
-              {/* Warmup set rows */}
               <div className="space-y-2">
                 {warmupSets.map(({ set, weight, unit }) => (
                   <div
