@@ -209,10 +209,16 @@ export function DayExerciseList({
         rest: 60,
         bilateral: exercise.bilateral,
       };
+      // The API requires maxReps whenever minReps is set (it drives double-progression),
+      // so quick-added exercises need both — not just minReps — or plan creation 400s.
       if (exercise.bilateral === false) {
-        onAdd({ ...base, left: { minReps: 10 }, right: { minReps: 10 } });
+        onAdd({
+          ...base,
+          left: { minReps: 10, maxReps: 10 },
+          right: { minReps: 10, maxReps: 10 },
+        });
       } else {
-        onAdd({ ...base, minReps: 10 });
+        onAdd({ ...base, minReps: 10, maxReps: 10 });
       }
     }
   };
