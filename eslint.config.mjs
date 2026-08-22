@@ -18,7 +18,28 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      // Los regenera @ducanh2912/next-pwa en cada build. Aportaban 47 de los
+      // 72 warnings del repo, todos sobre codigo que nadie escribio.
+      "public/sw.js",
+      "public/workbox-*.js",
+      "public/worker-*.js",
+      "public/fallback-*.js",
     ],
+  },
+  {
+    files: ["**/*.{ts,tsx}"],
+    rules: {
+      // El prefijo _ es la forma de decir "esto no se usa a proposito": hace
+      // falta para respetar la firma de un callback o el orden posicional.
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
+    },
   },
 ];
 

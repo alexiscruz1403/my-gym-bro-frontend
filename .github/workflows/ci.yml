@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, prod]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  quality:
+    uses: alexiscruz1403/my-gym-bro/.github/workflows/reusable-node-quality.yml@main
+    with:
+      node-version: '22'
+      lint-command: npm run lint:ci
+      typecheck-command: npm run typecheck
+      # Sin format-command: este repo no usa Prettier.
+
+  test:
+    name: Component tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run test:ci
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          flags: components
+          fail_ci_if_error: true
+
+  build:
+    name: Build & size
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci
+
+      # Receta oficial de Next: reusar .next/cache acelera el build, pero la
+      # clave incluye el hash de las fuentes para no servir un build viejo.
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('src/**/*.{ts,tsx}', 'next.config.ts') }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}-
+
+      # No necesita secretos: las URLs se leen en runtime desde
+      # src/lib/runtime-config.ts, no hay una sola variable NEXT_PUBLIC_.
+      - run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+
+      # La tabla va al log y al resumen del job: asi se lee desde el PR sin
+      # tener que abrir los logs, pero sigue estando donde uno la busca.
+      - name: Check bundle size
+        run: |
+          set +e
+          npx size-limit | tee size-limit.txt
+          status=${PIPESTATUS[0]}
+          set -e
+          {
+            echo '### Tamaño del bundle'
+            echo
+            echo '```'
+            cat size-limit.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"
+
+  security:
+    uses: alexiscruz1403/my-gym-bro/.github/workflows/reusable-security.yml@main

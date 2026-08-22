@@ -11,7 +11,21 @@ const config: Config = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
-  testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/"],
+  // e2e/ va excluido: son specs de Playwright y su `test` no es el de Jest.
+  // Sin esto, el patron por defecto de Jest los levanta y explotan.
+  testPathIgnorePatterns: [
+    "<rootDir>/node_modules/",
+    "<rootDir>/.next/",
+    "<rootDir>/e2e/",
+  ],
+  collectCoverageFrom: [
+    "src/**/*.{ts,tsx}",
+    "!src/**/*.d.ts",
+    "!src/app/**/layout.tsx",
+    "!src/app/**/page.tsx",
+    "!src/types/**",
+  ],
+  coverageDirectory: "coverage",
 };
 
 export default createJestConfig(config);

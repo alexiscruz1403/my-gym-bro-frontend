@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Runtime compartido (se descarga en toda ruta)",
+    "path": [
+      ".next/static/chunks/framework-*.js",
+      ".next/static/chunks/main-app-*.js",
+      ".next/static/chunks/polyfills-*.js",
+      ".next/static/chunks/webpack-*.js"
+    ],
+    "limit": "95 kB"
+  },
+  {
+    "name": "JS del cliente (todos los chunks)",
+    "path": ".next/static/chunks/**/*.js",
+    "limit": "1030 kB"
+  },
+  {
+    "name": "CSS",
+    "path": ".next/static/css/**/*.css",
+    "limit": "21 kB"
+  }
+]
