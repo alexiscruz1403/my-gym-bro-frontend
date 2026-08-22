@@ -1,0 +1,17 @@
+title = "my-gym-bro-frontend"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Fixtures de test y artefactos generados"
+paths = [
+  # Usuarios y contrasenas de test generados por spec (e2e/support/user.ts).
+  '''^e2e/''',
+  # Generados por @ducanh2912/next-pwa en cada build: hashes de workbox que
+  # los detectores genericos confunden con claves.
+  '''^public/sw\.js$''',
+  '''^public/workbox-.*\.js$''',
+  '''^public/worker-.*\.js$''',
+  '''^public/fallback-.*\.js$''',
+]

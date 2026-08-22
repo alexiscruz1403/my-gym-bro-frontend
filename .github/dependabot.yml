@@ -1,0 +1,57 @@
+version: 2
+
+# Agrupado a proposito: sin `groups`, una semana normal abre 10-15 PRs de una
+# linea cada uno y nadie los mira. Agrupados son 2 o 3 PRs revisables.
+#
+# El prefijo `chore(deps)` importa: semantic-release no saca release por commits
+# `chore`, asi que actualizar dependencias no dispara una version nueva.
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: 'chore(deps)'
+      prefix-development: 'chore(deps-dev)'
+    groups:
+      # next, react y eslint-config-next estan pineados a version exacta y
+      # tienen que moverse juntos: eslint-config-next sigue la version de next.
+      next:
+        patterns: ['next', 'eslint-config-next', '@next/*', 'react', 'react-dom', '@types/react', '@types/react-dom']
+      testing:
+        patterns: ['jest', 'jest-*', '@types/jest', '@testing-library/*', '@playwright/test']
+      linting:
+        patterns: ['eslint', 'eslint-*', '@eslint/*', '@typescript-eslint/*']
+        exclude-patterns: ['eslint-config-next']
+      tailwind:
+        patterns: ['tailwindcss', '@tailwindcss/*', 'tw-animate-css', 'tailwind-merge']
+      types:
+        patterns: ['@types/*']
+        exclude-patterns: ['@types/jest', '@types/react', '@types/react-dom']
+      production:
+        dependency-type: production
+        update-types: ['minor', 'patch']
+      development:
+        dependency-type: development
+        update-types: ['minor', 'patch']
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: 'chore(deps)'
+    groups:
+      actions:
+        patterns: ['*']
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: 'chore(deps)'
