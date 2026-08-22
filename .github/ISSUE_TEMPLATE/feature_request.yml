@@ -1,0 +1,24 @@
+name: Propuesta de mejora
+description: Una funcionalidad o un cambio de comportamiento
+title: 'feat: '
+labels: ['enhancement']
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Qué problema resuelve
+      description: El problema, no la solución. Si no hay un problema concreto detrás, probablemente no haga falta.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Qué proponés
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas que consideraste

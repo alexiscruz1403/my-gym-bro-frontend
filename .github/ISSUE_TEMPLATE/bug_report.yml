@@ -1,0 +1,42 @@
+name: Reporte de bug
+description: Algo no funciona como debería
+title: 'fix: '
+labels: ['bug']
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Qué pasó
+      description: Qué esperabas que pasara y qué pasó en su lugar.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Cómo reproducirlo
+      placeholder: |
+        1. Ir a...
+        2. Hacer click en...
+        3. Ver el error
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs o capturas
+      description: Salida de `docker compose logs <servicio>`, consola del navegador, o lo que aplique.
+      render: shell
+
+  - type: dropdown
+    id: where
+    attributes:
+      label: Dónde
+      options:
+        - Local (docker compose)
+        - Staging
+        - Producción
+        - No sé
+    validations:
+      required: true

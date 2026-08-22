@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Pregunta o idea suelta
+    url: https://github.com/alexiscruz1403/my-gym-bro-frontend/discussions
+    about: Para lo que todavía no es un bug ni una feature concreta.
