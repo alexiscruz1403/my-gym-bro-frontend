@@ -49,7 +49,6 @@ export function UserListItem({ user, followersCount, highlight, onFollowed }: Us
       <FollowButton
         userId={user._id}
         initialIsFollowing={user.isFollowing}
-        size="sm"
         onFollowed={onFollowed}
       />
     </div>

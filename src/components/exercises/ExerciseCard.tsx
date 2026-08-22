@@ -62,6 +62,7 @@ export function ExerciseCard(props: ExerciseCardProps) {
     >
       <CardContent className="flex items-center gap-3 p-4">
         {exercise.gifUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={exercise.gifUrl}
             alt={exercise.name}

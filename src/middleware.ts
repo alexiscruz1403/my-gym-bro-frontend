@@ -3,7 +3,6 @@ import type { NextRequest } from 'next/server';
 
 const ACCESS_TOKEN_COOKIE = 'access_token';
 const PUBLIC_ROUTES = ['/login', '/register', '/auth'];
-const PROTECTED_PREFIX = ['/dashboard', '/workout', '/history', '/feed', '/profile'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
