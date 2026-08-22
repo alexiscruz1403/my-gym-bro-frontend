@@ -2,13 +2,20 @@
   "name": "my-gym-bro-web",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "lint:ci": "eslint --max-warnings 0",
+    "typecheck": "tsc --noEmit --incremental false",
     "test": "jest",
+    "test:ci": "jest --ci --coverage",
     "test:watch": "jest --watch",
+    "size": "size-limit",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:report": "playwright show-report"
@@ -50,9 +57,11 @@
     "@ducanh2912/next-pwa": "^10.2.9",
     "@eslint/eslintrc": "^3",
     "@playwright/test": "^1.62.1",
+    "@size-limit/file": "^13.0.3",
     "@tailwindcss/postcss": "^4.2.2",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.5",
     "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -64,6 +73,7 @@
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
     "shadcn": "^4.1.1",
+    "size-limit": "^13.0.3",
     "tailwindcss": "^4.2.2",
     "typescript": "^5"
   }

@@ -12,7 +12,7 @@ interface PlanSummaryCardProps {
   planSummary: PlanSummaryDto;
 }
 
-function formatExerciseDetail(ex: PlanSummaryExerciseDto, t: ReturnType<typeof useTranslation>['t']): string {
+function formatExerciseDetail(ex: PlanSummaryExerciseDto): string {
   const sets = ex.sets;
   if (ex.bilateral) {
     if (ex.duration != null) return `${sets} × ${ex.duration}s`;
@@ -105,7 +105,7 @@ function DaySlide({ day, dayLabel, slideIndex, totalSlides }: DaySlideProps) {
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-[13px] font-medium leading-tight">{ex.exerciseName}</p>
                   <p className="text-[11.5px] text-muted-foreground">
-                    {formatExerciseDetail(ex, t)}
+                    {formatExerciseDetail(ex)}
                     {' · '}
                     {ex.rest}s {t('session.rest.label').toLowerCase()}
                   </p>

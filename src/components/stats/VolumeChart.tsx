@@ -10,7 +10,6 @@ import {
   ResponsiveContainer,
   Cell,
 } from 'recharts';
-import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatBreakdownLabel } from '@/lib/stats-dates';
 import type { WeightUnit } from '@/hooks/useStats';
@@ -25,7 +24,7 @@ interface VolumeChartProps {
 }
 
 export function VolumeChart({ data, period, loading, weightUnit, convertVolume }: VolumeChartProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   if (loading) {
     return <Skeleton className="h-48 w-full rounded-xl" />;

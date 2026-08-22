@@ -1,0 +1,31 @@
+# La cobertura de componentes arranca casi de cero (tres specs semilla), asi
+# que el status de project no puede exigir un absoluto. Lo que si se exige es
+# que el codigo nuevo venga con tests.
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+    patch:
+      default:
+        target: 60%
+        threshold: 0%
+
+flags:
+  components:
+    paths: ['src/']
+    carryforward: true
+
+comment:
+  layout: 'condensed_header, diff, flags'
+  require_changes: true
+
+ignore:
+  # Rutas y layouts del App Router: se ejercitan en los E2E de Playwright,
+  # no en Jest.
+  - 'src/app/**'
+  - 'src/types/**'
+  - 'e2e/**'
+  - 'worker/**'
+  - 'src/components/ui/**'

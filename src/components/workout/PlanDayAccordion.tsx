@@ -8,7 +8,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { ExerciseConfigRow } from './ExerciseConfigRow';
-import { ChevronDown, Link, Copy } from 'lucide-react';
+import { Link, Copy } from 'lucide-react';
 import type { PlanDay, ExerciseConfig } from '@/types/domain.types';
 
 type StandaloneItem = { type: 'standalone'; exercise: ExerciseConfig };

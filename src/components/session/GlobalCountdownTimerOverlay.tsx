@@ -28,7 +28,7 @@ interface GlobalCountdownTimerOverlayProps {
 }
 
 export function GlobalCountdownTimerOverlay({ onClose }: GlobalCountdownTimerOverlayProps) {
-  const { secondsLeft, isRunning, isPaused, isActive, totalSeconds, start, pause, resume, reset, complete } =
+  const { secondsLeft, isRunning, isActive, totalSeconds, start, pause, resume, reset, complete } =
     useCountdownTimer();
   const { position, isDragging, pointerHandlers } = useDraggable({
     defaultPosition: getDefaultPosition(),

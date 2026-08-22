@@ -7,7 +7,6 @@ interface FollowButtonProps {
   userId: string;
   initialIsFollowing: boolean;
   initialIsRequestPending?: boolean;
-  size?: 'sm' | 'default';
   onFollowed?: () => void;
 }
 
@@ -15,7 +14,6 @@ export function FollowButton({
   userId,
   initialIsFollowing,
   initialIsRequestPending = false,
-  size = 'default',
   onFollowed,
 }: FollowButtonProps) {
   const { isFollowing, isRequestPending, isLoading, toggle } = useFollow(

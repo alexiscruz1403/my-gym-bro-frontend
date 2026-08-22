@@ -11,11 +11,10 @@ import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { SyncStatusIndicator } from '@/components/shared/SyncStatusIndicator';
 
 interface AppHeaderProps {
-  title?: string;
   action?: React.ReactNode;
 }
 
-export function AppHeader({ title, action }: AppHeaderProps) {
+export function AppHeader({ action }: AppHeaderProps) {
   const { t } = useTranslation();
   const { isDarkMode, toggleDarkMode } = useUIStore();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);

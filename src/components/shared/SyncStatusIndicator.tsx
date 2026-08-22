@@ -1,6 +1,6 @@
 'use client';
 
-import { Cloud, CloudOff, Loader2, CheckCircle2 } from 'lucide-react';
+import { Cloud, CloudOff, Loader2 } from 'lucide-react';
 import useOfflineStore from '@/store/offline.store';
 
 export function SyncStatusIndicator() {

@@ -32,7 +32,7 @@ export function ExerciseSwapDialog({
     ? t('ai.swap.reasonMinLength')
     : null;
 
-  const { state, proposal, error, requestSwap, confirmSwap, reset, isRequesting, isConfirming } =
+  const { state, proposal, error, requestSwap, confirmSwap, reset, isConfirming } =
     useExerciseSwap({ planId, exerciseId });
 
   const handleOpen = (isOpen: boolean) => {
