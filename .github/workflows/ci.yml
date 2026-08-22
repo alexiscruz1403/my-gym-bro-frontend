@@ -95,5 +95,16 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
           exit "$status"
 
+  # Levanta el stack completo (Mongo, Redis, API, frontend, Caddy) con el
+  # compose del repo de infra y corre Playwright en 4 shards contra ESTE ref.
+  #
+  # Encadenado detras de quality a proposito: son 4 runners construyendo el
+  # stack entero, no vale la pena gastarlos si el lint ya fallo.
+  e2e:
+    needs: quality
+    uses: alexiscruz1403/my-gym-bro/.github/workflows/reusable-e2e.yml@main
+    with:
+      web-ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
   security:
     uses: alexiscruz1403/my-gym-bro/.github/workflows/reusable-security.yml@main
